@@ -4,8 +4,9 @@ export interface ItemsQuery {
   limit?: number;
   fields?: Array<string>;
   filter?: Record<string, {
-    _eq: string | number;
-  }>;
+    _eq?: string | number;
+    _in?: Array<string | number>;
+  } | any>;
 }
 
 export const directus = createDirectus(
@@ -30,15 +31,6 @@ export async function getItemById(
 
 interface Home {
   id: number;
-  services_title: string;
-  services_subtitle: string;
-  services_list: Array<{
-    title: string;
-    description: string;
-  }>;
-  quote_text: string;
-  quote_name: string;
-  quote_position: string;
   featured_title: string;
   hero_title: string;
   hero_subtitle: string;

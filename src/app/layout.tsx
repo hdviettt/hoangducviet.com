@@ -9,8 +9,8 @@ import Header from "@/components/Header";
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
   return {
-    title: global.title,
-    description: global.tagline,
+    title: "VIET",
+    description: global.tagline || "Personal blog by Viet",
   }
 }
 
@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className="antialiased min-h-screen grid grid-rows-[auto_1fr_auto]">
         <Header />
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

@@ -1,4 +1,3 @@
-import { Orbit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,105 +12,110 @@ export default async function Home() {
 
   const featuredPosts = await getPosts({
     limit: 6,
-    fields: ["slug", "title", "date_created"],
+    fields: ["slug", "title", "description", "date_created", "thumbnail.filename_disk", "thumbnail.height", "thumbnail.width"],
   });
 
   return (
     <>
-      <section className="bg-slate-50">
-        <Container className="-mt-8 py-28">
-          <div className="max-w-3xl text-center space-y-10 mx-auto mb-20">
-            <h1 className="text-5xl leading-none">{data.hero_title}</h1>
-            <p className="text-xl">{data.hero_subtitle}</p>
+      <section className="py-24 md:py-32">
+        <Container>
+          <div className="max-w-3xl mx-auto text-center space-y-8 mb-16">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-balance">
+              {data.hero_title}
+            </h1>
+            <p className="text-xl text-muted-foreground text-balance max-w-2xl mx-auto">
+              {data.hero_subtitle}
+            </p>
             {data.hero_buttons.length > 0 && (
-              <ul>
+              <div className="flex flex-wrap gap-4 justify-center">
                 {data.hero_buttons.map((button) => {
                   return (
-                    <li key={button.label}>
-                      <Button asChild size="lg" className="font-bold">
-                        <Link href={button.link}>{button.label}</Link>
-                      </Button>
-                    </li>
+                    <Button key={button.label} asChild size="lg" className="font-semibold">
+                      <Link href={button.link}>{button.label}</Link>
+                    </Button>
                   );
                 })}
-              </ul>
+              </div>
             )}
           </div>
           {typeof data.hero_cover === 'object' && (
-            <Image
-              className="block rounded-lg"
-              width={2100}
-              height={900}
-              src={`${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${data.hero_cover.filename_disk}?width=2100&height=900`}
-              alt=""
-              sizes="(max-width: 1152px) 100vw, 1112px"
-              priority
-            />
+            <div className="relative overflow-hidden rounded-xl border bg-muted/50">
+              <Image
+                className="w-full object-cover"
+                width={2100}
+                height={900}
+                src={`${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${data.hero_cover.filename_disk}?width=2100&height=900`}
+                alt=""
+                sizes="(max-width: 1152px) 100vw, 1112px"
+                priority
+              />
+            </div>
           )}
         </Container>
       </section>
-      <section>
-        <Container className="py-28">
-          <div className="max-w-3xl text-center space-y-10 mx-auto mb-28">
-            <Orbit className="inline-block w-10 h-auto" />
-            <h2 className="text-4xl">{data.services_title}</h2>
-            <p className="text-lg">{data.services_subtitle}</p>
+      <section className="py-24">
+        <Container>
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="text-3xl font-bold tracking-tight">{data.featured_title}</h2>
           </div>
-          {data.services_list.length > 0 && (
-            <ul className="grid grid-cols-3 gap-12">
-              {data.services_list.map((service) => {
-                return (
-                  <li key={service.title} className="space-y-4">
-                    <Orbit className="w-6 h-auto" />
-                    <h3 className="text-lg font-bold leading-snug">
-                      {service.title}
-                    </h3>
-                    <p>{service.description}</p>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </Container>
-      </section>
-      <section className="bg-slate-900 text-white">
-        <Container className="py-36">
-          <div className="max-w-3xl text-center mx-auto">
-            <p className="text-4xl italic font-serif mb-12">
-              {data.quote_text}
-            </p>
-            <p className="text-sm">{data.quote_name}</p>
-            <p className="text-sm text-slate-400">{data.quote_position}</p>
-          </div>
-        </Container>
-      </section>
-      <section>
-        <Container className="py-28">
-          <header className="flex items-center justify-between w-full mb-12">
-            <h2 className="text-4xl">{data.featured_title}</h2>
-          </header>
-          <ul className="grid gap-8 mb-16">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
             {featuredPosts.map((post) => {
+              const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
+                ? `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${post.thumbnail.filename_disk}`
+                : null;
+              
               return (
-                <li key={post.slug} className="space-y-1">
-                  <h3 className="text-2xl">
-                    <Link href={`/posts/${post.slug}`} className="hover:text-blue-500 hover:underline">
-                      {post.title}
-                    </Link>
-                  </h3>
-                  <p className="text-slate-600">
-                    {post.date_created &&
-                      new Date(post.date_created).toLocaleDateString()}
-                  </p>
-                </li>
+                <article 
+                  key={post.slug} 
+                  className="group relative rounded-lg border bg-card overflow-hidden hover:shadow-lg transition-all duration-200"
+                >
+                  <Link href={`/posts/${post.slug}`}>
+                    <span className="absolute inset-0 z-10" />
+                    {thumbnailUrl && post.thumbnail && typeof post.thumbnail === 'object' ? (
+                      <div className="aspect-video relative overflow-hidden bg-muted">
+                        <Image
+                          src={thumbnailUrl}
+                          alt={post.title || ''}
+                          width={post.thumbnail.width || 600}
+                          height={post.thumbnail.height || 400}
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
+                        />
+                      </div>
+                    ) : (
+                      <div className="aspect-video bg-muted flex items-center justify-center">
+                        <span className="text-4xl font-bold text-muted-foreground/20">VIET</span>
+                      </div>
+                    )}
+                    <div className="p-6 space-y-3">
+                      <h3 className="text-xl font-semibold leading-tight line-clamp-2">
+                        {post.title}
+                      </h3>
+                      {post.description && (
+                        <p className="text-muted-foreground line-clamp-2">
+                          {post.description}
+                        </p>
+                      )}
+                      <p className="text-sm text-muted-foreground">
+                        {post.date_created &&
+                          new Date(post.date_created).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                      </p>
+                    </div>
+                  </Link>
+                </article>
               );
             })}
-          </ul>
-          <p className="text-xl">
-            <Link href="/posts" className="hover:text-blue-500 hover:underline">
-              View All Posts
-            </Link>
-          </p>
+          </div>
+          <div className="text-center">
+            <Button asChild variant="outline">
+              <Link href="/posts" className="font-medium">
+                View All Posts
+              </Link>
+            </Button>
+          </div>
         </Container>
       </section>
     </>

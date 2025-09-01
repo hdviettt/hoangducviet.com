@@ -1,17 +1,18 @@
 import { readItem, readItems } from "@directus/sdk";
 
 import { type ItemsQuery, directus } from "@/lib/directus";
-import type { Block } from '@/types/fields';
 
 export interface Post {
   date_created?: string;
   categories?: Array<number | {
     post_categories_slug: string;
   }>;
-  body?: {
-    time: number;
-    blocks: Array<Block>;
-    version: string;
+  body?: string; // HTML content
+  description?: string; // Short description/excerpt
+  thumbnail?: string | {
+    filename_disk: string;
+    height: number;
+    width: number;
   };
   slug?: string;
   title?: string;
@@ -26,5 +27,19 @@ export async function getPostBySlug(
   options?: ItemsQuery,
 ): Promise<Post> {
   if (!slug) throw new Error("Invalid slug");
-  return directus.request(readItem("posts", slug, options));
+  const posts = await directus.request(readItems("posts", {
+    ...options,
+    filter: {
+      slug: {
+        _eq: slug,
+      },
+    },
+    limit: 1,
+  }));
+  
+  if (!posts || posts.length === 0) {
+    throw new Error(`Post with slug "${slug}" not found`);
+  }
+  
+  return posts[0];
 }

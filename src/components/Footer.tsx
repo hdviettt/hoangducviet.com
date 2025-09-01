@@ -2,10 +2,11 @@ import Container from "@/components/Container";
 
 const Footer = () => {
   return (
-    <footer className="mt-12 mb-8">
-      <Container className="flex justify-between gap-4">
-        <p className="text-sm">Space Jelly &copy; {new Date().getFullYear()}</p>
-        <p className="text-sm">Created by Colby Fayock with <a href="https://directus.io/?ref=spacejelly">Directus</a></p>
+    <footer className="border-t bg-background">
+      <Container className="py-8">
+        <div className="flex flex-col md:flex-row justify-center items-center text-sm text-muted-foreground">
+          <p>hoangducviet</p>
+        </div>
       </Container>
     </footer>
   );
