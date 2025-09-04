@@ -18,7 +18,7 @@ export interface Project {
 }
 
 export async function getProjects(options?: ItemsQuery): Promise<Array<Project>> {
-  return directus.request(readItems("projects", options));
+  return directus.request(readItems("projects", options)) as Promise<Array<Project>>;
 }
 
 export async function getProjectBySlug(
@@ -26,5 +26,5 @@ export async function getProjectBySlug(
   options?: ItemsQuery,
 ): Promise<Project> {
   // Since slug is now the primary key, we can use readItem directly
-  return directus.request(readItem("projects", slug, options));
+  return directus.request(readItem("projects", slug, options)) as Promise<Project>;
 }

@@ -6,7 +6,8 @@
       "Bash(npm run build:*)",
       "Bash(curl:*)",
       "Bash(npm install:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\lib/**)"
     ],
     "deny": [],
     "ask": []
