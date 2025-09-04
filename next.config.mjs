@@ -4,7 +4,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT.replace(/https?:\/\//, '') || 'directus-production-8b7b.up.railway.app',
+        hostname: process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT 
+          ? process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT.replace(/https?:\/\//, '') 
+          : 'directus-production-8b7b.up.railway.app',
       },
     ],
   },
