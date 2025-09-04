@@ -10,7 +10,7 @@ export interface ItemsQuery {
 }
 
 export const directus = createDirectus(
-  String(process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT),
+  process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT || "https://directus-production-8b7b.up.railway.app",
 ).with(
   rest({
     onRequest: (options) => ({ ...options, cache: "no-store" }),
