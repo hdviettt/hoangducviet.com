@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 
 import { getProjectBySlug } from "@/lib/projects";
 
+export const runtime = "edge";
+
 interface ProjectParams {
   params: {
     projectSlug: string;
