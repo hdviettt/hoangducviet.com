@@ -102,9 +102,6 @@ export default async function Home() {
                       height={600}
                       className="w-full h-full object-cover"
                       priority
-                      onError={(e) => {
-                        console.error("Image failed to load:", imageUrl);
-                      }}
                     />
                   </div>
                 </div>

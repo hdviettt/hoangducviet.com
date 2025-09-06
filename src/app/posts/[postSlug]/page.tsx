@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { getItemById } from "@/lib/directus";
 import { getPostBySlug } from "@/lib/posts";
+// import { getGlobalMetadata } from "@/lib/directus";
 
 export const runtime = 'edge';
 
@@ -18,12 +19,13 @@ export async function generateMetadata({ params }: PostParams): Promise<Metadata
     const post = await getPostBySlug(params.postSlug, {
       fields: ["title"],
     });
+    // const global = await getGlobalMetadata();
     return {
-      title: `${post.title} - VIET`,
+      title: `${post.title}`,
     }
   } catch (error) {
     return {
-      title: "Post - VIET",
+      title: "Post",
     }
   }
 }
@@ -52,7 +54,7 @@ export default async function PostPage({ params }: PostParams) {
     }
 
     // Get thumbnail URL
-    thumbnailUrl = data.thumbnail && typeof data.thumbnail === 'object' 
+    thumbnailUrl = data.thumbnail && typeof data.thumbnail === 'object'
       ? `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${data.thumbnail.filename_disk}`
       : null;
   } catch (error) {
@@ -71,8 +73,8 @@ export default async function PostPage({ params }: PostParams) {
     <div className="h-full overflow-auto">
       <div className="max-w-4xl mx-auto p-4 md:p-8 animate-fadeIn">
         {/* Back button */}
-        <Link 
-          href="/posts" 
+        <Link
+          href="/posts"
           className="inline-block text-xs text-white hover:bg-white hover:text-black px-2 py-1 mb-8 transition-colors border border-white font-mono uppercase"
         >
           [Back]
@@ -121,7 +123,7 @@ export default async function PostPage({ params }: PostParams) {
 
         {/* Article Content */}
         {data.body && (
-          <div 
+          <div
             className="prose prose-invert prose-sm md:prose-lg max-w-none 
               prose-headings:font-bold prose-headings:text-foreground prose-headings:mb-6
               prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6

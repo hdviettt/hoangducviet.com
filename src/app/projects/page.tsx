@@ -8,14 +8,14 @@ export const runtime = 'edge';
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
   return {
-    title: `Projects - VIET`,
+    title: `Projects - ${global.title}`,
     description: "Browse our collection of projects and case studies.",
   }
 }
 
 export default async function ProjectsPage() {
   let projects: Project[] = [];
-  
+
   try {
     projects = await getProjects({
       fields: ["slug", "title", "date_created"],

@@ -28,7 +28,12 @@
       "Bash(npm view:*)",
       "WebFetch(domain:developers.cloudflare.com)",
       "Bash(npm run pages:build:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:directus-production-8b7b.up.railway.app)",
+      "Bash(railway login:*)",
+      "Bash(cmd /c \"C:\\Users\\User\\Desktop\\directus-blog\\fix-directus-login.bat\")",
+      "Bash(railway logs:*)"
     ],
     "deny": [],
     "ask": []

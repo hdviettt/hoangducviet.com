@@ -134,7 +134,7 @@
   }
   
   .file-name {
-    @apply flex-1 transition-colors duration-200 group-hover:text-blue-400 font-normal;
+    @apply flex-1 transition-colors duration-200 group-hover:text-black font-normal;
   }
   
   .breadcrumb {

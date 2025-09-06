@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-
 import { getGlobalMetadata } from "@/lib/directus";
 import { getPageBySlug } from "@/lib/pages";
-
 import Container from "@/components/Container";
 import Block from "@/components/Block";
 
@@ -15,12 +13,12 @@ interface PageParams {
 }
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
-  const global = await getGlobalMetadata();
+  // const global = await getGlobalMetadata();
   const page = await getPageBySlug(params.pageSlug, {
     fields: ["title"],
   });
   return {
-    title: `${page.title} - ${global.title}`,
+    title: `${page.title}`,
     // description: '' // Add new field for excerpt or SEO Metadata
   }
 }

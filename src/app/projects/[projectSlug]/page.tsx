@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-
+// import { getGlobalMetadata } from "@/lib/directus";
 import { getProjectBySlug } from "@/lib/projects";
 
 export const runtime = 'edge';
@@ -17,12 +17,13 @@ export async function generateMetadata({ params }: ProjectParams): Promise<Metad
     const project = await getProjectBySlug(params.projectSlug, {
       fields: ["title"],
     });
+    // const global = await getGlobalMetadata();
     return {
-      title: `${project.title} - VIET`,
+      title: `${project.title}`,
     }
   } catch (error) {
     return {
-      title: "Project - VIET",
+      title: "Project",
     }
   }
 }
@@ -35,7 +36,7 @@ export default async function ProjectPage({ params }: ProjectParams) {
     // Fetch project with expanded posts relationship through the junction table
     project = await getProjectBySlug(params.projectSlug, {
       fields: [
-        "title", 
+        "title",
         "description",
         "date_created",
         "posts.posts_slug.slug",
@@ -61,13 +62,13 @@ export default async function ProjectPage({ params }: ProjectParams) {
       </div>
     );
   }
-  
+
   return (
     <div className="h-full overflow-auto">
       <div className="max-w-4xl mx-auto p-4 md:p-8 animate-fadeIn">
         {/* Back button */}
-        <Link 
-          href="/projects" 
+        <Link
+          href="/projects"
           className="inline-block text-xs text-white hover:bg-white hover:text-black px-2 py-1 mb-8 transition-colors border border-white font-mono uppercase"
         >
           [Back]
@@ -94,7 +95,7 @@ export default async function ProjectPage({ params }: ProjectParams) {
 
         {/* Project Description */}
         {project.description && (
-          <div 
+          <div
             className="prose prose-invert prose-sm md:prose-lg max-w-none mb-8 md:mb-12
               prose-headings:font-bold prose-headings:text-foreground prose-headings:mb-6
               prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6

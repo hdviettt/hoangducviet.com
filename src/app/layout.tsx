@@ -8,7 +8,7 @@ import ClientFileExplorer from "@/components/ClientFileExplorer";
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
   return {
-    title: "VIET",
+    title: global.title,
     description: global.tagline || "Personal blog by Viet",
   }
 }
