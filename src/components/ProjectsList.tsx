@@ -4,8 +4,8 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 
 interface Project {
-  slug: string;
-  title: string;
+  slug?: string;
+  title?: string;
   date_created?: string;
 }
 
@@ -28,7 +28,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
         case "date-asc":
           return new Date(a.date_created || 0).getTime() - new Date(b.date_created || 0).getTime();
         case "title":
-          return a.title.localeCompare(b.title);
+          return (a.title || "").localeCompare(b.title || "");
         default:
           return 0;
       }
@@ -123,9 +123,9 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
                   {year} [{projects.length}]
                 </div>
                 <div className="divide-y divide-border/10">
-                  {projects.map((project) => (
+                  {projects.map((project, index) => (
                     <Link
-                      key={project.slug}
+                      key={project.slug || index}
                       href={`/projects/${project.slug}`}
                       className="file-item group"
                     >
@@ -133,7 +133,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
                         [D]
                       </div>
                       <div className="file-name text-xs md:text-sm">
-                        {project.title}
+                        {project.title || "Untitled"}
                       </div>
                       <div className="w-20 md:w-28 text-right pr-2 md:pr-4 text-[9px] md:text-[10px] text-muted-foreground">
                         {project.date_created ? new Date(project.date_created).toLocaleDateString('en-US', {
@@ -151,9 +151,9 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
         ) : (
           // Regular View
           <div className="divide-y divide-border/10">
-            {sortedProjects.map((project) => (
+            {sortedProjects.map((project, index) => (
               <Link
-                key={project.slug}
+                key={project.slug || index}
                 href={`/projects/${project.slug}`}
                 className="file-item group"
               >
@@ -161,7 +161,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
                   [D]
                 </div>
                 <div className="file-name text-xs md:text-sm">
-                  {project.title}
+                  {project.title || "Untitled"}
                 </div>
                 <div className="w-20 md:w-28 text-right pr-2 md:pr-4 text-[9px] md:text-[10px] text-muted-foreground">
                   {project.date_created ? new Date(project.date_created).toLocaleDateString('en-US', {

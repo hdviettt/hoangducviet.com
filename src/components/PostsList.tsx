@@ -4,8 +4,8 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 
 interface Post {
-  slug: string;
-  title: string;
+  slug?: string;
+  title?: string;
   date_created?: string;
   categories?: Array<{ title: string }>;
 }
@@ -39,7 +39,7 @@ export default function PostsList({ posts, categories }: PostsListProps) {
         case "date-asc":
           return new Date(a.date_created || 0).getTime() - new Date(b.date_created || 0).getTime();
         case "title":
-          return a.title.localeCompare(b.title);
+          return (a.title || "").localeCompare(b.title || "");
         default:
           return 0;
       }
@@ -150,9 +150,9 @@ export default function PostsList({ posts, categories }: PostsListProps) {
                   {year} [{posts.length}]
                 </div>
                 <div className="divide-y divide-border/10">
-                  {posts.map((post) => (
+                  {posts.map((post, index) => (
                     <Link
-                      key={post.slug}
+                      key={post.slug || index}
                       href={`/posts/${post.slug}`}
                       className="file-item group"
                     >
@@ -160,7 +160,7 @@ export default function PostsList({ posts, categories }: PostsListProps) {
                         [F]
                       </div>
                       <div className="file-name text-xs md:text-sm">
-                        {post.title}
+                        {post.title || "Untitled"}
                       </div>
                       <div className="hidden md:block w-32 mr-4 text-[10px] text-muted-foreground font-mono">
                         {post.categories && post.categories.length > 0 
@@ -184,9 +184,9 @@ export default function PostsList({ posts, categories }: PostsListProps) {
         ) : (
           // Regular View
           <div className="divide-y divide-border/10">
-            {filteredAndSortedPosts.map((post) => (
+            {filteredAndSortedPosts.map((post, index) => (
               <Link
-                key={post.slug}
+                key={post.slug || index}
                 href={`/posts/${post.slug}`}
                 className="file-item group"
               >
@@ -194,7 +194,7 @@ export default function PostsList({ posts, categories }: PostsListProps) {
                   [F]
                 </div>
                 <div className="file-name text-xs md:text-sm">
-                  {post.title}
+                  {post.title || "Untitled"}
                 </div>
                 <div className="hidden md:block w-32 mr-4 text-[10px] text-muted-foreground font-mono">
                   {post.categories && post.categories.length > 0 

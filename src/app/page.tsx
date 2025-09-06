@@ -7,7 +7,6 @@ export default async function Home() {
   
   try {
     hdvietData = await getHdviet();
-    console.log("Hdviet data fetched:", hdvietData);
   } catch (error) {
     console.error("Error fetching Hdviet data:", error);
   }
@@ -27,24 +26,15 @@ export default async function Home() {
   // Get the first entry as the main profile
   const mainProfile = hdvietData[0];
   
-  // Debug logging
-  console.log("Main Profile Data:", mainProfile);
-  console.log("Image field:", mainProfile.image);
-  console.log("Directus Endpoint:", process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT);
-  
   // Construct image URL - handle different possible formats
   let imageUrl = null;
   if (mainProfile.image) {
     if (typeof mainProfile.image === 'object' && mainProfile.image.filename_disk) {
       imageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${mainProfile.image.filename_disk}`;
-      console.log("Image URL (object):", imageUrl);
     } else if (typeof mainProfile.image === 'string') {
       // If it's a UUID string
       imageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${mainProfile.image}`;
-      console.log("Image URL (string):", imageUrl);
     }
-  } else {
-    console.log("No image field found in profile data");
   }
 
   return (
