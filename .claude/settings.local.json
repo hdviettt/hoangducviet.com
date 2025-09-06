@@ -9,7 +9,22 @@
       "Bash(npm uninstall:*)",
       "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\lib/**)",
       "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter/**)",
-      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\lib/**)"
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\lib/**)",
+      "WebFetch(domain:pair.withgoogle.com)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\components/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\components/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app\\posts/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app\\posts\\[postSlug]/**)",
+      "WebFetch(domain:deskfolio.framer.website)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\components/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app\\projects/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\components/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app\\projects/**)",
+      "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app\\projects\\[projectSlug]/**)"
     ],
     "deny": [],
     "ask": []

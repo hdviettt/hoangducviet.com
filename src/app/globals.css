@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -12,46 +12,63 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 9% 7%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
+    /* Neo-brutalist flat design */
+    --background: 0 0% 0%; /* Pure black */
+    --foreground: 0 0% 100%; /* Pure white */
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 30%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 0% 100%;
+    --destructive-foreground: 0 0% 0%;
+    --border: 0 0% 100%;
+    --input: 0 0% 10%;
+    --ring: 0 0% 100%;
+    --radius: 0rem; /* No radius */
+    
+    /* Neo-brutalist accent colors */
+    --blue-accent: 0 0% 100%; /* Pure white for accents */
+    --blue-light: 0 0% 80%;
+    
+    /* Window system colors */
+    --window-bg: 0 0% 16%;
+    --window-border: 0 0% 22%;
+    --titlebar-bg: 0 0% 18%;
+    --sidebar-bg: 0 0% 12%;
+    --dock-bg: 0 0% 8%;
+    --dock-backdrop: rgba(0, 0, 0, 0.7);
+    
+    /* File explorer colors */
+    --table-header-bg: 0 0% 17%;
+    --table-row-hover: 0 0% 20%;
   }
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 220 13% 11%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --card: 220 13% 15%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 13% 15%;
+    --popover-foreground: 0 0% 95%;
     --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --primary-foreground: 220 13% 11%;
+    --secondary: 220 13% 18%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 220 13% 25%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 220 13% 22%;
+    --accent-foreground: 0 0% 95%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    --border: 220 13% 20%;
+    --input: 220 13% 18%;
     --ring: 240 4.9% 83.9%;
   }
 }
@@ -61,7 +78,111 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    @apply font-medium;
+  }
+}
+
+@layer components {
+  .window {
+    @apply bg-card overflow-hidden border-2 border-border;
+  }
+  
+  .window-titlebar {
+    @apply bg-black px-4 py-2 flex items-center justify-between border-b-2 border-border;
+  }
+  
+  .window-controls {
+    @apply flex items-center gap-2;
+  }
+  
+  .window-control {
+    @apply w-3 h-3 transition-opacity duration-200 hover:opacity-70 cursor-pointer border border-border;
+  }
+  
+  .dock {
+    @apply fixed bottom-0 left-0 right-0 bg-black px-4 py-2 flex items-center gap-2 border-t-2 border-border;
+  }
+  
+  .dock-item {
+    @apply px-4 py-2 flex items-center justify-center transition-colors duration-200 hover:bg-white hover:text-black cursor-pointer border-r border-border;
+  }
+  
+  .sidebar-item {
+    @apply flex items-center gap-2 px-3 py-2 text-sm transition-colors duration-200 hover:bg-white hover:text-black cursor-pointer;
+  }
+  
+  .table-row {
+    @apply flex items-center gap-4 px-4 py-3 transition-all duration-200 hover:bg-accent/40 text-sm cursor-pointer;
+  }
+  
+  .table-header {
+    @apply bg-black px-2 py-1.5 border-b-2 border-border text-[10px] text-white font-bold uppercase tracking-wider;
+  }
+  
+  .file-item {
+    @apply flex items-center gap-2 px-2 py-1.5 text-xs transition-colors duration-200 hover:bg-white hover:text-black cursor-pointer border-b border-border;
+  }
+  
+  .file-icon {
+    @apply w-3.5 h-3.5 text-muted-foreground transition-all duration-200 group-hover:text-blue-400;
+  }
+  
+  .file-name {
+    @apply flex-1 transition-colors duration-200 group-hover:text-blue-400 font-normal;
+  }
+  
+  .breadcrumb {
+    @apply flex items-center gap-1 text-xs text-muted-foreground;
+  }
+  
+  .breadcrumb-item {
+    @apply hover:text-foreground transition-colors duration-200;
+  }
+  
+  .navigation-bar {
+    @apply bg-black px-4 py-1 flex items-center justify-between border-b-2 border-border;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .animate-slideUp {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  /* Scrollbar Styles - Flat */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-black border-l border-border;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-white border border-black;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-200;
   }
 }

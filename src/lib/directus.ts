@@ -66,3 +66,39 @@ interface GlobalMetadata {
 export async function getGlobalMetadata() {
   return directus.request(readItems("global")) as unknown as GlobalMetadata;
 }
+
+interface Hdviet {
+  id: number;
+  name?: string;
+  description?: string;
+  image?: string | {
+    filename_disk: string;
+    height: number;
+    width: number;
+  };
+  [key: string]: any;
+}
+
+export async function getHdviet() {
+  try {
+    const result = await directus.request(readItems("hdviet", {
+      fields: ['*', 'image.filename_disk', 'image.height', 'image.width'],
+    }));
+    return result as unknown as Hdviet[];
+  } catch (error) {
+    console.error("Error fetching Hdviet data:", error);
+    return [];
+  }
+}
+
+export async function getHdvietById(id: number | string) {
+  try {
+    const result = await directus.request(readItem("hdviet", id, {
+      fields: ['*'],
+    }));
+    return result as unknown as Hdviet;
+  } catch (error) {
+    console.error("Error fetching Hdviet item:", error);
+    return null;
+  }
+}

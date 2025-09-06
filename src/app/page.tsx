@@ -1,123 +1,186 @@
 import Image from "next/image";
-import Link from "next/link";
-
-import { getHome } from "@/lib/directus";
-import { getPosts } from "@/lib/posts";
-
-import Container from "@/components/Container";
-import { Button } from "@/components/ui/button";
+import { getHdviet } from "@/lib/directus";
 
 export default async function Home() {
-  const data = await getHome();
+  // Fetch Hdviet data
+  let hdvietData: any[] = [];
+  
+  try {
+    hdvietData = await getHdviet();
+    console.log("Hdviet data fetched:", hdvietData);
+  } catch (error) {
+    console.error("Error fetching Hdviet data:", error);
+  }
 
-  const featuredPosts = await getPosts({
-    limit: 6,
-    fields: ["slug", "title", "description", "date_created", "thumbnail.filename_disk", "thumbnail.height", "thumbnail.width"],
-  });
+  // If no data, show empty state
+  if (hdvietData.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold mb-2 text-white uppercase">No Data</h1>
+          <p className="text-white font-mono text-xs">Empty collection</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Get the first entry as the main profile
+  const mainProfile = hdvietData[0];
+  
+  // Debug logging
+  console.log("Main Profile Data:", mainProfile);
+  console.log("Image field:", mainProfile.image);
+  console.log("Directus Endpoint:", process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT);
+  
+  // Construct image URL - handle different possible formats
+  let imageUrl = null;
+  if (mainProfile.image) {
+    if (typeof mainProfile.image === 'object' && mainProfile.image.filename_disk) {
+      imageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${mainProfile.image.filename_disk}`;
+      console.log("Image URL (object):", imageUrl);
+    } else if (typeof mainProfile.image === 'string') {
+      // If it's a UUID string
+      imageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${mainProfile.image}`;
+      console.log("Image URL (string):", imageUrl);
+    }
+  } else {
+    console.log("No image field found in profile data");
+  }
 
   return (
-    <>
-      <section className="py-24 md:py-32">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center space-y-8 mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-balance">
-              {data.hero_title}
-            </h1>
-            <p className="text-xl text-muted-foreground text-balance max-w-2xl mx-auto">
-              {data.hero_subtitle}
-            </p>
-            {data.hero_buttons.length > 0 && (
-              <div className="flex flex-wrap gap-4 justify-center">
-                {data.hero_buttons.map((button) => {
-                  return (
-                    <Button key={button.label} asChild size="lg" className="font-semibold">
-                      <Link href={button.link}>{button.label}</Link>
-                    </Button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-          {typeof data.hero_cover === 'object' && (
-            <div className="relative overflow-hidden rounded-xl border bg-muted/50">
-              <Image
-                className="w-full object-cover"
-                width={2100}
-                height={900}
-                src={`${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${data.hero_cover.filename_disk}?width=2100&height=900`}
-                alt=""
-                sizes="(max-width: 1152px) 100vw, 1112px"
-                priority
-              />
-            </div>
-          )}
-        </Container>
-      </section>
-      <section className="py-24">
-        <Container>
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">{data.featured_title}</h2>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
-            {featuredPosts.map((post) => {
-              const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
-                ? `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${post.thumbnail.filename_disk}`
-                : null;
+    <div className="h-full overflow-y-auto">
+      <div className="min-h-full p-4 md:p-8 lg:p-16 animate-fadeIn">
+        {/* Main Profile Section - Deskfolio Style */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            
+            {/* Left Side - Content */}
+            <div className="order-2 lg:order-1">
+              {/* Name */}
+              {mainProfile.name && (
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-foreground leading-tight uppercase">
+                  {mainProfile.name}
+                </h1>
+              )}
               
-              return (
-                <article 
-                  key={post.slug} 
-                  className="group relative rounded-lg border bg-card overflow-hidden hover:shadow-lg transition-all duration-200"
+              {/* Description (HTML) */}
+              {mainProfile.description && (
+                <div 
+                  className="prose prose-invert prose-lg max-w-none
+                    prose-headings:font-bold prose-headings:text-foreground prose-headings:mb-4 prose-headings:mt-6
+                    prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
+                    prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-a:transition-colors
+                    prose-strong:text-foreground prose-strong:font-semibold
+                    prose-ul:text-muted-foreground prose-ul:mb-4 prose-ul:ml-4
+                    prose-ol:text-muted-foreground prose-ol:mb-4 prose-ol:ml-4
+                    prose-li:text-muted-foreground prose-li:mb-2
+                    prose-blockquote:border-l-4 prose-blockquote:border-blue-400/50 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground
+                    prose-code:text-blue-400 prose-code:bg-secondary/50 prose-code:px-1 prose-code:rounded prose-code:text-sm
+                    prose-pre:bg-secondary/30 prose-pre:border prose-pre:border-border/20 prose-pre:rounded-lg"
+                  dangerouslySetInnerHTML={{ __html: mainProfile.description }}
+                />
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-0 mt-6 md:mt-8">
+                <a 
+                  href="/posts" 
+                  className="px-4 md:px-6 py-2 md:py-3 bg-black text-white border md:border-2 border-white font-bold uppercase text-[10px] md:text-xs hover:bg-white hover:text-black transition-colors"
                 >
-                  <Link href={`/posts/${post.slug}`}>
-                    <span className="absolute inset-0 z-10" />
-                    {thumbnailUrl && post.thumbnail && typeof post.thumbnail === 'object' ? (
-                      <div className="aspect-video relative overflow-hidden bg-muted">
-                        <Image
-                          src={thumbnailUrl}
-                          alt={post.title || ''}
-                          width={post.thumbnail.width || 600}
-                          height={post.thumbnail.height || 400}
-                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
-                        />
-                      </div>
-                    ) : (
-                      <div className="aspect-video bg-muted flex items-center justify-center">
-                        <span className="text-4xl font-bold text-muted-foreground/20">VIET</span>
+                  [Articles]
+                </a>
+                <a 
+                  href="/projects" 
+                  className="px-4 md:px-6 py-2 md:py-3 bg-black text-white border md:border-2 border-white border-l-0 font-bold uppercase text-[10px] md:text-xs hover:bg-white hover:text-black transition-colors"
+                >
+                  [Projects]
+                </a>
+              </div>
+            </div>
+
+            {/* Right Side - Image */}
+            <div className="order-1 lg:order-2">
+              {imageUrl ? (
+                <div className="w-full max-w-md mx-auto lg:max-w-none">
+                  <div className="aspect-square overflow-hidden border-2 md:border-4 border-white bg-black">
+                    <Image
+                      src={imageUrl}
+                      alt={mainProfile.name || 'Profile'}
+                      width={600}
+                      height={600}
+                      className="w-full h-full object-cover"
+                      priority
+                      onError={(e) => {
+                        console.error("Image failed to load:", imageUrl);
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="aspect-square bg-black border-2 md:border-4 border-white flex items-center justify-center">
+                  <div className="text-white font-mono text-sm md:text-lg uppercase">No Image</div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Profiles Section if there are more */}
+        {hdvietData.length > 1 && (
+          <div className="max-w-7xl mx-auto mt-20 pt-12 border-t border-border/20">
+            <h2 className="text-3xl font-bold mb-8 text-foreground">More Profiles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {hdvietData.slice(1).map((item, index) => {
+                let itemImageUrl = null;
+                if (item.image) {
+                  if (typeof item.image === 'object' && item.image.filename_disk) {
+                    itemImageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${item.image.filename_disk}`;
+                  } else if (typeof item.image === 'string') {
+                    itemImageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${item.image}`;
+                  }
+                }
+
+                return (
+                  <div key={item.id || index} className="flex gap-6 p-6 bg-secondary/10 rounded-xl border border-border/20 hover:bg-secondary/20 transition-all duration-300">
+                    {/* Small Image */}
+                    {itemImageUrl && (
+                      <div className="flex-shrink-0">
+                        <div className="w-24 h-24 rounded-lg overflow-hidden">
+                          <Image
+                            src={itemImageUrl}
+                            alt={item.name || 'Profile'}
+                            width={96}
+                            height={96}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
                       </div>
                     )}
-                    <div className="p-6 space-y-3">
-                      <h3 className="text-xl font-semibold leading-tight line-clamp-2">
-                        {post.title}
-                      </h3>
-                      {post.description && (
-                        <p className="text-muted-foreground line-clamp-2">
-                          {post.description}
-                        </p>
+                    
+                    {/* Content */}
+                    <div className="flex-1">
+                      {item.name && (
+                        <h3 className="text-xl font-bold mb-2 text-foreground">
+                          {item.name}
+                        </h3>
                       )}
-                      <p className="text-sm text-muted-foreground">
-                        {post.date_created &&
-                          new Date(post.date_created).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                      </p>
+                      
+                      {item.description && (
+                        <div 
+                          className="prose prose-invert prose-sm max-w-none
+                            prose-p:text-muted-foreground prose-p:line-clamp-3
+                            prose-a:text-blue-400"
+                          dangerouslySetInnerHTML={{ __html: item.description }}
+                        />
+                      )}
                     </div>
-                  </Link>
-                </article>
-              );
-            })}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="text-center">
-            <Button asChild variant="outline">
-              <Link href="/posts" className="font-medium">
-                View All Posts
-              </Link>
-            </Button>
-          </div>
-        </Container>
-      </section>
-    </>
+        )}
+      </div>
+    </div>
   );
 }
