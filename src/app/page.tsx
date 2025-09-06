@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { getHdviet } from "@/lib/directus";
 
+export const runtime = 'edge';
+
 export default async function Home() {
   // Fetch Hdviet data
   let hdvietData: any[] = [];

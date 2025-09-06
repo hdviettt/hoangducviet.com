@@ -3,6 +3,8 @@ import { getPosts } from "@/lib/posts";
 import { getItemById } from "@/lib/directus";
 import PostsList from "@/components/PostsList";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
   title: "Articles - VIET",
   description: "All blog posts and articles",
