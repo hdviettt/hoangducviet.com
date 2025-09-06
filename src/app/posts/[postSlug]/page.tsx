@@ -5,8 +5,6 @@ import Link from "next/link";
 import { getItemById } from "@/lib/directus";
 import { getPostBySlug } from "@/lib/posts";
 
-export const runtime = "edge";
-
 interface PostParams {
   params: {
     postSlug: string;

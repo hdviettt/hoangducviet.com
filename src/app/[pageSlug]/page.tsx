@@ -6,8 +6,6 @@ import { getPageBySlug } from "@/lib/pages";
 import Container from "@/components/Container";
 import Block from "@/components/Block";
 
-export const runtime = "edge";
-
 interface PageParams {
   params: {
     pageSlug: string;

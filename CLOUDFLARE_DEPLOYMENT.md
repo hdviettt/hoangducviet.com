@@ -3,8 +3,8 @@
 ## Prerequisites Completed ✅
 - Created `wrangler.jsonc` configuration
 - Updated `next.config.mjs` with Cloudflare setup
-- Added Edge runtime to dynamic routes
 - Updated `package.json` with deployment scripts
+- Added `.npmrc` file to handle dependency conflicts
 
 ## Deployment via Cloudflare Dashboard (Recommended for Windows)
 
@@ -26,13 +26,10 @@ git push origin main
 5. Configure build settings:
    - **Framework preset**: Select `None` (important - do not select Next.js)
    - **Build command**: `npx @cloudflare/next-on-pages@1`
-   - **Build output directory**: Leave empty or try `.vercel/output/static`
+   - **Build output directory**: Leave empty (Cloudflare will auto-detect)
    - **Root directory**: Leave empty
    
-   Note: If the deployment fails with the output directory, try these alternatives:
-   - Leave output directory completely empty
-   - Use `/` 
-   - Use `.vercel/output/static`
+   Note: The `.npmrc` file in the repository will handle the dependency conflicts
 
 ### 3. Environment Variables
 Add these in Cloudflare Pages settings:
@@ -61,9 +58,9 @@ npm run deploy
 ## Troubleshooting
 
 ### Build Errors
-- Ensure all dynamic routes have `export const runtime = "edge"`
 - Check that environment variables are set in Cloudflare dashboard
 - Verify Node.js version is 18 or higher
+- The `.npmrc` file handles dependency conflicts
 
 ### Windows Issues
 - Use WSL (Windows Subsystem for Linux) for local builds
@@ -72,7 +69,4 @@ npm run deploy
 ## Important Files
 - `wrangler.jsonc` - Cloudflare configuration
 - `next.config.mjs` - Next.js config with Cloudflare setup
-- Dynamic routes with Edge runtime:
-  - `/src/app/[pageSlug]/page.tsx`
-  - `/src/app/posts/[postSlug]/page.tsx`
-  - `/src/app/projects/[projectSlug]/page.tsx`
+- `.npmrc` - NPM configuration to handle dependency conflicts

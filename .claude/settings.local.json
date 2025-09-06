@@ -27,7 +27,8 @@
       "Read(/C:\\Users\\User\\Desktop\\directus_blog\\directus-blog-starter\\src\\app\\projects\\[projectSlug]/**)",
       "Bash(npm view:*)",
       "WebFetch(domain:developers.cloudflare.com)",
-      "Bash(npm run pages:build:*)"
+      "Bash(npm run pages:build:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
