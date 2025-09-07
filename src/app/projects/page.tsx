@@ -3,7 +3,7 @@ import { getGlobalMetadata } from "@/lib/directus";
 import { getProjects, type Project } from "@/lib/projects";
 import ProjectsList from "@/components/ProjectsList";
 
-export const runtime = 'edge';
+// Removed edge runtime for standard Cloudflare Pages deployment
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { getHdviet } from "@/lib/directus";
 
-export const runtime = 'edge';
+// Removed edge runtime for standard Cloudflare Pages deployment
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
