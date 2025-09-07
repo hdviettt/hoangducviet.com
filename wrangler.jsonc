@@ -1,6 +1,8 @@
 {
-  "name": "directus-blog",
-  "compatibility_date": "2024-09-23",
-  "compatibility_flags": ["nodejs_compat"],
+  "name": "hoangducviet-work",
+  "compatibility_date": "2025-09-07",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "pages_build_output_dir": ".vercel/output/static"
 }
