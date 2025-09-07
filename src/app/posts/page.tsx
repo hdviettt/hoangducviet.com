@@ -3,7 +3,7 @@ import { getPosts } from "@/lib/posts";
 import { getItemById } from "@/lib/directus";
 import PostsList from "@/components/PostsList";
 
-// Removed edge runtime for standard Cloudflare Pages deployment
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {

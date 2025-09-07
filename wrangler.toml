@@ -1,0 +1,12 @@
+name = "directus-blog"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+NEXT_PUBLIC_DIRECTUS_API_ENDPOINT = "https://directus-production-b969.up.railway.app"
+
+[site]
+bucket = ".vercel/output/static"
+
+[[build.command]]
+command = "npm run pages:build"
