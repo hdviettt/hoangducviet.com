@@ -10,7 +10,8 @@
     "format": "biome check --write ./src",
     "pages:build": "npx @cloudflare/next-on-pages",
     "preview": "npm run pages:build && wrangler pages dev",
-    "deploy": "npm run pages:build && wrangler pages deploy"
+    "deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
+    "pages:deploy": "wrangler pages deploy .vercel/output/static"
   },
   "dependencies": {
     "@directus/sdk": "^17.0.2",
