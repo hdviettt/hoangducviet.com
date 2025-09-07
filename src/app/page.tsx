@@ -39,7 +39,7 @@ export default async function Home() {
   const mainProfile = hdvietData[0];
   
   // Construct image URL - handle different possible formats
-  const directusUrl = process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT || 'https://directus-production-b969.up.railway.app';
+  const directusUrl = 'https://directus-production-b969.up.railway.app';
   let imageUrl = null;
   if (mainProfile.image) {
     if (typeof mainProfile.image === 'object' && mainProfile.image.filename_disk) {

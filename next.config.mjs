@@ -1,23 +1,25 @@
-import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
-
 /** @type {import('next').NextConfig} */
 
-// Ensure the environment variable has a default value
-const DIRECTUS_URL = process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT || 'https://directus-production-b969.up.railway.app';
+// Hard-code the Directus URL for Cloudflare Workers
+const DIRECTUS_URL = 'https://directus-production-b969.up.railway.app';
 
 const nextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: DIRECTUS_URL.replace(/https?:\/\//, ''),
+        hostname: 'directus-production-b969.up.railway.app',
       },
     ],
   },
+  env: {
+    NEXT_PUBLIC_DIRECTUS_API_ENDPOINT: DIRECTUS_URL,
+  },
 };
 
-// Setup Cloudflare development platform in development mode
+// Only import and setup dev platform in development
 if (process.env.NODE_ENV === 'development') {
+  const { setupDevPlatform } = await import('@cloudflare/next-on-pages/next-dev');
   await setupDevPlatform();
 }
 

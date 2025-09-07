@@ -9,7 +9,8 @@ export interface ItemsQuery {
   } | any>;
 }
 
-const directusUrl = process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT || "https://directus-production-b969.up.railway.app";
+// Use hardcoded URL for Cloudflare Workers
+const directusUrl = "https://directus-production-b969.up.railway.app";
 
 export const directus = createDirectus(directusUrl).with(
   rest({
