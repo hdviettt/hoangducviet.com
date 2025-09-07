@@ -4,6 +4,7 @@ import { getItemById } from "@/lib/directus";
 import PostsList from "@/components/PostsList";
 
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Articles",
@@ -57,6 +58,9 @@ export default async function PostsPage() {
     categories = Array.from(categoriesSet).sort();
   } catch (error) {
     console.error("Error fetching posts:", error);
+    // Return empty state on error
+    posts = [];
+    categories = [];
   }
 
   return (

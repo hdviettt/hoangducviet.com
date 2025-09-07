@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getHdviet } from "@/lib/directus";
 
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   // Fetch Hdviet data
@@ -11,6 +12,15 @@ export default async function Home() {
     hdvietData = await getHdviet();
   } catch (error) {
     console.error("Error fetching Hdviet data:", error);
+    // Return a simple error page for production
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold mb-2 text-white uppercase">Connection Error</h1>
+          <p className="text-white font-mono text-xs">Unable to fetch data</p>
+        </div>
+      </div>
+    );
   }
 
   // If no data, show empty state
@@ -29,13 +39,14 @@ export default async function Home() {
   const mainProfile = hdvietData[0];
   
   // Construct image URL - handle different possible formats
+  const directusUrl = process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT || 'https://directus-production-b969.up.railway.app';
   let imageUrl = null;
   if (mainProfile.image) {
     if (typeof mainProfile.image === 'object' && mainProfile.image.filename_disk) {
-      imageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${mainProfile.image.filename_disk}`;
+      imageUrl = `${directusUrl}/assets/${mainProfile.image.filename_disk}`;
     } else if (typeof mainProfile.image === 'string') {
       // If it's a UUID string
-      imageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${mainProfile.image}`;
+      imageUrl = `${directusUrl}/assets/${mainProfile.image}`;
     }
   }
 
@@ -123,9 +134,9 @@ export default async function Home() {
                 let itemImageUrl = null;
                 if (item.image) {
                   if (typeof item.image === 'object' && item.image.filename_disk) {
-                    itemImageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${item.image.filename_disk}`;
+                    itemImageUrl = `${directusUrl}/assets/${item.image.filename_disk}`;
                   } else if (typeof item.image === 'string') {
-                    itemImageUrl = `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${item.image}`;
+                    itemImageUrl = `${directusUrl}/assets/${item.image}`;
                   }
                 }
 
