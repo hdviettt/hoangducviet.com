@@ -1,6 +1,6 @@
-name = "directus-blog"
+name = "personal-blog"
 main = ".vercel/output/static/_worker.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2025-09-07"
 compatibility_flags = ["nodejs_compat"]
 
 [site]
