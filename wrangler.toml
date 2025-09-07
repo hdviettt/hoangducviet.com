@@ -1,13 +1,7 @@
 name = "personal-blog"
-main = ".vercel/output/static/_worker.js"
+pages_build_output_dir = ".vercel/output/static"
 compatibility_date = "2025-09-07"
 compatibility_flags = ["nodejs_compat"]
 
-[site]
-bucket = ".vercel/output/static"
-
 [build]
 command = "npx @cloudflare/next-on-pages@1"
-
-[vars]
-NEXT_PUBLIC_DIRECTUS_API_ENDPOINT = "https://directus-production-b969.up.railway.app"
