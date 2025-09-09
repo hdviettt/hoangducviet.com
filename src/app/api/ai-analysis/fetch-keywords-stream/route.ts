@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 
+export const runtime = 'edge';
+
 // DataForSEO API configuration
 const DATAFORSEO_URL = "https://api.dataforseo.com/v3/serp/google/organic/live/advanced";
 const DATAFORSEO_AUTH = "Basic YWl0ZWFtQHNlb25nb24uY29tOjcyMmU2MzI4OGU4NzRmMzk=";
