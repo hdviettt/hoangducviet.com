@@ -33,7 +33,8 @@
       "WebFetch(domain:directus-production-8b7b.up.railway.app)",
       "Bash(railway login:*)",
       "Bash(cmd /c \"C:\\Users\\User\\Desktop\\directus-blog\\fix-directus-login.bat\")",
-      "Bash(railway logs:*)"
+      "Bash(railway logs:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

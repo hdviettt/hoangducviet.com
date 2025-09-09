@@ -39,7 +39,8 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                 {pathname === "/" ? "about" :
                   pathname.startsWith("/posts") ? "articles" :
                     pathname.startsWith("/projects") ? "projects" :
-                      pathname.slice(1)}
+                      pathname.startsWith("/tools") ? "tools" :
+                        pathname.slice(1)}
               </span>
             </div>
           </div>
@@ -86,6 +87,17 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   >
                     articles/
                   </Link>
+
+                  {/* Tools */}
+                  <Link
+                    href="/tools"
+                    className={`block px-2 py-1.5 text-[11px] font-mono transition-colors ${pathname.startsWith("/tools")
+                      ? "bg-white text-black font-bold"
+                      : "text-white hover:bg-white hover:text-black"
+                      }`}
+                  >
+                    tools/
+                  </Link>
                 </div>
 
                 {/* Links Section */}
@@ -120,7 +132,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                 <div className="flex justify-around p-2">
                   <Link
                     href="/"
-                    className={`px-3 py-1.5 text-[10px] font-mono transition-colors ${pathname === "/"
+                    className={`px-2 py-1.5 text-[10px] font-mono transition-colors ${pathname === "/"
                       ? "bg-white text-black font-bold"
                       : "text-white hover:bg-white hover:text-black"
                       }`}
@@ -129,7 +141,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   </Link>
                   <Link
                     href="/projects"
-                    className={`px-3 py-1.5 text-[10px] font-mono transition-colors ${pathname.startsWith("/projects")
+                    className={`px-2 py-1.5 text-[10px] font-mono transition-colors ${pathname.startsWith("/projects")
                       ? "bg-white text-black font-bold"
                       : "text-white hover:bg-white hover:text-black"
                       }`}
@@ -138,12 +150,21 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   </Link>
                   <Link
                     href="/posts"
-                    className={`px-3 py-1.5 text-[10px] font-mono transition-colors ${pathname.startsWith("/posts")
+                    className={`px-2 py-1.5 text-[10px] font-mono transition-colors ${pathname.startsWith("/posts")
                       ? "bg-white text-black font-bold"
                       : "text-white hover:bg-white hover:text-black"
                       }`}
                   >
                     articles
+                  </Link>
+                  <Link
+                    href="/tools"
+                    className={`px-2 py-1.5 text-[10px] font-mono transition-colors ${pathname.startsWith("/tools")
+                      ? "bg-white text-black font-bold"
+                      : "text-white hover:bg-white hover:text-black"
+                      }`}
+                  >
+                    tools
                   </Link>
                 </div>
               </div>

@@ -1,7 +1,10 @@
-name = "personal-blog"
-pages_build_output_dir = ".vercel/output/static"
+name = "personal-blog-worker"
+main = ".vercel/output/static/_worker.js"
 compatibility_date = "2025-09-07"
 compatibility_flags = ["nodejs_compat"]
+
+[site]
+bucket = ".vercel/output/static"
 
 [build]
 command = "npx @cloudflare/next-on-pages@1"

@@ -1,4 +1,4 @@
-import { Home, FolderOpen, FileText, Briefcase, User, Github, Grid3x3, Minimize2 } from "lucide-react";
+import { Home, FolderOpen, FileText, Briefcase, User, Github, Grid3x3, Minimize2, Wrench } from "lucide-react";
 import Link from "next/link";
 
 import { getGlobalMetadata } from "@/lib/directus";
@@ -63,6 +63,15 @@ async function Header() {
               title="Projects"
             >
               <Briefcase className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+            </Link>
+            
+            <Link
+              href="/tools"
+              className="p-3 rounded-lg hover:bg-accent/50 transition-all duration-200 relative group"
+              title="Tools"
+            >
+              <Wrench className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
             </Link>
             
