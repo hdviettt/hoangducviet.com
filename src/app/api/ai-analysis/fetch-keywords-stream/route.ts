@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 // DataForSEO API configuration
 const DATAFORSEO_URL = "https://api.dataforseo.com/v3/serp/google/organic/live/advanced";
