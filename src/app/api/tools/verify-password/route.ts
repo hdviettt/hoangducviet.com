@@ -15,10 +15,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch the tool with its hashed password
+    // Check if tool exists in Directus (for validation)
     const tools = await directus.request(
       readItems("tools", {
-        fields: ["password"],
+        fields: ["slug"],
         filter: {
           slug: { _eq: toolSlug },
         },
@@ -35,15 +35,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!tool.password) {
+    // Get password from environment variable
+    const envPasswordKey = `TOOL_PASSWORD_${toolSlug.toUpperCase().replace(/-/g, '_')}`;
+    const toolPassword = process.env[envPasswordKey];
+
+    if (!toolPassword) {
       // Tool has no password protection
       return NextResponse.json({ valid: true });
     }
 
     console.log("Password verification debug:");
     console.log("- Tool slug:", toolSlug);
-    console.log("- Input password:", password);
-    console.log("- Stored hash:", tool.password);
+    // Don't log passwords in production
+    // console.log("- Input password:", password);
+    // console.log("- Stored hash:", tool.password);
 
     // Edge Runtime doesn't support native argon2, so we'll use a workaround
     // We'll verify by making a test request to Directus API
@@ -51,37 +56,9 @@ export async function POST(request: NextRequest) {
     let isValid = false;
 
     try {
-      // Check if it's an argon2 hash
-      if (tool.password.startsWith('$argon2')) {
-        // For argon2 hashes, we'll use Directus API to verify
-        // Create a test user authentication request
-        const directusEndpoint = process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT;
-        
-        if (!directusEndpoint) {
-          throw new Error("Directus endpoint not configured");
-        }
-
-        // Since we can't verify argon2 directly in edge runtime,
-        // we'll create a simple mapping for known passwords
-        // This is a temporary solution - in production you'd want proper argon2 verification
-        
-        const knownPasswordMappings = new Map([
-          ["seongonhehehe", "$argon2id$v=19$m=65536,t=3,p=4$btCLPBhd6EcFnkXe1EDvhg$R4huNSwEOdEgN1d2/02HnPo30p6wVRXRk2X+imgYsO0"],
-        ]);
-        
-        const expectedHash = knownPasswordMappings.get(password);
-        isValid = expectedHash === tool.password;
-        
-        console.log("- Using password mapping for argon2 verification");
-        console.log("- Expected hash for password:", expectedHash);
-        console.log("- Stored hash:", tool.password);
-        console.log("- Hashes match:", isValid);
-        
-      } else {
-        // Direct comparison for non-argon2 passwords
-        isValid = password === tool.password;
-        console.log("- Direct comparison result:", isValid);
-      }
+      // Simple password comparison with environment variable
+      isValid = password === toolPassword;
+      console.log("- Password verification completed");
 
     } catch (error) {
       console.error("- Password verification error:", error);
