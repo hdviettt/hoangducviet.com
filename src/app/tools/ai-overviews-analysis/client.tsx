@@ -13,38 +13,50 @@ interface AIOverviewsAnalysisClientProps {
 
 export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisClientProps) {
   const [mode, setMode] = useState<AnalysisMode>("upload");
-  
+
   // Upload mode states
   const [brandName, setBrandName] = useState("");
   const [brandDomain, setBrandDomain] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  
+
   // Fetch mode states
   const [keywords, setKeywords] = useState("");
   const [keywordFile, setKeywordFile] = useState<File | null>(null);
-  const [fetchProgress, setFetchProgress] = useState<{ 
-    current: number; 
+  const [fastMode, setFastMode] = useState(false);
+  const [fetchProgress, setFetchProgress] = useState<{
+    current: number;
     total: number;
-    currentKeyword?: string;
-    status?: string;
+    successful?: number;
+    failed?: number;
+    batch?: number;
+    totalBatches?: number;
+    mode?: string;
+    startTime?: number;
+    elapsedTime?: number;
   } | null>(null);
-  const [processedKeywords, setProcessedKeywords] = useState<{
-    keyword: string;
-    status: 'success' | 'failed' | 'processing';
-  }[]>([]);
-  
+
+  // Time tracking states
+  const [estimatedTime, setEstimatedTime] = useState<{
+    safe: number;
+    fast: number;
+  } | null>(null);
+  const [actualTime, setActualTime] = useState<number | null>(null);
+
   // Common states
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<AnalysisResults | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fetchedJsonData, setFetchedJsonData] = useState<any>(null);
-  
+  const [password, setPassword] = useState("");
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [verifyingPassword, setVerifyingPassword] = useState(false);
+
   // Sorting state for competitors table
   const [sortConfig, setSortConfig] = useState<{
     key: 'citedCount' | 'averageRank' | 'promptCitedRate' | 'mentioned';
     direction: 'asc' | 'desc';
   }>({ key: 'citedCount', direction: 'desc' });
-  
+
   // Fixed exchange rate
   const EXCHANGE_RATE = 26000; // 1 USD = 26,000 VND
 
@@ -53,14 +65,14 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
     const costPerKeyword = 0.004; // $0.004 per keyword
     const totalUSD = keywordCount * costPerKeyword;
     const totalVND = totalUSD * EXCHANGE_RATE;
-    
+
     return {
       usd: totalUSD,
       vnd: totalVND,
       formattedUSD: `$${totalUSD.toFixed(2)}`,
-      formattedVND: new Intl.NumberFormat('vi-VN', { 
-        style: 'currency', 
-        currency: 'VND' 
+      formattedVND: new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
       }).format(totalVND)
     };
   };
@@ -72,6 +84,49 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
     return keywordText.split(/\r?\n/).filter(line => line.trim().length > 0).length;
   };
 
+  // Calculate estimated processing time
+  const calculateEstimatedTime = (keywordCount: number) => {
+    // Based on DataForSEO API performance patterns:
+    // Average API response time: ~1.2-2.5 seconds per keyword
+    // Network latency: ~0.1-0.3 seconds per request
+
+    const avgApiResponseTime = 1.8; // seconds per keyword
+    const networkLatency = 0.2; // seconds per request
+
+    // Safe Mode: 16 workers, 200ms delays between batches
+    const safeWorkers = 16;
+    const safeBatchDelay = 0.2; // 200ms
+    const safeBatches = Math.ceil(keywordCount / safeWorkers);
+    const safeProcessingTime = Math.ceil(keywordCount / safeWorkers) * (avgApiResponseTime + networkLatency);
+    const safeBatchDelays = (safeBatches - 1) * safeBatchDelay;
+    const safeTotal = safeProcessingTime + safeBatchDelays;
+
+    // Fast Mode: All keywords simultaneously (limited by API response time)
+    // Assumes unlimited concurrency, bottlenecked by slowest API call
+    const fastProcessingTime = avgApiResponseTime + networkLatency; // All requests in parallel
+    const fastTotal = fastProcessingTime + 0.5; // Add small buffer for processing
+
+    return {
+      safe: Math.max(safeTotal, keywordCount * 0.5), // Minimum 0.5s per keyword
+      fast: Math.max(fastTotal, 2.5) // Minimum 2.5 seconds total
+    };
+  };
+
+  // Format time in human readable format
+  const formatTime = (seconds: number): string => {
+    if (seconds < 60) {
+      return `${Math.round(seconds)}s`;
+    } else if (seconds < 3600) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = Math.round(seconds % 60);
+      return remainingSeconds > 0 ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`;
+    } else {
+      const hours = Math.floor(seconds / 3600);
+      const remainingMinutes = Math.floor((seconds % 3600) / 60);
+      return `${hours}h ${remainingMinutes}m`;
+    }
+  };
+
   const handleKeywordFileUpload = async (file: File) => {
     try {
       const text = await file.text();
@@ -80,9 +135,13 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
       const keywordList = lines
         .map(line => line.trim())
         .filter(line => line.length > 0);
-      
+
       setKeywords(keywordList.join("\n"));
       setKeywordFile(file);
+
+      // Calculate time estimates for the new keyword list
+      const estimates = calculateEstimatedTime(keywordList.length);
+      setEstimatedTime(estimates);
     } catch (err) {
       setError("Failed to read keyword file");
     }
@@ -94,10 +153,78 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
       return;
     }
 
+    // Check if password is required for fetch mode
+    if (tool?.password && tool.password.trim() !== "") {
+      setShowPasswordPrompt(true);
+      return;
+    }
+
+    // Proceed with analysis
+    startAnalysis();
+  };
+
+  const handlePasswordSubmit = async () => {
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
+
+    setError(null);
+    setVerifyingPassword(true);
+    
+    try {
+      // Verify password with API
+      const response = await fetch("/api/tools/verify-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          toolSlug: tool?.slug,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+
+      console.log("Password verification response:", { status: response.status, data });
+
+      if (!response.ok) {
+        console.error("API error:", data);
+        setError(data.error || "Password verification failed");
+        return;
+      }
+
+      if (!data.valid) {
+        console.log("Password validation failed");
+        setError("Incorrect password");
+        return;
+      }
+
+      // Password is correct, close prompt and start analysis
+      setShowPasswordPrompt(false);
+      setError(null);
+      startAnalysis();
+      
+    } catch (error) {
+      console.error("Password verification error:", error);
+      setError("Password verification failed");
+    } finally {
+      setVerifyingPassword(false);
+    }
+  };
+
+  const handlePasswordCancel = () => {
+    setShowPasswordPrompt(false);
+    setPassword("");
+    setError(null);
+  };
+
+  const startAnalysis = async () => {
     setLoading(true);
     setError(null);
-    setProcessedKeywords([]);
-    setFetchProgress({ current: 0, total: 0 });
+    setActualTime(null); // Reset previous time
+
+    const startTime = Date.now();
+    setFetchProgress({ current: 0, total: 0, startTime });
 
     try {
       // Parse keywords
@@ -119,7 +246,8 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
           brandName,
           brandDomain,
           locationCode: 2704,
-          languageCode: "vi"
+          languageCode: "vi",
+          fastMode: fastMode
         }),
       });
 
@@ -135,56 +263,61 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
       }
 
       let buffer = '';
-      
+
       while (true) {
         const { done, value } = await reader.read();
-        
+
         if (done) break;
-        
+
         buffer += decoder.decode(value, { stream: true });
-        
+
         // Process complete SSE messages
         const lines = buffer.split('\n');
         buffer = lines.pop() || ''; // Keep incomplete line in buffer
-        
+
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             try {
               const data = JSON.parse(line.slice(6));
-              
+
               switch (data.type) {
                 case 'start':
-                  setFetchProgress({ current: 0, total: data.total });
+                  setFetchProgress({
+                    current: 0,
+                    total: data.total,
+                    mode: data.mode,
+                    successful: 0,
+                    failed: 0,
+                    startTime: Date.now()
+                  });
                   break;
-                  
+
                 case 'progress':
+                  const now = Date.now();
+                  const elapsedTime = fetchProgress?.startTime ? (now - fetchProgress.startTime) / 1000 : 0;
+
                   setFetchProgress({
                     current: data.current,
                     total: data.total,
-                    currentKeyword: data.keyword,
-                    status: 'fetching'
+                    successful: data.successful || 0,
+                    failed: data.failed || 0,
+                    batch: data.batch,
+                    totalBatches: data.totalBatches,
+                    mode: fetchProgress?.mode || 'safe',
+                    startTime: fetchProgress?.startTime || now,
+                    elapsedTime
                   });
-                  setProcessedKeywords(prev => [
-                    ...prev.filter(k => k.keyword !== data.keyword),
-                    { keyword: data.keyword, status: 'processing' }
-                  ]);
                   break;
-                  
-                case 'keyword-complete':
-                  setProcessedKeywords(prev => 
-                    prev.map(k => 
-                      k.keyword === data.keyword 
-                        ? { ...k, status: data.status === 'success' ? 'success' : 'failed' }
-                        : k
-                    )
-                  );
-                  break;
-                  
+
                 case 'analyzing':
                   setFetchProgress(null);
                   break;
-                  
+
                 case 'complete':
+                  // Calculate final processing time
+                  const finalTime = fetchProgress?.startTime ? (Date.now() - fetchProgress.startTime) / 1000 : 0;
+                  setActualTime(finalTime);
+
                   setResults(data.results);
                   if (data.rawData) {
                     setFetchedJsonData(data.rawData);
@@ -200,12 +333,12 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                     URL.revokeObjectURL(url);
                   }
                   if (data.stats) {
-                    console.log(`Completed: ${data.stats.successful}/${data.stats.requested} keywords`);
+                    console.log(`Completed: ${data.stats.successful}/${data.stats.requested} keywords in ${formatTime(finalTime)}`);
                   }
                   setLoading(false);
                   setFetchProgress(null);
                   break;
-                  
+
                 case 'error':
                   throw new Error(data.message);
               }
@@ -264,11 +397,11 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
   // Sort competitors based on current sort configuration
   const getSortedCompetitors = () => {
     if (!results?.competitors) return [];
-    
+
     const sorted = [...results.competitors].sort((a, b) => {
       let aValue: number = 0;
       let bValue: number = 0;
-      
+
       switch (sortConfig.key) {
         case 'citedCount':
           aValue = a.citedCount;
@@ -289,25 +422,25 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
           bValue = bMention?.mentioned || 0;
           break;
       }
-      
+
       if (sortConfig.direction === 'asc') {
         return aValue - bValue;
       } else {
         return bValue - aValue;
       }
     });
-    
+
     return sorted;
   };
-  
+
   // Get competitors for display (top 10 + user's brand if not in top 10)
   const getDisplayCompetitors = () => {
     const sorted = getSortedCompetitors();
     const top10 = sorted.slice(0, 10);
-    
+
     // Check if user's brand is in top 10
     const userBrandInTop10 = top10.some(c => isUserBrand(c.brand));
-    
+
     if (!userBrandInTop10) {
       // Find user's brand in the full list
       const userBrandCompetitor = sorted.find(c => isUserBrand(c.brand));
@@ -317,10 +450,10 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
         return [...top10, { ...userBrandCompetitor, displayRank: userBrandRank }];
       }
     }
-    
+
     return top10;
   };
-  
+
   // Handle sort column click
   const handleSort = (key: 'citedCount' | 'averageRank' | 'promptCitedRate' | 'mentioned') => {
     setSortConfig(prevConfig => ({
@@ -328,17 +461,17 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
       direction: prevConfig.key === key && prevConfig.direction === 'desc' ? 'asc' : 'desc'
     }));
   };
-  
+
   // Check if a competitor matches the user's input brand
   const isUserBrand = (competitor: any) => {
     if (!brandName && !brandDomain) return false;
-    
+
     // Handle both string input (for chart data) and competitor object (for table)
     const competitorBrand = typeof competitor === 'string' ? competitor : competitor.brand;
     const competitorDomains = typeof competitor === 'object' ? competitor.uniqueDomains || [] : [];
-    
+
     const normalizedCompetitor = competitorBrand.toLowerCase().trim();
-    
+
     // Check against brand name
     if (brandName) {
       const normalizedBrand = brandName.toLowerCase().trim();
@@ -346,34 +479,34 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
         return true;
       }
     }
-    
+
     // Check against brand domain
     if (brandDomain) {
       const normalizedDomain = brandDomain.toLowerCase().trim();
-      
+
       // Check if competitor brand matches domain
       if (normalizedCompetitor.includes(normalizedDomain) || normalizedDomain.includes(normalizedCompetitor)) {
         return true;
       }
-      
+
       // Check if any of competitor's domains match user's domain
       for (const domain of competitorDomains) {
         if (domain.toLowerCase().includes(normalizedDomain) || normalizedDomain.includes(domain.toLowerCase())) {
           return true;
         }
       }
-      
+
       // Also check domain core (without extensions)
       const domainCore = normalizedDomain
         .replace(/^(https?:\/\/)?(www\.)?/, '') // Remove protocol and www
         .replace(/\.[^.]+$/, '') // Remove top-level domain
         .trim();
-      
+
       if (domainCore && (normalizedCompetitor.includes(domainCore) || domainCore.includes(normalizedCompetitor))) {
         return true;
       }
     }
-    
+
     return false;
   };
 
@@ -387,11 +520,11 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
       brandRate: 0,
       brandInAIORate: 0
     };
-    
+
     const totalKeywords = results.keywords.length;
     const withAIO = results.keywords.filter(k => k.hasAIOverview).length;
     const withBrandCitation = results.keywords.filter(k => k.hasAIOverview && k.brandRank).length;
-    
+
     return {
       total: totalKeywords,
       withAIO: withAIO,
@@ -405,7 +538,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
   // Prepare data for citations bar chart
   const getCitationsChartData = () => {
     if (!results) return [];
-    
+
     return getSortedCompetitors()
       .slice(0, 10)
       .map(comp => ({
@@ -419,7 +552,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
   // Prepare data for mentions bar chart
   const getMentionsChartData = () => {
     if (!results) return [];
-    
+
     const mentionsData = results.brandMentions
       .sort((a, b) => b.mentioned - a.mentioned)
       .slice(0, 10)
@@ -433,7 +566,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
           isUserBrand: competitor ? isUserBrand(competitor) : isUserBrand(bm.competitor)
         };
       });
-    
+
     return mentionsData;
   };
 
@@ -488,21 +621,19 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
             <div className="p-4 flex gap-4">
               <button
                 onClick={() => setMode("fetch")}
-                className={`px-4 py-2 border-2 border-white font-mono text-xs uppercase transition-colors ${
-                  mode === "fetch" 
-                    ? "bg-white text-black" 
-                    : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+                className={`px-4 py-2 border-2 border-white font-mono text-xs uppercase transition-colors ${mode === "fetch"
+                  ? "bg-white text-black"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+                  }`}
               >
                 [Fetch Keywords]
               </button>
               <button
                 onClick={() => setMode("upload")}
-                className={`px-4 py-2 border-2 border-white font-mono text-xs uppercase transition-colors ${
-                  mode === "upload" 
-                    ? "bg-white text-black" 
-                    : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+                className={`px-4 py-2 border-2 border-white font-mono text-xs uppercase transition-colors ${mode === "upload"
+                  ? "bg-white text-black"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+                  }`}
               >
                 [Upload JSON]
               </button>
@@ -514,7 +645,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
             <div className="bg-black text-white font-mono text-xs px-2 py-2 border-b-2 border-white uppercase font-bold">
               {mode === "fetch" ? "Fetch & Analyze" : "Upload & Analyze"}
             </div>
-            
+
             <form onSubmit={mode === "upload" ? handleUploadAndAnalyze : (e) => { e.preventDefault(); handleFetchAndAnalyze(); }} className="p-4 md:p-6 space-y-6">
               {/* Brand Configuration */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -545,6 +676,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                 </div>
               </div>
 
+
               {/* Mode-specific inputs */}
               {mode === "fetch" ? (
                 <>
@@ -555,7 +687,19 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                     <div className="space-y-3">
                       <textarea
                         value={keywords}
-                        onChange={(e) => setKeywords(e.target.value)}
+                        onChange={(e) => {
+                          setKeywords(e.target.value);
+                          // Calculate time estimates on keyword change
+                          const keywordCount = e.target.value.trim()
+                            ? e.target.value.split(/\r?\n/).filter(line => line.trim().length > 0).length
+                            : 0;
+                          if (keywordCount > 0) {
+                            const estimates = calculateEstimatedTime(keywordCount);
+                            setEstimatedTime(estimates);
+                          } else {
+                            setEstimatedTime(null);
+                          }
+                        }}
                         className="w-full px-3 py-2 bg-black text-white border-2 border-white focus:outline-none focus:bg-white focus:text-black transition-colors font-mono text-sm placeholder-gray-500 h-32 resize-none"
                         placeholder="Enter keywords, one per line..."
                       />
@@ -607,75 +751,139 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                             <div className="text-[10px] font-mono text-gray-500 mt-2">
                               Rate: 1 USD = 26,000 VND
                             </div>
+                            {getKeywordCount() > 200 && (
+                              <div className="text-[10px] font-mono text-yellow-400 mt-2 border border-yellow-400/30 p-2">
+                                Large keyword sets may take several minutes to process. Processing will continue in batches.
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
                     </div>
                   </div>
 
+                  {/* Fast Mode Toggle */}
+                  <div className="border-2 border-white p-3 bg-black">
+                    <div className="text-xs font-mono uppercase text-white mb-3">
+                      [Processing Mode]
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className={`text-xs font-mono uppercase transition-colors ${!fastMode ? 'text-white font-bold' : 'text-gray-400'
+                          }`}>
+                          Safe Mode
+                        </span>
+
+                        {/* Toggle Switch */}
+                        <div
+                          onClick={() => setFastMode(!fastMode)}
+                          className="relative w-12 h-6 border-2 border-white bg-black cursor-pointer transition-all"
+                        >
+                          <div
+                            className={`absolute top-0 w-4 h-4 bg-white transition-transform ${fastMode ? 'translate-x-6' : 'translate-x-0'
+                              }`}
+                          />
+                        </div>
+
+                        <span className={`text-xs font-mono uppercase transition-colors ${fastMode ? 'text-white font-bold' : 'text-gray-400'
+                          }`}>
+                          Fast Mode
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-[10px] font-mono text-gray-400 mt-3">
+                      {fastMode
+                        ? "no delays - maximum speed"
+                        : "stable processing for all platforms"
+                      }
+                    </div>
+
+                    {/* Time Estimates */}
+                    {estimatedTime && getKeywordCount() > 0 && (
+                      <div className="mt-4 p-3 border border-white/30">
+                        <div className="text-xs font-mono uppercase text-white mb-2">
+                          [Estimated Processing Time]
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 text-xs font-mono">
+                          <div className={`${!fastMode ? 'text-green-400 font-bold' : 'text-gray-400'}`}>
+                            Safe Mode: {formatTime(estimatedTime.safe)}
+                          </div>
+                          <div className={`${fastMode ? 'text-green-400 font-bold' : 'text-gray-400'}`}>
+                            Fast Mode: {formatTime(estimatedTime.fast)}
+                          </div>
+                        </div>
+                        <div className="text-[10px] font-mono text-yellow-400 mt-2">
+                          Fast mode is ~{Math.round(estimatedTime.safe / estimatedTime.fast)}x faster for {getKeywordCount()} keywords
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   {fetchProgress && loading && (
                     <div className="border-2 border-white p-4">
                       <div className="text-xs font-mono uppercase text-white mb-3">
-                        [Fetching Keywords from DataForSEO]
+                        [Fetching Keywords - {fetchProgress.mode?.toUpperCase()} MODE]
                       </div>
-                      
+
                       {/* Progress Bar */}
                       <div className="mb-3">
-                        <div className="w-full bg-black border border-white h-6 relative">
-                          <div 
+                        <div className="w-full bg-black border border-white h-8 relative">
+                          <div
                             className="absolute inset-0 bg-white transition-all duration-300"
-                            style={{ 
-                              width: fetchProgress.total > 0 
-                                ? `${(fetchProgress.current / fetchProgress.total) * 100}%` 
-                                : '0%' 
+                            style={{
+                              width: fetchProgress.total > 0
+                                ? `${(fetchProgress.current / fetchProgress.total) * 100}%`
+                                : '0%'
                             }}
                           />
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-mono text-black mix-blend-difference">
+                            <span className="text-sm font-mono text-black mix-blend-difference font-bold">
                               {fetchProgress.current} / {fetchProgress.total}
                             </span>
                           </div>
                         </div>
                       </div>
-                      
-                      {/* Current Keyword */}
-                      {fetchProgress.currentKeyword && (
-                        <div className="text-xs font-mono text-yellow-400 mb-2">
-                          Processing: "{fetchProgress.currentKeyword}"
+
+                      {/* Progress Stats */}
+                      <div className="grid grid-cols-2 gap-4 text-xs font-mono">
+                        <div>
+                          <span className="text-green-400">✓ Successful: </span>
+                          <span className="text-white font-bold">{fetchProgress.successful || 0}</span>
+                        </div>
+                        <div>
+                          <span className="text-red-400">✗ Failed: </span>
+                          <span className="text-white font-bold">{fetchProgress.failed || 0}</span>
+                        </div>
+                      </div>
+
+                      {/* Batch Info (Safe Mode Only) */}
+                      {fetchProgress.batch && fetchProgress.totalBatches && (
+                        <div className="text-xs font-mono text-muted-foreground mt-2">
+                          Batch {fetchProgress.batch} of {fetchProgress.totalBatches}
                         </div>
                       )}
-                      
-                      {/* Processed Keywords List */}
-                      {processedKeywords.length > 0 && (
-                        <div className="max-h-32 overflow-y-auto border border-white/30 p-2 mb-2">
-                          {processedKeywords.slice(-5).map((kw, idx) => (
-                            <div key={idx} className="text-xs font-mono flex justify-between items-center py-1">
-                              <span className="text-muted-foreground truncate mr-2">
-                                {kw.keyword}
-                              </span>
-                              <span className={`text-[10px] uppercase ${
-                                kw.status === 'success' 
-                                  ? 'text-green-400' 
-                                  : kw.status === 'failed'
-                                  ? 'text-red-400'
-                                  : 'text-yellow-400'
-                              }`}>
-                                [{kw.status}]
-                              </span>
-                            </div>
-                          ))}
-                          {processedKeywords.length > 5 && (
-                            <div className="text-[10px] font-mono text-muted-foreground mt-1">
-                              ... and {processedKeywords.length - 5} more
-                            </div>
-                          )}
+
+                      {/* Time Tracking */}
+                      {fetchProgress.elapsedTime && (
+                        <div className="grid grid-cols-2 gap-4 text-xs font-mono mt-3 pt-3 border-t border-white/20">
+                          <div>
+                            <span className="text-blue-400">Elapsed: </span>
+                            <span className="text-white font-bold">{formatTime(fetchProgress.elapsedTime)}</span>
+                          </div>
+                          <div>
+                            <span className="text-purple-400">Speed: </span>
+                            <span className="text-white font-bold">
+                              {(fetchProgress.current / fetchProgress.elapsedTime).toFixed(1)} kw/s
+                            </span>
+                          </div>
                         </div>
                       )}
-                      
-                      <div className="text-xs font-mono text-muted-foreground">
-                        {fetchProgress.status === 'fetching' 
-                          ? `Fetching keyword ${fetchProgress.current} of ${fetchProgress.total}...`
-                          : 'Processing...'}
+
+                      <div className="text-xs font-mono text-muted-foreground mt-2">
+                        {fetchProgress.mode === 'fast'
+                          ? `Processing all keywords simultaneously...`
+                          : `Processing in batches of 16...`}
                       </div>
                     </div>
                   )}
@@ -716,10 +924,10 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                 disabled={loading}
                 className="w-full bg-black text-white border-2 border-white py-3 px-4 hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-mono text-xs uppercase font-bold"
               >
-                {loading 
-                  ? "[Processing...]" 
-                  : mode === "fetch" 
-                    ? "[Fetch & Analyze]" 
+                {loading
+                  ? "[Processing...]"
+                  : mode === "fetch"
+                    ? "[Fetch & Analyze]"
                     : "[Analyze Data]"
                 }
               </button>
@@ -729,7 +937,57 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
           {/* Results */}
           {results && (
             <div className="space-y-8">
-              {/* Summary */}
+              {/* Processing Time Summary */}
+              {actualTime && estimatedTime && (
+                <div className="border-2 border-white bg-black">
+                  <div className="bg-black text-white font-mono text-xs px-2 py-2 border-b-2 border-white uppercase font-bold">
+                    Processing Time Results
+                  </div>
+                  <div className="p-4 md:p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center border-2 border-white p-4">
+                        <div className="text-2xl md:text-3xl font-bold text-green-400 font-mono">
+                          {formatTime(actualTime)}
+                        </div>
+                        <div className="text-[10px] font-mono uppercase text-muted-foreground mt-2">
+                          [Actual Time]
+                        </div>
+                      </div>
+                      <div className="text-center border-2 border-white p-4">
+                        <div className="text-2xl md:text-3xl font-bold text-blue-400 font-mono">
+                          {formatTime(fastMode ? estimatedTime.fast : estimatedTime.safe)}
+                        </div>
+                        <div className="text-[10px] font-mono uppercase text-muted-foreground mt-2">
+                          [Estimated Time]
+                        </div>
+                      </div>
+                      <div className="text-center border-2 border-white p-4">
+                        <div className="text-2xl md:text-3xl font-bold text-purple-400 font-mono">
+                          {((results.keywords.length / actualTime).toFixed(1))} kw/s
+                        </div>
+                        <div className="text-[10px] font-mono uppercase text-muted-foreground mt-2">
+                          [Processing Speed]
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-4 p-3 border border-white/30">
+                      <div className="text-xs font-mono text-yellow-400">
+                        📊 Mode Comparison: {fastMode ? 'Fast' : 'Safe'} mode was{' '}
+                        {actualTime < (fastMode ? estimatedTime.fast : estimatedTime.safe) ? 'faster' : 'slower'} than estimated by{' '}
+                        {Math.abs(actualTime - (fastMode ? estimatedTime.fast : estimatedTime.safe)).toFixed(1)}s
+                      </div>
+                      <div className="text-[10px] font-mono text-gray-400 mt-1">
+                        {fastMode
+                          ? `Fast mode would have taken ~${formatTime(estimatedTime.safe)} in Safe mode (${(estimatedTime.safe / actualTime).toFixed(1)}x slower)`
+                          : `Fast mode would take ~${formatTime(estimatedTime.fast)} (${(actualTime / estimatedTime.fast).toFixed(1)}x faster)`
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Analysis Summary */}
               <div className="border-2 border-white bg-black">
                 <div className="bg-black text-white font-mono text-xs px-2 py-2 border-b-2 border-white uppercase font-bold">
                   Analysis Summary
@@ -782,7 +1040,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                   <div className="text-xs font-mono uppercase text-white mb-6 text-center">
                     [Keywords Performance Funnel]
                   </div>
-                  
+
                   {/* Funnel Visualization */}
                   <div className="max-w-2xl mx-auto space-y-4">
                     {/* Total Keywords */}
@@ -792,12 +1050,12 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         <div className="text-xs font-mono uppercase text-gray-400 mt-1">Total Keywords Analyzed</div>
                       </div>
                     </div>
-                    
+
                     {/* Arrow Down */}
                     <div className="flex justify-center">
                       <div className="text-white text-2xl">↓</div>
                     </div>
-                    
+
                     {/* AI Overview Keywords */}
                     <div className="relative mx-auto" style={{ width: '85%' }}>
                       <div className="bg-yellow-900/50 border-2 border-yellow-400 p-4 text-center relative">
@@ -814,12 +1072,12 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Arrow Down */}
                     <div className="flex justify-center">
                       <div className="text-white text-2xl">↓</div>
                     </div>
-                    
+
                     {/* Brand Cited Keywords */}
                     <div className="relative mx-auto" style={{ width: '60%' }}>
                       <div className="bg-green-900/50 border-2 border-green-400 p-4 text-center relative">
@@ -837,7 +1095,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Key Metrics Summary */}
                   <div className="grid grid-cols-3 gap-4 mt-8 pt-6 border-t-2 border-white/20">
                     <div className="text-center">
@@ -845,7 +1103,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         {getKeywordMetrics().aioRate.toFixed(1)}%
                       </div>
                       <div className="text-[10px] font-mono uppercase text-gray-400 mt-1">
-                        AI Overview<br/>Activation Rate
+                        AI Overview<br />Activation Rate
                       </div>
                     </div>
                     <div className="text-center">
@@ -853,7 +1111,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         {getKeywordMetrics().brandInAIORate.toFixed(1)}%
                       </div>
                       <div className="text-[10px] font-mono uppercase text-gray-400 mt-1">
-                        Brand Citation<br/>in AI Overviews
+                        Brand Citation<br />in AI Overviews
                       </div>
                     </div>
                     <div className="text-center">
@@ -861,7 +1119,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         {getKeywordMetrics().brandRate.toFixed(1)}%
                       </div>
                       <div className="text-[10px] font-mono uppercase text-gray-400 mt-1">
-                        Overall Brand<br/>Coverage
+                        Overall Brand<br />Coverage
                       </div>
                     </div>
                   </div>
@@ -875,36 +1133,36 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                       [Top Cited Brands]
                     </div>
                     <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={getCitationsChartData()} margin={{ top: 5, right: 5, left: 5, bottom: 50 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                      <XAxis 
-                        dataKey="name" 
-                        tick={{ fill: 'white', fontSize: 10 }}
-                        angle={-45}
-                        textAnchor="end"
-                        height={100}
-                      />
-                      <YAxis tick={{ fill: 'white', fontSize: 10 }} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'black', 
-                          border: '2px solid white',
-                          borderRadius: 0
-                        }}
-                        labelStyle={{ color: 'white', fontFamily: 'monospace', fontSize: '12px' }}
-                        formatter={(value, name) => [value, 'Citations']}
-                        labelFormatter={(label) => {
-                          const item = getCitationsChartData().find(d => d.name === label);
-                          return item?.fullName || label;
-                        }}
-                      />
-                      <Bar dataKey="citations">
-                        {getCitationsChartData().map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.isUserBrand ? '#10B981' : '#6B7280'} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
+                      <BarChart data={getCitationsChartData()} margin={{ top: 5, right: 5, left: 5, bottom: 50 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                        <XAxis
+                          dataKey="name"
+                          tick={{ fill: 'white', fontSize: 10 }}
+                          angle={-45}
+                          textAnchor="end"
+                          height={100}
+                        />
+                        <YAxis tick={{ fill: 'white', fontSize: 10 }} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: 'black',
+                            border: '2px solid white',
+                            borderRadius: 0
+                          }}
+                          labelStyle={{ color: 'white', fontFamily: 'monospace', fontSize: '12px' }}
+                          formatter={(value, name) => [value, 'Citations']}
+                          labelFormatter={(label) => {
+                            const item = getCitationsChartData().find(d => d.name === label);
+                            return item?.fullName || label;
+                          }}
+                        />
+                        <Bar dataKey="citations">
+                          {getCitationsChartData().map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.isUserBrand ? '#10B981' : '#6B7280'} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
 
                   {/* Bar Chart - Top Mentioned Brands */}
@@ -913,36 +1171,36 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                       [Top Mentioned Brands]
                     </div>
                     <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={getMentionsChartData()} margin={{ top: 5, right: 5, left: 5, bottom: 50 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                      <XAxis 
-                        dataKey="name" 
-                        tick={{ fill: 'white', fontSize: 10 }}
-                        angle={-45}
-                        textAnchor="end"
-                        height={100}
-                      />
-                      <YAxis tick={{ fill: 'white', fontSize: 10 }} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'black', 
-                          border: '2px solid white',
-                          borderRadius: 0
-                        }}
-                        labelStyle={{ color: 'white', fontFamily: 'monospace', fontSize: '12px' }}
-                        formatter={(value, name) => [value, 'Mentions']}
-                        labelFormatter={(label) => {
-                          const item = getMentionsChartData().find(d => d.name === label);
-                          return item?.fullName || label;
-                        }}
-                      />
-                      <Bar dataKey="mentions">
-                        {getMentionsChartData().map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.isUserBrand ? '#10B981' : '#6B7280'} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
+                      <BarChart data={getMentionsChartData()} margin={{ top: 5, right: 5, left: 5, bottom: 50 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                        <XAxis
+                          dataKey="name"
+                          tick={{ fill: 'white', fontSize: 10 }}
+                          angle={-45}
+                          textAnchor="end"
+                          height={100}
+                        />
+                        <YAxis tick={{ fill: 'white', fontSize: 10 }} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: 'black',
+                            border: '2px solid white',
+                            borderRadius: 0
+                          }}
+                          labelStyle={{ color: 'white', fontFamily: 'monospace', fontSize: '12px' }}
+                          formatter={(value, name) => [value, 'Mentions']}
+                          labelFormatter={(label) => {
+                            const item = getMentionsChartData().find(d => d.name === label);
+                            return item?.fullName || label;
+                          }}
+                        />
+                        <Bar dataKey="mentions">
+                          {getMentionsChartData().map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.isUserBrand ? '#10B981' : '#6B7280'} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
               </div>
@@ -1051,25 +1309,25 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         <th className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white">
                           [Domains]
                         </th>
-                        <th 
+                        <th
                           className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white cursor-pointer hover:bg-white hover:text-black"
                           onClick={() => handleSort('citedCount')}
                         >
                           [Citations] {sortConfig.key === 'citedCount' && (sortConfig.direction === 'desc' ? '↓' : '↑')}
                         </th>
-                        <th 
+                        <th
                           className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white cursor-pointer hover:bg-white hover:text-black"
                           onClick={() => handleSort('averageRank')}
                         >
                           [Avg Rank] {sortConfig.key === 'averageRank' && (sortConfig.direction === 'desc' ? '↓' : '↑')}
                         </th>
-                        <th 
+                        <th
                           className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white cursor-pointer hover:bg-white hover:text-black"
                           onClick={() => handleSort('promptCitedRate')}
                         >
                           [Citation Rate] {sortConfig.key === 'promptCitedRate' && (sortConfig.direction === 'desc' ? '↓' : '↑')}
                         </th>
-                        <th 
+                        <th
                           className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white cursor-pointer hover:bg-white hover:text-black"
                           onClick={() => handleSort('mentioned')}
                         >
@@ -1085,7 +1343,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         const isHighlighted = isUserBrand(competitor); // Pass full competitor object
                         const displayRank = (competitor as any).displayRank;
                         const isAppended = displayRank && displayRank > 10;
-                        
+
                         return (
                           <>
                             {isAppended && idx === 10 && (
@@ -1095,11 +1353,10 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                                 </td>
                               </tr>
                             )}
-                            <tr 
-                              key={idx} 
-                              className={`border-b border-white/20 hover:bg-white hover:text-black transition-colors ${
-                                isHighlighted ? 'bg-green-900/30 font-bold' : ''
-                              }`}
+                            <tr
+                              key={idx}
+                              className={`border-b border-white/20 hover:bg-white hover:text-black transition-colors ${isHighlighted ? 'bg-green-900/30 font-bold' : ''
+                                }`}
                             >
                               <td className="px-4 py-3 text-xs font-mono text-gray-400">
                                 #{displayRank || idx + 1}
@@ -1108,25 +1365,25 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                                 {competitor.brand}
                                 {isHighlighted && <span className="ml-2 text-green-400">[YOUR BRAND]</span>}
                               </td>
-                            <td className="px-4 py-3 text-xs font-mono" title={competitor.uniqueDomains.join(", ")}>
-                              {competitor.uniqueDomains.length > 2 
-                                ? `${competitor.uniqueDomains.slice(0, 2).join(", ")}...` 
-                                : competitor.uniqueDomains.join(", ")
-                              }
-                            </td>
-                            <td className="px-4 py-3 text-xs font-mono">
-                              {competitor.citedCount}
-                            </td>
-                            <td className="px-4 py-3 text-xs font-mono">
-                              {competitor.averageRank.toFixed(2)}
-                            </td>
-                            <td className="px-4 py-3 text-xs font-mono">
-                              {(competitor.promptCitedRate * 100).toFixed(1)}%
-                            </td>
-                            <td className="px-4 py-3 text-xs font-mono">
-                              {brandMention ? brandMention.mentioned : 0}
-                            </td>
-                          </tr>
+                              <td className="px-4 py-3 text-xs font-mono" title={competitor.uniqueDomains.join(", ")}>
+                                {competitor.uniqueDomains.length > 2
+                                  ? `${competitor.uniqueDomains.slice(0, 2).join(", ")}...`
+                                  : competitor.uniqueDomains.join(", ")
+                                }
+                              </td>
+                              <td className="px-4 py-3 text-xs font-mono">
+                                {competitor.citedCount}
+                              </td>
+                              <td className="px-4 py-3 text-xs font-mono">
+                                {competitor.averageRank.toFixed(2)}
+                              </td>
+                              <td className="px-4 py-3 text-xs font-mono">
+                                {(competitor.promptCitedRate * 100).toFixed(1)}%
+                              </td>
+                              <td className="px-4 py-3 text-xs font-mono">
+                                {brandMention ? brandMention.mentioned : 0}
+                              </td>
+                            </tr>
                           </>
                         );
                       })}
@@ -1165,6 +1422,59 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                       className="bg-black text-white border-2 border-white px-4 py-3 hover:bg-white hover:text-black transition-colors font-mono text-xs uppercase"
                     >
                       [Download Brand Mentions CSV]
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Password Prompt Modal */}
+          {showPasswordPrompt && (
+            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+              <div className="border-2 border-white bg-black p-6 max-w-md w-full mx-4">
+                <div className="bg-black text-white font-mono text-xs px-2 py-2 border-b-2 border-white uppercase font-bold mb-4">
+                  Authentication Required
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-mono uppercase text-white mb-2">
+                      [Tool Password] <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                      className="w-full px-3 py-2 bg-black text-white border-2 border-white focus:outline-none focus:bg-white focus:text-black transition-colors font-mono text-sm placeholder-gray-500"
+                      placeholder="Enter password to access fetch mode"
+                      autoFocus
+                    />
+                    <div className="text-[10px] font-mono text-yellow-400 mt-1">
+                      🔒 Password required for keyword fetching mode
+                    </div>
+                  </div>
+
+                  {error && (
+                    <div className="bg-black border-2 border-red-500 text-red-500 px-3 py-2 font-mono text-xs uppercase">
+                      [Error] {error}
+                    </div>
+                  )}
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handlePasswordSubmit}
+                      disabled={verifyingPassword}
+                      className="flex-1 bg-black text-white border-2 border-white py-2 px-4 hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-mono text-xs uppercase font-bold"
+                    >
+                      {verifyingPassword ? "[Verifying...]" : "[Authenticate]"}
+                    </button>
+                    <button
+                      onClick={handlePasswordCancel}
+                      className="flex-1 bg-black text-gray-400 border-2 border-gray-400 py-2 px-4 hover:bg-gray-400 hover:text-black transition-colors font-mono text-xs uppercase"
+                    >
+                      [Cancel]
                     </button>
                   </div>
                 </div>

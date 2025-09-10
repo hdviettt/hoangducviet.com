@@ -33,7 +33,7 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
   try {
     const tools = await directus.request(
       readItems("tools", {
-        fields: ["name", "description", "slug", "status"],
+        fields: ["name", "description", "slug", "status", "password"],
         filter: {
           slug: {
             _eq: slug,
@@ -48,7 +48,8 @@ export async function getToolBySlug(slug: string): Promise<Tool | null> {
       name: tool.name,
       description: stripHtml(tool.description || ''),
       slug: tool.slug,
-      status: tool.status
+      status: tool.status,
+      password: tool.password
     } : null;
   } catch (error) {
     console.error(`Error fetching tool with slug ${slug}:`, error);

@@ -4,6 +4,7 @@ export interface Tool {
   description: string;
   slug: string;
   status: "published" | "coming_soon" | "draft";
+  password?: string;
   date_created?: string;
   date_updated?: string;
 }
