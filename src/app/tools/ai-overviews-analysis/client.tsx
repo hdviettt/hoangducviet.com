@@ -53,9 +53,9 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
 
   // Sorting state for competitors table
   const [sortConfig, setSortConfig] = useState<{
-    key: 'citedCount' | 'averageRank' | 'promptCitedRate' | 'mentioned';
+    key: 'citedInPrompts' | 'averageRank' | 'promptCitedRate' | 'mentioned' | 'mentionRate';
     direction: 'asc' | 'desc';
-  }>({ key: 'citedCount', direction: 'desc' });
+  }>({ key: 'citedInPrompts', direction: 'desc' });
 
   // Fixed exchange rate
   const EXCHANGE_RATE = 26000; // 1 USD = 26,000 VND
@@ -398,28 +398,39 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
   const getSortedCompetitors = () => {
     if (!results?.competitors) return [];
 
+    // Calculate total AI Overview keywords once
+    const totalAIOverviewKeywords = results.keywords.filter(k => k.hasAIOverview).length;
+
     const sorted = [...results.competitors].sort((a, b) => {
       let aValue: number = 0;
       let bValue: number = 0;
 
       switch (sortConfig.key) {
-        case 'citedCount':
-          aValue = a.citedCount;
-          bValue = b.citedCount;
+        case 'citedInPrompts':
+          aValue = a.citedInPrompts;
+          bValue = b.citedInPrompts;
           break;
         case 'averageRank':
           aValue = a.averageRank;
           bValue = b.averageRank;
           break;
         case 'promptCitedRate':
-          aValue = a.promptCitedRate;
-          bValue = b.promptCitedRate;
+          // Use calculated citation rate: keywords cited / total AI Overview keywords
+          aValue = totalAIOverviewKeywords > 0 ? (a.citedInPrompts / totalAIOverviewKeywords) * 100 : 0;
+          bValue = totalAIOverviewKeywords > 0 ? (b.citedInPrompts / totalAIOverviewKeywords) * 100 : 0;
           break;
         case 'mentioned':
           const aMention = results.brandMentions.find(bm => bm.competitor === a.brand);
           const bMention = results.brandMentions.find(bm => bm.competitor === b.brand);
           aValue = aMention?.mentioned || 0;
           bValue = bMention?.mentioned || 0;
+          break;
+        case 'mentionRate':
+          // Use calculated mention rate: mentions / total AI Overview keywords
+          const aMentionData = results.brandMentions.find(bm => bm.competitor === a.brand);
+          const bMentionData = results.brandMentions.find(bm => bm.competitor === b.brand);
+          aValue = totalAIOverviewKeywords > 0 ? ((aMentionData?.mentioned || 0) / totalAIOverviewKeywords) * 100 : 0;
+          bValue = totalAIOverviewKeywords > 0 ? ((bMentionData?.mentioned || 0) / totalAIOverviewKeywords) * 100 : 0;
           break;
       }
 
@@ -455,7 +466,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
   };
 
   // Handle sort column click
-  const handleSort = (key: 'citedCount' | 'averageRank' | 'promptCitedRate' | 'mentioned') => {
+  const handleSort = (key: 'citedInPrompts' | 'averageRank' | 'promptCitedRate' | 'mentioned' | 'mentionRate') => {
     setSortConfig(prevConfig => ({
       key,
       direction: prevConfig.key === key && prevConfig.direction === 'desc' ? 'asc' : 'desc'
@@ -581,6 +592,33 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
     window.URL.revokeObjectURL(url);
   };
 
+  const downloadEnhancedKeywordsCSV = (results: AnalysisResults) => {
+    const enhancedKeywords = results.keywords.map(keyword => {
+      // Find the corresponding AI overview for this keyword
+      const aiOverview = results.aiOverviews.find(ao => ao.keyword === keyword.keyword);
+      
+      return {
+        keyword: keyword.keyword,
+        hasAIOverview: keyword.hasAIOverview ? "YES" : "NO",
+        totalCitations: keyword.referenceCount || 0,
+        brandRank: keyword.brandRank || "",
+        aiOverviewCitations: aiOverview ? JSON.stringify(aiOverview.references.map(ref => ({
+          rank: ref.rank,
+          domain: ref.domain
+        }))) : "[]"
+      };
+    });
+
+    const csv = convertToCSV(enhancedKeywords);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "keywords_detailed.csv";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const convertToCSV = (data: any[]): string => {
     if (!data.length) return "";
     const headers = Object.keys(data[0]);
@@ -588,7 +626,12 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
       headers
         .map((header) => {
           const value = row[header];
-          return typeof value === "object" ? JSON.stringify(value) : value;
+          // Escape quotes and wrap in quotes if contains comma or quote
+          const stringValue = typeof value === "object" ? JSON.stringify(value) : String(value);
+          if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+            return '"' + stringValue.replace(/"/g, '""') + '"';
+          }
+          return stringValue;
         })
         .join(","),
     );
@@ -1230,7 +1273,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                     )}
                     <button
                       onClick={() =>
-                        downloadCSV(results.keywords, "keywords.csv")
+                        downloadEnhancedKeywordsCSV(results)
                       }
                       className="px-3 py-1 border border-white text-[10px] hover:bg-white hover:text-black transition-colors"
                     >
@@ -1311,9 +1354,9 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         </th>
                         <th
                           className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white cursor-pointer hover:bg-white hover:text-black"
-                          onClick={() => handleSort('citedCount')}
+                          onClick={() => handleSort('citedInPrompts')}
                         >
-                          [Citations] {sortConfig.key === 'citedCount' && (sortConfig.direction === 'desc' ? '↓' : '↑')}
+                          [Number of Keywords Cited] {sortConfig.key === 'citedInPrompts' && (sortConfig.direction === 'desc' ? '↓' : '↑')}
                         </th>
                         <th
                           className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white cursor-pointer hover:bg-white hover:text-black"
@@ -1333,6 +1376,12 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         >
                           [Mentions] {sortConfig.key === 'mentioned' && (sortConfig.direction === 'desc' ? '↓' : '↑')}
                         </th>
+                        <th
+                          className="px-4 py-2 text-left text-[10px] font-mono uppercase text-white cursor-pointer hover:bg-white hover:text-black"
+                          onClick={() => handleSort('mentionRate')}
+                        >
+                          [Mention Rate] {sortConfig.key === 'mentionRate' && (sortConfig.direction === 'desc' ? '↓' : '↑')}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1343,12 +1392,21 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         const isHighlighted = isUserBrand(competitor); // Pass full competitor object
                         const displayRank = (competitor as any).displayRank;
                         const isAppended = displayRank && displayRank > 10;
+                        
+                        // Calculate rates based on total AI Overview keywords
+                        const totalAIOverviewKeywords = results.keywords.filter(k => k.hasAIOverview).length;
+                        const mentionRate = totalAIOverviewKeywords > 0 
+                          ? ((brandMention?.mentioned || 0) / totalAIOverviewKeywords) * 100 
+                          : 0;
+                        const citationRate = totalAIOverviewKeywords > 0 
+                          ? (competitor.citedInPrompts / totalAIOverviewKeywords) * 100 
+                          : 0;
 
                         return (
                           <>
                             {isAppended && idx === 10 && (
                               <tr key="separator" className="border-t-2 border-white">
-                                <td colSpan={7} className="px-4 py-1 text-[10px] font-mono text-center text-gray-400">
+                                <td colSpan={8} className="px-4 py-1 text-[10px] font-mono text-center text-gray-400">
                                   [... {displayRank - 11} more competitors ...]
                                 </td>
                               </tr>
@@ -1372,16 +1430,19 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                                 }
                               </td>
                               <td className="px-4 py-3 text-xs font-mono">
-                                {competitor.citedCount}
+                                {competitor.citedInPrompts}
                               </td>
                               <td className="px-4 py-3 text-xs font-mono">
                                 {competitor.averageRank.toFixed(2)}
                               </td>
                               <td className="px-4 py-3 text-xs font-mono">
-                                {(competitor.promptCitedRate * 100).toFixed(1)}%
+                                {citationRate.toFixed(1)}%
                               </td>
                               <td className="px-4 py-3 text-xs font-mono">
                                 {brandMention ? brandMention.mentioned : 0}
+                              </td>
+                              <td className="px-4 py-3 text-xs font-mono">
+                                {mentionRate.toFixed(1)}%
                               </td>
                             </tr>
                           </>
@@ -1398,22 +1459,14 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                   Export Data
                 </div>
                 <div className="p-4 md:p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
                       onClick={() =>
-                        downloadCSV(results.keywords, "keywords.csv")
+                        downloadEnhancedKeywordsCSV(results)
                       }
                       className="bg-black text-white border-2 border-white px-4 py-3 hover:bg-white hover:text-black transition-colors font-mono text-xs uppercase"
                     >
                       [Download Keywords CSV]
-                    </button>
-                    <button
-                      onClick={() =>
-                        downloadCSV(results.competitors, "competitors.csv")
-                      }
-                      className="bg-black text-white border-2 border-white px-4 py-3 hover:bg-white hover:text-black transition-colors font-mono text-xs uppercase"
-                    >
-                      [Download Competitors CSV]
                     </button>
                     <button
                       onClick={() =>
