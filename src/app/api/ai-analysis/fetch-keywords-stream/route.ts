@@ -274,8 +274,11 @@ async function processKeywords(
     message: 'Processing analysis...'
   })}\n\n`));
 
-  // Call the analyze endpoint
-  const analyzeResponse = await fetch(new URL('/api/ai-analysis/analyze', request.url).toString(), {
+  // Call the analyze endpoint - use internal HTTP call to avoid SSL issues
+  const port = process.env.PORT || '3000';
+  const baseUrl = `http://localhost:${port}`;
+  
+  const analyzeResponse = await fetch(`${baseUrl}/api/ai-analysis/analyze`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
