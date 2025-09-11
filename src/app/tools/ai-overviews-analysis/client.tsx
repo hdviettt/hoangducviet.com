@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Tool } from "@/types/tools";
 import { AnalysisResults } from "@/lib/seo-analyzer/types";
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer } from "recharts";
+import { countries, languages, DEFAULT_COUNTRY, DEFAULT_LANGUAGE, type Country, type Language } from "@/lib/dataforseo-mappings";
 
 type AnalysisMode = "upload" | "fetch";
 
@@ -23,6 +24,8 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
   const [keywords, setKeywords] = useState("");
   const [keywordFile, setKeywordFile] = useState<File | null>(null);
   const [fastMode, setFastMode] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<Country>(DEFAULT_COUNTRY);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(DEFAULT_LANGUAGE);
   const [fetchProgress, setFetchProgress] = useState<{
     current: number;
     total: number;
@@ -245,8 +248,8 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
           keywords: keywordList,
           brandName,
           brandDomain,
-          locationCode: 2704,
-          languageCode: "vi",
+          locationCode: selectedCountry.locationCode,
+          languageCode: selectedLanguage.code,
           fastMode: fastMode
         }),
       });
@@ -719,6 +722,54 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                 </div>
               </div>
 
+              {/* Location and Language Configuration */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-mono uppercase text-white mb-2">
+                    [Country/Location]
+                  </label>
+                  <select
+                    value={selectedCountry.name}
+                    onChange={(e) => {
+                      const country = countries.find(c => c.name === e.target.value);
+                      if (country) setSelectedCountry(country);
+                    }}
+                    className="w-full px-3 py-2 bg-black text-white border-2 border-white focus:outline-none focus:bg-white focus:text-black transition-colors font-mono text-sm"
+                  >
+                    {countries.map((country) => (
+                      <option key={country.code} value={country.name}>
+                        {country.name} ({country.code})
+                      </option>
+                    ))}
+                  </select>
+                  <div className="text-[10px] font-mono text-gray-400 mt-1">
+                    Location Code: {selectedCountry.locationCode}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono uppercase text-white mb-2">
+                    [Language]
+                  </label>
+                  <select
+                    value={selectedLanguage.name}
+                    onChange={(e) => {
+                      const language = languages.find(l => l.name === e.target.value);
+                      if (language) setSelectedLanguage(language);
+                    }}
+                    className="w-full px-3 py-2 bg-black text-white border-2 border-white focus:outline-none focus:bg-white focus:text-black transition-colors font-mono text-sm"
+                  >
+                    {languages.map((language) => (
+                      <option key={language.code} value={language.name}>
+                        {language.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="text-[10px] font-mono text-gray-400 mt-1">
+                    Language Code: {selectedLanguage.code}
+                  </div>
+                </div>
+              </div>
 
               {/* Mode-specific inputs */}
               {mode === "fetch" ? (
