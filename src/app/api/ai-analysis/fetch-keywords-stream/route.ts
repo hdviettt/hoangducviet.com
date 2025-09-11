@@ -1,22 +1,21 @@
 import { NextRequest } from "next/server";
 
-export const runtime = 'edge';
+// Removed edge runtime - using Node.js runtime for better compatibility
 
 // DataForSEO API configuration
 const DATAFORSEO_URL = "https://api.dataforseo.com/v3/serp/google/organic/live/advanced";
 const DATAFORSEO_AUTH = "Basic YWl0ZWFtQHNlb25nb24uY29tOjcyMmU2MzI4OGU4NzRmMzk=";
 
-// Performance tuning - Similar to Python's MAX_WORKERS
-// Fast mode mimics your Python approach more closely
-const MAX_WORKERS_SAFE = 16; // Safe mode for stability
-const MAX_WORKERS_FAST = 32; // Fast mode like your Python script
+// Performance tuning optimized for Node.js runtime
+const MAX_WORKERS_SAFE = 12; // Reduced for better Node.js performance
+const MAX_WORKERS_FAST = 20; // Fast mode but reasonable for Node.js
 
-// Delay between batches to avoid rate limiting
+// Delay between batches to avoid rate limiting  
 const BATCH_DELAY_SAFE = 200; // milliseconds - safe mode
-const BATCH_DELAY_FAST = 0;   // Fast mode - no delays like Python
+const BATCH_DELAY_FAST = 0;   // Fast mode - no delays
 
-// Timeout for individual keyword requests
-const REQUEST_TIMEOUT = 30000;
+// Timeout for individual keyword requests - reduced for better reliability
+const REQUEST_TIMEOUT = 25000; // 25s to stay under typical server limits
 
 interface KeywordRequest {
   keywords: string[];
@@ -81,226 +80,226 @@ async function fetchDataForSEO(keyword: string, locationCode: number = 2704, lan
 export async function POST(request: NextRequest) {
   const encoder = new TextEncoder();
 
-  // Create a TransformStream for SSE
-  const stream = new TransformStream();
-  const writer = stream.writable.getWriter();
-
-  // Start processing in background
-  (async () => {
-    try {
-      const { keywords, brandName, brandDomain, locationCode = 2704, languageCode = "vi", fastMode = false }: KeywordRequest = await request.json();
-
-      if (!keywords || !Array.isArray(keywords) || keywords.length === 0) {
-        await writer.write(encoder.encode(`data: ${JSON.stringify({
-          type: 'error',
-          message: 'No keywords provided'
-        })}\n\n`));
-        await writer.close();
-        return;
-      }
-
-      const cleanedKeywords = keywords
-        .map(k => k.trim())
-        .filter(k => k.length > 0);
-
-      // Log keyword processing for debugging
-      console.log(`Original keywords: ${keywords.length}, Cleaned keywords: ${cleanedKeywords.length}`);
-      if (keywords.length !== cleanedKeywords.length) {
-        console.log(`Filtered out ${keywords.length - cleanedKeywords.length} empty/whitespace keywords`);
-      }
-
-      // Configure performance based on mode
-      const MAX_WORKERS = fastMode ? MAX_WORKERS_FAST : MAX_WORKERS_SAFE;
-      const BATCH_DELAY = fastMode ? BATCH_DELAY_FAST : BATCH_DELAY_SAFE;
-
-      // Send initial status
-      await writer.write(encoder.encode(`data: ${JSON.stringify({
-        type: 'start',
-        total: cleanedKeywords.length,
-        mode: fastMode ? 'fast' : 'safe',
-        originalCount: keywords.length,
-        filteredCount: keywords.length - cleanedKeywords.length
-      })}\n\n`));
-
-      const results: any[] = [];
-      let successCount = 0;
-      let failCount = 0;
-      let completedCount = 0;
-
-      if (fastMode) {
-        // FAST MODE: Process all keywords at once like your Python script
-        console.log(`Starting FAST mode processing of ${cleanedKeywords.length} keywords with unlimited concurrency`);
-        
-        // Start all requests simultaneously (like Python's executor.map)
-        const allPromises = cleanedKeywords.map(async (keyword) => {
-          try {
-            const result = await fetchDataForSEO(keyword, locationCode, languageCode);
-            return { keyword, result, success: result !== null };
-          } catch (error) {
-            console.error(`Fast mode error for keyword "${keyword}":`, error);
-            return { keyword, result: null, success: false };
-          }
-        });
-
-        // Wait for all promises to settle and track progress
-        const allResults = await Promise.allSettled(allPromises);
-        
-        // Process all results and maintain keyword order
-        allResults.forEach((settledResult) => {
-          completedCount++;
-          
-          if (settledResult.status === 'fulfilled') {
-            const { keyword, result, success } = settledResult.value;
-            if (success && result) {
-              // Store result with keyword info for proper mapping
-              results.push({ ...result, keyword });
-              successCount++;
-            } else {
-              // Store failed result with keyword info
-              results.push({ keyword, failed: true, reason: "API call failed" });
-              failCount++;
-            }
-          } else {
-            // Store rejected promise result
-            results.push({ keyword: 'unknown', failed: true, reason: settledResult.reason });
-            failCount++;
-            console.error('Promise rejected in fast mode:', settledResult.reason);
-          }
-
-          // Send progress update every 20 completions or at the end
-          if (completedCount % 20 === 0 || completedCount === cleanedKeywords.length) {
-            writer.write(encoder.encode(`data: ${JSON.stringify({
-              type: 'progress',
-              current: completedCount,
-              total: cleanedKeywords.length,
-              successful: successCount,
-              failed: failCount
-            })}\n\n`)).catch(err => console.error('Progress update error:', err));
-          }
-        });
-      } else {
-        // SAFE MODE: Process in batches with better error resilience
-        for (let i = 0; i < cleanedKeywords.length; i += MAX_WORKERS) {
-          const batch = cleanedKeywords.slice(i, Math.min(i + MAX_WORKERS, cleanedKeywords.length));
-          console.log(`Processing batch ${Math.floor(i / MAX_WORKERS) + 1}/${Math.ceil(cleanedKeywords.length / MAX_WORKERS)} (${batch.length} keywords)`);
-
-          // Process batch with individual error handling (don't let one failure stop the batch)
-          const batchPromises = batch.map(async (keyword) => {
-            try {
-              const result = await fetchDataForSEO(keyword, locationCode, languageCode);
-              return { keyword, result, success: result !== null };
-            } catch (error) {
-              console.error(`Batch error for keyword "${keyword}":`, error);
-              return { keyword, result: null, success: false };
-            }
-          });
-
-          // Use Promise.allSettled instead of Promise.all to handle individual failures
-          const settledResults = await Promise.allSettled(batchPromises);
-
-          // Process results regardless of individual failures
-          settledResults.forEach((settledResult) => {
-            completedCount++;
-            
-            if (settledResult.status === 'fulfilled') {
-              const { keyword, result, success } = settledResult.value;
-              if (success && result) {
-                // Store result with keyword info for proper mapping
-                results.push({ ...result, keyword });
-                successCount++;
-              } else {
-                // Store failed result with keyword info
-                results.push({ keyword, failed: true, reason: "API call failed" });
-                failCount++;
-              }
-            } else {
-              // Promise was rejected - still need to track it
-              results.push({ keyword: 'unknown', failed: true, reason: settledResult.reason });
-              failCount++;
-              console.error('Promise rejected in batch:', settledResult.reason);
-            }
-          });
-
-          // Small delay between batches in safe mode
-          if (BATCH_DELAY > 0 && i + MAX_WORKERS < cleanedKeywords.length) {
-            await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
-          }
-          
-          // Send progress update (tqdm style)
-          await writer.write(encoder.encode(`data: ${JSON.stringify({
-            type: 'progress',
-            current: completedCount,
-            total: cleanedKeywords.length,
-            successful: successCount,
-            failed: failCount,
-            batch: Math.floor(i / MAX_WORKERS) + 1,
-            totalBatches: Math.ceil(cleanedKeywords.length / MAX_WORKERS)
+  // Create a ReadableStream for Node.js runtime compatibility
+  const stream = new ReadableStream({
+    start(controller) {
+      // Store controller for writing data
+      (async () => {
+        try {
+          await processKeywords(request, controller, encoder);
+        } catch (error) {
+          console.error('Stream processing error:', error);
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+            type: 'error',
+            message: error instanceof Error ? error.message : 'Unknown error'
           })}\n\n`));
+        } finally {
+          controller.close();
         }
-      }
-
-      // Create the final data structure matching the Python output
-      // Results array should now contain all keywords (successful and failed)
-      const apiData = {
-        "0": Object.fromEntries(
-          results.map((result, index) => [index.toString(), result])
-        )
-      };
-
-      console.log(`Final results: ${results.length} total (should match ${cleanedKeywords.length}), ${successCount} successful, ${failCount} failed`);
-
-      // Now analyze the data
-      await writer.write(encoder.encode(`data: ${JSON.stringify({
-        type: 'analyzing',
-        message: 'Processing analysis...'
-      })}\n\n`));
-
-      // Call the analyze endpoint
-      const analyzeResponse = await fetch(new URL('/api/ai-analysis/analyze', request.url).toString(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          brandName,
-          brandDomain,
-          data: apiData
-        })
-      });
-
-      if (analyzeResponse.ok) {
-        const analysisResult = await analyzeResponse.json();
-
-        // Send completion with results and raw data
-        await writer.write(encoder.encode(`data: ${JSON.stringify({
-          type: 'complete',
-          results: analysisResult.results,
-          rawData: apiData,
-          stats: {
-            requested: cleanedKeywords.length,
-            successful: successCount,
-            failed: failCount
-          }
-        })}\n\n`));
-      } else {
-        throw new Error('Analysis failed');
-      }
-
-    } catch (error) {
-      console.error('Stream error:', error);
-      await writer.write(encoder.encode(`data: ${JSON.stringify({
-        type: 'error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      })}\n\n`));
-    } finally {
-      await writer.close();
+      })();
     }
-  })();
+  });
 
   // Return the stream as Server-Sent Events
-  return new Response(stream.readable, {
+  return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
     },
   });
+}
+
+async function processKeywords(
+  request: NextRequest, 
+  controller: ReadableStreamDefaultController<Uint8Array>, 
+  encoder: TextEncoder
+) {
+  const { keywords, brandName, brandDomain, locationCode = 2704, languageCode = "vi", fastMode = false }: KeywordRequest = await request.json();
+
+  if (!keywords || !Array.isArray(keywords) || keywords.length === 0) {
+    controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+      type: 'error',
+      message: 'No keywords provided'
+    })}\n\n`));
+    return;
+  }
+
+  const cleanedKeywords = keywords
+    .map(k => k.trim())
+    .filter(k => k.length > 0);
+
+  // Log keyword processing for debugging
+  console.log(`Original keywords: ${keywords.length}, Cleaned keywords: ${cleanedKeywords.length}`);
+  if (keywords.length !== cleanedKeywords.length) {
+    console.log(`Filtered out ${keywords.length - cleanedKeywords.length} empty/whitespace keywords`);
+  }
+
+  // Configure performance based on mode
+  const MAX_WORKERS = fastMode ? MAX_WORKERS_FAST : MAX_WORKERS_SAFE;
+  const BATCH_DELAY = fastMode ? BATCH_DELAY_FAST : BATCH_DELAY_SAFE;
+
+  // Send initial status
+  controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+    type: 'start',
+    total: cleanedKeywords.length,
+    mode: fastMode ? 'fast' : 'safe',
+    originalCount: keywords.length,
+    filteredCount: keywords.length - cleanedKeywords.length
+  })}\n\n`));
+
+  const results: any[] = [];
+  let successCount = 0;
+  let failCount = 0;
+  let completedCount = 0;
+
+  if (fastMode) {
+    // FAST MODE: Process all keywords at once
+    console.log(`Starting FAST mode processing of ${cleanedKeywords.length} keywords with limited concurrency`);
+    
+    // Start all requests simultaneously but with concurrency control
+    const allPromises = cleanedKeywords.map(async (keyword) => {
+      try {
+        const result = await fetchDataForSEO(keyword, locationCode, languageCode);
+        return { keyword, result, success: result !== null };
+      } catch (error) {
+        console.error(`Fast mode error for keyword "${keyword}":`, error);
+        return { keyword, result: null, success: false };
+      }
+    });
+
+    // Wait for all promises to settle and track progress
+    const allResults = await Promise.allSettled(allPromises);
+    
+    // Process all results and maintain keyword order
+    allResults.forEach((settledResult) => {
+      completedCount++;
+      
+      if (settledResult.status === 'fulfilled') {
+        const { keyword, result, success } = settledResult.value;
+        if (success && result) {
+          results.push({ ...result, keyword });
+          successCount++;
+        } else {
+          results.push({ keyword, failed: true, reason: "API call failed" });
+          failCount++;
+        }
+      } else {
+        results.push({ keyword: 'unknown', failed: true, reason: settledResult.reason });
+        failCount++;
+        console.error('Promise rejected in fast mode:', settledResult.reason);
+      }
+
+      // Send progress update every 20 completions or at the end
+      if (completedCount % 20 === 0 || completedCount === cleanedKeywords.length) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+          type: 'progress',
+          current: completedCount,
+          total: cleanedKeywords.length,
+          successful: successCount,
+          failed: failCount
+        })}\n\n`));
+      }
+    });
+  } else {
+    // SAFE MODE: Process in batches with better error resilience
+    for (let i = 0; i < cleanedKeywords.length; i += MAX_WORKERS) {
+      const batch = cleanedKeywords.slice(i, Math.min(i + MAX_WORKERS, cleanedKeywords.length));
+      console.log(`Processing batch ${Math.floor(i / MAX_WORKERS) + 1}/${Math.ceil(cleanedKeywords.length / MAX_WORKERS)} (${batch.length} keywords)`);
+
+      // Process batch with individual error handling
+      const batchPromises = batch.map(async (keyword) => {
+        try {
+          const result = await fetchDataForSEO(keyword, locationCode, languageCode);
+          return { keyword, result, success: result !== null };
+        } catch (error) {
+          console.error(`Batch error for keyword "${keyword}":`, error);
+          return { keyword, result: null, success: false };
+        }
+      });
+
+      // Use Promise.allSettled to handle individual failures
+      const settledResults = await Promise.allSettled(batchPromises);
+
+      // Process results regardless of individual failures
+      settledResults.forEach((settledResult) => {
+        completedCount++;
+        
+        if (settledResult.status === 'fulfilled') {
+          const { keyword, result, success } = settledResult.value;
+          if (success && result) {
+            results.push({ ...result, keyword });
+            successCount++;
+          } else {
+            results.push({ keyword, failed: true, reason: "API call failed" });
+            failCount++;
+          }
+        } else {
+          results.push({ keyword: 'unknown', failed: true, reason: settledResult.reason });
+          failCount++;
+          console.error('Promise rejected in batch:', settledResult.reason);
+        }
+      });
+
+      // Small delay between batches in safe mode
+      if (BATCH_DELAY > 0 && i + MAX_WORKERS < cleanedKeywords.length) {
+        await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
+      }
+      
+      // Send progress update
+      controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+        type: 'progress',
+        current: completedCount,
+        total: cleanedKeywords.length,
+        successful: successCount,
+        failed: failCount,
+        batch: Math.floor(i / MAX_WORKERS) + 1,
+        totalBatches: Math.ceil(cleanedKeywords.length / MAX_WORKERS)
+      })}\n\n`));
+    }
+  }
+
+  // Create the final data structure
+  const apiData = {
+    "0": Object.fromEntries(
+      results.map((result, index) => [index.toString(), result])
+    )
+  };
+
+  console.log(`Final results: ${results.length} total (should match ${cleanedKeywords.length}), ${successCount} successful, ${failCount} failed`);
+
+  // Now analyze the data
+  controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+    type: 'analyzing',
+    message: 'Processing analysis...'
+  })}\n\n`));
+
+  // Call the analyze endpoint
+  const analyzeResponse = await fetch(new URL('/api/ai-analysis/analyze', request.url).toString(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      brandName,
+      brandDomain,
+      data: apiData
+    })
+  });
+
+  if (analyzeResponse.ok) {
+    const analysisResult = await analyzeResponse.json();
+
+    // Send completion with results and raw data
+    controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+      type: 'complete',
+      results: analysisResult.results,
+      rawData: apiData,
+      stats: {
+        requested: cleanedKeywords.length,
+        successful: successCount,
+        failed: failCount
+      }
+    })}\n\n`));
+  } else {
+    throw new Error('Analysis failed');
+  }
 }

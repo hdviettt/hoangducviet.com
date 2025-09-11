@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readItems } from "@directus/sdk";
 import { directus } from "@/lib/directus";
 
-export const runtime = 'edge';
+// Removed edge runtime - using Node.js runtime for better compatibility
 
 export async function POST(request: NextRequest) {
   try {

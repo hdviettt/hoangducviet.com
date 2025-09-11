@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { analyzeData } from "@/lib/seo-analyzer/analyzer";
 import type { BrandConfig } from "@/lib/seo-analyzer/types";
 
-export const runtime = 'edge';
+// Removed edge runtime - using Node.js runtime for better compatibility
 
 export async function POST(request: NextRequest) {
   try {
