@@ -5,6 +5,7 @@ import type { Tool } from "@/types/tools";
 import { AnalysisResults } from "@/lib/seo-analyzer/types";
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer } from "recharts";
 import { countries, languages, DEFAULT_COUNTRY, DEFAULT_LANGUAGE, type Country, type Language } from "@/lib/dataforseo-mappings";
+import SearchableSelector from "@/components/SearchableSelector";
 
 type AnalysisMode = "upload" | "fetch";
 
@@ -724,51 +725,37 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
 
               {/* Location and Language Configuration */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-mono uppercase text-white mb-2">
-                    [Country/Location]
-                  </label>
-                  <select
-                    value={selectedCountry.name}
-                    onChange={(e) => {
-                      const country = countries.find(c => c.name === e.target.value);
-                      if (country) setSelectedCountry(country);
-                    }}
-                    className="w-full px-3 py-2 bg-black text-white border-2 border-white focus:outline-none focus:bg-white focus:text-black transition-colors font-mono text-sm"
-                  >
-                    {countries.map((country) => (
-                      <option key={country.code} value={country.name}>
-                        {country.name} ({country.code})
-                      </option>
-                    ))}
-                  </select>
-                  <div className="text-[10px] font-mono text-gray-400 mt-1">
-                    Location Code: {selectedCountry.locationCode}
-                  </div>
-                </div>
+                <SearchableSelector
+                  options={countries.map(country => ({
+                    label: country.name,
+                    value: country.name,
+                    sublabel: `${country.code} (${country.locationCode})`
+                  }))}
+                  value={selectedCountry.name}
+                  onChange={(value) => {
+                    const country = countries.find(c => c.name === value);
+                    if (country) setSelectedCountry(country);
+                  }}
+                  placeholder="Select country..."
+                  label="Country/Location"
+                  sublabel={`Location Code: ${selectedCountry.locationCode}`}
+                />
 
-                <div>
-                  <label className="block text-xs font-mono uppercase text-white mb-2">
-                    [Language]
-                  </label>
-                  <select
-                    value={selectedLanguage.name}
-                    onChange={(e) => {
-                      const language = languages.find(l => l.name === e.target.value);
-                      if (language) setSelectedLanguage(language);
-                    }}
-                    className="w-full px-3 py-2 bg-black text-white border-2 border-white focus:outline-none focus:bg-white focus:text-black transition-colors font-mono text-sm"
-                  >
-                    {languages.map((language) => (
-                      <option key={language.code} value={language.name}>
-                        {language.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="text-[10px] font-mono text-gray-400 mt-1">
-                    Language Code: {selectedLanguage.code}
-                  </div>
-                </div>
+                <SearchableSelector
+                  options={languages.map(language => ({
+                    label: language.name,
+                    value: language.name,
+                    sublabel: language.code
+                  }))}
+                  value={selectedLanguage.name}
+                  onChange={(value) => {
+                    const language = languages.find(l => l.name === value);
+                    if (language) setSelectedLanguage(language);
+                  }}
+                  placeholder="Select language..."
+                  label="Language"
+                  sublabel={`Language Code: ${selectedLanguage.code}`}
+                />
               </div>
 
               {/* Mode-specific inputs */}
