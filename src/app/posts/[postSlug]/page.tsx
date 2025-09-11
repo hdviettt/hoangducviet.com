@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getItemById } from "@/lib/directus";
+import { getItemById, getGlobalMetadata } from "@/lib/directus";
 import { getPostBySlug } from "@/lib/posts";
-// import { getGlobalMetadata } from "@/lib/directus";
 
 export const runtime = 'edge';
 
@@ -17,11 +16,41 @@ interface PostParams {
 export async function generateMetadata({ params }: PostParams): Promise<Metadata> {
   try {
     const post = await getPostBySlug(params.postSlug, {
-      fields: ["title"],
+      fields: ["title", "description", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
     });
-    // const global = await getGlobalMetadata();
+    const globalData = await getGlobalMetadata();
+    const siteTitle = globalData && globalData.length > 0 ? globalData[0].title : "Blog";
+    const siteDescription = globalData && globalData.length > 0 ? globalData[0].tagline : "";
+    
+    // Build thumbnail URL if available
+    const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
+      ? `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${post.thumbnail.filename_disk}`
+      : null;
+    
+    const postUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com'}/posts/${params.postSlug}`;
+    
     return {
-      title: `${post.title}`,
+      title: `${post.title} | ${siteTitle}`,
+      description: post.description || siteDescription,
+      openGraph: {
+        title: post.title,
+        description: post.description || siteDescription,
+        url: postUrl,
+        siteName: siteTitle,
+        type: 'article',
+        images: thumbnailUrl ? [{
+          url: thumbnailUrl,
+          width: typeof post.thumbnail === 'object' ? post.thumbnail.width : 1200,
+          height: typeof post.thumbnail === 'object' ? post.thumbnail.height : 630,
+          alt: post.title,
+        }] : [],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.title,
+        description: post.description || siteDescription,
+        images: thumbnailUrl ? [thumbnailUrl] : [],
+      },
     }
   } catch (error) {
     return {
@@ -37,7 +66,7 @@ export default async function PostPage({ params }: PostParams) {
 
   try {
     data = await getPostBySlug(params.postSlug, {
-      fields: ["title", "body", "date_created", "thumbnail.filename_disk", "thumbnail.height", "thumbnail.width", "categories.post_categories_slug"],
+      fields: ["title", "body", "description", "date_created", "thumbnail.filename_disk", "thumbnail.height", "thumbnail.width", "categories.post_categories_slug"],
     });
 
     const categorySlugs = data.categories?.filter((category: any) => typeof category === 'object').map(({ post_categories_slug }: any) => post_categories_slug);
