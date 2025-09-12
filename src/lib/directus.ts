@@ -65,7 +65,7 @@ interface GlobalMetadata {
 }
 
 export async function getGlobalMetadata() {
-  return directus.request(readItems("global")) as unknown as GlobalMetadata;
+  return directus.request(readItems("global")) as unknown as GlobalMetadata[];
 }
 
 interface Hdviet {

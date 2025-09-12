@@ -7,9 +7,11 @@ import ClientFileExplorer from "@/components/ClientFileExplorer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
+  const siteTitle = global && global.length > 0 ? global[0].title : "Blog";
+  const siteTagline = global && global.length > 0 ? global[0].tagline : "Personal blog by Viet";
   return {
-    title: global.title,
-    description: global.tagline || "Personal blog by Viet",
+    title: siteTitle,
+    description: siteTagline,
   }
 }
 
