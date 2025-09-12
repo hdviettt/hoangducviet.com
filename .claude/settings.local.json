@@ -34,7 +34,8 @@
       "Bash(railway login:*)",
       "Bash(cmd /c \"C:\\Users\\User\\Desktop\\directus-blog\\fix-directus-login.bat\")",
       "Bash(railway logs:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

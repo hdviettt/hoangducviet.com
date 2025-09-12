@@ -175,7 +175,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
 
     setError(null);
     setVerifyingPassword(true);
-    
+
     try {
       // Verify password with API
       const response = await fetch("/api/tools/verify-password", {
@@ -207,7 +207,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
       setShowPasswordPrompt(false);
       setError(null);
       startAnalysis();
-      
+
     } catch (error) {
       console.error("Password verification error:", error);
       setError("Password verification failed");
@@ -600,7 +600,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
     const enhancedKeywords = results.keywords.map(keyword => {
       // Find the corresponding AI overview for this keyword
       const aiOverview = results.aiOverviews.find(ao => ao.keyword === keyword.keyword);
-      
+
       return {
         keyword: keyword.keyword,
         hasAIOverview: keyword.hasAIOverview ? "YES" : "NO",
@@ -972,7 +972,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
               ) : (
                 <div>
                   <label className="block text-xs font-mono uppercase text-white mb-2">
-                    [DataForSEO JSON File]
+                    [API JSON File]
                   </label>
                   <div className="relative">
                     <input
@@ -1430,14 +1430,14 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                         const isHighlighted = isUserBrand(competitor); // Pass full competitor object
                         const displayRank = (competitor as any).displayRank;
                         const isAppended = displayRank && displayRank > 10;
-                        
+
                         // Calculate rates based on total AI Overview keywords
                         const totalAIOverviewKeywords = results.keywords.filter(k => k.hasAIOverview).length;
-                        const mentionRate = totalAIOverviewKeywords > 0 
-                          ? ((brandMention?.mentioned || 0) / totalAIOverviewKeywords) * 100 
+                        const mentionRate = totalAIOverviewKeywords > 0
+                          ? ((brandMention?.mentioned || 0) / totalAIOverviewKeywords) * 100
                           : 0;
-                        const citationRate = totalAIOverviewKeywords > 0 
-                          ? (competitor.citedInPrompts / totalAIOverviewKeywords) * 100 
+                        const citationRate = totalAIOverviewKeywords > 0
+                          ? (competitor.citedInPrompts / totalAIOverviewKeywords) * 100
                           : 0;
 
                         return (
@@ -1527,7 +1527,7 @@ export default function AIOverviewsAnalysisClient({ tool }: AIOverviewsAnalysisC
                 <div className="bg-black text-white font-mono text-xs px-2 py-2 border-b-2 border-white uppercase font-bold mb-4">
                   Authentication Required
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-mono uppercase text-white mb-2">
