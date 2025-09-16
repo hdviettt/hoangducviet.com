@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: PostParams): Promise<Metadata
       fields: ["title", "description", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
     });
     const globalData = await getGlobalMetadata();
-    const siteTitle = globalData && globalData.length > 0 ? globalData[0].title : "Blog";
-    const siteDescription = globalData && globalData.length > 0 ? globalData[0].tagline : "";
+    const siteTitle = globalData && Array.isArray(globalData) && globalData.length > 0 ? globalData[0].title : "Blog";
+    const siteDescription = globalData && Array.isArray(globalData) && globalData.length > 0 ? globalData[0].tagline : "";
     
     // Build thumbnail URL if available
     const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
