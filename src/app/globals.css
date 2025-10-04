@@ -12,43 +12,27 @@
 
 @layer base {
   :root {
-    /* Neo-brutalist flat design */
-    --background: 0 0% 0%; /* Pure black */
-    --foreground: 0 0% 100%; /* Pure white */
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 10%;
+    /* Neo-brutalism monotone black and white */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 0%; /* Pure black */
+    --card: 0 0% 100%; /* Pure white */
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 0 0% 0%; /* Black */
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary: 0 0% 0%; /* Black */
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 30%;
-    --muted-foreground: 0 0% 70%;
-    --accent: 0 0% 15%;
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 0%; /* Black */
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 0% 100%;
-    --destructive-foreground: 0 0% 0%;
-    --border: 0 0% 100%;
-    --input: 0 0% 10%;
-    --ring: 0 0% 100%;
-    --radius: 0rem; /* No radius */
-    
-    /* Neo-brutalist accent colors */
-    --blue-accent: 0 0% 100%; /* Pure white for accents */
-    --blue-light: 0 0% 80%;
-    
-    /* Window system colors */
-    --window-bg: 0 0% 16%;
-    --window-border: 0 0% 22%;
-    --titlebar-bg: 0 0% 18%;
-    --sidebar-bg: 0 0% 12%;
-    --dock-bg: 0 0% 8%;
-    --dock-backdrop: rgba(0, 0, 0, 0.7);
-    
-    /* File explorer colors */
-    --table-header-bg: 0 0% 17%;
-    --table-row-hover: 0 0% 20%;
+    --destructive: 0 0% 0%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 0%; /* Black borders */
+    --input: 0 0% 100%;
+    --ring: 0 0% 0%;
+    --radius: 0.5rem; /* Small rounded corners for neo-brutalism */
   }
   .dark {
     --background: 220 13% 11%;
@@ -77,78 +61,94 @@
   * {
     @apply border-border;
   }
+
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    outline: 2px solid hsl(var(--border));
+    outline-offset: 2px;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif;
     @apply font-medium;
+  }
+
+  /* Ensure consistent font family across all elements */
+  * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* Prose content should use the same font */
+  .prose, .prose * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   }
 }
 
 @layer components {
   .window {
-    @apply bg-card overflow-hidden border-2 border-border;
+    @apply bg-card overflow-hidden border-4 border-border shadow-neo-md rounded-lg;
   }
-  
+
   .window-titlebar {
-    @apply bg-black px-4 py-2 flex items-center justify-between border-b-2 border-border;
+    @apply bg-primary px-4 py-2 flex items-center justify-between border-b-4 border-border;
   }
-  
+
   .window-controls {
     @apply flex items-center gap-2;
   }
-  
+
   .window-control {
-    @apply w-3 h-3 transition-opacity duration-200 hover:opacity-70 cursor-pointer border border-border;
+    @apply w-3 h-3 transition-all duration-200 hover:scale-110 cursor-pointer border-2 border-border rounded-full bg-card;
   }
-  
+
   .dock {
-    @apply fixed bottom-0 left-0 right-0 bg-black px-4 py-2 flex items-center gap-2 border-t-2 border-border;
+    @apply fixed bottom-0 left-0 right-0 bg-card px-4 py-3 flex items-center gap-3 border-t-4 border-border shadow-neo-lg;
   }
-  
+
   .dock-item {
-    @apply px-4 py-2 flex items-center justify-center transition-colors duration-200 hover:bg-white hover:text-black cursor-pointer border-r border-border;
+    @apply px-4 py-2 flex items-center justify-center transition-all duration-200 cursor-pointer border-2 border-border rounded-lg bg-card hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm active:translate-x-1 active:translate-y-1 active:shadow-none;
   }
-  
+
   .sidebar-item {
-    @apply flex items-center gap-2 px-3 py-2 text-sm transition-colors duration-200 hover:bg-white hover:text-black cursor-pointer;
+    @apply flex items-center gap-2 px-3 py-2 text-sm transition-all duration-200 cursor-pointer border-2 border-border rounded-lg bg-card hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm;
   }
-  
+
   .table-row {
-    @apply flex items-center gap-4 px-4 py-3 transition-all duration-200 hover:bg-accent/40 text-sm cursor-pointer;
+    @apply flex items-center gap-4 px-4 py-3 transition-all duration-200 hover:bg-secondary/20 text-sm cursor-pointer border-b-2 border-border;
   }
-  
+
   .table-header {
-    @apply bg-black px-2 py-1.5 border-b-2 border-border text-[10px] text-white font-bold uppercase tracking-wider;
+    @apply bg-primary px-2 py-1.5 border-b-4 border-border text-[10px] text-foreground font-bold uppercase tracking-wider;
   }
-  
+
   .file-item {
-    @apply flex items-center gap-2 px-2 py-1.5 text-xs transition-colors duration-200 hover:bg-white hover:text-black cursor-pointer border-b border-border;
+    @apply flex items-center gap-2 px-2 py-1.5 text-xs transition-all duration-200 cursor-pointer border-b-2 border-border hover:bg-primary/10;
   }
-  
+
   .file-icon {
-    @apply w-3.5 h-3.5 text-muted-foreground transition-all duration-200 group-hover:text-blue-400;
+    @apply w-3.5 h-3.5 text-muted-foreground transition-all duration-200;
   }
-  
+
   .file-name {
-    @apply flex-1 transition-colors duration-200 group-hover:text-black font-normal;
+    @apply flex-1 transition-colors duration-200 font-normal;
   }
-  
+
   .breadcrumb {
     @apply flex items-center gap-1 text-xs text-muted-foreground;
   }
-  
+
   .breadcrumb-item {
     @apply hover:text-foreground transition-colors duration-200;
   }
-  
-  .navigation-bar {
-    @apply bg-black px-4 py-1 flex items-center justify-between border-b-2 border-border;
-  }
-  
+
   /* Animations */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -168,21 +168,21 @@
     animation: slideUp 0.6s ease-out;
   }
   
-  /* Scrollbar Styles - Flat */
+  /* Scrollbar Styles - Neo-brutalism */
   ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
   }
-  
+
   ::-webkit-scrollbar-track {
-    @apply bg-black border-l border-border;
+    @apply bg-muted border-2 border-border;
   }
-  
+
   ::-webkit-scrollbar-thumb {
-    @apply bg-white border border-black;
+    @apply bg-primary border-2 border-border rounded-md hover:bg-accent transition-colors;
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-200;
+    @apply bg-accent;
   }
 }

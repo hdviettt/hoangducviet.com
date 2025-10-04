@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { getItemById, getGlobalMetadata } from "@/lib/directus";
 import { getPostBySlug } from "@/lib/posts";
+import TableOfContents from "@/components/TableOfContents";
 
 export const runtime = 'edge';
 
@@ -100,73 +101,82 @@ export default async function PostPage({ params }: PostParams) {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="max-w-4xl mx-auto p-4 md:p-8 animate-fadeIn">
-        {/* Back button */}
-        <Link
-          href="/posts"
-          className="inline-block text-xs text-white hover:bg-white hover:text-black px-2 py-1 mb-8 transition-colors border border-white font-mono uppercase"
-        >
-          [Back]
-        </Link>
+      <div className="max-w-7xl mx-auto p-6 md:p-12 animate-fadeIn">
+        <div className="flex gap-8">
+          {/* Main Content */}
+          <div className="flex-1 max-w-3xl">
+            {/* Back button */}
+            <Link
+              href="/posts"
+              className="inline-block text-[10px] text-primary-foreground px-3 py-1.5 mb-8 transition-all border-2 border-border rounded-md bg-primary shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none font-mono uppercase font-bold"
+            >
+              ← Back
+            </Link>
 
-        {/* Article Header */}
-        <header className="mb-6 md:mb-10 pb-4 md:pb-6 border-b border-border/20">
-          <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 text-foreground">{data.title}</h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <time dateTime={data.date_created} className="font-mono text-xs">
-              {data.date_created &&
-                new Date(data.date_created).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-            </time>
-            {categories.length > 0 && (
-              <>
-                <span className="text-white">|</span>
-                <div className="flex items-center gap-2">
-                  {categories.map(({ title }) => (
-                    <span key={title} className="px-2 py-1 bg-black text-white border border-white text-xs font-mono uppercase">
-                      {title}
-                    </span>
-                  ))}
-                </div>
-              </>
+            {/* Article Header */}
+            <header className="mb-8 pb-6 border-b-2 border-border">
+              <h1 className="text-2xl md:text-3xl font-bold mb-4 text-foreground uppercase">{data.title}</h1>
+              <div className="flex flex-wrap items-center gap-2">
+                <time dateTime={data.date_created} className="font-mono text-[9px] bg-muted/30 px-2 py-1 rounded-md border-2 border-border uppercase">
+                  {data.date_created &&
+                    new Date(data.date_created).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                </time>
+                {categories.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    {categories.map(({ title }) => (
+                      <span key={title} className="px-2 py-1 bg-primary text-primary-foreground border-2 border-border text-[9px] font-mono uppercase rounded-md shadow-neo-sm">
+                        {title}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </header>
+
+            {/* Thumbnail Image */}
+            {thumbnailUrl && data.thumbnail && typeof data.thumbnail === 'object' && (
+              <div className="mb-8 overflow-hidden border-4 border-border rounded-lg shadow-neo-md">
+                <Image
+                  src={thumbnailUrl}
+                  alt={data.title || ''}
+                  width={data.thumbnail.width || 800}
+                  height={data.thumbnail.height || 400}
+                  className="w-full h-auto"
+                  priority
+                />
+              </div>
+            )}
+
+            {/* Article Content */}
+            {data.body && (
+              <div
+                className="article-content prose prose-base max-w-none
+                  prose-headings:font-bold prose-headings:text-foreground prose-headings:mb-4 prose-headings:mt-8 prose-headings:uppercase
+                  prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
+                  prose-p:text-foreground prose-p:leading-relaxed prose-p:mb-4 prose-p:text-sm
+                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:transition-colors
+                  prose-strong:text-foreground prose-strong:font-bold
+                  prose-code:text-primary prose-code:bg-muted/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:border prose-code:border-border prose-code:font-mono
+                  prose-pre:bg-card prose-pre:border-2 prose-pre:border-border prose-pre:rounded-lg prose-pre:shadow-neo-sm prose-pre:p-4 prose-pre:text-xs
+                  prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:bg-muted/20 prose-blockquote:py-2 prose-blockquote:my-4 prose-blockquote:text-sm
+                  prose-ul:text-foreground prose-ul:text-sm prose-ul:mb-4 prose-ol:text-foreground prose-ol:text-sm prose-ol:mb-4
+                  prose-li:marker:text-primary prose-li:mb-1
+                  prose-hr:border-border prose-hr:border-2 prose-hr:my-6
+                  prose-img:border-2 prose-img:border-border prose-img:rounded-lg prose-img:shadow-neo-sm"
+                dangerouslySetInnerHTML={{ __html: data.body }}
+              />
             )}
           </div>
-        </header>
 
-        {/* Thumbnail Image */}
-        {thumbnailUrl && data.thumbnail && typeof data.thumbnail === 'object' && (
-          <div className="mb-6 md:mb-10 overflow-hidden border-2 md:border-4 border-white">
-            <Image
-              src={thumbnailUrl}
-              alt={data.title || ''}
-              width={data.thumbnail.width || 800}
-              height={data.thumbnail.height || 400}
-              className="w-full h-auto transition-transform duration-500 hover:scale-105"
-              priority
-            />
-          </div>
-        )}
-
-        {/* Article Content */}
-        {data.body && (
-          <div
-            className="prose prose-invert prose-sm md:prose-lg max-w-none 
-              prose-headings:font-bold prose-headings:text-foreground prose-headings:mb-6
-              prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6
-              prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-a:transition-colors
-              prose-strong:text-foreground prose-strong:font-semibold
-              prose-code:text-blue-400 prose-code:bg-secondary/50 prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-code:text-sm
-              prose-pre:bg-secondary/30 prose-pre:border prose-pre:border-border/20 prose-pre:rounded-lg
-              prose-blockquote:border-l-4 prose-blockquote:border-blue-400/50 prose-blockquote:pl-6 prose-blockquote:italic
-              prose-ul:text-muted-foreground prose-ol:text-muted-foreground
-              prose-li:marker:text-blue-400/50 prose-li:mb-2
-              prose-hr:border-border/20 prose-hr:my-8"
-            dangerouslySetInnerHTML={{ __html: data.body }}
-          />
-        )}
+          {/* Table of Contents Sidebar */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
+            <TableOfContents />
+          </aside>
+        </div>
       </div>
     </div>
   );
