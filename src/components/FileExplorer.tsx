@@ -22,7 +22,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
         if (postsData) {
           setArchiveData(postsData);
           // Expand all years by default
-          const years = new Set(postsData.map((item: any) => item.year));
+          const years = new Set<string>(postsData.map((item: any) => item.year as string));
           setExpandedYears(years);
         }
       };
