@@ -12,26 +12,26 @@
 
 @layer base {
   :root {
-    /* Neo-brutalism monotone blue color palette */
+    /* Neo-brutalism monotone black and white */
     --background: 0 0% 100%; /* Pure white */
     --foreground: 0 0% 0%; /* Pure black */
     --card: 0 0% 100%; /* Pure white */
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
-    --primary: 217 91% 60%; /* Blue accent */
-    --primary-foreground: 0 0% 100%; /* White text on blue */
-    --secondary: 217 91% 60%; /* Same blue */
+    --primary: 0 0% 0%; /* Black */
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary: 0 0% 0%; /* Black */
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 90%;
     --muted-foreground: 0 0% 40%;
-    --accent: 217 91% 60%; /* Same blue */
+    --accent: 0 0% 0%; /* Black */
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 85% 60%;
+    --destructive: 0 0% 0%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 0%; /* Black borders */
     --input: 0 0% 100%;
-    --ring: 217 91% 60%;
+    --ring: 0 0% 0%;
     --radius: 0.5rem; /* Small rounded corners for neo-brutalism */
   }
   .dark {
@@ -149,10 +149,6 @@
     @apply hover:text-foreground transition-colors duration-200;
   }
 
-  .navigation-bar {
-    @apply bg-primary px-4 py-2 flex items-center justify-between border-b-4 border-border;
-  }
-  
   /* Animations */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }

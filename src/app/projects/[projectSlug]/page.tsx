@@ -146,7 +146,7 @@ export default async function ProjectPage({ params }: ProjectParams) {
         )}
 
         {posts.length === 0 && (
-          <div className="mt-10 pt-8 border-t-2 border-border p-6 bg-muted/20 text-center border-2 rounded-lg">
+          <div className="mt-10 p-6 bg-muted/20 text-center border-2 border-border rounded-lg">
             <p className="text-foreground font-mono text-[10px] uppercase font-bold">No related articles</p>
           </div>
         )}

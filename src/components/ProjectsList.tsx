@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface Project {
   slug?: string;
   title?: string;
   date_created?: string;
+  description?: string;
 }
 
 interface ProjectsListProps {
@@ -16,34 +16,6 @@ interface ProjectsListProps {
 
 export default function ProjectsList({ projects }: ProjectsListProps) {
   const [sortBy, setSortBy] = useState<"date-desc" | "date-asc" | "title">("date-desc");
-
-  // Initialize with all years and months expanded
-  const [expandedYears, setExpandedYears] = useState<Set<string>>(() => {
-    const years = new Set<string>();
-    projects.forEach(project => {
-      if (project.date_created) {
-        years.add(new Date(project.date_created).getFullYear().toString());
-      } else {
-        years.add("Unknown");
-      }
-    });
-    return years;
-  });
-
-  const [expandedMonths, setExpandedMonths] = useState<Set<string>>(() => {
-    const yearMonths = new Set<string>();
-    projects.forEach(project => {
-      if (project.date_created) {
-        const date = new Date(project.date_created);
-        const year = date.getFullYear().toString();
-        const month = date.toLocaleDateString('en-US', { month: 'long' });
-        yearMonths.add(`${year}-${month}`);
-      } else {
-        yearMonths.add("Unknown-Unknown");
-      }
-    });
-    return yearMonths;
-  });
 
   // Sort projects
   const sortedProjects = useMemo(() => {
@@ -112,133 +84,139 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
     });
   }, [sortedProjects]);
 
-  const toggleYear = (year: string) => {
-    const newExpanded = new Set(expandedYears);
-    if (newExpanded.has(year)) {
-      newExpanded.delete(year);
-    } else {
-      newExpanded.add(year);
-    }
-    setExpandedYears(newExpanded);
-  };
-
-  const toggleMonth = (yearMonth: string) => {
-    const newExpanded = new Set(expandedMonths);
-    if (newExpanded.has(yearMonth)) {
-      newExpanded.delete(yearMonth);
-    } else {
-      newExpanded.add(yearMonth);
-    }
-    setExpandedMonths(newExpanded);
-  };
+  // Expose archive data to window for FileExplorer
+  useEffect(() => {
+    (window as any).__PROJECTS_ARCHIVE__ = groupedProjects;
+  }, [groupedProjects]);
 
   return (
-    <>
-      {/* Controls Bar - Neo-brutalism Style */}
-      <div className="bg-muted/20 border-b-4 border-border px-3 py-3 flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4">
-        {/* Sort Control */}
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-foreground font-mono uppercase font-bold">Sort:</span>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="bg-card text-foreground border-2 border-border px-3 py-1.5 text-[10px] font-mono uppercase cursor-pointer rounded-md shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
-          >
-            <option value="date-desc">Date [New]</option>
-            <option value="date-asc">Date [Old]</option>
-            <option value="title">Title [A-Z]</option>
-          </select>
-        </div>
+    <div className="flex h-full">
+      {/* Left Sidebar - Table of Contents */}
+      <div className="w-48 border-r-4 border-border bg-muted/20 overflow-y-auto flex-shrink-0">
+        <div className="p-3">
+          <nav className="space-y-1">
+            {groupedProjects.map(({ year, months }) => (
+              <div key={year}>
+                {/* Year - Jump to section */}
+                <a
+                  href={`#year-${year}`}
+                  className="block text-foreground font-mono text-[11px] px-2 py-1 uppercase font-bold hover:text-primary transition-colors"
+                >
+                  {year}
+                </a>
 
-        {/* Results Count */}
-        <div className="md:ml-auto text-[10px] text-foreground font-mono font-bold">
-          {sortedProjects.length} items
+                {/* Months - Jump to section */}
+                <div className="ml-3 space-y-0.5 mb-2">
+                  {months.map(({ month, projects }) => (
+                    <a
+                      key={`${year}-${month}`}
+                      href={`#month-${year}-${month}`}
+                      className="block text-muted-foreground font-mono text-[10px] px-2 py-0.5 hover:text-foreground transition-colors"
+                    >
+                      {month} ({projects.length})
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </nav>
         </div>
       </div>
 
-      {/* Table Content */}
-      <div className="flex-1 overflow-y-auto min-h-0">
-        {sortedProjects.length === 0 ? (
-          <div className="flex items-center justify-center h-64 text-foreground">
-            <div className="text-center">
-              <p className="text-lg font-bold uppercase">No Projects</p>
-              <p className="text-xs mt-2 font-mono">Empty directory</p>
-            </div>
+      {/* Right Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Controls Bar - Neo-brutalism Style */}
+        <div className="bg-muted/20 border-b-4 border-border px-3 py-3 flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4">
+          {/* Sort Control */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-foreground font-mono uppercase font-bold">Sort:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-card text-foreground border-2 border-border px-3 py-1.5 text-[10px] font-mono uppercase cursor-pointer rounded-md shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+            >
+              <option value="date-desc">Date [New]</option>
+              <option value="date-asc">Date [Old]</option>
+              <option value="title">Title [A-Z]</option>
+            </select>
           </div>
-        ) : (
-          // Hierarchical Grouped View
-          <div className="divide-y-2 divide-border">
-            {groupedProjects.map(({ year, months }) => (
-              <div key={year}>
-                {/* Year Header - Clickable */}
-                <div
-                  onClick={() => toggleYear(year)}
-                  className="bg-primary text-primary-foreground font-mono text-[10px] px-3 py-2 border-b-4 border-border uppercase font-bold flex items-center gap-2 cursor-pointer hover:bg-primary/90 transition-colors"
-                >
-                  {expandedYears.has(year) ? (
-                    <ChevronDown className="w-3 h-3" />
-                  ) : (
-                    <ChevronRight className="w-3 h-3" />
-                  )}
-                  {year} [{months.reduce((sum, m) => sum + m.projects.length, 0)}]
-                </div>
 
-                {/* Months - Show when year is expanded */}
-                {expandedYears.has(year) && (
-                  <div className="divide-y-2 divide-border">
-                    {months.map(({ month, projects }) => {
-                      const yearMonth = `${year}-${month}`;
-                      return (
-                        <div key={yearMonth}>
-                          {/* Month Header - Clickable */}
-                          <div
-                            onClick={() => toggleMonth(yearMonth)}
-                            className="bg-muted/20 text-foreground font-mono text-[9px] px-6 py-1.5 border-b-2 border-border uppercase font-bold flex items-center gap-2 cursor-pointer hover:bg-muted/30 transition-colors"
+          {/* Results Count */}
+          <div className="md:ml-auto text-[10px] text-foreground font-mono font-bold">
+            {sortedProjects.length} items
+          </div>
+        </div>
+
+        {/* Projects List - Grouped by Year and Month */}
+        <div className="flex-1 overflow-y-auto min-h-0">
+          {sortedProjects.length === 0 ? (
+            <div className="flex items-center justify-center h-64 text-foreground">
+              <div className="text-center">
+                <p className="text-lg font-bold uppercase">No Projects</p>
+                <p className="text-xs mt-2 font-mono">Empty directory</p>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4">
+              {groupedProjects.map(({ year, months }) => (
+                <div key={year} id={`year-${year}`} className="mb-8">
+                  {/* Year Header */}
+                  <div className="bg-primary text-primary-foreground font-mono text-xs px-3 py-2 mb-4 uppercase font-bold">
+                    {year}
+                  </div>
+
+                  {/* Months */}
+                  {months.map(({ month, projects }) => (
+                    <div key={`${year}-${month}`} id={`month-${year}-${month}`} className="mb-6">
+                      {/* Month Header */}
+                      <div className="text-foreground font-mono text-[10px] px-2 py-1 mb-2 uppercase font-bold">
+                        {month}
+                      </div>
+
+                      {/* Projects in this month */}
+                      <div className="space-y-2">
+                        {projects.map((project, index) => (
+                          <Link
+                            key={project.slug || index}
+                            href={`/projects/${project.slug}`}
+                            className="block px-3 py-3 transition-all duration-200 cursor-pointer border-2 border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm bg-card"
                           >
-                            {expandedMonths.has(yearMonth) ? (
-                              <ChevronDown className="w-2.5 h-2.5" />
-                            ) : (
-                              <ChevronRight className="w-2.5 h-2.5" />
-                            )}
-                            {month} [{projects.length}]
-                          </div>
-
-                          {/* Projects - Show when month is expanded */}
-                          {expandedMonths.has(yearMonth) && (
-                            <div className="divide-y-2 divide-border">
-                              {projects.map((project, index) => (
-                                <Link
-                                  key={project.slug || index}
-                                  href={`/projects/${project.slug}`}
-                                  className="file-item group"
-                                >
-                                  <div className="w-8 text-[9px] font-mono text-muted-foreground">
-                                    [D]
-                                  </div>
-                                  <div className="file-name text-[10px]">
-                                    {project.title || "Untitled"}
-                                  </div>
-                                  <div className="w-20 md:w-28 text-right pr-2 md:pr-4 text-[9px] text-muted-foreground">
+                            <div className="flex items-start gap-2">
+                              <div className="w-8 text-[9px] font-mono text-muted-foreground pt-0.5">
+                                [D]
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-normal text-[10px] mb-1">
+                                  {project.title || "Untitled"}
+                                </div>
+                                {project.description && (
+                                  <div
+                                    className="text-[9px] text-muted-foreground line-clamp-2 mb-1"
+                                    dangerouslySetInnerHTML={{ __html: project.description }}
+                                  />
+                                )}
+                                <div className="flex items-center gap-2 text-[8px] text-muted-foreground font-mono">
+                                  <span>
                                     {project.date_created ? new Date(project.date_created).toLocaleDateString('en-US', {
                                       month: 'short',
                                       day: 'numeric',
                                       year: 'numeric'
                                     }) : ""}
-                                  </div>
-                                </Link>
-                              ))}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
-import { Github, Facebook, Instagram } from "lucide-react";
+import { ReactNode, useState, useEffect } from "react";
+import { Github, Facebook, Instagram, ChevronDown, ChevronRight } from "lucide-react";
 
 interface FileExplorerProps {
   children: ReactNode;
@@ -10,12 +10,47 @@ interface FileExplorerProps {
 
 export default function FileExplorer({ children, title = "VIET" }: FileExplorerProps) {
   const pathname = usePathname();
+  const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
+  const [archiveData, setArchiveData] = useState<any[]>([]);
+
+  // Fetch archive data when on posts page
+  useEffect(() => {
+    if (pathname.startsWith("/posts")) {
+      // Extract archive data from the DOM (PostsList component renders it)
+      const extractArchive = () => {
+        const postsData = (window as any).__POSTS_ARCHIVE__;
+        if (postsData) {
+          setArchiveData(postsData);
+          // Expand all years by default
+          const years = new Set(postsData.map((item: any) => item.year));
+          setExpandedYears(years);
+        }
+      };
+
+      // Try immediately and after a short delay
+      extractArchive();
+      const timeout = setTimeout(extractArchive, 100);
+      return () => clearTimeout(timeout);
+    } else {
+      setArchiveData([]);
+    }
+  }, [pathname]);
+
+  const toggleYear = (year: string) => {
+    const newExpanded = new Set(expandedYears);
+    if (newExpanded.has(year)) {
+      newExpanded.delete(year);
+    } else {
+      newExpanded.add(year);
+    }
+    setExpandedYears(newExpanded);
+  };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-background overflow-hidden p-2 md:p-6">
-      <div className="w-full max-w-5xl h-full md:h-[600px]">
+    <div className="h-screen bg-background overflow-hidden">
+      <div className="w-full h-full">
         {/* Neo-brutalist File Explorer Window */}
-        <div className="h-full window flex flex-col">
+        <div className="h-full flex flex-col border-4 border-border bg-card">
 
           {/* Title Bar - Neo-brutalism */}
           <div className="window-titlebar">
@@ -25,7 +60,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                 <div className="window-control bg-secondary" />
                 <div className="window-control bg-accent" />
               </div>
-              <div className="text-xs text-foreground font-bold uppercase tracking-wider">
+              <div className="text-xs text-primary-foreground font-bold uppercase tracking-wider">
                 {title}
               </div>
             </div>
@@ -48,19 +83,19 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
           {/* Content Area */}
           <div className="flex-1 flex overflow-hidden">
             {/* Sidebar - Neo-brutalism */}
-            <div className="hidden md:block w-40 bg-muted/20 border-r-4 border-border flex-shrink-0 overflow-y-auto">
+            <div className="hidden md:block w-56 bg-muted/20 border-r-4 border-border flex-shrink-0 overflow-y-auto">
               <div className="p-3">
                 <div className="text-[10px] text-foreground mb-3 px-2 font-bold uppercase tracking-wider">
                   Files
                 </div>
 
-                <div className="space-y-2">
+                <nav className="space-y-2">
                   {/* About */}
                   <Link
                     href="/"
-                    className={`block px-3 py-2 text-xs font-mono transition-all rounded-md border-2 ${pathname === "/"
-                      ? "bg-primary text-primary-foreground border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:shadow-neo-sm"
+                    className={`block px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 ${pathname === "/"
+                      ? "bg-foreground text-background border-border shadow-neo-sm font-bold"
+                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
                       }`}
                   >
                     about.md
@@ -69,9 +104,9 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   {/* Projects */}
                   <Link
                     href="/projects"
-                    className={`block px-3 py-2 text-xs font-mono transition-all rounded-md border-2 ${pathname.startsWith("/projects")
-                      ? "bg-secondary text-secondary-foreground border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:shadow-neo-sm"
+                    className={`block px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 ${pathname.startsWith("/projects")
+                      ? "bg-foreground text-background border-border shadow-neo-sm font-bold"
+                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
                       }`}
                   >
                     projects/
@@ -80,16 +115,16 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   {/* Articles */}
                   <Link
                     href="/posts"
-                    className={`block px-3 py-2 text-xs font-mono transition-all rounded-md border-2 ${pathname.startsWith("/posts")
-                      ? "bg-accent text-accent-foreground border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:shadow-neo-sm"
+                    className={`block px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 ${pathname.startsWith("/posts")
+                      ? "bg-foreground text-background border-border shadow-neo-sm font-bold"
+                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
                       }`}
                   >
                     articles/
                   </Link>
-                </div>
+                </nav>
 
-                {/* Links Section */}
+                {/* Social Links */}
                 <div className="mt-6 pt-4 border-t-2 border-border">
                   <div className="text-[10px] text-foreground mb-3 px-2 font-bold uppercase tracking-wider">
                     Social
@@ -99,7 +134,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                       href="https://github.com/hdviettt"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:shadow-neo-sm"
+                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
                       title="Github"
                     >
                       <Github className="w-4 h-4" />
@@ -108,7 +143,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                       href="https://www.facebook.com/hoangducviettt/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:shadow-neo-sm"
+                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
                       title="Facebook"
                     >
                       <Facebook className="w-4 h-4" />
@@ -117,7 +152,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                       href="https://www.instagram.com/_hdviet/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:shadow-neo-sm"
+                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
                       title="Instagram"
                     >
                       <Instagram className="w-4 h-4" />
