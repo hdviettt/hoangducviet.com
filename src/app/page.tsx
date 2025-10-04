@@ -84,28 +84,13 @@ export default async function Home() {
                 />
               )}
 
-              {/* Action Buttons */}
-              <div className="flex gap-0 mt-6 md:mt-8">
-                <a 
-                  href="/posts" 
-                  className="px-4 md:px-6 py-2 md:py-3 bg-black text-white border md:border-2 border-white font-bold uppercase text-[10px] md:text-xs hover:bg-white hover:text-black transition-colors"
-                >
-                  [Articles]
-                </a>
-                <a 
-                  href="/projects" 
-                  className="px-4 md:px-6 py-2 md:py-3 bg-black text-white border md:border-2 border-white border-l-0 font-bold uppercase text-[10px] md:text-xs hover:bg-white hover:text-black transition-colors"
-                >
-                  [Projects]
-                </a>
-              </div>
             </div>
 
             {/* Right Side - Image */}
             <div className="order-1 lg:order-2">
               {imageUrl ? (
                 <div className="w-full max-w-md mx-auto lg:max-w-none">
-                  <div className="aspect-square overflow-hidden border-2 md:border-4 border-white bg-black">
+                  <div className="aspect-square overflow-hidden border-4 border-border bg-card rounded-full shadow-neo-lg">
                     <Image
                       src={imageUrl}
                       alt={mainProfile.name || 'Profile'}
@@ -117,8 +102,8 @@ export default async function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="aspect-square bg-black border-2 md:border-4 border-white flex items-center justify-center">
-                  <div className="text-white font-mono text-sm md:text-lg uppercase">No Image</div>
+                <div className="aspect-square bg-card border-4 border-border rounded-full shadow-neo-lg flex items-center justify-center">
+                  <div className="text-foreground font-mono text-sm md:text-lg uppercase">No Image</div>
                 </div>
               )}
             </div>
@@ -127,7 +112,7 @@ export default async function Home() {
 
         {/* Additional Profiles Section if there are more */}
         {hdvietData.length > 1 && (
-          <div className="max-w-7xl mx-auto mt-20 pt-12 border-t border-border/20">
+          <div className="max-w-7xl mx-auto mt-20 pt-12 border-t-4 border-border">
             <h2 className="text-3xl font-bold mb-8 text-foreground">More Profiles</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {hdvietData.slice(1).map((item, index) => {
@@ -141,11 +126,11 @@ export default async function Home() {
                 }
 
                 return (
-                  <div key={item.id || index} className="flex gap-6 p-6 bg-secondary/10 rounded-xl border border-border/20 hover:bg-secondary/20 transition-all duration-300">
+                  <div key={item.id || index} className="flex gap-6 p-6 bg-card rounded-xl border-4 border-border shadow-neo hover:translate-x-1 hover:translate-y-1 hover:shadow-neo-sm transition-all duration-300">
                     {/* Small Image */}
                     {itemImageUrl && (
                       <div className="flex-shrink-0">
-                        <div className="w-24 h-24 rounded-lg overflow-hidden">
+                        <div className="w-24 h-24 rounded-lg overflow-hidden border-2 border-border">
                           <Image
                             src={itemImageUrl}
                             alt={item.name || 'Profile'}
@@ -156,7 +141,7 @@ export default async function Home() {
                         </div>
                       </div>
                     )}
-                    
+
                     {/* Content */}
                     <div className="flex-1">
                       {item.name && (
@@ -164,12 +149,12 @@ export default async function Home() {
                           {item.name}
                         </h3>
                       )}
-                      
+
                       {item.description && (
-                        <div 
-                          className="prose prose-invert prose-sm max-w-none
+                        <div
+                          className="prose prose-sm max-w-none
                             prose-p:text-muted-foreground prose-p:line-clamp-3
-                            prose-a:text-blue-400"
+                            prose-a:text-primary"
                           dangerouslySetInnerHTML={{ __html: item.description }}
                         />
                       )}

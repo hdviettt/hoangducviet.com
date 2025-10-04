@@ -55,6 +55,12 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		boxShadow: {
+  			'neo': '4px 4px 0px 0px rgba(0, 0, 0, 1)',
+  			'neo-sm': '2px 2px 0px 0px rgba(0, 0, 0, 1)',
+  			'neo-md': '6px 6px 0px 0px rgba(0, 0, 0, 1)',
+  			'neo-lg': '8px 8px 0px 0px rgba(0, 0, 0, 1)',
   		}
   	}
   },

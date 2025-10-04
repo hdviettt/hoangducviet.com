@@ -35,7 +35,12 @@
       "Bash(cmd /c \"C:\\Users\\User\\Desktop\\directus-blog\\fix-directus-login.bat\")",
       "Bash(railway logs:*)",
       "Bash(mkdir:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(cp:*)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "WebFetch(domain:www.neobrutalism.dev)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
     "ask": []
