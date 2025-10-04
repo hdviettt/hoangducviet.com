@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { List, X } from "lucide-react";
 
 interface TOCItem {
   id: string;
@@ -11,6 +12,7 @@ interface TOCItem {
 export default function TableOfContents() {
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     // Extract headings from the article content
@@ -93,47 +95,107 @@ export default function TableOfContents() {
   if (headings.length === 0) return null;
 
   return (
-    <div className="sticky top-4 bg-card border-2 border-border rounded-lg shadow-neo-md p-4 max-h-[calc(100vh-2rem)] overflow-y-auto">
-      <div className="text-[10px] text-foreground mb-4 font-bold uppercase tracking-wider font-mono border-b-2 border-border pb-2">
-        Contents
-      </div>
-      <nav className="space-y-1">
-        {headings.map((heading) => {
-          const indent = heading.level - 1;
-          const isActive = activeId === heading.id;
+    <>
+      {/* Desktop TOC */}
+      <div className="hidden lg:block sticky top-4 bg-card border-2 border-border rounded-lg shadow-neo-md p-4 max-h-[calc(100vh-2rem)] overflow-y-auto">
+        <div className="text-[10px] text-foreground mb-4 font-bold uppercase tracking-wider font-mono border-b-2 border-border pb-2">
+          Contents
+        </div>
+        <nav className="space-y-1">
+          {headings.map((heading) => {
+            const indent = heading.level - 1;
+            const isActive = activeId === heading.id;
 
-          return (
-            <a
-              key={heading.id}
-              href={`#${heading.id}`}
-              className={`block text-[10px] font-mono transition-colors py-1.5 rounded relative ${
-                isActive
-                  ? "text-primary font-bold"
-                  : "text-foreground hover:text-primary"
-              }`}
-              style={{
-                paddingLeft: `${8 + indent * 12}px`,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(heading.id)?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }}
+            return (
+              <a
+                key={heading.id}
+                href={`#${heading.id}`}
+                className={`block text-[10px] font-mono transition-colors py-1.5 rounded relative ${
+                  isActive
+                    ? "text-primary font-bold"
+                    : "text-foreground hover:text-primary"
+                }`}
+                style={{
+                  paddingLeft: `${8 + indent * 12}px`,
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(heading.id)?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
+              >
+                {indent > 0 && (
+                  <span
+                    className="absolute left-0 top-0 bottom-0 border-l-2 border-muted/40"
+                    style={{ left: `${indent * 12 - 4}px` }}
+                  />
+                )}
+                {heading.text}
+              </a>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Mobile TOC Button */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed bottom-20 right-4 z-40 bg-primary text-primary-foreground p-4 rounded-full shadow-neo-md border-2 border-border active:translate-x-1 active:translate-y-1"
+        aria-label="Table of contents"
+      >
+        <List className="w-6 h-6" />
+      </button>
+
+      {/* Mobile TOC Drawer */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-background overflow-y-auto">
+          <div className="sticky top-0 bg-primary px-4 py-3 flex items-center justify-between border-b-4 border-border">
+            <span className="text-primary-foreground font-mono text-sm font-bold uppercase">Contents</span>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="text-primary-foreground p-2 active:scale-95"
+              aria-label="Close"
             >
-              {/* Subtle left border indicator for hierarchy */}
-              {indent > 0 && (
-                <span
-                  className="absolute left-0 top-0 bottom-0 border-l-2 border-muted/40"
-                  style={{ left: `${indent * 12 - 4}px` }}
-                />
-              )}
-              {heading.text}
-            </a>
-          );
-        })}
-      </nav>
-    </div>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="p-4">
+            <nav className="space-y-2">
+              {headings.map((heading) => {
+                const indent = heading.level - 1;
+                const isActive = activeId === heading.id;
+
+                return (
+                  <a
+                    key={heading.id}
+                    href={`#${heading.id}`}
+                    className={`block text-sm font-mono transition-colors py-2 px-3 rounded border-2 border-border ${
+                      isActive
+                        ? "bg-primary text-primary-foreground font-bold"
+                        : "bg-card text-foreground hover:bg-muted/20"
+                    }`}
+                    style={{
+                      marginLeft: `${indent * 16}px`,
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileOpen(false);
+                      document.getElementById(heading.id)?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                  >
+                    {heading.text}
+                  </a>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

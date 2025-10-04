@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { Calendar, X } from "lucide-react";
 
 interface Post {
   slug?: string;
@@ -20,6 +20,7 @@ interface PostsListProps {
 export default function PostsList({ posts, categories }: PostsListProps) {
   const [sortBy, setSortBy] = useState<"date-desc" | "date-asc" | "title">("date-desc");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [mobileTocOpen, setMobileTocOpen] = useState(false);
 
 
   // Filter and sort posts
@@ -103,22 +104,19 @@ export default function PostsList({ posts, categories }: PostsListProps) {
   }, [groupedPosts]);
 
   return (
-    <div className="flex h-full">
-      {/* Left Sidebar - Table of Contents */}
-      <div className="w-48 border-r-4 border-border bg-muted/20 overflow-y-auto flex-shrink-0">
+    <div className="flex h-full relative">
+      {/* Desktop Sidebar - Table of Contents */}
+      <div className="hidden md:block w-48 border-r-4 border-border bg-muted/20 overflow-y-auto flex-shrink-0">
         <div className="p-3">
           <nav className="space-y-1">
             {groupedPosts.map(({ year, months }) => (
               <div key={year}>
-                {/* Year - Jump to section */}
                 <a
                   href={`#year-${year}`}
                   className="block text-foreground font-mono text-[11px] px-2 py-1 uppercase font-bold hover:text-primary transition-colors"
                 >
                   {year}
                 </a>
-
-                {/* Months - Jump to section */}
                 <div className="ml-3 space-y-0.5 mb-2">
                   {months.map(({ month, posts }) => (
                     <a
@@ -135,6 +133,58 @@ export default function PostsList({ posts, categories }: PostsListProps) {
           </nav>
         </div>
       </div>
+
+      {/* Mobile ToC Button */}
+      <button
+        onClick={() => setMobileTocOpen(true)}
+        className="md:hidden fixed bottom-20 right-4 z-40 bg-primary text-primary-foreground p-4 rounded-full shadow-neo-md border-2 border-border active:translate-x-1 active:translate-y-1"
+        aria-label="Open navigation"
+      >
+        <Calendar className="w-6 h-6" />
+      </button>
+
+      {/* Mobile ToC Drawer */}
+      {mobileTocOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-background overflow-y-auto">
+          <div className="sticky top-0 bg-primary px-4 py-3 flex items-center justify-between border-b-4 border-border">
+            <span className="text-primary-foreground font-mono text-sm font-bold uppercase">Navigation</span>
+            <button
+              onClick={() => setMobileTocOpen(false)}
+              className="text-primary-foreground p-2 active:scale-95"
+              aria-label="Close navigation"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="p-4">
+            <nav className="space-y-2">
+              {groupedPosts.map(({ year, months }) => (
+                <div key={year}>
+                  <a
+                    href={`#year-${year}`}
+                    onClick={() => setMobileTocOpen(false)}
+                    className="block text-foreground font-mono text-base px-3 py-2 uppercase font-bold hover:text-primary transition-colors border-2 border-border rounded-md bg-card"
+                  >
+                    {year}
+                  </a>
+                  <div className="ml-3 space-y-1 mt-2 mb-3">
+                    {months.map(({ month, posts }) => (
+                      <a
+                        key={`${year}-${month}`}
+                        href={`#month-${year}-${month}`}
+                        onClick={() => setMobileTocOpen(false)}
+                        className="block text-foreground font-mono text-sm px-3 py-2 hover:bg-muted/20 transition-colors rounded-md"
+                      >
+                        {month} ({posts.length})
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
 
       {/* Right Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -207,22 +257,22 @@ export default function PostsList({ posts, categories }: PostsListProps) {
                           <Link
                             key={post.slug || index}
                             href={`/posts/${post.slug}`}
-                            className="block px-3 py-3 transition-all duration-200 cursor-pointer border-2 border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm bg-card"
+                            className="block px-4 py-4 md:px-3 md:py-3 transition-all duration-200 cursor-pointer border-2 border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm active:translate-x-1 active:translate-y-1 bg-card"
                           >
                             <div className="flex items-start gap-2">
                               <div className="w-8 text-[9px] font-mono text-muted-foreground pt-0.5">
                                 [F]
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="font-normal text-[10px] mb-1">
+                                <div className="font-normal text-sm md:text-[10px] mb-1">
                                   {post.title || "Untitled"}
                                 </div>
                                 {post.description && (
-                                  <div className="text-[9px] text-muted-foreground line-clamp-2 mb-1">
+                                  <div className="text-xs md:text-[9px] text-muted-foreground line-clamp-2 mb-1">
                                     {post.description}
                                   </div>
                                 )}
-                                <div className="flex items-center gap-2 text-[8px] text-muted-foreground font-mono">
+                                <div className="flex items-center gap-2 text-[10px] md:text-[8px] text-muted-foreground font-mono">
                                   <span>
                                     {post.date_created ? new Date(post.date_created).toLocaleDateString('en-US', {
                                       month: 'short',

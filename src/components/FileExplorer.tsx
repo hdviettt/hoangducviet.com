@@ -165,11 +165,11 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
             {/* Main Content */}
             <div className="flex-1 bg-card overflow-y-auto">
               {/* Mobile Navigation */}
-              <div className="md:hidden bg-muted/20 border-b-2 border-border p-2">
-                <div className="flex gap-2">
+              <div className="md:hidden bg-muted/20 border-b-2 border-border p-3">
+                <div className="flex gap-2 mb-3">
                   <Link
                     href="/"
-                    className={`flex-1 px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 text-center ${pathname === "/"
+                    className={`flex-1 px-4 py-3 text-xs font-mono transition-all rounded-md border-2 text-center active:translate-x-0.5 active:translate-y-0.5 ${pathname === "/"
                       ? "bg-primary text-primary-foreground border-border shadow-neo-sm font-bold"
                       : "bg-card text-foreground border-border"
                       }`}
@@ -178,8 +178,8 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   </Link>
                   <Link
                     href="/projects"
-                    className={`flex-1 px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 text-center ${pathname.startsWith("/projects")
-                      ? "bg-secondary text-secondary-foreground border-border shadow-neo-sm font-bold"
+                    className={`flex-1 px-4 py-3 text-xs font-mono transition-all rounded-md border-2 text-center active:translate-x-0.5 active:translate-y-0.5 ${pathname.startsWith("/projects")
+                      ? "bg-primary text-primary-foreground border-border shadow-neo-sm font-bold"
                       : "bg-card text-foreground border-border"
                       }`}
                   >
@@ -187,13 +187,44 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   </Link>
                   <Link
                     href="/posts"
-                    className={`flex-1 px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 text-center ${pathname.startsWith("/posts")
-                      ? "bg-accent text-accent-foreground border-border shadow-neo-sm font-bold"
+                    className={`flex-1 px-4 py-3 text-xs font-mono transition-all rounded-md border-2 text-center active:translate-x-0.5 active:translate-y-0.5 ${pathname.startsWith("/posts")
+                      ? "bg-primary text-primary-foreground border-border shadow-neo-sm font-bold"
                       : "bg-card text-foreground border-border"
                       }`}
                   >
                     articles
                   </Link>
+                </div>
+
+                {/* Social links row */}
+                <div className="flex gap-2 pt-2 border-t-2 border-border">
+                  <a
+                    href="https://github.com/hdviettt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center p-3 bg-card text-foreground border-2 border-border rounded-md active:translate-x-0.5 active:translate-y-0.5"
+                    aria-label="GitHub"
+                  >
+                    <Github className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="https://www.facebook.com/hoangducviettt/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center p-3 bg-card text-foreground border-2 border-border rounded-md active:translate-x-0.5 active:translate-y-0.5"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/_hdviet/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center p-3 bg-card text-foreground border-2 border-border rounded-md active:translate-x-0.5 active:translate-y-0.5"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="w-5 h-5" />
+                  </a>
                 </div>
               </div>
               {children}
