@@ -3,9 +3,21 @@ import Image from 'next/image';
 
 const Block = (props: Block) => {
   if (props.type === "header") {
+    const level = props.data.level || 2;
+    const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
+    const sizeClasses = {
+      1: 'text-2xl',
+      2: 'text-xl',
+      3: 'text-lg',
+      4: 'text-base',
+      5: 'text-sm',
+      6: 'text-sm',
+    };
+
     return (
-      <h2
+      <HeadingTag
         key={props.id}
+        className={`${sizeClasses[level as keyof typeof sizeClasses]} font-bold text-foreground mb-4 mt-8 uppercase`}
         dangerouslySetInnerHTML={{
           __html: props.data.text || '',
         }}
@@ -16,10 +28,24 @@ const Block = (props: Block) => {
     return (
       <p
         key={props.id}
+        className="text-sm text-foreground leading-relaxed mb-4"
         dangerouslySetInnerHTML={{
           __html: props.data.text || '',
         }}
       />
+    );
+  }
+  if (props.type === "list") {
+    const ListTag = props.data.style === "ordered" ? "ol" : "ul";
+    return (
+      <ListTag
+        key={props.id}
+        className="text-sm text-foreground mb-4 ml-6 space-y-1"
+      >
+        {props.data.items?.map((item: string, index: number) => (
+          <li key={index} className="text-sm text-foreground" dangerouslySetInnerHTML={{ __html: item }} />
+        ))}
+      </ListTag>
     );
   }
   if (props.type === "image" && props.data.file) {
