@@ -90,6 +90,66 @@
   .prose, .prose * {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   }
+
+  /* Article content consistency - aggressive override of all inline styles */
+  .article-content {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    font-size: 0.875rem !important;
+    line-height: 1.75 !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Force all children to inherit except headings */
+  .article-content * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    font-size: 0.875rem !important;
+    line-height: 1.75 !important;
+    color: hsl(var(--foreground)) !important;
+    font-weight: 400 !important;
+  }
+
+  /* Headings only */
+  .article-content h1,
+  .article-content h2,
+  .article-content h3,
+  .article-content h4,
+  .article-content h5,
+  .article-content h6 {
+    @apply font-bold text-foreground uppercase;
+    font-weight: 700 !important;
+  }
+
+  .article-content h1 { font-size: 1.5rem !important; line-height: 1.2 !important; }
+  .article-content h2 { font-size: 1.25rem !important; line-height: 1.3 !important; }
+  .article-content h3 { font-size: 1.125rem !important; line-height: 1.4 !important; }
+  .article-content h4 { font-size: 1rem !important; line-height: 1.5 !important; }
+  .article-content h5 { font-size: 0.875rem !important; line-height: 1.5 !important; }
+  .article-content h6 { font-size: 0.875rem !important; line-height: 1.5 !important; }
+
+  /* Paragraphs and text elements */
+  .article-content p,
+  .article-content li,
+  .article-content ul,
+  .article-content ol,
+  .article-content div,
+  .article-content span,
+  .article-content a,
+  .article-content strong,
+  .article-content b,
+  .article-content em,
+  .article-content i,
+  .article-content td,
+  .article-content th {
+    font-size: 0.875rem !important;
+    line-height: 1.75 !important;
+    font-weight: 400 !important;
+  }
+
+  /* Strong/bold text should be bolder */
+  .article-content strong,
+  .article-content b {
+    font-weight: 600 !important;
+  }
 }
 
 @layer components {

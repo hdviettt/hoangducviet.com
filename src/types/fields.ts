@@ -4,6 +4,8 @@ export interface Block {
   data: {
     text?: string;
     level?: number;
+    style?: string;
+    items?: string[];
     file?: {
       url: string;
       width?: number;

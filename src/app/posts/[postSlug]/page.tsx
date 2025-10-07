@@ -101,7 +101,7 @@ export default async function PostPage({ params }: PostParams) {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="max-w-7xl mx-auto p-6 md:p-12 animate-fadeIn">
+      <div className="max-w-7xl mx-auto p-6 md:p-12 pb-20 md:pb-12 animate-fadeIn">
         <div className="flex gap-8">
           {/* Main Content */}
           <div className="flex-1 max-w-3xl">

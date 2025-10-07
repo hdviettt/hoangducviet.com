@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getHdviet } from "@/lib/directus";
+import { getPosts } from "@/lib/posts";
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -7,7 +9,8 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   // Fetch Hdviet data
   let hdvietData: any[] = [];
-  
+  let latestPosts: any[] = [];
+
   try {
     hdvietData = await getHdviet();
   } catch (error) {
@@ -21,6 +24,17 @@ export default async function Home() {
         </div>
       </div>
     );
+  }
+
+  // Fetch latest posts
+  try {
+    latestPosts = await getPosts({
+      fields: ["slug", "title", "description", "date_created", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
+      sort: ["-date_created"],
+      limit: 3,
+    });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
   }
 
   // If no data, show empty state
@@ -52,13 +66,32 @@ export default async function Home() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="min-h-full flex justify-center p-8 md:p-12 lg:p-16 animate-fadeIn">
-        {/* Main Profile Section - Deskfolio Style */}
-        <div className="max-w-3xl w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+      <div className="min-h-full p-6 md:p-8 lg:p-12 pb-20 md:pb-12 animate-fadeIn">
+        <div className="max-w-2xl mx-auto space-y-12">
+          {/* Main Profile Section */}
+          <div>
+            {/* Profile Image - Float left for flexible wrapping */}
+            {imageUrl ? (
+              <div className="float-left mr-6 mb-4 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40">
+                <div className="w-full h-full overflow-hidden border-4 border-border bg-card rounded-full shadow-neo-sm">
+                  <Image
+                    src={imageUrl}
+                    alt={mainProfile.name || 'Profile'}
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    priority
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="float-left mr-6 mb-4 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 bg-card border-4 border-border rounded-full shadow-neo-sm flex items-center justify-center">
+                <div className="text-foreground font-mono text-[8px] sm:text-xs uppercase">No Image</div>
+              </div>
+            )}
 
-            {/* Left Side - Content */}
-            <div className="order-2 lg:order-1">
+            {/* Content - Wraps around image */}
+            <div>
               {/* Name */}
               {mainProfile.name && (
                 <h1 className="text-2xl md:text-3xl font-bold mb-6 text-foreground leading-tight uppercase">
@@ -84,36 +117,84 @@ export default async function Home() {
                   dangerouslySetInnerHTML={{ __html: mainProfile.description }}
                 />
               )}
-
             </div>
 
-            {/* Right Side - Image */}
-            <div className="order-1 lg:order-2">
-              {imageUrl ? (
-                <div className="w-full max-w-xs mx-auto">
-                  <div className="aspect-square overflow-hidden border-4 border-border bg-card rounded-full shadow-neo-lg">
-                    <Image
-                      src={imageUrl}
-                      alt={mainProfile.name || 'Profile'}
-                      width={300}
-                      height={300}
-                      className="w-full h-full object-cover"
-                      priority
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="w-full max-w-xs mx-auto aspect-square bg-card border-4 border-border rounded-full shadow-neo-lg flex items-center justify-center">
-                  <div className="text-foreground font-mono text-sm md:text-lg uppercase">No Image</div>
-                </div>
-              )}
-            </div>
+            {/* Clear float */}
+            <div className="clear-both"></div>
           </div>
-        </div>
 
-        {/* Additional Profiles Section if there are more */}
-        {hdvietData.length > 1 && (
-          <div className="max-w-7xl mx-auto mt-20 pt-12 border-t-4 border-border">
+          {/* Latest Posts Section */}
+          {latestPosts.length > 0 && (
+            <div className="pt-8 border-t-4 border-border">
+            <h2 className="text-xl font-bold mb-6 text-foreground uppercase">Latest Posts</h2>
+            <div className="space-y-4">
+              {latestPosts.map((post) => {
+                const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
+                  ? `${directusUrl}/assets/${post.thumbnail.filename_disk}`
+                  : null;
+
+                return (
+                  <Link
+                    key={post.slug}
+                    href={`/posts/${post.slug}`}
+                    className="block group"
+                  >
+                    <div className="flex gap-3 p-3 bg-card rounded-lg border-2 border-border shadow-neo-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all duration-200">
+                      {/* Thumbnail */}
+                      {thumbnailUrl && (
+                        <div className="flex-shrink-0 w-20 sm:w-24 self-start">
+                          <div className="w-full aspect-square overflow-hidden border-2 border-border rounded-md">
+                            <Image
+                              src={thumbnailUrl}
+                              alt={post.title || ''}
+                              width={96}
+                              height={96}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex-1 min-w-0 flex flex-col">
+                        <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground">
+                          {post.title || "Untitled"}
+                        </h3>
+                        {post.description && (
+                          <p className="text-xs text-muted-foreground line-clamp-2 mb-1 flex-1">
+                            {post.description}
+                          </p>
+                        )}
+                        {post.date_created && (
+                          <time className="text-[10px] text-muted-foreground font-mono mt-auto block">
+                            {new Date(post.date_created).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </time>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+              {/* View All Posts Link */}
+              <div className="mt-6 text-center">
+                <Link
+                  href="/posts"
+                  className="inline-block text-xs text-primary-foreground px-3 py-1.5 transition-all border-2 border-border rounded-md bg-primary shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none font-mono uppercase font-bold"
+                >
+                  View All Posts →
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* Additional Profiles Section if there are more */}
+          {hdvietData.length > 1 && (
+            <div className="pt-12 border-t-4 border-border">
             <h2 className="text-3xl font-bold mb-8 text-foreground">More Profiles</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {hdvietData.slice(1).map((item, index) => {
@@ -164,8 +245,9 @@ export default async function Home() {
                 );
               })}
             </div>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

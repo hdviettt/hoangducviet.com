@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Calendar, X } from "lucide-react";
 
 interface Post {
@@ -10,6 +11,11 @@ interface Post {
   date_created?: string;
   categories?: Array<{ title: string }>;
   description?: string;
+  thumbnail?: string | {
+    filename_disk: string;
+    width: number;
+    height: number;
+  };
 }
 
 interface PostsListProps {
@@ -252,45 +258,64 @@ export default function PostsList({ posts, categories }: PostsListProps) {
                       </div>
 
                       {/* Posts in this month */}
-                      <div className="space-y-2">
-                        {posts.map((post, index) => (
-                          <Link
-                            key={post.slug || index}
-                            href={`/posts/${post.slug}`}
-                            className="block px-4 py-4 md:px-3 md:py-3 transition-all duration-200 cursor-pointer border-2 border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm active:translate-x-1 active:translate-y-1 bg-card"
-                          >
-                            <div className="flex items-start gap-2">
-                              <div className="w-8 text-[9px] font-mono text-muted-foreground pt-0.5">
-                                [F]
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="font-normal text-sm md:text-[10px] mb-1">
-                                  {post.title || "Untitled"}
-                                </div>
-                                {post.description && (
-                                  <div className="text-xs md:text-[9px] text-muted-foreground line-clamp-2 mb-1">
-                                    {post.description}
+                      <div className="space-y-4">
+                        {posts.map((post, index) => {
+                          const directusUrl = 'https://directus-production-b969.up.railway.app';
+                          const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
+                            ? `${directusUrl}/assets/${post.thumbnail.filename_disk}`
+                            : null;
+
+                          return (
+                            <Link
+                              key={post.slug || index}
+                              href={`/posts/${post.slug}`}
+                              className="block group"
+                            >
+                              <div className="flex gap-3 p-3 bg-card rounded-lg border-2 border-border shadow-neo-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all duration-200">
+                                {/* Thumbnail */}
+                                {thumbnailUrl && (
+                                  <div className="flex-shrink-0 w-20 sm:w-24 self-start">
+                                    <div className="w-full aspect-square overflow-hidden border-2 border-border rounded-md">
+                                      <Image
+                                        src={thumbnailUrl}
+                                        alt={post.title || ''}
+                                        width={96}
+                                        height={96}
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
                                   </div>
                                 )}
-                                <div className="flex items-center gap-2 text-[10px] md:text-[8px] text-muted-foreground font-mono">
-                                  <span>
-                                    {post.date_created ? new Date(post.date_created).toLocaleDateString('en-US', {
-                                      month: 'short',
-                                      day: 'numeric',
-                                      year: 'numeric'
-                                    }) : ""}
-                                  </span>
-                                  {post.categories && post.categories.length > 0 && (
-                                    <>
-                                      <span>•</span>
-                                      <span>{post.categories.map(cat => cat.title).join(", ")}</span>
-                                    </>
+
+                                <div className="flex-1 min-w-0 flex flex-col">
+                                  <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground">
+                                    {post.title || "Untitled"}
+                                  </h3>
+                                  {post.description && (
+                                    <p className="text-xs text-muted-foreground line-clamp-2 mb-1 flex-1">
+                                      {post.description}
+                                    </p>
                                   )}
+                                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono mt-auto">
+                                    <time>
+                                      {post.date_created ? new Date(post.date_created).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                      }) : ""}
+                                    </time>
+                                    {post.categories && post.categories.length > 0 && (
+                                      <>
+                                        <span>•</span>
+                                        <span>{post.categories.map(cat => cat.title).join(", ")}</span>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </Link>
-                        ))}
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
