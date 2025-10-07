@@ -7,6 +7,7 @@ export interface ItemsQuery {
     _eq?: string | number;
     _in?: Array<string | number>;
   } | any>;
+  sort?: Array<string>;
 }
 
 // Use hardcoded URL for Cloudflare Workers

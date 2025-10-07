@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getHdviet } from "@/lib/directus";
+import { getPosts } from "@/lib/posts";
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
@@ -7,7 +9,8 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   // Fetch Hdviet data
   let hdvietData: any[] = [];
-  
+  let latestPosts: any[] = [];
+
   try {
     hdvietData = await getHdviet();
   } catch (error) {
@@ -21,6 +24,17 @@ export default async function Home() {
         </div>
       </div>
     );
+  }
+
+  // Fetch latest posts
+  try {
+    latestPosts = await getPosts({
+      fields: ["slug", "title", "description", "date_created", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
+      sort: ["-date_created"],
+      limit: 3,
+    });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
   }
 
   // If no data, show empty state
@@ -52,82 +66,136 @@ export default async function Home() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="min-h-full p-4 md:p-8 lg:p-16 animate-fadeIn">
-        {/* Main Profile Section - Deskfolio Style */}
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            
-            {/* Left Side - Content */}
-            <div className="order-2 lg:order-1">
+      <div className="min-h-full p-6 md:p-8 lg:p-12 animate-fadeIn">
+        <div className="max-w-2xl mx-auto space-y-12">
+          {/* Main Profile Section */}
+          <div>
+            {/* Profile Image - Float left for flexible wrapping */}
+            {imageUrl ? (
+              <div className="float-left mr-6 mb-4 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40">
+                <div className="w-full h-full overflow-hidden border-4 border-border bg-card rounded-full shadow-neo-sm">
+                  <Image
+                    src={imageUrl}
+                    alt={mainProfile.name || 'Profile'}
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    priority
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="float-left mr-6 mb-4 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 bg-card border-4 border-border rounded-full shadow-neo-sm flex items-center justify-center">
+                <div className="text-foreground font-mono text-[8px] sm:text-xs uppercase">No Image</div>
+              </div>
+            )}
+
+            {/* Content - Wraps around image */}
+            <div>
               {/* Name */}
               {mainProfile.name && (
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-foreground leading-tight uppercase">
+                <h1 className="text-2xl md:text-3xl font-bold mb-6 text-foreground leading-tight uppercase">
                   {mainProfile.name}
                 </h1>
               )}
-              
+
               {/* Description (HTML) */}
               {mainProfile.description && (
-                <div 
-                  className="prose prose-invert prose-lg max-w-none
-                    prose-headings:font-bold prose-headings:text-foreground prose-headings:mb-4 prose-headings:mt-6
-                    prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
-                    prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-a:transition-colors
-                    prose-strong:text-foreground prose-strong:font-semibold
-                    prose-ul:text-muted-foreground prose-ul:mb-4 prose-ul:ml-4
-                    prose-ol:text-muted-foreground prose-ol:mb-4 prose-ol:ml-4
-                    prose-li:text-muted-foreground prose-li:mb-2
-                    prose-blockquote:border-l-4 prose-blockquote:border-blue-400/50 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground
-                    prose-code:text-blue-400 prose-code:bg-secondary/50 prose-code:px-1 prose-code:rounded prose-code:text-sm
-                    prose-pre:bg-secondary/30 prose-pre:border prose-pre:border-border/20 prose-pre:rounded-lg"
+                <div
+                  className="prose prose-base max-w-none
+                    prose-headings:font-bold prose-headings:text-foreground prose-headings:mb-4 prose-headings:mt-6 prose-headings:uppercase
+                    prose-h1:text-xl prose-h2:text-lg prose-h3:text-base
+                    prose-p:text-foreground prose-p:leading-relaxed prose-p:mb-4 prose-p:text-sm
+                    prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:transition-colors
+                    prose-strong:text-foreground prose-strong:font-bold
+                    prose-ul:text-foreground prose-ul:mb-4 prose-ul:ml-4 prose-ul:text-sm
+                    prose-ol:text-foreground prose-ol:mb-4 prose-ol:ml-4 prose-ol:text-sm
+                    prose-li:text-foreground prose-li:mb-2
+                    prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-foreground prose-blockquote:text-sm
+                    prose-code:text-primary prose-code:bg-muted/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:border prose-code:border-border
+                    prose-pre:bg-card prose-pre:border-2 prose-pre:border-border prose-pre:rounded-lg prose-pre:shadow-neo-sm"
                   dangerouslySetInnerHTML={{ __html: mainProfile.description }}
                 />
               )}
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-0 mt-6 md:mt-8">
-                <a 
-                  href="/posts" 
-                  className="px-4 md:px-6 py-2 md:py-3 bg-black text-white border md:border-2 border-white font-bold uppercase text-[10px] md:text-xs hover:bg-white hover:text-black transition-colors"
+            {/* Clear float */}
+            <div className="clear-both"></div>
+          </div>
+
+          {/* Latest Posts Section */}
+          {latestPosts.length > 0 && (
+            <div className="pt-8 border-t-4 border-border">
+            <h2 className="text-xl font-bold mb-6 text-foreground uppercase">Latest Posts</h2>
+            <div className="space-y-4">
+              {latestPosts.map((post) => {
+                const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
+                  ? `${directusUrl}/assets/${post.thumbnail.filename_disk}`
+                  : null;
+
+                return (
+                  <Link
+                    key={post.slug}
+                    href={`/posts/${post.slug}`}
+                    className="block group"
+                  >
+                    <div className="flex gap-3 p-3 bg-card rounded-lg border-2 border-border shadow-neo-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all duration-200">
+                      {/* Thumbnail */}
+                      {thumbnailUrl && (
+                        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20">
+                          <div className="w-full h-full overflow-hidden border-2 border-border rounded-md">
+                            <Image
+                              src={thumbnailUrl}
+                              alt={post.title || ''}
+                              width={80}
+                              height={80}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground uppercase group-hover:underline">
+                          {post.title}
+                        </h3>
+                        {post.description && (
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {post.description}
+                          </p>
+                        )}
+                        {post.date_created && (
+                          <time className="text-[10px] text-muted-foreground font-mono mt-1 block">
+                            {new Date(post.date_created).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </time>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+              {/* View All Posts Link */}
+              <div className="mt-6 text-center">
+                <Link
+                  href="/posts"
+                  className="inline-block text-xs text-primary-foreground px-3 py-1.5 transition-all border-2 border-border rounded-md bg-primary shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none font-mono uppercase font-bold"
                 >
-                  [Articles]
-                </a>
-                <a 
-                  href="/projects" 
-                  className="px-4 md:px-6 py-2 md:py-3 bg-black text-white border md:border-2 border-white border-l-0 font-bold uppercase text-[10px] md:text-xs hover:bg-white hover:text-black transition-colors"
-                >
-                  [Projects]
-                </a>
+                  More →
+                </Link>
               </div>
             </div>
+          )}
 
-            {/* Right Side - Image */}
-            <div className="order-1 lg:order-2">
-              {imageUrl ? (
-                <div className="w-full max-w-md mx-auto lg:max-w-none">
-                  <div className="aspect-square overflow-hidden border-2 md:border-4 border-white bg-black">
-                    <Image
-                      src={imageUrl}
-                      alt={mainProfile.name || 'Profile'}
-                      width={600}
-                      height={600}
-                      className="w-full h-full object-cover"
-                      priority
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="aspect-square bg-black border-2 md:border-4 border-white flex items-center justify-center">
-                  <div className="text-white font-mono text-sm md:text-lg uppercase">No Image</div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Profiles Section if there are more */}
-        {hdvietData.length > 1 && (
-          <div className="max-w-7xl mx-auto mt-20 pt-12 border-t border-border/20">
+          {/* Additional Profiles Section if there are more */}
+          {hdvietData.length > 1 && (
+            <div className="pt-12 border-t-4 border-border">
             <h2 className="text-3xl font-bold mb-8 text-foreground">More Profiles</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {hdvietData.slice(1).map((item, index) => {
@@ -141,11 +209,11 @@ export default async function Home() {
                 }
 
                 return (
-                  <div key={item.id || index} className="flex gap-6 p-6 bg-secondary/10 rounded-xl border border-border/20 hover:bg-secondary/20 transition-all duration-300">
+                  <div key={item.id || index} className="flex gap-6 p-6 bg-card rounded-xl border-4 border-border shadow-neo hover:translate-x-1 hover:translate-y-1 hover:shadow-neo-sm transition-all duration-300">
                     {/* Small Image */}
                     {itemImageUrl && (
                       <div className="flex-shrink-0">
-                        <div className="w-24 h-24 rounded-lg overflow-hidden">
+                        <div className="w-24 h-24 rounded-lg overflow-hidden border-2 border-border">
                           <Image
                             src={itemImageUrl}
                             alt={item.name || 'Profile'}
@@ -156,7 +224,7 @@ export default async function Home() {
                         </div>
                       </div>
                     )}
-                    
+
                     {/* Content */}
                     <div className="flex-1">
                       {item.name && (
@@ -164,12 +232,12 @@ export default async function Home() {
                           {item.name}
                         </h3>
                       )}
-                      
+
                       {item.description && (
-                        <div 
-                          className="prose prose-invert prose-sm max-w-none
+                        <div
+                          className="prose prose-sm max-w-none
                             prose-p:text-muted-foreground prose-p:line-clamp-3
-                            prose-a:text-blue-400"
+                            prose-a:text-primary"
                           dangerouslySetInnerHTML={{ __html: item.description }}
                         />
                       )}
@@ -178,8 +246,9 @@ export default async function Home() {
                 );
               })}
             </div>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
