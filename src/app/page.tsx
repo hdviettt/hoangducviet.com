@@ -126,7 +126,7 @@ export default async function Home() {
           {/* Latest Posts Section */}
           {latestPosts.length > 0 && (
             <div className="pt-8 border-t-4 border-border">
-            <h2 className="text-xl font-bold mb-6 text-foreground uppercase">Latest Posts</h2>
+            <h2 className="text-xl font-bold mb-6 text-foreground">Latest Posts</h2>
             <div className="space-y-4">
               {latestPosts.map((post) => {
                 const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
@@ -157,7 +157,7 @@ export default async function Home() {
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground uppercase">
+                        <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground">
                           {post.title}
                         </h3>
                         {post.description && (
