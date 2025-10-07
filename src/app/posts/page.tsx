@@ -19,7 +19,7 @@ export default async function PostsPage() {
     // Fetch posts with categories expanded through the junction table
     posts = await getPosts({
       limit: 100,
-      fields: ["*", "categories.post_categories_slug.*"],
+      fields: ["*", "categories.post_categories_slug.*", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
     });
 
     // Extract and process categories from posts

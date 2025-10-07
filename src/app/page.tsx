@@ -51,7 +51,7 @@ export default async function Home() {
 
   // Get the first entry as the main profile
   const mainProfile = hdvietData[0];
-  
+
   // Construct image URL - handle different possible formats
   const directusUrl = 'https://directus-production-b969.up.railway.app';
   let imageUrl = null;

@@ -20,7 +20,7 @@ export default async function ProjectsPage() {
 
   try {
     projects = await getProjects({
-      fields: ["slug", "title", "date_created"],
+      fields: ["slug", "title", "date_created", "description", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
     });
   } catch (error) {
     console.error("Error fetching projects:", error);
