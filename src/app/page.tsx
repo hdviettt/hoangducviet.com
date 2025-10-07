@@ -157,7 +157,7 @@ export default async function Home() {
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground uppercase group-hover:underline">
+                        <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground uppercase">
                           {post.title}
                         </h3>
                         {post.description && (
