@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState, useEffect } from "react";
-import { Github, Facebook, Instagram, ChevronDown, ChevronRight } from "lucide-react";
+import { Github, Facebook, Instagram } from "lucide-react";
 
 interface FileExplorerProps {
   children: ReactNode;
@@ -49,147 +49,110 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
   return (
     <div className="h-screen bg-background overflow-hidden">
       <div className="w-full h-full">
-        {/* Neo-brutalist File Explorer Window */}
-        <div className="h-full flex flex-col border-4 border-border bg-card">
-
-          {/* Title Bar - Neo-brutalism */}
-          <div className="window-titlebar">
-            <div className="flex items-center gap-2 md:gap-3">
-              <div className="hidden md:flex items-center gap-2">
-                <div className="window-control bg-destructive" />
-                <div className="window-control bg-secondary" />
-                <div className="window-control bg-accent" />
-              </div>
-              <div className="text-xs text-primary-foreground font-bold uppercase tracking-wider">
-                {title}
-              </div>
-            </div>
-          </div>
-
-          {/* Path Bar */}
-          <div className="bg-card px-2 md:px-3 py-2 flex items-center border-b-2 border-border">
-            <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-foreground font-mono">
-              <span className="hover:text-primary transition-colors cursor-pointer">~/portfolio</span>
-              <span>/</span>
-              <span className="font-bold text-primary">
-                {pathname === "/" ? "about" :
-                  pathname.startsWith("/posts") ? "articles" :
-                    pathname.startsWith("/projects") ? "projects" :
-                        pathname.slice(1)}
-              </span>
-            </div>
-          </div>
+        {/* Modern File Explorer Window */}
+        <div className="h-full flex flex-col border border-border bg-card">
 
           {/* Content Area */}
           <div className="flex-1 flex overflow-hidden">
-            {/* Sidebar - Neo-brutalism */}
-            <div className="hidden md:block w-56 bg-muted/20 border-r-4 border-border flex-shrink-0 overflow-y-auto">
-              <div className="p-3">
-                <div className="text-[10px] text-foreground mb-3 px-2 font-bold uppercase tracking-wider">
-                  Files
-                </div>
-
-                <nav className="space-y-2">
-                  {/* About */}
+            {/* Sidebar */}
+            <div className="hidden md:flex w-28 bg-muted/30 border-r border-border flex-shrink-0 flex-col">
+              <div className="flex-1 flex flex-col items-center py-4 gap-2">
+                <nav className="flex flex-col gap-1 w-full px-2">
+                  {/* Home */}
                   <Link
                     href="/"
-                    className={`block px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 ${pathname === "/"
-                      ? "bg-foreground text-background border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
+                    className={`flex items-center justify-center px-3 py-2 text-xs font-medium transition-all rounded-md ${pathname === "/"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-muted"
                       }`}
                   >
-                    about.md
+                    home
                   </Link>
 
                   {/* Projects */}
                   <Link
                     href="/projects"
-                    className={`block px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 ${pathname.startsWith("/projects")
-                      ? "bg-foreground text-background border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
+                    className={`flex items-center justify-center px-3 py-2 text-xs font-medium transition-all rounded-md ${pathname.startsWith("/projects")
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-muted"
                       }`}
                   >
-                    projects/
+                    projects
                   </Link>
 
                   {/* Articles */}
                   <Link
                     href="/posts"
-                    className={`block px-3 py-2 text-[10px] font-mono transition-all rounded-md border-2 ${pathname.startsWith("/posts")
-                      ? "bg-foreground text-background border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
+                    className={`flex items-center justify-center px-3 py-2 text-xs font-medium transition-all rounded-md ${pathname.startsWith("/posts")
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-muted"
                       }`}
                   >
-                    articles/
+                    articles
                   </Link>
                 </nav>
+              </div>
 
-                {/* Social Links */}
-                <div className="mt-6 pt-4 border-t-2 border-border">
-                  <div className="text-[10px] text-foreground mb-3 px-2 font-bold uppercase tracking-wider">
-                    Social
-                  </div>
-                  <div className="flex gap-2">
-                    <a
-                      href="https://github.com/hdviettt"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
-                      title="Github"
-                    >
-                      <Github className="w-4 h-4" />
-                    </a>
-                    <a
-                      href="https://www.facebook.com/hoangducviettt/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
-                      title="Facebook"
-                    >
-                      <Facebook className="w-4 h-4" />
-                    </a>
-                    <a
-                      href="https://www.instagram.com/_hdviet/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center p-2 bg-card text-foreground border-2 border-border rounded-md transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-neo-sm"
-                      title="Instagram"
-                    >
-                      <Instagram className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
+              {/* Social Links */}
+              <div className="border-t border-border py-3 flex flex-col items-center gap-2">
+                <a
+                  href="https://github.com/hdviettt"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-10 h-10 text-foreground rounded-md transition-all hover:bg-muted"
+                  title="Github"
+                >
+                  <Github className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.facebook.com/hoangducviettt/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-10 h-10 text-foreground rounded-md transition-all hover:bg-muted"
+                  title="Facebook"
+                >
+                  <Facebook className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/_hdviet/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-10 h-10 text-foreground rounded-md transition-all hover:bg-muted"
+                  title="Instagram"
+                >
+                  <Instagram className="w-4 h-4" />
+                </a>
               </div>
             </div>
 
             {/* Main Content */}
             <div className="flex-1 bg-card overflow-y-auto">
               {/* Mobile Navigation - Compact single row */}
-              <div className="md:hidden bg-muted/20 border-b-2 border-border p-2">
+              <div className="md:hidden bg-muted/30 border-b border-border p-2">
                 <div className="flex gap-2 items-center">
                   <Link
                     href="/"
-                    className={`flex-1 px-2 py-1.5 text-[10px] font-mono transition-all rounded-md border-2 text-center active:translate-x-0.5 active:translate-y-0.5 ${pathname === "/"
-                      ? "bg-primary text-primary-foreground border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border"
+                    className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname === "/"
+                      ? "bg-primary text-primary-foreground font-medium"
+                      : "bg-muted/50 text-foreground hover:bg-muted"
                       }`}
                   >
-                    about
+                    home
                   </Link>
                   <Link
                     href="/projects"
-                    className={`flex-1 px-2 py-1.5 text-[10px] font-mono transition-all rounded-md border-2 text-center active:translate-x-0.5 active:translate-y-0.5 ${pathname.startsWith("/projects")
-                      ? "bg-primary text-primary-foreground border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border"
+                    className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname.startsWith("/projects")
+                      ? "bg-primary text-primary-foreground font-medium"
+                      : "bg-muted/50 text-foreground hover:bg-muted"
                       }`}
                   >
                     projects
                   </Link>
                   <Link
                     href="/posts"
-                    className={`flex-1 px-2 py-1.5 text-[10px] font-mono transition-all rounded-md border-2 text-center active:translate-x-0.5 active:translate-y-0.5 ${pathname.startsWith("/posts")
-                      ? "bg-primary text-primary-foreground border-border shadow-neo-sm font-bold"
-                      : "bg-card text-foreground border-border"
+                    className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname.startsWith("/posts")
+                      ? "bg-primary text-primary-foreground font-medium"
+                      : "bg-muted/50 text-foreground hover:bg-muted"
                       }`}
                   >
                     articles
@@ -200,7 +163,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                     href="https://github.com/hdviettt"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center p-1.5 bg-card text-foreground border-2 border-border rounded-md active:translate-x-0.5 active:translate-y-0.5"
+                    className="flex items-center justify-center p-1.5 text-foreground rounded-md hover:bg-muted transition-all"
                     aria-label="GitHub"
                   >
                     <Github className="w-4 h-4" />
@@ -209,7 +172,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                     href="https://www.facebook.com/hoangducviettt/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center p-1.5 bg-card text-foreground border-2 border-border rounded-md active:translate-x-0.5 active:translate-y-0.5"
+                    className="flex items-center justify-center p-1.5 text-foreground rounded-md hover:bg-muted transition-all"
                     aria-label="Facebook"
                   >
                     <Facebook className="w-4 h-4" />
@@ -218,7 +181,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                     href="https://www.instagram.com/_hdviet/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center p-1.5 bg-card text-foreground border-2 border-border rounded-md active:translate-x-0.5 active:translate-y-0.5"
+                    className="flex items-center justify-center p-1.5 text-foreground rounded-md hover:bg-muted transition-all"
                     aria-label="Instagram"
                   >
                     <Instagram className="w-4 h-4" />

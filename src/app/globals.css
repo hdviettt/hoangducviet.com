@@ -12,27 +12,27 @@
 
 @layer base {
   :root {
-    /* Neo-brutalism monotone black and white */
-    --background: 0 0% 100%; /* Pure white */
-    --foreground: 0 0% 0%; /* Pure black */
-    --card: 0 0% 100%; /* Pure white */
-    --card-foreground: 0 0% 0%;
+    /* Modern light theme */
+    --background: 0 0% 100%; /* White */
+    --foreground: 220 13% 25%; /* Soft dark gray */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 220 13% 25%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 0 0% 0%; /* Black */
+    --popover-foreground: 220 13% 25%;
+    --primary: 220 13% 25%; /* Soft dark gray */
     --primary-foreground: 0 0% 100%; /* White */
-    --secondary: 0 0% 0%; /* Black */
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 0 0% 0%; /* Black */
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 0% 0%;
+    --secondary: 220 13% 95%; /* Very light gray */
+    --secondary-foreground: 220 13% 25%;
+    --muted: 220 13% 96%;
+    --muted-foreground: 220 13% 45%;
+    --accent: 220 13% 95%;
+    --accent-foreground: 220 13% 25%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 0%; /* Black borders */
-    --input: 0 0% 100%;
-    --ring: 0 0% 0%;
-    --radius: 0.5rem; /* Small rounded corners for neo-brutalism */
+    --border: 220 13% 91%; /* Light gray borders */
+    --input: 220 13% 95%;
+    --ring: 220 13% 25%;
+    --radius: 0.5rem;
   }
   .dark {
     --background: 220 13% 11%;
@@ -74,6 +74,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -149,6 +150,51 @@
   .article-content strong,
   .article-content b {
     font-weight: 600 !important;
+  }
+
+  /* Code block styling - clean and simple */
+  .article-content pre {
+    background-color: #f6f8fa !important;
+    color: #24292f !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+    overflow-x: auto !important;
+    margin: 1.5rem 0 !important;
+    border: 1px solid #d0d7de !important;
+    box-shadow: none !important;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
+  }
+
+  .article-content pre code {
+    background-color: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-size: 0.875rem !important;
+    line-height: 1.7 !important;
+    border: none !important;
+    font-family: inherit !important;
+  }
+
+  .article-content pre code::before,
+  .article-content pre code::after {
+    content: none !important;
+  }
+
+  /* Inline code styling */
+  .article-content :not(pre) > code {
+    background-color: rgba(175, 184, 193, 0.2) !important;
+    color: #24292f !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: 6px !important;
+    font-size: 85% !important;
+    border: none !important;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
+  }
+
+  .article-content :not(pre) > code::before,
+  .article-content :not(pre) > code::after {
+    content: none !important;
   }
 }
 

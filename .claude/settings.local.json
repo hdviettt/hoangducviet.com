@@ -40,7 +40,8 @@
       "Bash(find:*)",
       "Bash(rm:*)",
       "WebFetch(domain:www.neobrutalism.dev)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Read(//c/**)"
     ],
     "deny": [],
     "ask": []

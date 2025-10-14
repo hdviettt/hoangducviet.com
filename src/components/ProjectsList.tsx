@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, X } from "lucide-react";
 
 interface Project {
   slug?: string;
@@ -22,28 +21,12 @@ interface ProjectsListProps {
 }
 
 export default function ProjectsList({ projects }: ProjectsListProps) {
-  const [sortBy, setSortBy] = useState<"date-desc" | "date-asc" | "title">("date-desc");
-  const [mobileTocOpen, setMobileTocOpen] = useState(false);
-
-  // Sort projects
+  // Sort projects by date (newest first)
   const sortedProjects = useMemo(() => {
-    let sorted = [...projects];
-
-    sorted.sort((a, b) => {
-      switch (sortBy) {
-        case "date-desc":
-          return new Date(b.date_created || 0).getTime() - new Date(a.date_created || 0).getTime();
-        case "date-asc":
-          return new Date(a.date_created || 0).getTime() - new Date(b.date_created || 0).getTime();
-        case "title":
-          return (a.title || "").localeCompare(b.title || "");
-        default:
-          return 0;
-      }
-    });
-
-    return sorted;
-  }, [projects, sortBy]);
+    return [...projects].sort((a, b) =>
+      new Date(b.date_created || 0).getTime() - new Date(a.date_created || 0).getTime()
+    );
+  }, [projects]);
 
   // Group projects by year and month hierarchically
   const groupedProjects = useMemo(() => {
@@ -57,7 +40,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
       } else {
         const date = new Date(project.date_created);
         const year = date.getFullYear().toString();
-        const month = date.toLocaleDateString('en-US', { month: 'long' });
+        const month = `${String(date.getMonth() + 1).padStart(2, '0')}.${year}`;
 
         if (!yearGroups[year]) yearGroups[year] = {};
         if (!yearGroups[year][month]) yearGroups[year][month] = [];
@@ -72,14 +55,15 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
       return parseInt(b) - parseInt(a);
     });
 
-    const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
     return sortedYears.map(year => {
       const months = yearGroups[year];
       const sortedMonths = Object.keys(months).sort((a, b) => {
         if (a === "Unknown") return 1;
         if (b === "Unknown") return -1;
-        return monthOrder.indexOf(b) - monthOrder.indexOf(a);
+        // Parse MM.YYYY format for sorting (descending order)
+        const [monthA] = a.split('.');
+        const [monthB] = b.split('.');
+        return parseInt(monthB) - parseInt(monthA);
       });
 
       return {
@@ -99,139 +83,44 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
 
   return (
     <div className="flex h-full relative">
-      {/* Desktop Sidebar - Table of Contents */}
-      <div className="hidden md:block w-48 border-r-4 border-border bg-muted/20 overflow-y-auto flex-shrink-0">
-        <div className="p-3">
-          <nav className="space-y-1">
-            {groupedProjects.map(({ year, months }) => (
-              <div key={year}>
-                <a
-                  href={`#year-${year}`}
-                  className="block text-foreground font-mono text-[11px] px-2 py-1 uppercase font-bold hover:text-primary transition-colors"
-                >
-                  {year}
-                </a>
-                <div className="ml-3 space-y-0.5 mb-2">
-                  {months.map(({ month, projects }) => (
-                    <a
-                      key={`${year}-${month}`}
-                      href={`#month-${year}-${month}`}
-                      className="block text-muted-foreground font-mono text-[10px] px-2 py-0.5 hover:text-foreground transition-colors"
-                    >
-                      {month} ({projects.length})
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Mobile ToC Button */}
-      <button
-        onClick={() => setMobileTocOpen(true)}
-        className="md:hidden fixed bottom-20 right-4 z-40 bg-primary text-primary-foreground p-4 rounded-full shadow-neo-md border-2 border-border active:translate-x-1 active:translate-y-1"
-        aria-label="Open navigation"
-      >
-        <Calendar className="w-6 h-6" />
-      </button>
-
-      {/* Mobile ToC Drawer */}
-      {mobileTocOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-background overflow-y-auto">
-          <div className="sticky top-0 bg-primary px-4 py-3 flex items-center justify-between border-b-4 border-border">
-            <span className="text-primary-foreground font-mono text-sm font-bold uppercase">Navigation</span>
-            <button
-              onClick={() => setMobileTocOpen(false)}
-              className="text-primary-foreground p-2 active:scale-95"
-              aria-label="Close navigation"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="p-4">
-            <nav className="space-y-2">
-              {groupedProjects.map(({ year, months }) => (
-                <div key={year}>
-                  <a
-                    href={`#year-${year}`}
-                    onClick={() => setMobileTocOpen(false)}
-                    className="block text-foreground font-mono text-base px-3 py-2 uppercase font-bold hover:text-primary transition-colors border-2 border-border rounded-md bg-card"
-                  >
-                    {year}
-                  </a>
-                  <div className="ml-3 space-y-1 mt-2 mb-3">
-                    {months.map(({ month, projects }) => (
-                      <a
-                        key={`${year}-${month}`}
-                        href={`#month-${year}-${month}`}
-                        onClick={() => setMobileTocOpen(false)}
-                        className="block text-foreground font-mono text-sm px-3 py-2 hover:bg-muted/20 transition-colors rounded-md"
-                      >
-                        {month} ({projects.length})
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </nav>
-          </div>
-        </div>
-      )}
-
-      {/* Right Content Area */}
+      {/* Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Controls Bar - Neo-brutalism Style */}
-        <div className="bg-muted/20 border-b-4 border-border px-3 py-3 flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4">
-          {/* Sort Control */}
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] text-foreground font-mono uppercase font-bold">Sort:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-card text-foreground border-2 border-border px-3 py-1.5 text-[10px] font-mono uppercase cursor-pointer rounded-md shadow-neo-sm hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
-            >
-              <option value="date-desc">Date [New]</option>
-              <option value="date-asc">Date [Old]</option>
-              <option value="title">Title [A-Z]</option>
-            </select>
-          </div>
-
-          {/* Results Count */}
-          <div className="md:ml-auto text-[10px] text-foreground font-mono font-bold">
-            {sortedProjects.length} items
-          </div>
-        </div>
-
         {/* Projects List - Grouped by Year and Month */}
         <div className="flex-1 overflow-y-auto min-h-0">
           {sortedProjects.length === 0 ? (
             <div className="flex items-center justify-center h-64 text-foreground">
               <div className="text-center">
-                <p className="text-lg font-bold uppercase">No Projects</p>
-                <p className="text-xs mt-2 font-mono">Empty directory</p>
+                <p className="text-lg font-semibold">No Projects</p>
+                <p className="text-xs mt-2 text-muted-foreground">No projects available</p>
               </div>
             </div>
           ) : (
-            <div className="p-4">
+            <div className="p-6 md:p-8">
               {groupedProjects.map(({ year, months }) => (
-                <div key={year} id={`year-${year}`} className="mb-8">
-                  {/* Year Header */}
-                  <div className="bg-primary text-primary-foreground font-mono text-xs px-3 py-2 mb-4 uppercase font-bold">
-                    {year}
+                <div key={year} id={`year-${year}`} className="mb-10 flex gap-4">
+                  {/* Timeline Bar */}
+                  <div className="flex-shrink-0 w-0.5 bg-border relative">
+                    {/* Year marker dot */}
+                    <div className="absolute -left-1 top-0 w-2.5 h-2.5 rounded-full bg-foreground"></div>
                   </div>
 
-                  {/* Months */}
-                  {months.map(({ month, projects }) => (
-                    <div key={`${year}-${month}`} id={`month-${year}-${month}`} className="mb-6">
-                      {/* Month Header */}
-                      <div className="text-foreground font-mono text-[10px] px-2 py-1 mb-2 uppercase font-bold">
-                        {month}
-                      </div>
+                  {/* Content */}
+                  <div className="flex-1">
+                    {/* Year Header */}
+                    <div className="text-foreground text-sm px-2 py-1 mb-5 font-semibold">
+                      {year}
+                    </div>
 
-                      {/* Projects in this month */}
-                      <div className="space-y-4">
+                    {/* Months */}
+                    {months.map(({ month, projects }) => (
+                      <div key={`${year}-${month}`} id={`month-${year}-${month}`} className="mb-6">
+                        {/* Month Header */}
+                        <div className="text-muted-foreground text-xs px-2 py-1 mb-4 font-medium">
+                          {month}
+                        </div>
+
+                        {/* Projects in this month */}
+                        <div className="space-y-4">
                         {projects.map((project, index) => {
                           const directusUrl = 'https://directus-production-b969.up.railway.app';
                           const thumbnailUrl = project.thumbnail && typeof project.thumbnail === 'object'
@@ -244,16 +133,16 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
                               href={`/projects/${project.slug}`}
                               className="block group"
                             >
-                              <div className="flex gap-3 p-3 bg-card rounded-lg border-2 border-border shadow-neo-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all duration-200">
+                              <div className="flex gap-4 p-4 bg-card rounded-lg border border-border hover:shadow-sm hover:border-primary/20 transition-all duration-200">
                                 {/* Thumbnail */}
                                 {thumbnailUrl && (
-                                  <div className="flex-shrink-0 w-20 sm:w-24 self-start">
-                                    <div className="w-full aspect-square overflow-hidden border-2 border-border rounded-md">
+                                  <div className="flex-shrink-0 w-16 sm:w-20 self-start">
+                                    <div className="w-full aspect-square overflow-hidden border border-border rounded-md">
                                       <Image
                                         src={thumbnailUrl}
                                         alt={project.title || ''}
-                                        width={96}
-                                        height={96}
+                                        width={80}
+                                        height={80}
                                         className="w-full h-full object-cover"
                                       />
                                     </div>
@@ -261,22 +150,24 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
                                 )}
 
                                 <div className="flex-1 min-w-0 flex flex-col">
-                                  <h3 className="text-sm sm:text-base font-bold mb-1 text-foreground">
+                                  <h3 className="text-xs sm:text-sm font-semibold mb-2 text-foreground">
                                     {project.title || "Untitled"}
                                   </h3>
                                   {project.description && (
                                     <div
-                                      className="text-xs text-muted-foreground line-clamp-2 mb-1 flex-1"
+                                      className="text-[11px] text-muted-foreground line-clamp-2 mb-2 flex-1"
                                       dangerouslySetInnerHTML={{ __html: project.description }}
                                     />
                                   )}
-                                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono mt-auto">
+                                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground mt-auto">
                                     <time>
-                                      {project.date_created ? new Date(project.date_created).toLocaleDateString('en-US', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                        year: 'numeric'
-                                      }) : ""}
+                                      {project.date_created ? (() => {
+                                        const date = new Date(project.date_created);
+                                        const day = String(date.getDate()).padStart(2, '0');
+                                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                                        const year = date.getFullYear();
+                                        return `${day}.${month}.${year}`;
+                                      })() : ""}
                                     </time>
                                   </div>
                                 </div>
@@ -285,8 +176,9 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
                           );
                         })}
                       </div>
-                    </div>
-                  ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

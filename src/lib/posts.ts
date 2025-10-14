@@ -7,7 +7,7 @@ export interface Post {
   categories?: Array<number | {
     post_categories_slug: string;
   }>;
-  body?: string; // HTML content
+  content?: string; // Markdown content
   description?: string; // Short description/excerpt
   thumbnail?: string | {
     filename_disk: string;
@@ -16,6 +16,7 @@ export interface Post {
   };
   slug?: string;
   title?: string;
+  status?: string; // Published status
 }
 
 export async function getPosts(options?: ItemsQuery): Promise<Array<Post>> {
