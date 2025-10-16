@@ -66,8 +66,8 @@ export default async function Home() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="min-h-full p-8 md:p-12 lg:p-16 animate-fadeIn">
-        <div className="max-w-3xl mx-auto space-y-12">
+      <div className="min-h-full px-8 md:px-16 lg:px-24 py-8 md:py-12 lg:py-16 animate-fadeIn">
+        <div className="max-w-2xl mx-auto space-y-12">
           {/* Main Profile Section */}
           <div>
             {/* Profile Image - Float left for flexible wrapping */}

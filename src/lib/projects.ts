@@ -10,6 +10,7 @@ export interface Project {
   posts?: Array<number | Post>;
   title?: string;
   description?: string;
+  status?: string; // Published status
   thumbnail?: string | {
     filename_disk: string;
     height: number;
@@ -18,13 +19,39 @@ export interface Project {
 }
 
 export async function getProjects(options?: ItemsQuery): Promise<Array<Project>> {
-  return directus.request(readItems("projects", options)) as Promise<Array<Project>>;
+  return directus.request(readItems("projects", {
+    ...options,
+    filter: {
+      ...options?.filter,
+      status: {
+        _eq: "published",
+      },
+    },
+  })) as Promise<Array<Project>>;
 }
 
 export async function getProjectBySlug(
   slug: string,
   options?: ItemsQuery,
 ): Promise<Project> {
-  // Since slug is now the primary key, we can use readItem directly
-  return directus.request(readItem("projects", slug, options)) as Promise<Project>;
+  // Use readItems with filter to check both slug and status
+  const projects = await directus.request(readItems("projects", {
+    ...options,
+    filter: {
+      ...options?.filter,
+      slug: {
+        _eq: slug,
+      },
+      status: {
+        _eq: "published",
+      },
+    },
+    limit: 1,
+  })) as Project[];
+
+  if (!projects || projects.length === 0) {
+    throw new Error(`Project with slug "${slug}" not found or not published`);
+  }
+
+  return projects[0];
 }

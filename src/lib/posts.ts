@@ -20,7 +20,15 @@ export interface Post {
 }
 
 export async function getPosts(options?: ItemsQuery): Promise<Array<Post>> {
-  return directus.request(readItems("posts", options));
+  return directus.request(readItems("posts", {
+    ...options,
+    filter: {
+      ...options?.filter,
+      status: {
+        _eq: "published",
+      },
+    },
+  }));
 }
 
 export async function getPostBySlug(
@@ -31,16 +39,20 @@ export async function getPostBySlug(
   const posts = await directus.request(readItems("posts", {
     ...options,
     filter: {
+      ...options?.filter,
       slug: {
         _eq: slug,
+      },
+      status: {
+        _eq: "published",
       },
     },
     limit: 1,
   }));
-  
+
   if (!posts || posts.length === 0) {
     throw new Error(`Post with slug "${slug}" not found`);
   }
-  
+
   return posts[0];
 }

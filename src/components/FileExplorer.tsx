@@ -56,14 +56,14 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
           <div className="flex-1 flex overflow-hidden">
             {/* Sidebar */}
             <div className="hidden md:flex w-28 bg-muted/30 border-r border-border flex-shrink-0 flex-col">
-              <div className="flex-1 flex flex-col items-center py-4 gap-2">
+              <div className="flex-1 flex flex-col items-center justify-center gap-2">
                 <nav className="flex flex-col gap-1 w-full px-2">
                   {/* Home */}
                   <Link
                     href="/"
-                    className={`flex items-center justify-center px-3 py-2 text-xs font-medium transition-all rounded-md ${pathname === "/"
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-muted"
+                    className={`flex items-center justify-center px-3 py-2 text-xs transition-all rounded-md ${pathname === "/"
+                      ? "font-bold text-foreground"
+                      : "font-normal text-foreground hover:bg-muted"
                       }`}
                   >
                     home
@@ -72,9 +72,9 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   {/* Projects */}
                   <Link
                     href="/projects"
-                    className={`flex items-center justify-center px-3 py-2 text-xs font-medium transition-all rounded-md ${pathname.startsWith("/projects")
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-muted"
+                    className={`flex items-center justify-center px-3 py-2 text-xs transition-all rounded-md ${pathname.startsWith("/projects")
+                      ? "font-bold text-foreground"
+                      : "font-normal text-foreground hover:bg-muted"
                       }`}
                   >
                     projects
@@ -83,9 +83,9 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   {/* Articles */}
                   <Link
                     href="/posts"
-                    className={`flex items-center justify-center px-3 py-2 text-xs font-medium transition-all rounded-md ${pathname.startsWith("/posts")
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-muted"
+                    className={`flex items-center justify-center px-3 py-2 text-xs transition-all rounded-md ${pathname.startsWith("/posts")
+                      ? "font-bold text-foreground"
+                      : "font-normal text-foreground hover:bg-muted"
                       }`}
                   >
                     articles
@@ -133,8 +133,8 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   <Link
                     href="/"
                     className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname === "/"
-                      ? "bg-primary text-primary-foreground font-medium"
-                      : "bg-muted/50 text-foreground hover:bg-muted"
+                      ? "font-bold text-foreground"
+                      : "font-normal text-foreground hover:bg-muted"
                       }`}
                   >
                     home
@@ -142,8 +142,8 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   <Link
                     href="/projects"
                     className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname.startsWith("/projects")
-                      ? "bg-primary text-primary-foreground font-medium"
-                      : "bg-muted/50 text-foreground hover:bg-muted"
+                      ? "font-bold text-foreground"
+                      : "font-normal text-foreground hover:bg-muted"
                       }`}
                   >
                     projects
@@ -151,8 +151,8 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   <Link
                     href="/posts"
                     className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname.startsWith("/posts")
-                      ? "bg-primary text-primary-foreground font-medium"
-                      : "bg-muted/50 text-foreground hover:bg-muted"
+                      ? "font-bold text-foreground"
+                      : "font-normal text-foreground hover:bg-muted"
                       }`}
                   >
                     articles

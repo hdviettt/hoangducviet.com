@@ -102,10 +102,10 @@ export default async function PostPage({ params }: PostParams) {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="max-w-7xl mx-auto p-8 md:p-12 pb-20 md:pb-16 animate-fadeIn">
+      <div className="max-w-4xl mx-auto px-8 md:px-16 lg:px-24 py-8 md:py-12 pb-20 md:pb-16 animate-fadeIn">
         <div className="flex gap-10">
           {/* Main Content */}
-          <div className="flex-1 max-w-3xl">
+          <div className="flex-1 max-w-2xl mx-auto">
             {/* Back button */}
             <Link
               href="/posts"
