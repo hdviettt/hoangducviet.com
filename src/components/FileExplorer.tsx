@@ -52,54 +52,56 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
         {/* Modern File Explorer Window */}
         <div className="h-full flex flex-col border border-border bg-card">
 
-          {/* Content Area */}
-          <div className="flex-1 flex overflow-hidden">
-            {/* Sidebar */}
-            <div className="hidden md:flex w-28 bg-muted/30 border-r border-border flex-shrink-0 flex-col">
-              <div className="flex-1 flex flex-col items-center justify-center gap-2">
-                <nav className="flex flex-col gap-1 w-full px-2">
-                  {/* Home */}
-                  <Link
-                    href="/"
-                    className={`flex items-center justify-center px-3 py-2 text-xs transition-all rounded-md ${pathname === "/"
-                      ? "font-bold text-foreground"
-                      : "font-normal text-foreground hover:bg-muted"
-                      }`}
-                  >
-                    home
-                  </Link>
-
-                  {/* Projects */}
-                  <Link
-                    href="/projects"
-                    className={`flex items-center justify-center px-3 py-2 text-xs transition-all rounded-md ${pathname.startsWith("/projects")
-                      ? "font-bold text-foreground"
-                      : "font-normal text-foreground hover:bg-muted"
-                      }`}
-                  >
-                    projects
-                  </Link>
-
-                  {/* Articles */}
-                  <Link
-                    href="/posts"
-                    className={`flex items-center justify-center px-3 py-2 text-xs transition-all rounded-md ${pathname.startsWith("/posts")
-                      ? "font-bold text-foreground"
-                      : "font-normal text-foreground hover:bg-muted"
-                      }`}
-                  >
-                    articles
-                  </Link>
-                </nav>
-              </div>
+          {/* Top Navigation Bar */}
+          <div className="border-b border-border px-4 py-4">
+            <div className="flex items-center justify-center gap-8 max-w-7xl mx-auto">
+              {/* Navigation Links */}
+              <nav className="flex gap-6">
+                <Link
+                  href="/"
+                  className={`text-sm transition-all duration-200 relative ${pathname === "/"
+                    ? "font-semibold text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                    }`}
+                >
+                  home
+                  {pathname === "/" && (
+                    <span className="absolute -bottom-1 left-0 w-full h-px bg-foreground" />
+                  )}
+                </Link>
+                <Link
+                  href="/projects"
+                  className={`text-sm transition-all duration-200 relative ${pathname.startsWith("/projects")
+                    ? "font-semibold text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                    }`}
+                >
+                  projects
+                  {pathname.startsWith("/projects") && (
+                    <span className="absolute -bottom-1 left-0 w-full h-px bg-foreground" />
+                  )}
+                </Link>
+                <Link
+                  href="/posts"
+                  className={`text-sm transition-all duration-200 relative ${pathname.startsWith("/posts")
+                    ? "font-semibold text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                    }`}
+                >
+                  articles
+                  {pathname.startsWith("/posts") && (
+                    <span className="absolute -bottom-1 left-0 w-full h-px bg-foreground" />
+                  )}
+                </Link>
+              </nav>
 
               {/* Social Links */}
-              <div className="border-t border-border py-3 flex flex-col items-center gap-2">
+              <div className="flex items-center gap-3">
                 <a
                   href="https://github.com/hdviettt"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 text-foreground rounded-md transition-all hover:bg-muted"
+                  className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:-translate-y-0.5"
                   title="Github"
                 >
                   <Github className="w-4 h-4" />
@@ -108,7 +110,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   href="https://www.facebook.com/hoangducviettt/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 text-foreground rounded-md transition-all hover:bg-muted"
+                  className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:-translate-y-0.5"
                   title="Facebook"
                 >
                   <Facebook className="w-4 h-4" />
@@ -117,79 +119,18 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
                   href="https://www.instagram.com/_hdviet/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 text-foreground rounded-md transition-all hover:bg-muted"
+                  className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:-translate-y-0.5"
                   title="Instagram"
                 >
                   <Instagram className="w-4 h-4" />
                 </a>
               </div>
             </div>
+          </div>
 
-            {/* Main Content */}
-            <div className="flex-1 bg-card overflow-y-auto">
-              {/* Mobile Navigation - Compact single row */}
-              <div className="md:hidden bg-muted/30 border-b border-border p-2">
-                <div className="flex gap-2 items-center">
-                  <Link
-                    href="/"
-                    className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname === "/"
-                      ? "font-bold text-foreground"
-                      : "font-normal text-foreground hover:bg-muted"
-                      }`}
-                  >
-                    home
-                  </Link>
-                  <Link
-                    href="/projects"
-                    className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname.startsWith("/projects")
-                      ? "font-bold text-foreground"
-                      : "font-normal text-foreground hover:bg-muted"
-                      }`}
-                  >
-                    projects
-                  </Link>
-                  <Link
-                    href="/posts"
-                    className={`flex-1 px-2 py-1.5 text-[11px] font-mono transition-all rounded-md text-center ${pathname.startsWith("/posts")
-                      ? "font-bold text-foreground"
-                      : "font-normal text-foreground hover:bg-muted"
-                      }`}
-                  >
-                    articles
-                  </Link>
-
-                  {/* Social links inline */}
-                  <a
-                    href="https://github.com/hdviettt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center p-1.5 text-foreground rounded-md hover:bg-muted transition-all"
-                    aria-label="GitHub"
-                  >
-                    <Github className="w-4 h-4" />
-                  </a>
-                  <a
-                    href="https://www.facebook.com/hoangducviettt/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center p-1.5 text-foreground rounded-md hover:bg-muted transition-all"
-                    aria-label="Facebook"
-                  >
-                    <Facebook className="w-4 h-4" />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/_hdviet/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center p-1.5 text-foreground rounded-md hover:bg-muted transition-all"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-              {children}
-            </div>
+          {/* Main Content */}
+          <div className="flex-1 bg-card overflow-y-auto">
+            {children}
           </div>
         </div>
       </div>

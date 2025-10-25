@@ -41,7 +41,9 @@
       "Bash(rm:*)",
       "WebFetch(domain:www.neobrutalism.dev)",
       "Bash(timeout:*)",
-      "Read(//c/**)"
+      "Read(//c/**)",
+      "Read(//d/myblog/myblog/**)",
+      "Bash(tasklist:*)"
     ],
     "deny": [],
     "ask": []

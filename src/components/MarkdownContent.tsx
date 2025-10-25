@@ -25,8 +25,52 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
     return <div className="text-muted-foreground text-sm">Loading content...</div>;
   }
 
+  // Helper function to generate heading IDs from text
+  const generateId = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+  };
+
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h1: ({children, ...props}: any) => {
+          const text = typeof children === 'string' ? children : String(children);
+          const id = generateId(text);
+          return <h1 id={id} {...props}>{children}</h1>;
+        },
+        h2: ({children, ...props}: any) => {
+          const text = typeof children === 'string' ? children : String(children);
+          const id = generateId(text);
+          return <h2 id={id} {...props}>{children}</h2>;
+        },
+        h3: ({children, ...props}: any) => {
+          const text = typeof children === 'string' ? children : String(children);
+          const id = generateId(text);
+          return <h3 id={id} {...props}>{children}</h3>;
+        },
+        h4: ({children, ...props}: any) => {
+          const text = typeof children === 'string' ? children : String(children);
+          const id = generateId(text);
+          return <h4 id={id} {...props}>{children}</h4>;
+        },
+        h5: ({children, ...props}: any) => {
+          const text = typeof children === 'string' ? children : String(children);
+          const id = generateId(text);
+          return <h5 id={id} {...props}>{children}</h5>;
+        },
+        h6: ({children, ...props}: any) => {
+          const text = typeof children === 'string' ? children : String(children);
+          const id = generateId(text);
+          return <h6 id={id} {...props}>{children}</h6>;
+        },
+      }}
+    >
       {content}
     </ReactMarkdown>
   );

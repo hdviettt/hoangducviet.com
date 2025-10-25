@@ -4,8 +4,9 @@ import Link from "next/link";
 
 import { getItemById, getGlobalMetadata } from "@/lib/directus";
 import { getPostBySlug } from "@/lib/posts";
-import TableOfContents from "@/components/TableOfContents";
+import InlineTableOfContents from "@/components/InlineTableOfContents";
 import MarkdownContent from "@/components/MarkdownContent";
+import ReadingProgress from "@/components/ReadingProgress";
 
 export const runtime = 'edge';
 
@@ -102,23 +103,26 @@ export default async function PostPage({ params }: PostParams) {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="max-w-4xl mx-auto px-8 md:px-16 lg:px-24 py-8 md:py-12 pb-20 md:pb-16 animate-fadeIn">
-        <div className="flex gap-10">
+      <ReadingProgress />
+      <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 py-8 md:py-12 pb-20 md:pb-16 animate-fadeIn">
+        {/* Back button */}
+        <Link
+          href="/posts"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-all duration-200 hover:-translate-x-1 mb-8"
+        >
+          <span>←</span>
+          <span>Back to articles</span>
+        </Link>
+
+        <div className="flex gap-8 lg:gap-12">
           {/* Main Content */}
-          <div className="flex-1 max-w-2xl mx-auto">
-            {/* Back button */}
-            <Link
-              href="/posts"
-              className="inline-block text-xs text-primary-foreground px-3 py-1.5 mb-8 transition-all border border-border rounded-md bg-primary hover:bg-primary/90 font-medium"
-            >
-              ← Back
-            </Link>
+          <div className="flex-1 min-w-0">
 
             {/* Article Header */}
-            <header className="mb-8 pb-6 border-b border-border">
-              <h1 className="text-xl md:text-2xl font-semibold mb-4 text-foreground">{data.title}</h1>
-              <div className="flex flex-wrap items-center gap-2">
-                <time dateTime={data.date_created} className="text-[11px] bg-muted/30 px-2 py-1 rounded-md border border-border text-muted-foreground">
+            <header className="mb-12 pb-8 border-b border-border scroll-fade-in">
+              <h1 className="text-3xl font-semibold mb-4 text-foreground">{data.title}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <time dateTime={data.date_created} className="text-sm text-muted-foreground">
                   {data.date_created &&
                     new Date(data.date_created).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -129,7 +133,7 @@ export default async function PostPage({ params }: PostParams) {
                 {categories.length > 0 && (
                   <div className="flex items-center gap-2">
                     {categories.map(({ title }) => (
-                      <span key={title} className="px-2 py-1 bg-primary text-primary-foreground border border-border text-[11px] rounded-md">
+                      <span key={title} className="text-sm text-muted-foreground">
                         {title}
                       </span>
                     ))}
@@ -153,28 +157,18 @@ export default async function PostPage({ params }: PostParams) {
             )}
 
             {/* Article Content */}
-            {data.content && (
-              <div
-                className="article-content prose prose-base max-w-none
-                  prose-headings:font-semibold prose-headings:text-foreground prose-headings:mb-4 prose-headings:mt-8
-                  prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
-                  prose-p:text-foreground prose-p:leading-relaxed prose-p:mb-4 prose-p:text-sm
-                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:transition-colors
-                  prose-strong:text-foreground prose-strong:font-semibold
-                  prose-blockquote:border-l-2 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:bg-muted/20 prose-blockquote:py-2 prose-blockquote:my-4 prose-blockquote:text-sm
-                  prose-ul:text-foreground prose-ul:text-sm prose-ul:mb-4 prose-ol:text-foreground prose-ol:text-sm prose-ol:mb-4
-                  prose-li:marker:text-primary prose-li:mb-1
-                  prose-hr:border-border prose-hr:border prose-hr:my-6
-                  prose-img:border prose-img:border-border prose-img:rounded-lg"
-              >
+            {data.content ? (
+              <div className="article-content">
                 <MarkdownContent content={data.content} />
               </div>
+            ) : (
+              <div className="text-muted-foreground">No content available</div>
             )}
           </div>
 
-          {/* Table of Contents Sidebar */}
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <TableOfContents />
+          {/* Table of Contents Sidebar - Desktop Only */}
+          <aside className="hidden lg:block w-72 flex-shrink-0">
+            {data.content && <InlineTableOfContents content={data.content} />}
           </aside>
         </div>
       </div>
