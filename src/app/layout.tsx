@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased min-h-screen bg-background text-foreground overflow-hidden">
+    <html lang="en" className="overflow-x-hidden">
+      <body className="antialiased min-h-screen bg-background text-foreground overflow-hidden overflow-x-hidden">
         <GoogleAnalytics gaId="G-HKSHVM8Z9G" />
         <ClientFileExplorer>
           {children}

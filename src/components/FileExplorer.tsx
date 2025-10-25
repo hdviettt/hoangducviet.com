@@ -47,10 +47,10 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
   };
 
   return (
-    <div className="h-screen bg-background overflow-hidden">
-      <div className="w-full h-full">
+    <div className="h-screen bg-background overflow-hidden overflow-x-hidden">
+      <div className="w-full h-full overflow-x-hidden">
         {/* Modern File Explorer Window */}
-        <div className="h-full flex flex-col border border-border bg-card">
+        <div className="h-full flex flex-col border border-border bg-card overflow-x-hidden">
 
           {/* Top Navigation Bar */}
           <div className="border-b border-border px-4 py-4">
@@ -129,7 +129,7 @@ export default function FileExplorer({ children, title = "VIET" }: FileExplorerP
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 bg-card overflow-y-auto">
+          <div className="flex-1 bg-card overflow-y-auto overflow-x-hidden">
             {children}
           </div>
         </div>
