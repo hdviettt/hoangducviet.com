@@ -23,9 +23,6 @@ export async function getProjects(options?: ItemsQuery): Promise<Array<Project>>
     ...options,
     filter: {
       ...options?.filter,
-      status: {
-        _eq: "published",
-      },
     },
   })) as Promise<Array<Project>>;
 }
@@ -34,7 +31,7 @@ export async function getProjectBySlug(
   slug: string,
   options?: ItemsQuery,
 ): Promise<Project> {
-  // Use readItems with filter to check both slug and status
+  // Use readItems with filter to check slug
   const projects = await directus.request(readItems("projects", {
     ...options,
     filter: {
@@ -42,15 +39,12 @@ export async function getProjectBySlug(
       slug: {
         _eq: slug,
       },
-      status: {
-        _eq: "published",
-      },
     },
     limit: 1,
   })) as Project[];
 
   if (!projects || projects.length === 0) {
-    throw new Error(`Project with slug "${slug}" not found or not published`);
+    throw new Error(`Project with slug "${slug}" not found`);
   }
 
   return projects[0];
