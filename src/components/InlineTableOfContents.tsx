@@ -95,7 +95,7 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
   if (headings.length === 0) return null;
 
   return (
-    <div className="sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto">
+    <div className="sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden">
       <div className="text-xs font-semibold uppercase tracking-wider mb-4 text-muted-foreground">
         Table of Contents
       </div>
@@ -108,13 +108,15 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
             <a
               key={heading.id}
               href={`#${heading.id}`}
-              className={`block text-sm transition-all duration-200 ${
+              className={`block text-sm transition-all duration-200 break-words ${
                 isActive
                   ? "text-foreground font-medium"
                   : "text-muted-foreground hover:text-foreground hover:translate-x-1"
               }`}
               style={{
                 paddingLeft: `${indent * 16}px`,
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word',
               }}
               onClick={(e) => {
                 e.preventDefault();

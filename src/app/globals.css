@@ -108,6 +108,8 @@
     font-size: 15px;
     line-height: 1.7;
     color: hsl(var(--foreground));
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   /* Article headings - match global scale */
@@ -212,6 +214,13 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 14px;
     line-height: 1.6;
+    max-width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .article-content pre {
+      font-size: 12px;
+    }
   }
 
   .article-content pre code {
@@ -238,6 +247,22 @@
     margin: 1.5rem 0;
     color: hsl(var(--muted-foreground));
     font-style: italic;
+  }
+
+  /* Ensure images and media don't overflow */
+  .article-content img,
+  .article-content video,
+  .article-content iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Tables should scroll on mobile */
+  .article-content table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
   }
 }
 
