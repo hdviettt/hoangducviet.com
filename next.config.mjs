@@ -15,6 +15,20 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_DIRECTUS_API_ENDPOINT: DIRECTUS_URL,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/ingest/static/:path*',
+        destination: 'https://us-assets.i.posthog.com/static/:path*',
+      },
+      {
+        source: '/ingest/:path*',
+        destination: 'https://us.i.posthog.com/:path*',
+      },
+    ];
+  },
+  // This is required to support PostHog trailing slash API requests
+  skipTrailingSlashRedirect: true,
 };
 
 // Only import and setup dev platform in development

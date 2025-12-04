@@ -4,6 +4,7 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 
 import { getGlobalMetadata } from "@/lib/directus";
 import ClientFileExplorer from "@/components/ClientFileExplorer";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
@@ -24,9 +25,11 @@ export default function RootLayout({
     <html lang="en" className="overflow-x-hidden">
       <body className="antialiased min-h-screen bg-background text-foreground overflow-hidden overflow-x-hidden">
         <GoogleAnalytics gaId="G-HKSHVM8Z9G" />
-        <ClientFileExplorer>
-          {children}
-        </ClientFileExplorer>
+        <PostHogProvider>
+          <ClientFileExplorer>
+            {children}
+          </ClientFileExplorer>
+        </PostHogProvider>
       </body>
     </html>
   );
