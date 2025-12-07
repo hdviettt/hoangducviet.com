@@ -48,7 +48,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme, mounted]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    // Update DOM class immediately before React state to prevent flash
+    const newTheme = theme === "light" ? "dark" : "light";
+    const root = document.documentElement;
+
+    if (newTheme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+
+    localStorage.setItem("theme", newTheme);
+    setTheme(newTheme);
   };
 
   return (
