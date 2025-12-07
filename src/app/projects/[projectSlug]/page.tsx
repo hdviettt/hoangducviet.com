@@ -65,11 +65,11 @@ export default async function ProjectPage({ params }: ProjectParams) {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 py-8 md:py-12 pb-20 md:pb-16 animate-fadeIn">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-12 pb-20 md:pb-16">
         {/* Back button */}
         <Link
           href="/projects"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-all duration-200 hover:-translate-x-1 mb-8"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
           <span>←</span>
           <span>Back to projects</span>

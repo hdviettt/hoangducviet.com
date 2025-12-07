@@ -43,7 +43,11 @@
       "Bash(timeout:*)",
       "Read(//c/**)",
       "Read(//d/myblog/myblog/**)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Skill(docx)",
+      "Bash(pandoc:*)",
+      "Bash(powershell -Command \"Expand-Archive -Path ''traffic-user-tracking-plan.docx'' -DestinationPath ''docx-temp'' -Force\")",
+      "WebFetch(domain:www.better-auth.com)"
     ],
     "deny": [],
     "ask": []

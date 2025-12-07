@@ -69,6 +69,18 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
           const id = generateId(text);
           return <h6 id={id} {...props}>{children}</h6>;
         },
+        img: ({src, alt, ...props}: any) => {
+          return (
+            <figure className="my-6">
+              <img src={src} alt={alt || ''} className="w-full h-auto rounded-lg" {...props} />
+              {alt && (
+                <figcaption className="text-center text-sm text-muted-foreground mt-3">
+                  {alt}
+                </figcaption>
+              )}
+            </figure>
+          );
+        },
       }}
     >
       {content}

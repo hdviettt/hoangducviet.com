@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { GoogleAnalytics } from '@next/third-parties/google'
 
 import { getGlobalMetadata } from "@/lib/directus";
 import ClientFileExplorer from "@/components/ClientFileExplorer";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
@@ -16,20 +19,37 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+// Script to prevent theme flash - runs before React hydration
+const themeScript = `
+  (function() {
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-x-hidden">
-      <body className="antialiased min-h-screen bg-background text-foreground overflow-hidden overflow-x-hidden">
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} overflow-x-hidden`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="antialiased min-h-screen bg-background text-foreground overflow-hidden overflow-x-hidden font-sans">
         <GoogleAnalytics gaId="G-HKSHVM8Z9G" />
-        <PostHogProvider>
-          <ClientFileExplorer>
-            {children}
-          </ClientFileExplorer>
-        </PostHogProvider>
+        <ThemeProvider>
+          <PostHogProvider>
+            <ClientFileExplorer>
+              {children}
+            </ClientFileExplorer>
+          </PostHogProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

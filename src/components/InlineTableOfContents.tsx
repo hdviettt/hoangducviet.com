@@ -95,11 +95,11 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
   if (headings.length === 0) return null;
 
   return (
-    <div className="sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden">
-      <div className="text-xs font-semibold uppercase tracking-wider mb-4 text-muted-foreground">
-        Table of Contents
+    <div className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden">
+      <div className="text-xs font-medium text-muted-foreground mb-4">
+        On this page
       </div>
-      <nav className="space-y-2">
+      <nav className="space-y-1 border-l border-border">
         {headings.map((heading) => {
           const indent = heading.level - 1;
           const isActive = activeId === heading.id;
@@ -108,13 +108,13 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
             <a
               key={heading.id}
               href={`#${heading.id}`}
-              className={`block text-sm transition-all duration-200 break-words ${
+              className={`block text-[13px] py-1 transition-colors break-words border-l-2 -ml-px ${
                 isActive
-                  ? "text-foreground font-medium"
-                  : "text-muted-foreground hover:text-foreground hover:translate-x-1"
+                  ? "text-foreground border-foreground"
+                  : "text-muted-foreground hover:text-foreground border-transparent hover:border-muted-foreground/50"
               }`}
               style={{
-                paddingLeft: `${indent * 16}px`,
+                paddingLeft: `${12 + indent * 12}px`,
                 overflowWrap: 'break-word',
                 wordBreak: 'break-word',
               }}
@@ -122,10 +122,9 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
                 e.preventDefault();
                 setActiveId(heading.id);
                 const element = document.getElementById(heading.id);
-                const scrollContainer = document.querySelector('.h-full.overflow-auto') as HTMLElement;
+                const scrollContainer = document.querySelector('.flex-1.bg-background.overflow-y-auto') as HTMLElement;
 
                 if (element && scrollContainer) {
-                  // Calculate position relative to the scroll container
                   const elementTop = element.offsetTop;
                   scrollContainer.scrollTo({
                     top: elementTop - 100,

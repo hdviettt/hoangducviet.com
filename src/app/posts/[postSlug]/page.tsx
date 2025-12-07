@@ -104,25 +104,25 @@ export default async function PostPage({ params }: PostParams) {
   return (
     <div className="h-full overflow-auto">
       <ReadingProgress />
-      <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 py-8 md:py-12 pb-20 md:pb-16 animate-fadeIn">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-12 pb-20 md:pb-16">
         {/* Back button */}
         <Link
           href="/posts"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-all duration-200 hover:-translate-x-1 mb-8"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
           <span>←</span>
           <span>Back to articles</span>
         </Link>
 
-        <div className="flex gap-8 lg:gap-12">
+        <div className="flex gap-12 lg:gap-16">
           {/* Main Content */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 max-w-2xl">
 
             {/* Article Header */}
-            <header className="mb-12 pb-8 border-b border-border scroll-fade-in">
-              <h1 className="text-3xl font-semibold mb-4 text-foreground">{data.title}</h1>
-              <div className="flex flex-wrap items-center gap-3">
-                <time dateTime={data.date_created} className="text-sm text-muted-foreground">
+            <header className="mb-10">
+              <h1 className="text-2xl md:text-3xl font-semibold mb-3 text-foreground tracking-tight">{data.title}</h1>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                <time dateTime={data.date_created}>
                   {data.date_created &&
                     new Date(data.date_created).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -131,20 +131,21 @@ export default async function PostPage({ params }: PostParams) {
                     })}
                 </time>
                 {categories.length > 0 && (
-                  <div className="flex items-center gap-2">
-                    {categories.map(({ title }) => (
-                      <span key={title} className="text-sm text-muted-foreground">
-                        {title}
+                  <>
+                    <span className="text-border">·</span>
+                    {categories.map(({ title }, index) => (
+                      <span key={title}>
+                        {title}{index < categories.length - 1 ? ', ' : ''}
                       </span>
                     ))}
-                  </div>
+                  </>
                 )}
               </div>
             </header>
 
             {/* Thumbnail Image */}
             {thumbnailUrl && data.thumbnail && typeof data.thumbnail === 'object' && (
-              <div className="mb-8 overflow-hidden border border-border rounded-lg">
+              <div className="mb-10 overflow-hidden rounded-lg border border-border">
                 <Image
                   src={thumbnailUrl}
                   alt={data.title || ''}
@@ -167,7 +168,7 @@ export default async function PostPage({ params }: PostParams) {
           </div>
 
           {/* Table of Contents Sidebar - Desktop Only */}
-          <aside className="hidden lg:block w-72 flex-shrink-0">
+          <aside className="hidden lg:block w-56 flex-shrink-0">
             {data.content && <InlineTableOfContents content={data.content} />}
           </aside>
         </div>

@@ -28,7 +28,7 @@ const Block = (props: Block) => {
     return (
       <p
         key={props.id}
-        className="text-sm text-foreground leading-relaxed mb-4"
+        className="text-sm text-foreground leading-relaxed mb-7"
         dangerouslySetInnerHTML={{
           __html: props.data.text || '',
         }}
