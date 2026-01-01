@@ -10,8 +10,8 @@ const config: Config = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
-  			mono: ['var(--font-geist-mono)', 'monospace'],
+  			sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+  			mono: ['var(--font-mono)', 'monospace'],
   		},
   		colors: {
   			background: 'hsl(var(--background))',
@@ -56,15 +56,9 @@ const config: Config = {
   			}
   		},
   		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		boxShadow: {
-  			'neo': '4px 4px 0px 0px rgba(0, 0, 0, 1)',
-  			'neo-sm': '2px 2px 0px 0px rgba(0, 0, 0, 1)',
-  			'neo-md': '6px 6px 0px 0px rgba(0, 0, 0, 1)',
-  			'neo-lg': '8px 8px 0px 0px rgba(0, 0, 0, 1)',
+  			lg: '0',
+  			md: '0',
+  			sm: '0'
   		}
   	}
   },

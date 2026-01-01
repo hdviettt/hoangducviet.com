@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 // import { getGlobalMetadata } from "@/lib/directus";
 import { getProjectBySlug } from "@/lib/projects";
 
-export const runtime = 'edge';
 
 interface ProjectParams {
   params: {
@@ -69,10 +68,9 @@ export default async function ProjectPage({ params }: ProjectParams) {
         {/* Back button */}
         <Link
           href="/projects"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          className="inline-block text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
-          <span>←</span>
-          <span>Back to projects</span>
+          Back to projects
         </Link>
 
         <div className="flex gap-8 lg:gap-12">
@@ -112,14 +110,11 @@ export default async function ProjectPage({ params }: ProjectParams) {
                     <Link
                       key={post.slug}
                       href={`/posts/${post.slug}`}
-                      className="flex items-center px-4 py-3 bg-card border border-border rounded-md hover:shadow-sm hover:border-primary/20 transition-all group"
+                      className="flex items-center justify-between px-4 py-3 bg-card border border-border hover:bg-muted transition-colors duration-75 group"
                     >
-                      <span className="text-xs mr-3 text-primary">→</span>
-                      <div className="flex-1">
-                        <div className="text-xs font-medium text-foreground">
-                          {post.title}
-                        </div>
-                      </div>
+                      <span className="text-sm text-foreground">
+                        {post.title}
+                      </span>
                       <div className="text-[11px] text-muted-foreground">
                         {post.date_created &&
                           new Date(post.date_created).toLocaleDateString('en-US', {
@@ -135,7 +130,7 @@ export default async function ProjectPage({ params }: ProjectParams) {
             )}
 
             {posts.length === 0 && (
-              <div className="mt-10 p-6 bg-muted/20 text-center border border-border rounded-lg">
+              <div className="mt-10 p-6 bg-muted/20 text-center border border-border">
                 <p className="text-foreground text-xs text-muted-foreground">No related articles</p>
               </div>
             )}

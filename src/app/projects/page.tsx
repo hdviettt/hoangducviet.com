@@ -3,7 +3,6 @@ import { getGlobalMetadata } from "@/lib/directus";
 import { getProjects, type Project } from "@/lib/projects";
 import ProjectsList from "@/components/ProjectsList";
 
-export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {

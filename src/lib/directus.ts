@@ -15,7 +15,7 @@ const directusUrl = "https://directus-production-b969.up.railway.app";
 
 export const directus = createDirectus(directusUrl).with(
   rest({
-    onRequest: (options) => ({ ...options, cache: "no-store" }),
+    onRequest: (options) => ({ ...options, next: { revalidate: 60 } }),
   }),
 );
 

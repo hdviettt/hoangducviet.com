@@ -16,12 +16,12 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
+  // Extract headings from markdown content
   useEffect(() => {
-    // Extract headings from markdown content
     const lines = content.split('\n');
     const items: TOCItem[] = [];
 
-    lines.forEach((line, index) => {
+    lines.forEach((line) => {
       const match = line.match(/^(#{1,6})\s+(.+)$/);
       if (match) {
         const level = match[1].length;
@@ -38,65 +38,57 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
     });
 
     setHeadings(items);
-
-    if (items.length > 0) {
-      setActiveId(items[0].id);
-    }
   }, [content]);
 
+  // Handle scroll to highlight active heading
   useEffect(() => {
     if (headings.length === 0) return;
 
-    // Find the scroll container (the div with overflow-auto)
-    const scrollContainer = document.querySelector('.h-full.overflow-auto') as HTMLElement;
-    if (!scrollContainer) return;
-
-    // Track scroll position to update active heading
     const handleScroll = () => {
-      const headingElements = document.querySelectorAll(".article-content h1, .article-content h2, .article-content h3, .article-content h4, .article-content h5, .article-content h6");
-      const headingsArray = Array.from(headingElements) as HTMLElement[];
+      const headingElements = headings
+        .map(h => document.getElementById(h.id))
+        .filter((el): el is HTMLElement => el !== null);
 
-      if (headingsArray.length === 0) return;
+      if (headingElements.length === 0) return;
 
-      // Get scroll position from the scroll container
-      const scrollPosition = scrollContainer.scrollTop + 200;
+      // Find which heading is currently in view
+      let currentId = headings[0]?.id || "";
 
-      // Find the current active heading by checking which one we've scrolled past
-      let currentActiveId = headingsArray[0].id;
-
-      for (const heading of headingsArray) {
-        // Get position relative to the scroll container
-        const headingTop = heading.offsetTop;
-
-        if (headingTop <= scrollPosition) {
-          currentActiveId = heading.id;
+      for (const el of headingElements) {
+        const rect = el.getBoundingClientRect();
+        // If the heading is above the middle of the viewport, it's the active one
+        if (rect.top <= 100) {
+          currentId = el.id;
         } else {
           break;
         }
       }
 
-      setActiveId(currentActiveId);
+      setActiveId(currentId);
     };
 
-    // Wait for headings to be rendered in the DOM, then set up scroll listener
-    const timer = setTimeout(() => {
-      handleScroll(); // Initial call to set active heading
-    }, 300);
+    // Initial check
+    setTimeout(handleScroll, 100);
 
-    // Listen to scroll events on the scroll container
-    scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      clearTimeout(timer);
-      scrollContainer.removeEventListener("scroll", handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [headings]);
 
   if (headings.length === 0) return null;
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      const top = element.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "smooth" });
+      setActiveId(id);
+    }
+  };
+
   return (
-    <div className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden">
-      <div className="text-xs font-medium text-muted-foreground mb-4">
+    <div>
+      <div className="text-xs font-medium text-muted-foreground mb-3">
         On this page
       </div>
       <nav className="space-y-1 border-l border-border">
@@ -108,30 +100,13 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
             <a
               key={heading.id}
               href={`#${heading.id}`}
-              className={`block text-[13px] py-1 transition-colors break-words border-l-2 -ml-px ${
+              onClick={(e) => handleClick(e, heading.id)}
+              className={`block text-sm py-1 transition-colors border-l-2 -ml-px ${
                 isActive
                   ? "text-foreground border-foreground"
-                  : "text-muted-foreground hover:text-foreground border-transparent hover:border-muted-foreground/50"
+                  : "text-muted-foreground hover:text-foreground border-transparent"
               }`}
-              style={{
-                paddingLeft: `${12 + indent * 12}px`,
-                overflowWrap: 'break-word',
-                wordBreak: 'break-word',
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveId(heading.id);
-                const element = document.getElementById(heading.id);
-                const scrollContainer = document.querySelector('.flex-1.bg-background.overflow-y-auto') as HTMLElement;
-
-                if (element && scrollContainer) {
-                  const elementTop = element.offsetTop;
-                  scrollContainer.scrollTo({
-                    top: elementTop - 100,
-                    behavior: "smooth",
-                  });
-                }
-              }}
+              style={{ paddingLeft: `${12 + indent * 12}px` }}
             >
               {heading.text}
             </a>

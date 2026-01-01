@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-// Hard-code the Directus URL for Cloudflare Workers
 const DIRECTUS_URL = 'https://directus-production-b969.up.railway.app';
 
 const nextConfig = {
@@ -30,11 +29,5 @@ const nextConfig = {
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
 };
-
-// Only import and setup dev platform in development
-if (process.env.NODE_ENV === 'development') {
-  const { setupDevPlatform } = await import('@cloudflare/next-on-pages/next-dev');
-  await setupDevPlatform();
-}
 
 export default nextConfig;

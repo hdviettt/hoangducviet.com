@@ -1,40 +1,21 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface MarkdownContentProps {
   content: string;
 }
 
+// Helper function to generate heading IDs from text
+const generateId = (text: string) => {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim();
+};
+
 export default function MarkdownContent({ content }: MarkdownContentProps) {
-  const [ReactMarkdown, setReactMarkdown] = useState<any>(null);
-  const [remarkGfm, setRemarkGfm] = useState<any>(null);
-
-  useEffect(() => {
-    // Dynamically import react-markdown and remark-gfm to avoid edge runtime issues
-    Promise.all([
-      import("react-markdown"),
-      import("remark-gfm")
-    ]).then(([md, gfm]) => {
-      setReactMarkdown(() => md.default);
-      setRemarkGfm(() => gfm.default);
-    });
-  }, []);
-
-  if (!ReactMarkdown || !remarkGfm) {
-    return <div className="text-muted-foreground text-sm">Loading content...</div>;
-  }
-
-  // Helper function to generate heading IDs from text
-  const generateId = (text: string) => {
-    return text
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
-  };
-
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -72,7 +53,7 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
         img: ({src, alt, ...props}: any) => {
           return (
             <figure className="my-6">
-              <img src={src} alt={alt || ''} className="w-full h-auto rounded-lg" {...props} />
+              <img src={src} alt={alt || ''} className="w-full h-auto" {...props} />
               {alt && (
                 <figcaption className="text-center text-sm text-muted-foreground mt-3">
                   {alt}

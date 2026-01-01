@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from '@next/third-parties/google'
 
@@ -9,6 +8,18 @@ import ClientFileExplorer from "@/components/ClientFileExplorer";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
   const siteTitle = global && global.length > 0 ? global[0].title : "Hoang Duc Viet";
@@ -16,6 +27,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: siteTitle,
     description: siteTagline,
+    icons: {
+      icon: '/favicon.svg',
+    },
   }
 }
 
@@ -37,11 +51,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} overflow-x-hidden`} suppressHydrationWarning>
+    <html lang="vi" className={`${inter.variable} ${jetbrainsMono.variable} overflow-x-hidden`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="antialiased min-h-screen bg-background text-foreground overflow-hidden overflow-x-hidden font-sans">
+      <body className="antialiased min-h-screen bg-background text-foreground font-sans">
         <GoogleAnalytics gaId="G-HKSHVM8Z9G" />
         <ThemeProvider>
           <PostHogProvider>
