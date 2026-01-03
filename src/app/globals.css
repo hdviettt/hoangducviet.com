@@ -5,7 +5,7 @@
 @layer base {
   :root {
     /* Light theme - Developer minimal */
-    --background: 0 0% 100%;
+    --background: 72 20% 95%;
     --foreground: 0 0% 9%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;

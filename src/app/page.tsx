@@ -60,7 +60,7 @@ export default async function Home() {
               alt={mainProfile.name || 'Profile'}
               width={80}
               height={80}
-              className="w-20 h-20 rounded-full object-cover mx-auto mb-4"
+              className="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-2 border-foreground/20"
               priority
             />
           )}
