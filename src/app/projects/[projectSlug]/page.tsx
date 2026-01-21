@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 // import { getGlobalMetadata } from "@/lib/directus";
 import { getProjectBySlug } from "@/lib/projects";
@@ -63,80 +62,67 @@ export default async function ProjectPage({ params }: ProjectParams) {
   }
 
   return (
-    <div className="h-full overflow-auto">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-12 pb-20 md:pb-16">
-        {/* Back button */}
-        <Link
-          href="/projects"
-          className="inline-block text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-        >
-          Back to projects
-        </Link>
+    <div className="py-8 sm:py-12 md:py-16">
+      {/* Back button */}
+      <Link
+        href="/projects"
+        className="inline-block text-sm text-muted-foreground hover:text-primary transition-colors mb-8"
+      >
+        ← Back to projects
+      </Link>
 
-        <div className="flex gap-8 lg:gap-12">
-          {/* Main Content */}
-          <div className="flex-1 min-w-0">
-            {/* Project Header */}
-            <header className="mb-12 pb-8 border-b border-border scroll-fade-in">
-              <h1 className="text-3xl font-semibold mb-4 text-foreground">{project.title}</h1>
-              <div className="flex flex-wrap items-center gap-3">
-                <time dateTime={project.date_created} className="text-sm text-muted-foreground">
-                  {project.date_created &&
-                    new Date(project.date_created).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                </time>
-              </div>
-            </header>
+      {/* Project Header */}
+      <header className="mb-8 sm:mb-10">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-tight">
+          {project.title}
+        </h1>
+        <time dateTime={project.date_created} className="text-xs sm:text-sm text-muted-foreground">
+          {project.date_created &&
+            new Date(project.date_created).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+        </time>
+      </header>
 
-            {/* Project Description */}
-            {project.description && (
-              <div
-                className="article-content mb-10"
-                dangerouslySetInnerHTML={{ __html: project.description }}
-              />
-            )}
+      {/* Project Description */}
+      {project.description && (
+        <div
+          className="article-content mb-10"
+          dangerouslySetInnerHTML={{ __html: project.description }}
+        />
+      )}
 
-            {/* Related Posts */}
-            {posts.length > 0 && (
-              <section className="mt-10 pt-8 border-t border-border">
-                <h2 className="text-base font-semibold mb-5 text-foreground">
-                  Related Articles
-                </h2>
-                <div className="space-y-3">
-                  {posts.map((post: any) => (
-                    <Link
-                      key={post.slug}
-                      href={`/posts/${post.slug}`}
-                      className="flex items-center justify-between px-4 py-3 bg-card border border-border hover:bg-muted transition-colors duration-75 group"
-                    >
-                      <span className="text-sm text-foreground">
-                        {post.title}
-                      </span>
-                      <div className="text-[11px] text-muted-foreground">
-                        {post.date_created &&
-                          new Date(post.date_created).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {posts.length === 0 && (
-              <div className="mt-10 p-6 bg-muted/20 text-center border border-border">
-                <p className="text-foreground text-xs text-muted-foreground">No related articles</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* Related Posts */}
+      {posts.length > 0 && (
+        <section className="mt-10 pt-8 border-t border-border">
+          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4">
+            Related Posts
+          </h2>
+          <ul className="space-y-2">
+            {posts.map((post: any) => (
+              <li key={post.slug}>
+                <Link
+                  href={`/posts/${post.slug}`}
+                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
+                >
+                  <span className="text-muted-foreground text-xs shrink-0 order-2 sm:order-1">
+                    {post.date_created &&
+                      new Date(post.date_created).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: '2-digit'
+                      })}
+                  </span>
+                  <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
+                    {post.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

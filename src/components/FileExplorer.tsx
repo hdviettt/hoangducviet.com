@@ -24,21 +24,21 @@ export default function FileExplorer({ children }: FileExplorerProps) {
     <div className="min-h-screen bg-background font-mono">
       {/* Terminal Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background">
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
           {/* Terminal title bar */}
           <div className="h-8 flex items-center justify-between border-b border-border/50 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="text-primary">●</span>
-              <span className="hidden sm:inline">hdviet@blog</span>
-              <span className="text-muted-foreground/50">:</span>
-              <span className="text-foreground">{getTerminalPath()}</span>
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-primary shrink-0">●</span>
+              <span className="hidden sm:inline shrink-0">hdviet@blog</span>
+              <span className="text-muted-foreground/50 shrink-0">:</span>
+              <span className="text-foreground truncate">{getTerminalPath()}</span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <a
                 href="https://github.com/hdviettt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors p-1"
               >
                 <Github className="w-3.5 h-3.5" />
               </a>
@@ -46,7 +46,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 href="https://www.facebook.com/hoangducviettt/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors p-1"
               >
                 <Facebook className="w-3.5 h-3.5" />
               </a>
@@ -54,13 +54,13 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 href="https://www.instagram.com/_hdviet/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors p-1"
               >
                 <Instagram className="w-3.5 h-3.5" />
               </a>
               <button
                 onClick={toggleTheme}
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors p-1"
               >
                 {!mounted ? (
                   <div className="w-3.5 h-3.5" />
@@ -74,50 +74,43 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="h-10 flex items-center gap-6 text-sm">
+          <nav className="h-10 flex items-center gap-4 sm:gap-6 text-sm overflow-x-auto">
             <Link
               href="/"
-              className={`transition-colors ${
+              className={`transition-colors whitespace-nowrap ${
                 pathname === "/"
                   ? "text-primary"
                   : "text-muted-foreground hover:text-primary"
               }`}
             >
-              <span className="text-muted-foreground/50">./</span>home
+              home
             </Link>
             <Link
               href="/posts"
-              className={`transition-colors ${
+              className={`transition-colors whitespace-nowrap ${
                 pathname.startsWith("/posts")
                   ? "text-primary"
                   : "text-muted-foreground hover:text-primary"
               }`}
             >
-              <span className="text-muted-foreground/50">./</span>posts
+              posts
             </Link>
             <Link
               href="/projects"
-              className={`transition-colors ${
+              className={`transition-colors whitespace-nowrap ${
                 pathname.startsWith("/projects")
                   ? "text-primary"
                   : "text-muted-foreground hover:text-primary"
               }`}
             >
-              <span className="text-muted-foreground/50">./</span>projects
+              projects
             </Link>
           </nav>
         </div>
       </header>
 
       {/* Content */}
-      <main className="max-w-3xl mx-auto px-4">{children}</main>
-
-      {/* Terminal Footer */}
-      <footer className="border-t border-border mt-16">
-        <div className="max-w-3xl mx-auto px-4 py-4 text-xs text-muted-foreground font-mono">
-          <span className="text-primary">$</span> echo "Built with Next.js"
-        </div>
-      </footer>
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 pb-16">{children}</main>
     </div>
   );
 }

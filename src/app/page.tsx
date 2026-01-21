@@ -23,20 +23,16 @@ export default async function Home() {
   } catch (error) {
     console.error("Error fetching data:", error);
     return (
-      <div className="py-12 font-mono">
-        <p className="text-muted-foreground text-sm">
-          <span className="text-primary">&gt;</span> Error: Unable to load content.
-        </p>
+      <div className="py-12">
+        <p className="text-muted-foreground text-sm">Unable to load content.</p>
       </div>
     );
   }
 
   if (hdvietData.length === 0) {
     return (
-      <div className="py-12 font-mono">
-        <p className="text-muted-foreground text-sm">
-          <span className="text-primary">&gt;</span> No content available.
-        </p>
+      <div className="py-12">
+        <p className="text-muted-foreground text-sm">No content available.</p>
       </div>
     );
   }
@@ -54,15 +50,9 @@ export default async function Home() {
   }
 
   return (
-    <div className="py-12 font-mono">
-      {/* Terminal intro command */}
-      <div className="mb-8 text-sm">
-        <span className="text-primary">$</span>{" "}
-        <span className="text-muted-foreground">cat ./README.md</span>
-      </div>
-
+    <div className="py-8 sm:py-12">
       {/* Profile Section */}
-      <section className="mb-12">
+      <section className="mb-10 sm:mb-12">
         <div className="flex items-start gap-4 mb-6">
           {imageUrl && (
             <Image
@@ -70,13 +60,13 @@ export default async function Home() {
               alt={mainProfile.name || 'Profile'}
               width={64}
               height={64}
-              className="w-16 h-16 object-cover border border-border"
+              className="w-14 h-14 sm:w-16 sm:h-16 object-cover border border-border shrink-0"
               priority
             />
           )}
-          <div>
+          <div className="min-w-0">
             {mainProfile?.name && (
-              <h1 className="text-lg font-medium text-foreground mb-1">
+              <h1 className="text-lg sm:text-xl font-medium text-foreground mb-1">
                 {mainProfile.name}
               </h1>
             )}
@@ -97,32 +87,29 @@ export default async function Home() {
       {/* Recent Posts Section */}
       {latestPosts.length > 0 && (
         <section>
-          {/* Section header */}
-          <div className="text-xs text-muted-foreground mb-4 pb-2 border-b border-border/50">
-            <span className="text-primary">$</span>{" "}
-            <span>ls -t ./posts | head -5</span>
-          </div>
+          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 pb-2 border-b border-border">
+            Recent Posts
+          </h2>
 
-          {/* Posts list */}
-          <ul className="space-y-1 mb-6">
+          <ul className="space-y-2 mb-6">
             {latestPosts.map((post) => {
               const date = post.date_created
                 ? new Date(post.date_created).toLocaleDateString('en-US', {
                     month: 'short',
                     day: '2-digit'
-                  }).toLowerCase()
-                : '---';
+                  })
+                : '';
 
               return (
                 <li key={post.slug}>
                   <Link
                     href={`/posts/${post.slug}`}
-                    className="flex items-baseline gap-4 py-1 group text-sm"
+                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
                   >
-                    <span className="text-muted-foreground text-xs w-16 shrink-0">
+                    <span className="text-muted-foreground text-xs w-16 shrink-0 order-2 sm:order-1">
                       {date}
                     </span>
-                    <span className="text-foreground group-hover:text-primary transition-colors">
+                    <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
                       {post.title}
                     </span>
                   </Link>
@@ -133,18 +120,12 @@ export default async function Home() {
 
           <Link
             href="/posts"
-            className="text-xs text-muted-foreground hover:text-primary transition-colors"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors"
           >
-            <span className="text-primary">&gt;</span> cd ./posts
+            View all posts →
           </Link>
         </section>
       )}
-
-      {/* Terminal prompt at bottom */}
-      <div className="mt-12 text-sm text-muted-foreground">
-        <span className="text-primary">$</span>{" "}
-        <span className="inline-block w-2 h-4 bg-primary/80 animate-pulse" />
-      </div>
     </div>
   );
 }

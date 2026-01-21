@@ -21,58 +21,36 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
   }, [projects]);
 
   return (
-    <div className="py-12 font-mono">
-      {/* Terminal command header */}
-      <div className="mb-8 text-sm">
-        <span className="text-primary">$</span>{" "}
-        <span className="text-muted-foreground">ls -la ./projects</span>
-      </div>
+    <div className="py-8 sm:py-12">
+      <h1 className="text-xl sm:text-2xl font-medium mb-8 sm:mb-10">Projects</h1>
 
       {sortedProjects.length === 0 ? (
-        <p className="text-muted-foreground text-sm">
-          <span className="text-primary">&gt;</span> No projects found.
-        </p>
+        <p className="text-muted-foreground text-sm">No projects found.</p>
       ) : (
-        <div>
-          {/* Directory header */}
-          <div className="text-xs text-muted-foreground mb-3 pb-2 border-b border-border/50">
-            <span className="text-primary">drwxr-xr-x</span>
-            <span className="mx-3">{sortedProjects.length}</span>
-            <span>projects/</span>
-          </div>
+        <ul className="space-y-2">
+          {sortedProjects.map((project, index) => {
+            const year = project.date_created
+              ? new Date(project.date_created).getFullYear()
+              : '';
 
-          {/* Projects list */}
-          <ul className="space-y-1">
-            {sortedProjects.map((project, index) => {
-              const year = project.date_created
-                ? new Date(project.date_created).getFullYear()
-                : '----';
-
-              return (
-                <li key={project.slug || index}>
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="flex items-baseline gap-4 py-1 group text-sm"
-                  >
-                    <span className="text-muted-foreground text-xs w-12 shrink-0">
-                      {year}
-                    </span>
-                    <span className="text-foreground group-hover:text-primary transition-colors">
-                      {project.title || "untitled"}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+            return (
+              <li key={project.slug || index}>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
+                >
+                  <span className="text-muted-foreground text-xs w-12 shrink-0 order-2 sm:order-1">
+                    {year}
+                  </span>
+                  <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
+                    {project.title || "Untitled"}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       )}
-
-      {/* Terminal prompt at bottom */}
-      <div className="mt-12 text-sm text-muted-foreground">
-        <span className="text-primary">$</span>{" "}
-        <span className="inline-block w-2 h-4 bg-primary/80 animate-pulse" />
-      </div>
     </div>
   );
 }

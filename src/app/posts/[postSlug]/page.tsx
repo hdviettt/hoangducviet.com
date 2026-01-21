@@ -82,24 +82,24 @@ export default async function PostPage({ params }: PostParams) {
   return (
     <>
       <ReadingProgress />
-      <div className="max-w-6xl mx-auto px-6 md:px-8 lg:px-12 py-12 md:py-20 pb-24">
+      <div className="py-8 sm:py-12 md:py-16">
         {/* Back button */}
         <Link
           href="/posts"
-          className="inline-block text-sm text-muted-foreground hover:text-foreground transition-colors duration-75 mb-12"
+          className="inline-block text-sm text-muted-foreground hover:text-primary transition-colors mb-8"
         >
-Back to articles
+          ← Back to posts
         </Link>
 
-        <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
+        <div className="lg:grid lg:grid-cols-[1fr_200px] lg:gap-8 xl:gap-12 items-start">
           {/* Main Content */}
-          <div className="min-w-0 max-w-[680px]">
+          <div className="min-w-0">
             {/* Article Header */}
-            <header className="mb-12">
-              <h1 className="text-2xl md:text-3xl font-semibold mb-4 leading-tight">
+            <header className="mb-8 sm:mb-10">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-tight">
                 {data.title}
               </h1>
-              <time className="text-sm text-muted-foreground" dateTime={data.date_created}>
+              <time className="text-xs sm:text-sm text-muted-foreground" dateTime={data.date_created}>
                 {data.date_created && new Date(data.date_created).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
