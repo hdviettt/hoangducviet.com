@@ -23,16 +23,20 @@ export default async function Home() {
   } catch (error) {
     console.error("Error fetching data:", error);
     return (
-      <div className="min-h-full flex items-center justify-center">
-        <p className="text-muted-foreground">Unable to load content.</p>
+      <div className="py-12 font-mono">
+        <p className="text-muted-foreground text-sm">
+          <span className="text-primary">&gt;</span> Error: Unable to load content.
+        </p>
       </div>
     );
   }
 
   if (hdvietData.length === 0) {
     return (
-      <div className="min-h-full flex items-center justify-center">
-        <p className="text-muted-foreground">No content available.</p>
+      <div className="py-12 font-mono">
+        <p className="text-muted-foreground text-sm">
+          <span className="text-primary">&gt;</span> No content available.
+        </p>
       </div>
     );
   }
@@ -50,68 +54,96 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-full">
-      <div className="max-w-xl mx-auto px-6 py-16 md:py-24">
-        {/* Profile */}
-        <section className="mb-16">
+    <div className="py-12 font-mono">
+      {/* Terminal intro command */}
+      <div className="mb-8 text-sm">
+        <span className="text-primary">$</span>{" "}
+        <span className="text-muted-foreground">cat ./README.md</span>
+      </div>
+
+      {/* Profile Section */}
+      <section className="mb-12">
+        <div className="flex items-start gap-4 mb-6">
           {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || 'Profile'}
-              width={80}
-              height={80}
-              className="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-2 border-foreground/20"
+              width={64}
+              height={64}
+              className="w-16 h-16 object-cover border border-border"
               priority
             />
           )}
-          {mainProfile?.name && (
-            <h1 className="text-2xl font-semibold mb-4 text-center">{mainProfile.name}</h1>
-          )}
+          <div>
+            {mainProfile?.name && (
+              <h1 className="text-lg font-medium text-foreground mb-1">
+                {mainProfile.name}
+              </h1>
+            )}
+            <p className="text-xs text-muted-foreground">
+              <span className="text-primary">@</span>hdviet
+            </p>
+          </div>
+        </div>
 
-          {mainProfile?.description && (
-            <div
-              className="text-muted-foreground leading-relaxed [&_a]:text-foreground [&_a]:underline [&_p]:mb-3 [&_p:last-child]:mb-0"
-              dangerouslySetInnerHTML={{ __html: mainProfile.description }}
-            />
-          )}
-        </section>
+        {mainProfile?.description && (
+          <div
+            className="text-sm text-muted-foreground leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-3 [&_p:last-child]:mb-0"
+            dangerouslySetInnerHTML={{ __html: mainProfile.description }}
+          />
+        )}
+      </section>
 
-        {/* Posts */}
-        {latestPosts.length > 0 && (
-          <section>
-            <h2 className="text-sm font-medium text-muted-foreground mb-4">
-              Writing
-            </h2>
+      {/* Recent Posts Section */}
+      {latestPosts.length > 0 && (
+        <section>
+          {/* Section header */}
+          <div className="text-xs text-muted-foreground mb-4 pb-2 border-b border-border/50">
+            <span className="text-primary">$</span>{" "}
+            <span>ls -t ./posts | head -5</span>
+          </div>
 
-            <ul className="space-y-3 mb-6">
-              {latestPosts.map((post) => (
+          {/* Posts list */}
+          <ul className="space-y-1 mb-6">
+            {latestPosts.map((post) => {
+              const date = post.date_created
+                ? new Date(post.date_created).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: '2-digit'
+                  }).toLowerCase()
+                : '---';
+
+              return (
                 <li key={post.slug}>
                   <Link
                     href={`/posts/${post.slug}`}
-                    className="flex items-baseline justify-between gap-4 group"
+                    className="flex items-baseline gap-4 py-1 group text-sm"
                   >
-                    <span className="text-foreground group-hover:text-muted-foreground transition-colors">
-                      {post.title}
+                    <span className="text-muted-foreground text-xs w-16 shrink-0">
+                      {date}
                     </span>
-                    <span className="text-sm text-muted-foreground tabular-nums shrink-0">
-                      {post.date_created && new Date(post.date_created).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric'
-                      })}
+                    <span className="text-foreground group-hover:text-primary transition-colors">
+                      {post.title}
                     </span>
                   </Link>
                 </li>
-              ))}
-            </ul>
+              );
+            })}
+          </ul>
 
-            <Link
-              href="/posts"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              All articles
-            </Link>
-          </section>
-        )}
+          <Link
+            href="/posts"
+            className="text-xs text-muted-foreground hover:text-primary transition-colors"
+          >
+            <span className="text-primary">&gt;</span> cd ./posts
+          </Link>
+        </section>
+      )}
+
+      {/* Terminal prompt at bottom */}
+      <div className="mt-12 text-sm text-muted-foreground">
+        <span className="text-primary">$</span>{" "}
+        <span className="inline-block w-2 h-4 bg-primary/80 animate-pulse" />
       </div>
     </div>
   );

@@ -42,50 +42,67 @@ export default function PostsList({ posts }: PostsListProps) {
   }, [posts]);
 
   return (
-    <div className="min-h-full">
-      <div className="max-w-xl mx-auto px-6 py-16 md:py-24">
-        <h1 className="text-2xl font-semibold mb-12 font-mono">Articles</h1>
+    <div className="py-12 font-mono">
+      {/* Terminal command header */}
+      <div className="mb-8 text-sm">
+        <span className="text-primary">$</span>{" "}
+        <span className="text-muted-foreground">ls -la ./posts</span>
+      </div>
 
-        {postsByYear.length === 0 ? (
-          <p className="text-muted-foreground">No articles yet.</p>
-        ) : (
-          <div className="space-y-10">
-            {postsByYear.map(({ year, posts: yearPosts }) => (
-              <section key={year}>
-                <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-4">
-                  {year}
-                </h2>
+      {postsByYear.length === 0 ? (
+        <p className="text-muted-foreground text-sm">
+          <span className="text-primary">&gt;</span> No articles found.
+        </p>
+      ) : (
+        <div className="space-y-8">
+          {postsByYear.map(({ year, posts: yearPosts }) => (
+            <section key={year}>
+              {/* Year header - like a directory */}
+              <div className="text-xs text-muted-foreground mb-3 pb-2 border-b border-border/50">
+                <span className="text-primary">drwxr-xr-x</span>
+                <span className="mx-3">{yearPosts.length}</span>
+                <span>{year}/</span>
+              </div>
 
-                <ul className="space-y-3">
-                  {yearPosts.map((post, index) => {
-                    const isUnpublished = post.status !== 'published';
+              {/* Posts list */}
+              <ul className="space-y-1">
+                {yearPosts.map((post, index) => {
+                  const isUnpublished = post.status !== 'published';
+                  const date = post.date_created
+                    ? new Date(post.date_created).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: '2-digit'
+                      }).toLowerCase()
+                    : '---';
 
-                    return (
-                      <li key={post.slug || index}>
-                        <Link
-                          href={`/posts/${post.slug}`}
-                          className={`flex items-baseline justify-between gap-4 group ${
-                            isUnpublished ? 'opacity-40' : ''
-                          }`}
-                        >
-                          <span className="text-foreground group-hover:text-primary transition-colors">
-                            {post.title || "Untitled"}
-                          </span>
-                          <span className="font-mono text-xs text-muted-foreground tabular-nums shrink-0">
-                            {post.date_created && new Date(post.date_created).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric'
-                            })}
-                          </span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ))}
-          </div>
-        )}
+                  return (
+                    <li key={post.slug || index}>
+                      <Link
+                        href={`/posts/${post.slug}`}
+                        className={`flex items-baseline gap-4 py-1 group text-sm ${
+                          isUnpublished ? 'opacity-40' : ''
+                        }`}
+                      >
+                        <span className="text-muted-foreground text-xs w-16 shrink-0">
+                          {date}
+                        </span>
+                        <span className="text-foreground group-hover:text-primary transition-colors">
+                          {post.title || "untitled"}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
+      )}
+
+      {/* Terminal prompt at bottom */}
+      <div className="mt-12 text-sm text-muted-foreground">
+        <span className="text-primary">$</span>{" "}
+        <span className="inline-block w-2 h-4 bg-primary/80 animate-pulse" />
       </div>
     </div>
   );
