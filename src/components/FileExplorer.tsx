@@ -36,20 +36,20 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             </Link>
             <Link
               href="/posts"
-              className={`text-sm transition-colors ${
+              className={`font-mono text-xs uppercase tracking-wider transition-colors ${
                 pathname.startsWith("/posts")
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-primary"
               }`}
             >
               Articles
             </Link>
             <Link
               href="/projects"
-              className={`text-sm transition-colors ${
+              className={`font-mono text-xs uppercase tracking-wider transition-colors ${
                 pathname.startsWith("/projects")
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-primary"
               }`}
             >
               Projects
@@ -62,7 +62,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               href="https://github.com/hdviettt"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 text-muted-foreground hover:text-primary transition-colors"
             >
               <Github className="w-4 h-4" />
             </a>
@@ -70,7 +70,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               href="https://www.facebook.com/hoangducviettt/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 text-muted-foreground hover:text-primary transition-colors"
             >
               <Facebook className="w-4 h-4" />
             </a>
@@ -78,13 +78,13 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               href="https://www.instagram.com/_hdviet/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 text-muted-foreground hover:text-primary transition-colors"
             >
               <Instagram className="w-4 h-4" />
             </a>
             <button
               onClick={toggleTheme}
-              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 text-muted-foreground hover:text-primary transition-colors"
             >
               {!mounted ? (
                 <div className="w-4 h-4" />

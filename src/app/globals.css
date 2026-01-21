@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Light theme - Developer minimal */
+    /* Light theme - with orange accent */
     --background: 72 20% 95%;
     --foreground: 0 0% 9%;
     --muted: 0 0% 96%;
@@ -12,42 +12,42 @@
     --border: 0 0% 91%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 9%;
-    --primary: 0 0% 9%;
+    --primary: 32 95% 44%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 9%;
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 32 95% 44%;
+    --accent-foreground: 0 0% 100%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 9%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --input: 0 0% 91%;
-    --ring: 0 0% 9%;
+    --ring: 32 95% 44%;
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Dark theme - Dark gray */
-    --background: 0 0% 9%;
-    --foreground: 0 0% 90%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 50%;
-    --border: 0 0% 14%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 90%;
-    --primary: 0 0% 90%;
+    /* Dark theme - Claude Code terminal style */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 87%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 55%;
+    --border: 0 0% 15%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 87%;
+    --primary: 32 95% 55%;
     --primary-foreground: 0 0% 5%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 90%;
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 90%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 90%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 0 0% 87%;
+    --accent: 32 95% 55%;
+    --accent-foreground: 0 0% 5%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 87%;
     --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
-    --input: 0 0% 14%;
-    --ring: 0 0% 90%;
+    --input: 0 0% 15%;
+    --ring: 32 95% 55%;
   }
 }
 
@@ -61,10 +61,10 @@
     font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   }
 
-  /* Selection */
+  /* Selection - Orange highlight */
   ::selection {
-    background: hsl(var(--foreground));
-    color: hsl(var(--background));
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
   }
 }
 
@@ -190,7 +190,8 @@ small, .text-sm {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 14px;
   line-height: 1.6;
-  border-radius: 6px;
+  border-radius: 0;
+  border: 1px solid hsl(var(--border));
 }
 
 .article-content :not(pre) > code {
@@ -198,7 +199,7 @@ small, .text-sm {
   padding: 2px 6px;
   font-size: 14px;
   font-family: var(--font-mono), ui-monospace, monospace;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .article-content blockquote {
@@ -255,21 +256,21 @@ small, .text-sm {
   to { opacity: 1; }
 }
 
-/* Scrollbar */
+/* Scrollbar - Terminal style */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: hsl(var(--muted));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(var(--primary) / 0.7);
 }

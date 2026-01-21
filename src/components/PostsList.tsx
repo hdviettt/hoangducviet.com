@@ -44,7 +44,7 @@ export default function PostsList({ posts }: PostsListProps) {
   return (
     <div className="min-h-full">
       <div className="max-w-xl mx-auto px-6 py-16 md:py-24">
-        <h1 className="text-2xl font-semibold mb-12">Articles</h1>
+        <h1 className="text-2xl font-semibold mb-12 font-mono">Articles</h1>
 
         {postsByYear.length === 0 ? (
           <p className="text-muted-foreground">No articles yet.</p>
@@ -52,7 +52,7 @@ export default function PostsList({ posts }: PostsListProps) {
           <div className="space-y-10">
             {postsByYear.map(({ year, posts: yearPosts }) => (
               <section key={year}>
-                <h2 className="text-sm font-medium text-muted-foreground mb-4">
+                <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-4">
                   {year}
                 </h2>
 
@@ -68,10 +68,10 @@ export default function PostsList({ posts }: PostsListProps) {
                             isUnpublished ? 'opacity-40' : ''
                           }`}
                         >
-                          <span className="text-foreground group-hover:text-muted-foreground transition-colors">
+                          <span className="text-foreground group-hover:text-primary transition-colors">
                             {post.title || "Untitled"}
                           </span>
-                          <span className="text-sm text-muted-foreground tabular-nums shrink-0">
+                          <span className="font-mono text-xs text-muted-foreground tabular-nums shrink-0">
                             {post.date_created && new Date(post.date_created).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric'
