@@ -1,11 +1,9 @@
-# Use Bun instead of Node.js
-providers = ["bun"]
-
+# Configure Nixpacks to use Bun
 [phases.setup]
-nixPkgs = ["bun"]
+nixPkgs = ["nodejs_20", "bun"]
 
 [phases.install]
-cmds = ["bun install"]
+cmds = ["bun install --frozen-lockfile"]
 
 [phases.build]
 cmds = ["bun run build"]
