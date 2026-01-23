@@ -205,8 +205,19 @@ small, .text-sm {
   margin: 20px 0;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.4;
   border: 1px solid hsl(var(--border));
+  white-space: pre;
+  tab-size: 4;
+}
+
+.article-content pre code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background: none;
+  padding: 0;
+  white-space: pre;
 }
 
 .article-content :not(pre) > code {
