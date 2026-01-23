@@ -203,12 +203,16 @@ small, .text-sm {
   padding: 16px;
   overflow-x: auto;
   margin: 20px 0;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 13px;
-  line-height: 1.4;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  font-size: 14px;
+  line-height: 1.2;
   border: 1px solid hsl(var(--border));
   white-space: pre;
   tab-size: 4;
+  letter-spacing: 0;
+  font-variant-ligatures: none;
+  font-feature-settings: normal;
+  text-rendering: geometricPrecision;
 }
 
 .article-content pre code {
@@ -218,6 +222,8 @@ small, .text-sm {
   background: none;
   padding: 0;
   white-space: pre;
+  letter-spacing: 0;
+  font-variant-ligatures: none;
 }
 
 .article-content :not(pre) > code {
