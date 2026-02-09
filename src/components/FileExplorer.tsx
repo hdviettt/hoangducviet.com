@@ -20,6 +20,8 @@ export default function FileExplorer({ children }: FileExplorerProps) {
     return "~" + pathname;
   };
 
+  const isPostPage = pathname.startsWith('/posts/') && pathname !== '/posts';
+
   return (
     <div className="min-h-screen bg-background font-mono">
       {/* Terminal Header */}
@@ -110,7 +112,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
       </header>
 
       {/* Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 pb-16">{children}</main>
+      <main className={`mx-auto px-4 sm:px-6 pb-16 ${isPostPage ? 'max-w-5xl' : 'max-w-4xl'}`}>{children}</main>
     </div>
   );
 }

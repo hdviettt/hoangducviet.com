@@ -76,6 +76,8 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
 
   if (headings.length === 0) return null;
 
+  const minLevel = Math.min(...headings.map(h => h.level));
+
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -88,12 +90,12 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
 
   return (
     <div>
-      <div className="text-xs font-medium text-muted-foreground mb-3">
+      <div className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">
         On this page
       </div>
       <nav className="space-y-1 border-l border-border">
         {headings.map((heading) => {
-          const indent = heading.level - 1;
+          const indent = heading.level - minLevel;
           const isActive = activeId === heading.id;
 
           return (
@@ -101,9 +103,9 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
               key={heading.id}
               href={`#${heading.id}`}
               onClick={(e) => handleClick(e, heading.id)}
-              className={`block text-sm py-1 transition-colors border-l-2 -ml-px ${
+              className={`block text-xs py-1 transition-colors border-l-2 -ml-px ${
                 isActive
-                  ? "text-foreground border-foreground"
+                  ? "text-primary border-primary font-medium"
                   : "text-muted-foreground hover:text-foreground border-transparent"
               }`}
               style={{ paddingLeft: `${12 + indent * 12}px` }}

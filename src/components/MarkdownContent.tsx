@@ -15,40 +15,42 @@ const generateId = (text: string) => {
     .trim();
 };
 
+const HeadingWithAnchor = ({ level, children, ...props }: any) => {
+  const text = typeof children === 'string' ? children : String(children);
+  const id = generateId(text);
+  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+
+  return (
+    <Tag id={id} className="group relative" {...props}>
+      <a
+        href={`#${id}`}
+        className="heading-anchor absolute -left-5 top-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary transition-opacity"
+        aria-label={`Link to ${text}`}
+      >
+        #
+      </a>
+      {children}
+    </Tag>
+  );
+};
+
 export default function MarkdownContent({ content }: MarkdownContentProps) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        h1: ({children, ...props}: any) => {
-          const text = typeof children === 'string' ? children : String(children);
-          const id = generateId(text);
-          return <h1 id={id} {...props}>{children}</h1>;
-        },
-        h2: ({children, ...props}: any) => {
-          const text = typeof children === 'string' ? children : String(children);
-          const id = generateId(text);
-          return <h2 id={id} {...props}>{children}</h2>;
-        },
-        h3: ({children, ...props}: any) => {
-          const text = typeof children === 'string' ? children : String(children);
-          const id = generateId(text);
-          return <h3 id={id} {...props}>{children}</h3>;
-        },
-        h4: ({children, ...props}: any) => {
-          const text = typeof children === 'string' ? children : String(children);
-          const id = generateId(text);
-          return <h4 id={id} {...props}>{children}</h4>;
-        },
-        h5: ({children, ...props}: any) => {
-          const text = typeof children === 'string' ? children : String(children);
-          const id = generateId(text);
-          return <h5 id={id} {...props}>{children}</h5>;
-        },
-        h6: ({children, ...props}: any) => {
-          const text = typeof children === 'string' ? children : String(children);
-          const id = generateId(text);
-          return <h6 id={id} {...props}>{children}</h6>;
+        h1: (props: any) => <HeadingWithAnchor level={1} {...props} />,
+        h2: (props: any) => <HeadingWithAnchor level={2} {...props} />,
+        h3: (props: any) => <HeadingWithAnchor level={3} {...props} />,
+        h4: (props: any) => <HeadingWithAnchor level={4} {...props} />,
+        h5: (props: any) => <HeadingWithAnchor level={5} {...props} />,
+        h6: (props: any) => <HeadingWithAnchor level={6} {...props} />,
+        table: ({children, ...props}: any) => {
+          return (
+            <div className="table-wrapper">
+              <table {...props}>{children}</table>
+            </div>
+          );
         },
         img: ({src, alt, ...props}: any) => {
           return (

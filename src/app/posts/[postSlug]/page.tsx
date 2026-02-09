@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { getGlobalMetadata } from "@/lib/directus";
-import { getPostBySlug } from "@/lib/posts";
+import { getPostBySlug, getAdjacentPosts } from "@/lib/posts";
 import InlineTableOfContents from "@/components/InlineTableOfContents";
 import MarkdownContent from "@/components/MarkdownContent";
+import PostNavigation from "@/components/PostNavigation";
 import ReadingProgress from "@/components/ReadingProgress";
 
 
@@ -62,11 +63,15 @@ export async function generateMetadata({ params }: PostParams): Promise<Metadata
 
 export default async function PostPage({ params }: PostParams) {
   let data: any = null;
+  let adjacentPosts = { previous: null as any, next: null as any };
 
   try {
-    data = await getPostBySlug(params.postSlug, {
-      fields: ["title", "content", "date_created"],
-    });
+    [data, adjacentPosts] = await Promise.all([
+      getPostBySlug(params.postSlug, {
+        fields: ["title", "content", "date_created"],
+      }),
+      getAdjacentPosts(params.postSlug),
+    ]);
   } catch (error) {
     console.error("Error fetching post:", error);
   }
@@ -86,17 +91,17 @@ export default async function PostPage({ params }: PostParams) {
         {/* Back button */}
         <Link
           href="/posts"
-          className="inline-block text-sm text-muted-foreground hover:text-primary transition-colors mb-8"
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors mb-8 uppercase tracking-wider"
         >
-          ← Back to posts
+          cd ..
         </Link>
 
-        <div className="lg:grid lg:grid-cols-[1fr_200px] lg:gap-8 xl:gap-12 items-start">
+        <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
           {/* Main Content */}
           <div className="min-w-0">
             {/* Article Header */}
-            <header className="mb-8 sm:mb-10">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-tight">
+            <header className="mb-10 sm:mb-12">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 leading-tight">
                 {data.title}
               </h1>
               <time className="text-xs sm:text-sm text-muted-foreground" dateTime={data.date_created}>
@@ -123,6 +128,8 @@ export default async function PostPage({ params }: PostParams) {
             {data.content && <InlineTableOfContents content={data.content} />}
           </aside>
         </div>
+
+        <PostNavigation previous={adjacentPosts.previous} next={adjacentPosts.next} />
       </div>
     </>
   );

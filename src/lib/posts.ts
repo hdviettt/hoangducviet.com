@@ -31,6 +31,24 @@ export async function getPosts(options?: ItemsQuery): Promise<Array<Post>> {
   }));
 }
 
+export async function getAdjacentPosts(currentSlug: string): Promise<{
+  previous: Pick<Post, 'slug' | 'title'> | null;
+  next: Pick<Post, 'slug' | 'title'> | null;
+}> {
+  const allPosts = await directus.request(readItems("posts", {
+    fields: ["slug", "title", "date_created"],
+    filter: { status: { _eq: "published" } },
+    sort: ["-date_created"],
+  }));
+
+  const currentIndex = allPosts.findIndex((p: any) => p.slug === currentSlug);
+
+  return {
+    previous: currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] as Post : null,
+    next: currentIndex > 0 ? allPosts[currentIndex - 1] as Post : null,
+  };
+}
+
 export async function getPostBySlug(
   slug: Post["slug"],
   options?: ItemsQuery,
