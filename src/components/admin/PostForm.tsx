@@ -65,7 +65,7 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col h-[calc(100vh-4rem)]">
+    <form onSubmit={handleSubmit} className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
       {/* Sticky top bar: title + actions */}
       <div className="sticky top-0 z-20 bg-background border-b border-border pb-3 mb-4 flex items-center gap-4">
         <input

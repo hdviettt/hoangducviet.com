@@ -14,7 +14,7 @@ export default function AdminLayout({
     <ToastProvider>
       <div className="flex min-h-screen bg-background font-mono">
         <AdminSidebar />
-        <main className="flex-1 p-8 overflow-hidden">{children}</main>
+        <main className="flex-1 p-8 overflow-auto">{children}</main>
       </div>
     </ToastProvider>
   );
