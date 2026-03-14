@@ -375,9 +375,9 @@ export default function RichEditor({ content, onChange }: RichEditorProps) {
   if (!editor) return null;
 
   return (
-    <div ref={editorRef} className="border border-border bg-background relative">
+    <div ref={editorRef} className="border border-border bg-background relative flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex items-center gap-0.5 px-2 py-1 border-b border-border bg-card overflow-x-auto">
+      <div className="flex items-center gap-0.5 px-2 py-1 border-b border-border bg-card overflow-x-auto sticky top-0 z-10 shrink-0">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive("bold")}
@@ -511,14 +511,16 @@ export default function RichEditor({ content, onChange }: RichEditorProps) {
       </div>
 
       {/* Editor Content */}
-      <EditorContent editor={editor} />
+      <div className="flex-1 overflow-y-auto min-h-0 relative">
+        <EditorContent editor={editor} />
 
-      {/* Slash Command Menu */}
-      {showSlash && (
-        <div style={{ position: "absolute", top: slashPos.top, left: slashPos.left }}>
-          <SlashMenu editor={editor} onClose={() => setShowSlash(false)} />
-        </div>
-      )}
+        {/* Slash Command Menu */}
+        {showSlash && (
+          <div style={{ position: "absolute", top: slashPos.top, left: slashPos.left }}>
+            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

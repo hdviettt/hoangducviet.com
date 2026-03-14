@@ -26,21 +26,18 @@ export default async function EditPostPage({ params }: Params) {
   const post = postResult[0];
 
   return (
-    <div>
-      <h1 className="text-xl font-medium mb-6">Edit Post</h1>
-      <PostForm
-        initialData={{
-          slug: post.slug,
-          title: post.title,
-          description: post.description ?? "",
-          content: post.content ?? "",
-          thumbnail: post.thumbnail ?? "",
-          status: post.status,
-          categories: postCats.map((c) => c.categorySlug),
-        }}
-        allCategories={categories}
-        isEdit
-      />
-    </div>
+    <PostForm
+      initialData={{
+        slug: post.slug,
+        title: post.title,
+        description: post.description ?? "",
+        content: post.content ?? "",
+        thumbnail: post.thumbnail ?? "",
+        status: post.status,
+        categories: postCats.map((c) => c.categorySlug),
+      }}
+      allCategories={categories}
+      isEdit
+    />
   );
 }

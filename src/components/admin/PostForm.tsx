@@ -62,28 +62,35 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => handleTitleChange(e.target.value)}
-        placeholder="post title..."
-        className="w-full bg-transparent text-xl font-medium focus:outline-none placeholder:text-muted-foreground/40"
-        required
-      />
+    <form onSubmit={handleSubmit} className="flex flex-col h-[calc(100vh-4rem)]">
+      {/* Sticky top bar: title + actions */}
+      <div className="sticky top-0 z-20 bg-background border-b border-border pb-3 mb-4 flex items-center gap-4">
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => handleTitleChange(e.target.value)}
+          placeholder="post title..."
+          className="flex-1 bg-transparent text-xl font-medium focus:outline-none placeholder:text-muted-foreground/40"
+          required
+        />
+        <select value={status} onChange={(e) => setStatus(e.target.value)}
+          className="bg-background border border-border px-3 py-1.5 text-xs focus:outline-none focus:border-primary shrink-0">
+          <option value="draft">draft</option>
+          <option value="published">published</option>
+        </select>
+        <button type="submit" disabled={saving}
+          className="bg-primary text-primary-foreground px-5 py-1.5 text-sm hover:opacity-90 transition-opacity disabled:opacity-50 shrink-0">
+          {saving ? "saving..." : isEdit ? "update" : "publish"}
+        </button>
+        <button type="button" onClick={() => setShowMeta(!showMeta)}
+          className="text-xs text-muted-foreground hover:text-primary transition-colors shrink-0">
+          {showMeta ? "▲ settings" : "⚙ settings"}
+        </button>
+      </div>
 
-      <RichEditor content={content} onChange={setContent} />
-
-      <button
-        type="button"
-        onClick={() => setShowMeta(!showMeta)}
-        className="text-xs text-muted-foreground hover:text-primary transition-colors"
-      >
-        {showMeta ? "▲ hide settings" : "▼ post settings"}
-      </button>
-
+      {/* Collapsible metadata panel */}
       {showMeta && (
-        <div className="border border-border p-4 space-y-3">
+        <div className="border border-border p-4 space-y-3 mb-4 shrink-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-muted-foreground mb-1">slug</label>
@@ -91,18 +98,10 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
                 className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">status</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary">
-                <option value="draft">draft</option>
-                <option value="published">published</option>
-              </select>
+              <label className="block text-xs text-muted-foreground mb-1">description</label>
+              <input type="text" value={description} onChange={(e) => setDescription(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="short excerpt for SEO" />
             </div>
-          </div>
-          <div>
-            <label className="block text-xs text-muted-foreground mb-1">description</label>
-            <input type="text" value={description} onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="short excerpt for SEO" />
           </div>
           <div>
             <label className="block text-xs text-muted-foreground mb-1">thumbnail</label>
@@ -129,15 +128,9 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
         </div>
       )}
 
-      <div className="flex gap-3">
-        <button type="submit" disabled={saving}
-          className="bg-primary text-primary-foreground px-6 py-2 text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
-          {saving ? "saving..." : isEdit ? "update" : "publish"}
-        </button>
-        <button type="button" onClick={() => router.back()}
-          className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          cancel
-        </button>
+      {/* Editor fills remaining space */}
+      <div className="flex-1 min-h-0">
+        <RichEditor content={content} onChange={setContent} />
       </div>
     </form>
   );
