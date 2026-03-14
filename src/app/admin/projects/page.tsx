@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { projects } from "@/db/schema";
 import { desc } from "drizzle-orm";
 import Link from "next/link";
+import StatusToggle from "@/components/admin/StatusToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -22,19 +23,24 @@ export default async function AdminProjectsPage() {
 
       <div className="border border-border divide-y divide-border">
         {allProjects.map((project) => (
-          <Link
+          <div
             key={project.slug}
-            href={`/admin/projects/${project.slug}/edit`}
             className="flex items-center gap-4 px-4 py-3 hover:bg-muted/30 transition-colors"
           >
-            <span className="text-sm flex-1">{project.title}</span>
+            <StatusToggle slug={project.slug} status={project.status} apiPath="projects" />
+            <Link
+              href={`/admin/projects/${project.slug}/edit`}
+              className="text-sm flex-1 hover:text-primary transition-colors"
+            >
+              {project.title}
+            </Link>
             <span className={`text-xs ${project.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
               {project.status}
             </span>
             <span className="text-xs text-muted-foreground w-24 text-right">
               {project.dateCreated?.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
-          </Link>
+          </div>
         ))}
         {allProjects.length === 0 && (
           <div className="px-4 py-8 text-center text-sm text-muted-foreground">no projects yet.</div>

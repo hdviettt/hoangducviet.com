@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { posts } from "@/db/schema";
 import { desc } from "drizzle-orm";
 import Link from "next/link";
+import StatusToggle from "@/components/admin/StatusToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -22,19 +23,24 @@ export default async function AdminPostsPage() {
 
       <div className="border border-border divide-y divide-border">
         {allPosts.map((post) => (
-          <Link
+          <div
             key={post.slug}
-            href={`/admin/posts/${post.slug}/edit`}
             className="flex items-center gap-4 px-4 py-3 hover:bg-muted/30 transition-colors"
           >
-            <span className="text-sm flex-1 truncate">{post.title}</span>
+            <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
+            <Link
+              href={`/admin/posts/${post.slug}/edit`}
+              className="text-sm flex-1 truncate hover:text-primary transition-colors"
+            >
+              {post.title}
+            </Link>
             <span className={`text-xs ${post.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
               {post.status}
             </span>
             <span className="text-xs text-muted-foreground w-24 text-right">
               {post.dateCreated?.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
-          </Link>
+          </div>
         ))}
         {allPosts.length === 0 && (
           <div className="px-4 py-8 text-center text-sm text-muted-foreground">no posts yet.</div>
