@@ -18,14 +18,9 @@ interface PostFormProps {
   isEdit?: boolean;
 }
 
-export default function PostForm({
-  initialData,
-  allCategories,
-  isEdit,
-}: PostFormProps) {
+export default function PostForm({ initialData, allCategories, isEdit }: PostFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
   const [description, setDescription] = useState(initialData?.description ?? "");
@@ -59,28 +54,21 @@ export default function PostForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, slug, description, content, thumbnail, status, categories }),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.error || "Failed to save");
-        return;
-      }
+      if (!res.ok) { alert((await res.json()).error || "Failed to save"); return; }
       router.push("/admin/posts");
       router.refresh();
-    } catch {
-      alert("Network error");
-    } finally {
-      setSaving(false);
-    }
+    } catch { alert("Network error"); }
+    finally { setSaving(false); }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <input
         type="text"
         value={title}
         onChange={(e) => handleTitleChange(e.target.value)}
-        placeholder="Post title..."
-        className="w-full bg-transparent text-2xl font-semibold text-white focus:outline-none placeholder:text-[#444]"
+        placeholder="post title..."
+        className="w-full bg-transparent text-xl font-medium focus:outline-none placeholder:text-muted-foreground/40"
         required
       />
 
@@ -89,74 +77,49 @@ export default function PostForm({
       <button
         type="button"
         onClick={() => setShowMeta(!showMeta)}
-        className="text-xs text-[#666] hover:text-[#aaa] transition-colors"
+        className="text-xs text-muted-foreground hover:text-primary transition-colors"
       >
-        {showMeta ? "Hide settings ▲" : "Post settings ▼"}
+        {showMeta ? "▲ hide settings" : "▼ post settings"}
       </button>
 
       {showMeta && (
-        <div className="admin-card space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="border border-border p-4 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-[#888] mb-1.5">Slug</label>
-              <input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                className="admin-input"
-                required
-              />
+              <label className="block text-xs text-muted-foreground mb-1">slug</label>
+              <input type="text" value={slug} onChange={(e) => setSlug(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
             </div>
             <div>
-              <label className="block text-xs text-[#888] mb-1.5">Status</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="admin-select"
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
+              <label className="block text-xs text-muted-foreground mb-1">status</label>
+              <select value={status} onChange={(e) => setStatus(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                <option value="draft">draft</option>
+                <option value="published">published</option>
               </select>
             </div>
           </div>
-
           <div>
-            <label className="block text-xs text-[#888] mb-1.5">Description</label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="admin-input"
-              placeholder="Short excerpt for SEO"
-            />
+            <label className="block text-xs text-muted-foreground mb-1">description</label>
+            <input type="text" value={description} onChange={(e) => setDescription(e.target.value)}
+              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="short excerpt for SEO" />
           </div>
-
           <div>
-            <label className="block text-xs text-[#888] mb-1.5">Thumbnail URL</label>
-            <input
-              type="text"
-              value={thumbnail}
-              onChange={(e) => setThumbnail(e.target.value)}
-              className="admin-input"
-              placeholder="/uploads/image.jpg"
-            />
+            <label className="block text-xs text-muted-foreground mb-1">thumbnail</label>
+            <input type="text" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)}
+              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="/uploads/image.jpg" />
           </div>
-
           {allCategories.length > 0 && (
             <div>
-              <label className="block text-xs text-[#888] mb-2">Categories</label>
+              <label className="block text-xs text-muted-foreground mb-1.5">categories</label>
               <div className="flex flex-wrap gap-2">
                 {allCategories.map((cat) => (
-                  <button
-                    key={cat.slug}
-                    type="button"
-                    onClick={() => toggleCategory(cat.slug)}
-                    className={`px-3 py-1 text-xs rounded-full border transition-colors ${
+                  <button key={cat.slug} type="button" onClick={() => toggleCategory(cat.slug)}
+                    className={`px-3 py-1 text-xs border transition-colors ${
                       categories.includes(cat.slug)
-                        ? "border-blue-500 text-blue-400 bg-blue-500/10"
-                        : "border-[#333] text-[#888] hover:border-[#555]"
-                    }`}
-                  >
+                        ? "border-primary text-primary bg-primary/10"
+                        : "border-border text-muted-foreground hover:border-foreground"
+                    }`}>
                     {cat.title}
                   </button>
                 ))}
@@ -167,15 +130,13 @@ export default function PostForm({
       )}
 
       <div className="flex gap-3">
-        <button type="submit" disabled={saving} className="admin-btn">
-          {saving ? "Saving..." : isEdit ? "Update" : "Publish"}
+        <button type="submit" disabled={saving}
+          className="bg-primary text-primary-foreground px-6 py-2 text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
+          {saving ? "saving..." : isEdit ? "update" : "publish"}
         </button>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="px-4 py-2 text-sm text-[#888] hover:text-white transition-colors"
-        >
-          Cancel
+        <button type="button" onClick={() => router.back()}
+          className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          cancel
         </button>
       </div>
     </form>

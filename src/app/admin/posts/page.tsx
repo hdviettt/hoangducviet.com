@@ -6,62 +6,38 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPostsPage() {
-  const allPosts = await db
-    .select()
-    .from(posts)
-    .orderBy(desc(posts.dateCreated));
+  const allPosts = await db.select().from(posts).orderBy(desc(posts.dateCreated));
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-white">Posts</h1>
-        <Link href="/admin/posts/new" className="admin-btn">
-          New Post
+    <div className="max-w-4xl">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-lg font-medium">posts</h1>
+        <Link
+          href="/admin/posts/new"
+          className="text-sm bg-primary text-primary-foreground px-4 py-1.5 hover:opacity-90 transition-opacity"
+        >
+          + new post
         </Link>
       </div>
 
-      <div className="admin-card p-0">
-        <div className="grid grid-cols-[1fr_90px_110px_60px] px-5 py-2.5 border-b border-[#222] text-xs text-[#666] uppercase tracking-wider">
-          <span>Title</span>
-          <span>Status</span>
-          <span>Date</span>
-          <span />
-        </div>
+      <div className="border border-border divide-y divide-border">
         {allPosts.map((post) => (
-          <div
+          <Link
             key={post.slug}
-            className="grid grid-cols-[1fr_90px_110px_60px] px-5 py-3 border-b border-[#222] last:border-0 items-center hover:bg-[#1a1a1a] transition-colors"
+            href={`/admin/posts/${post.slug}/edit`}
+            className="flex items-center gap-4 px-4 py-3 hover:bg-muted/30 transition-colors"
           >
-            <Link
-              href={`/admin/posts/${post.slug}/edit`}
-              className="text-sm text-[#ccc] hover:text-white truncate"
-            >
-              {post.title}
-            </Link>
-            <span
-              className={`admin-badge ${post.status === "published" ? "admin-badge-green" : "admin-badge-yellow"}`}
-            >
+            <span className="text-sm flex-1 truncate">{post.title}</span>
+            <span className={`text-xs ${post.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
               {post.status}
             </span>
-            <span className="text-xs text-[#666]">
-              {post.dateCreated?.toLocaleDateString("en-US", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              })}
+            <span className="text-xs text-muted-foreground w-24 text-right">
+              {post.dateCreated?.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
-            <Link
-              href={`/admin/posts/${post.slug}/edit`}
-              className="text-xs text-blue-400 hover:text-blue-300"
-            >
-              Edit
-            </Link>
-          </div>
+          </Link>
         ))}
         {allPosts.length === 0 && (
-          <div className="px-5 py-10 text-center text-sm text-[#666]">
-            No posts yet.
-          </div>
+          <div className="px-4 py-8 text-center text-sm text-muted-foreground">no posts yet.</div>
         )}
       </div>
     </div>

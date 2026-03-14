@@ -4,13 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/posts", label: "Posts" },
-  { href: "/admin/pages", label: "Pages" },
-  { href: "/admin/projects", label: "Projects" },
-  { href: "/admin/categories", label: "Categories" },
-  { href: "/admin/media", label: "Media" },
-  { href: "/admin/settings", label: "Settings" },
+  { href: "/admin", label: "dashboard" },
+  { href: "/admin/posts", label: "posts" },
+  { href: "/admin/pages", label: "pages" },
+  { href: "/admin/projects", label: "projects" },
+  { href: "/admin/categories", label: "categories" },
+  { href: "/admin/media", label: "media" },
+  { href: "/admin/settings", label: "settings" },
 ];
 
 export default function AdminSidebar() {
@@ -22,15 +22,15 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="admin-sidebar">
-      <div className="mb-8">
-        <Link href="/" className="text-[#888] hover:text-white text-xs">
-          ← Site
+    <aside className="w-48 border-r border-border bg-card min-h-screen py-6 px-3 flex flex-col shrink-0">
+      <div className="px-3 mb-6">
+        <Link href="/" className="text-xs text-muted-foreground hover:text-primary">
+          ← site
         </Link>
-        <h2 className="text-white text-base font-semibold mt-3">Admin</h2>
+        <div className="text-sm text-primary font-medium mt-2">admin</div>
       </div>
 
-      <nav className="flex-1 space-y-0.5">
+      <nav className="flex-1 space-y-px">
         {navItems.map((item) => {
           const isActive =
             item.href === "/admin"
@@ -41,7 +41,11 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`admin-nav-item ${isActive ? "active" : ""}`}
+              className={`block px-3 py-1.5 text-sm transition-colors ${
+                isActive
+                  ? "text-primary border-l-2 border-primary bg-primary/5"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
               {item.label}
             </Link>
@@ -52,9 +56,9 @@ export default function AdminSidebar() {
       <button
         type="button"
         onClick={handleLogout}
-        className="text-[#666] hover:text-[#f87171] text-sm mt-6 text-left"
+        className="px-3 text-xs text-muted-foreground hover:text-destructive text-left mt-4"
       >
-        Logout
+        logout
       </button>
     </aside>
   );

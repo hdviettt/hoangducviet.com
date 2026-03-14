@@ -6,62 +6,38 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function AdminProjectsPage() {
-  const allProjects = await db
-    .select()
-    .from(projects)
-    .orderBy(desc(projects.dateCreated));
+  const allProjects = await db.select().from(projects).orderBy(desc(projects.dateCreated));
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-white">Projects</h1>
-        <Link href="/admin/projects/new" className="admin-btn">
-          New Project
+    <div className="max-w-4xl">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-lg font-medium">projects</h1>
+        <Link
+          href="/admin/projects/new"
+          className="text-sm bg-primary text-primary-foreground px-4 py-1.5 hover:opacity-90 transition-opacity"
+        >
+          + new project
         </Link>
       </div>
 
-      <div className="admin-card p-0">
-        <div className="grid grid-cols-[1fr_90px_110px_60px] px-5 py-2.5 border-b border-[#222] text-xs text-[#666] uppercase tracking-wider">
-          <span>Title</span>
-          <span>Status</span>
-          <span>Date</span>
-          <span />
-        </div>
+      <div className="border border-border divide-y divide-border">
         {allProjects.map((project) => (
-          <div
+          <Link
             key={project.slug}
-            className="grid grid-cols-[1fr_90px_110px_60px] px-5 py-3 border-b border-[#222] last:border-0 items-center hover:bg-[#1a1a1a] transition-colors"
+            href={`/admin/projects/${project.slug}/edit`}
+            className="flex items-center gap-4 px-4 py-3 hover:bg-muted/30 transition-colors"
           >
-            <Link
-              href={`/admin/projects/${project.slug}/edit`}
-              className="text-sm text-[#ccc] hover:text-white"
-            >
-              {project.title}
-            </Link>
-            <span
-              className={`admin-badge ${project.status === "published" ? "admin-badge-green" : "admin-badge-yellow"}`}
-            >
+            <span className="text-sm flex-1">{project.title}</span>
+            <span className={`text-xs ${project.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
               {project.status}
             </span>
-            <span className="text-xs text-[#666]">
-              {project.dateCreated?.toLocaleDateString("en-US", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              })}
+            <span className="text-xs text-muted-foreground w-24 text-right">
+              {project.dateCreated?.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
-            <Link
-              href={`/admin/projects/${project.slug}/edit`}
-              className="text-xs text-blue-400 hover:text-blue-300"
-            >
-              Edit
-            </Link>
-          </div>
+          </Link>
         ))}
         {allProjects.length === 0 && (
-          <div className="px-5 py-10 text-center text-sm text-[#666]">
-            No projects yet.
-          </div>
+          <div className="px-4 py-8 text-center text-sm text-muted-foreground">no projects yet.</div>
         )}
       </div>
     </div>

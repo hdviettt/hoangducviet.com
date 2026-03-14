@@ -14,67 +14,38 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Login failed");
-        return;
-      }
-
+      if (!res.ok) { setError((await res.json()).error || "Login failed"); return; }
       router.push("/admin");
       router.refresh();
-    } catch {
-      setError("Network error");
-    } finally {
-      setLoading(false);
-    }
+    } catch { setError("Network error"); }
+    finally { setLoading(false); }
   };
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="admin-card p-8">
-        <h1 className="text-xl font-semibold text-white mb-6">Sign in</h1>
-
+    <div className="w-full max-w-xs">
+      <div className="border border-border p-6">
+        <div className="text-sm text-primary font-medium mb-6">admin login</div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="username" className="block text-xs text-[#888] mb-1.5">
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="admin-input"
-              required
-            />
+            <label htmlFor="username" className="block text-xs text-muted-foreground mb-1">username</label>
+            <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}
+              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
           </div>
-
           <div>
-            <label htmlFor="password" className="block text-xs text-[#888] mb-1.5">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="admin-input"
-              required
-            />
+            <label htmlFor="password" className="block text-xs text-muted-foreground mb-1">password</label>
+            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
           </div>
-
-          {error && <p className="text-sm text-red-400">{error}</p>}
-
-          <button type="submit" disabled={loading} className="admin-btn w-full">
-            {loading ? "Signing in..." : "Sign in"}
+          {error && <p className="text-xs text-destructive">{error}</p>}
+          <button type="submit" disabled={loading}
+            className="w-full bg-primary text-primary-foreground py-2 text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
+            {loading ? "..." : "login"}
           </button>
         </form>
       </div>

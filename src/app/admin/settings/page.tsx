@@ -36,48 +36,58 @@ export default function AdminSettingsPage() {
           profile: { name: profileName, description: profileDescription, image: profileImage },
         }),
       });
-      if (res.ok) alert("Saved"); else alert("Failed to save");
+      alert(res.ok ? "saved" : "failed");
     } catch { alert("Network error"); }
     finally { setSaving(false); }
   };
 
-  if (loading) return <div className="text-[#666]">Loading...</div>;
+  if (loading) return <div className="text-sm text-muted-foreground">loading...</div>;
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold text-white mb-8">Settings</h1>
+    <div className="max-w-2xl">
+      <h1 className="text-lg font-medium mb-6">settings</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-8 max-w-xl">
-        <section className="admin-card space-y-4">
-          <h2 className="text-sm font-semibold text-[#aaa] mb-4">Site</h2>
-          <div>
-            <label className="block text-xs text-[#888] mb-1.5">Title</label>
-            <input type="text" value={siteTitle} onChange={(e) => setSiteTitle(e.target.value)} className="admin-input" />
-          </div>
-          <div>
-            <label className="block text-xs text-[#888] mb-1.5">Tagline</label>
-            <input type="text" value={tagline} onChange={(e) => setTagline(e.target.value)} className="admin-input" />
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <section>
+          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">site</h2>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">title</label>
+              <input type="text" value={siteTitle} onChange={(e) => setSiteTitle(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">tagline</label>
+              <input type="text" value={tagline} onChange={(e) => setTagline(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" />
+            </div>
           </div>
         </section>
 
-        <section className="admin-card space-y-4">
-          <h2 className="text-sm font-semibold text-[#aaa] mb-4">Profile</h2>
-          <div>
-            <label className="block text-xs text-[#888] mb-1.5">Name</label>
-            <input type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)} className="admin-input" />
-          </div>
-          <div>
-            <label className="block text-xs text-[#888] mb-1.5">Description (HTML)</label>
-            <textarea value={profileDescription} onChange={(e) => setProfileDescription(e.target.value)} className="admin-input min-h-[120px] resize-y" />
-          </div>
-          <div>
-            <label className="block text-xs text-[#888] mb-1.5">Profile Image URL</label>
-            <input type="text" value={profileImage} onChange={(e) => setProfileImage(e.target.value)} className="admin-input" placeholder="/uploads/profile.jpg" />
+        <section>
+          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">profile</h2>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">name</label>
+              <input type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">description (html)</label>
+              <textarea value={profileDescription} onChange={(e) => setProfileDescription(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary min-h-[100px] resize-y" />
+            </div>
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">image url</label>
+              <input type="text" value={profileImage} onChange={(e) => setProfileImage(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="/uploads/profile.jpg" />
+            </div>
           </div>
         </section>
 
-        <button type="submit" disabled={saving} className="admin-btn">
-          {saving ? "Saving..." : "Save"}
+        <button type="submit" disabled={saving}
+          className="bg-primary text-primary-foreground px-6 py-2 text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
+          {saving ? "saving..." : "save"}
         </button>
       </form>
     </div>
