@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 interface ProjectParams {
-  params: { projectSlug: string };
+  params: {
+    projectSlug: string;
+  };
 }
 
 export async function generateMetadata({
@@ -11,9 +13,13 @@ export async function generateMetadata({
 }: ProjectParams): Promise<Metadata> {
   try {
     const project = await getProjectBySlug(params.projectSlug);
-    return { title: project.title };
-  } catch {
-    return { title: "Project" };
+    return {
+      title: `${project.title}`,
+    };
+  } catch (error) {
+    return {
+      title: "Project",
+    };
   }
 }
 
@@ -29,46 +35,72 @@ export default async function ProjectPage({ params }: ProjectParams) {
   }
 
   if (!project) {
-    return <p className="text-neutral-500">Project not found</p>;
+    return (
+      <div className="p-8">
+        <div className="text-gray-500">Project not found</div>
+      </div>
+    );
   }
 
   return (
-    <div>
+    <div className="py-8 sm:py-12 md:py-16">
+      {/* Back button */}
       <Link
         href="/projects"
-        className="text-sm text-neutral-400 hover:text-neutral-600 mb-8 inline-block"
+        className="inline-block text-sm text-muted-foreground hover:text-primary transition-colors mb-8"
       >
-        ← back
+        ← Back to projects
       </Link>
 
-      <h1 className="text-2xl font-semibold mb-2">{project.title}</h1>
-      <time className="text-sm text-neutral-400">
-        {project.date_created &&
-          new Date(project.date_created).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-      </time>
+      {/* Project Header */}
+      <header className="mb-8 sm:mb-10">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-tight">
+          {project.title}
+        </h1>
+        <time
+          dateTime={project.date_created ?? ""}
+          className="text-xs sm:text-sm text-muted-foreground"
+        >
+          {project.date_created &&
+            new Date(project.date_created).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+        </time>
+      </header>
 
+      {/* Project Description */}
       {project.description && (
         <div
-          className="prose-blog mt-6"
+          className="article-content mb-10"
           dangerouslySetInnerHTML={{ __html: project.description }}
         />
       )}
 
+      {/* Related Posts */}
       {posts.length > 0 && (
-        <section className="mt-10 pt-6 border-t border-neutral-200">
-          <h2 className="text-sm font-semibold text-neutral-400 mb-3">Related Posts</h2>
-          <ul className="space-y-1">
+        <section className="mt-10 pt-8 border-t border-border">
+          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4">
+            Related Posts
+          </h2>
+          <ul className="space-y-2">
             {posts.map((post: any) => (
               <li key={post.slug}>
                 <Link
                   href={`/posts/${post.slug}`}
-                  className="text-blue-600 hover:underline"
+                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
                 >
-                  {post.title}
+                  <span className="text-muted-foreground text-xs shrink-0 order-2 sm:order-1">
+                    {post.date_created &&
+                      new Date(post.date_created).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "2-digit",
+                      })}
+                  </span>
+                  <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
+                    {post.title}
+                  </span>
                 </Link>
               </li>
             ))}

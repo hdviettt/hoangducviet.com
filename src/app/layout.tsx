@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
+
+import ClientFileExplorer from "@/components/ClientFileExplorer";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { getGlobalMetadata } from "@/lib/global";
-import Link from "next/link";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -29,29 +37,44 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// Script to prevent theme flash - runs before React hydration
+// Default is dark mode, only switch to light if explicitly stored
+const themeScript = `
+  (function() {
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {
+      document.documentElement.classList.add('dark');
+    }
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={inter.variable}>
-      <body className="antialiased bg-white text-neutral-900">
+    <html
+      lang="vi"
+      className={`${inter.variable} ${jetbrainsMono.variable} overflow-x-hidden`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="antialiased min-h-screen bg-background text-foreground font-sans">
         <GoogleAnalytics gaId="G-HKSHVM8Z9G" />
-        <PostHogProvider>
-          <div className="max-w-2xl mx-auto px-6 py-10">
-            <header className="mb-10">
-              <Link href="/" className="text-xl font-semibold hover:no-underline">
-                Hoang Duc Viet
-              </Link>
-              <nav className="mt-2 text-sm text-neutral-500 flex gap-4">
-                <Link href="/" className="hover:text-neutral-900">blog</Link>
-                <Link href="/projects" className="hover:text-neutral-900">projects</Link>
-              </nav>
-            </header>
-            <main>{children}</main>
-          </div>
-        </PostHogProvider>
+        <ThemeProvider>
+          <PostHogProvider>
+            <ClientFileExplorer>{children}</ClientFileExplorer>
+          </PostHogProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

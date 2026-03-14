@@ -2,141 +2,443 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Light theme - with orange accent */
+    --background: 72 20% 95%;
+    --foreground: 0 0% 9%;
+    --foreground-muted: 0 0% 20%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --border: 0 0% 91%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --primary: 32 95% 44%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --accent: 32 95% 44%;
+    --accent-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --input: 0 0% 91%;
+    --ring: 32 95% 44%;
+    --radius: 0;
+  }
+
+  .dark {
+    /* Dark theme - Claude Code terminal style */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 88%;
+    --foreground-muted: 0 0% 78%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 55%;
+    --border: 0 0% 15%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 87%;
+    --primary: 32 95% 55%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 0 0% 87%;
+    --accent: 32 95% 55%;
+    --accent-foreground: 0 0% 5%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 87%;
+    --destructive: 0 62% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --input: 0 0% 15%;
+    --ring: 32 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    border-radius: 0 !important;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-mono), ui-monospace, "Courier New", monospace;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Selection - Orange highlight */
+  ::selection {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  /* All links get orange hover */
+  a:hover {
+    color: hsl(var(--primary));
+  }
+}
+
 /* ================================
-   MINIMAL BLOG STYLES
+   TYPOGRAPHY - Terminal monospace
    ================================ */
 
+/* Base body text */
 body {
-  font-family: var(--font-inter, Inter), system-ui, -apple-system, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
+  letter-spacing: 0;
 }
 
-/* Blog post content */
-.prose-blog {
+/* Headings - monospace terminal style */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+}
+
+h1 {
+  font-size: 24px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 {
+  font-size: 16px;
+}
+h4 {
+  font-size: 14px;
+}
+h5 {
+  font-size: 14px;
+}
+h6 {
+  font-size: 13px;
+}
+
+/* Paragraph */
+p {
+  color: hsl(var(--foreground));
+}
+
+/* Small/muted text */
+small,
+.text-sm {
+  font-size: 13px;
+}
+
+.text-xs {
+  font-size: 12px;
+}
+
+/* ================================
+   ARTICLE CONTENT - Terminal style
+   ================================ */
+
+.article-content {
+  font-size: 1rem;
   line-height: 1.8;
+  color: hsl(var(--foreground-muted));
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-.prose-blog h1,
-.prose-blog h2,
-.prose-blog h3,
-.prose-blog h4 {
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  scroll-margin-top: 80px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.article-content .heading-anchor:hover {
+  text-decoration: none;
+}
+
+.article-content h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  color: hsl(var(--primary));
+}
+
+.article-content h2 {
+  font-size: 1.375em;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  line-height: 1.3;
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--primary));
+}
+
+.article-content h3 {
+  font-size: 1.125em;
   font-weight: 600;
-  margin-top: 2em;
-  margin-bottom: 0.5em;
-  color: #111;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  color: hsl(var(--primary));
 }
 
-.prose-blog h1 { font-size: 1.75em; }
-.prose-blog h2 { font-size: 1.4em; }
-.prose-blog h3 { font-size: 1.15em; }
-
-.prose-blog p {
-  margin-bottom: 1em;
-  color: #333;
+.article-content h4 {
+  font-size: 1em;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--primary));
 }
 
-.prose-blog ul,
-.prose-blog ol {
-  padding-left: 1.5em;
-  margin-bottom: 1em;
+.article-content h5,
+.article-content h6 {
+  font-size: 0.875em;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--primary));
 }
 
-.prose-blog ul { list-style-type: disc; }
-.prose-blog ol { list-style-type: decimal; }
-.prose-blog li { margin-bottom: 0.25em; color: #333; }
+.article-content p {
+  margin-bottom: 1.25rem;
+  color: hsl(var(--foreground-muted));
+}
 
-.prose-blog a {
-  color: #2563eb;
+.article-content ul,
+.article-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.article-content ul {
+  list-style-type: none;
+}
+.article-content ul li::before {
+  content: "- ";
+  color: hsl(var(--muted-foreground));
+}
+.article-content ol {
+  list-style-type: decimal;
+}
+
+.article-content li {
+  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground-muted));
+}
+
+.article-content a {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.article-content a:hover {
   text-decoration: underline;
 }
 
-.prose-blog strong { font-weight: 700; }
-
-.prose-blog blockquote {
-  border-left: 3px solid #d1d5db;
-  padding-left: 1em;
-  margin: 1.5em 0;
-  color: #6b7280;
-  font-style: italic;
+.article-content strong {
+  font-weight: 600;
+  color: hsl(var(--foreground));
 }
 
-.prose-blog pre {
-  background: #f5f5f5;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  padding: 1em;
+.article-content pre {
+  background: hsl(var(--muted));
+  padding: 1rem 1.25rem;
   overflow-x: auto;
-  font-family: ui-monospace, monospace;
-  font-size: 0.875em;
-  margin: 1.5em 0;
+  margin: 1.25rem 0;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+    "DejaVu Sans Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border: 1px solid hsl(var(--border));
+  white-space: pre;
+  tab-size: 4;
+  letter-spacing: 0;
+  font-variant-ligatures: none;
+  font-feature-settings: normal;
+  text-rendering: geometricPrecision;
 }
 
-.prose-blog :not(pre) > code {
-  background: #f5f5f5;
-  padding: 0.15em 0.4em;
-  border-radius: 3px;
-  font-family: ui-monospace, monospace;
-  font-size: 0.875em;
+.article-content pre code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background: none;
+  padding: 0;
+  white-space: pre;
+  letter-spacing: 0;
+  font-variant-ligatures: none;
 }
 
-.prose-blog hr {
-  border: none;
-  border-top: 1px solid #e5e5e5;
-  margin: 2em 0;
+.article-content :not(pre) > code {
+  background: hsl(var(--muted));
+  padding: 0.15em 0.35em;
+  font-size: 0.9em;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  color: hsl(var(--primary));
 }
 
-.prose-blog img {
+.article-content blockquote {
+  border-left: 3px solid hsl(var(--primary));
+  padding-left: 1rem;
+  margin: 1.25rem 0;
+  color: hsl(var(--muted-foreground));
+  font-style: normal;
+}
+
+.article-content img {
   max-width: 100%;
   height: auto;
-  margin: 1.5em 0;
-  border-radius: 4px;
+  margin: 1.25rem 0;
+  border: 1px solid hsl(var(--border));
 }
 
-.prose-blog table {
+.article-content hr {
+  border: none;
+  border-top: 1px dashed hsl(var(--border));
+  margin: 2rem 0;
+}
+
+/* Table wrapper for mobile scroll */
+.article-content .table-wrapper {
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-content table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5em 0;
-  font-size: 0.9em;
+  margin: 1.25rem 0;
+  font-size: 0.875rem;
 }
 
-.prose-blog th,
-.prose-blog td {
-  border: 1px solid #e5e5e5;
-  padding: 0.5em 0.75em;
+.article-content th,
+.article-content td {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid hsl(var(--border));
   text-align: left;
 }
 
-.prose-blog th {
-  background: #f5f5f5;
+.article-content th {
+  background: hsl(var(--muted));
   font-weight: 600;
-}
-
-/* Heading anchors */
-.prose-blog .heading-anchor {
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-.prose-blog .group:hover .heading-anchor {
-  opacity: 1;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 /* ================================
-   ADMIN STYLES
+   UTILITIES
    ================================ */
 
-/* Keep admin panel functional with basic dark theme */
-.admin-layout {
-  background: #0a0a0a;
-  color: #e5e5e5;
+/* Page transitions */
+.page-transition {
+  animation: fadeIn 0.3s ease;
 }
 
-/* Rich editor styles */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Scrollbar - Terminal style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.6);
+}
+
+/* ================================
+   TERMINAL UTILITIES
+   ================================ */
+
+/* Terminal prompt prefix */
+.terminal-prompt::before {
+  content: "> ";
+  color: hsl(var(--primary));
+}
+
+/* Terminal cursor blink */
+.terminal-cursor::after {
+  content: "_";
+  animation: blink 1s step-end infinite;
+  color: hsl(var(--primary));
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Terminal section header */
+.terminal-header {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+/* Terminal list item */
+.terminal-list-item {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 14px;
+  padding: 6px 0;
+  border-bottom: 1px dashed hsl(var(--border) / 0.5);
+}
+
+.terminal-list-item:last-child {
+  border-bottom: none;
+}
+
+/* Terminal box */
+.terminal-box {
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  padding: 16px;
+}
+
+/* ================================
+   RICH EDITOR (Tiptap)
+   ================================ */
+
+/* Inherit article styles in the editor */
 .prose-editor {
   font-family: var(--font-inter, Inter), system-ui, sans-serif;
   font-size: 16px;
-  line-height: 1.8;
-  color: #333;
+  line-height: 1.75;
+  color: hsl(var(--foreground));
 }
 
 .prose-editor h1,
@@ -144,15 +446,18 @@ body {
 .prose-editor h3,
 .prose-editor h4 {
   font-weight: 600;
+  color: hsl(var(--primary));
   margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
 
 .prose-editor h1 { font-size: 1.75em; }
-.prose-editor h2 { font-size: 1.4em; }
-.prose-editor h3 { font-size: 1.15em; }
+.prose-editor h2 { font-size: 1.375em; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 0.3em; }
+.prose-editor h3 { font-size: 1.125em; }
 
-.prose-editor p { margin-bottom: 0.75em; }
+.prose-editor p {
+  margin-bottom: 0.75em;
+}
 
 .prose-editor ul,
 .prose-editor ol {
@@ -160,64 +465,72 @@ body {
   margin-bottom: 1em;
 }
 
+.prose-editor li { margin-bottom: 0.25em; }
 .prose-editor ul { list-style-type: disc; }
 .prose-editor ol { list-style-type: decimal; }
-.prose-editor li { margin-bottom: 0.25em; }
 
 .prose-editor a {
-  color: #2563eb;
+  color: hsl(var(--primary));
   text-decoration: underline;
 }
 
+.prose-editor strong { font-weight: 700; }
+
 .prose-editor blockquote {
-  border-left: 3px solid #d1d5db;
+  border-left: 3px solid hsl(var(--primary));
   padding-left: 1em;
   margin: 1em 0;
-  color: #6b7280;
+  color: hsl(var(--muted-foreground));
   font-style: italic;
 }
 
 .prose-editor pre {
-  background: #f5f5f5;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
   padding: 1em;
   overflow-x: auto;
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 0.875em;
   margin: 1em 0;
 }
 
 .prose-editor :not(pre) > code {
-  background: #f5f5f5;
+  background: hsl(var(--muted));
+  color: hsl(var(--primary));
   padding: 0.15em 0.4em;
-  border-radius: 3px;
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 0.875em;
 }
 
 .prose-editor hr {
   border: none;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px dashed hsl(var(--border));
   margin: 2em 0;
 }
 
 .prose-editor img {
   max-width: 100%;
   height: auto;
+  border: 1px solid hsl(var(--border));
   margin: 1em 0;
-  border-radius: 4px;
 }
 
-/* Editor placeholder */
+/* Placeholder */
 .prose-editor p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
-  color: #a3a3a3;
+  color: hsl(var(--muted-foreground));
   pointer-events: none;
   height: 0;
 }
 
+/* Selected node highlight */
 .prose-editor .ProseMirror-selectednode {
-  outline: 2px solid #2563eb;
+  outline: 2px solid hsl(var(--primary));
+}
+
+/* Remove all shadows */
+* {
+  box-shadow: none !important;
+  text-shadow: none !important;
 }

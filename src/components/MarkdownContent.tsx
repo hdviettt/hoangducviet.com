@@ -24,7 +24,7 @@ const HeadingWithAnchor = ({ level, children, ...props }: any) => {
     <Tag id={id} className="group relative" {...props}>
       <a
         href={`#${id}`}
-        className="heading-anchor absolute -left-5 top-0 opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-blue-600 transition-opacity"
+        className="heading-anchor absolute -left-5 top-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary transition-opacity"
         aria-label={`Link to ${text}`}
       >
         #
@@ -62,7 +62,7 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                 {...props}
               />
               {alt && (
-                <figcaption className="text-center text-sm text-neutral-500 mt-3">
+                <figcaption className="text-center text-sm text-muted-foreground mt-3">
                   {alt}
                 </figcaption>
               )}
