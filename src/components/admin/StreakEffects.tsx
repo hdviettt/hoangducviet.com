@@ -6,14 +6,13 @@ import type { Editor } from "@tiptap/react";
 // ---- Tier Definitions ----
 
 const STREAK_TIERS = [
-  { min: 5, label: "", particles: 2, shake: 0 },
-  { min: 15, label: "Nice!", particles: 3, shake: 0 },
-  { min: 30, label: "Great!", particles: 5, shake: 0.5 },
-  { min: 60, label: "On Fire!", particles: 7, shake: 1 },
-  { min: 120, label: "UNSTOPPABLE!", particles: 10, shake: 1.5 },
+  { min: 5, label: "", particles: 2 },
+  { min: 15, label: "Nice!", particles: 3 },
+  { min: 30, label: "Great!", particles: 5 },
+  { min: 60, label: "On Fire!", particles: 7 },
+  { min: 120, label: "UNSTOPPABLE!", particles: 10 },
 ];
 
-// Orange-themed particle colors that escalate
 const PARTICLE_COLORS = [
   ["#fb923c", "#fdba74", "#fed7aa"],
   ["#f97316", "#fb923c", "#fdba74"],
@@ -29,110 +28,139 @@ function getTier(streak: number) {
   return null;
 }
 
-// ---- Audio Engine ----
+// ---- Typewriter Audio Engine ----
 
-class TypingSounds {
+class TypewriterSounds {
   private ctx: AudioContext | null = null;
-  private initialized = false;
 
   private getCtx(): AudioContext | null {
     if (!this.ctx) {
-      try {
-        this.ctx = new AudioContext();
-        this.initialized = true;
-      } catch {
-        return null;
-      }
+      try { this.ctx = new AudioContext(); } catch { return null; }
     }
-    if (this.ctx.state === "suspended") {
-      this.ctx.resume();
-    }
+    if (this.ctx.state === "suspended") this.ctx.resume();
     return this.ctx;
   }
 
-  // Base typing click — short noise burst
+  // Mechanical keyboard click — two layered noise bursts
+  // simulating the key strike and key bottom-out
   playKeystroke(streak: number) {
     const ctx = this.getCtx();
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const result = getTier(streak);
+    const tierResult = getTier(streak);
+    const tierIndex = tierResult ? tierResult.index : -1;
 
-    // Base click: filtered noise
-    const bufferSize = 512;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * 0.3;
+    // --- Layer 1: Initial key strike (sharp, high click) ---
+    const strikeLen = 256;
+    const strikeBuf = ctx.createBuffer(1, strikeLen, ctx.sampleRate);
+    const strikeData = strikeBuf.getChannelData(0);
+    for (let i = 0; i < strikeLen; i++) {
+      // Sharp attack that decays quickly
+      const env = Math.exp(-i / (strikeLen * 0.08));
+      strikeData[i] = (Math.random() * 2 - 1) * env;
     }
 
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
+    const strike = ctx.createBufferSource();
+    strike.buffer = strikeBuf;
 
-    const filter = ctx.createBiquadFilter();
-    filter.type = "highpass";
-    filter.frequency.value = 4000 + (result ? result.index * 800 : 0);
+    const strikeFilter = ctx.createBiquadFilter();
+    strikeFilter.type = "bandpass";
+    // Random pitch variation for natural feel
+    strikeFilter.frequency.value = 3000 + Math.random() * 2000;
+    strikeFilter.Q.value = 1.5;
 
-    const gain = ctx.createGain();
-    const baseVol = 0.04;
-    const tierBonus = result ? result.index * 0.015 : 0;
-    gain.gain.setValueAtTime(baseVol + tierBonus, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    const strikeGain = ctx.createGain();
+    const baseVol = 0.06 + Math.min(tierIndex * 0.01, 0.04);
+    strikeGain.gain.setValueAtTime(baseVol, now);
+    strikeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
 
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    noise.start(now);
-    noise.stop(now + 0.04);
+    strike.connect(strikeFilter);
+    strikeFilter.connect(strikeGain);
+    strikeGain.connect(ctx.destination);
+    strike.start(now);
+    strike.stop(now + 0.025);
 
-    // At higher tiers, add a pitched tone
-    if (result && result.index >= 2) {
+    // --- Layer 2: Bottom-out thock (lower, slightly delayed) ---
+    const thockLen = 384;
+    const thockBuf = ctx.createBuffer(1, thockLen, ctx.sampleRate);
+    const thockData = thockBuf.getChannelData(0);
+    for (let i = 0; i < thockLen; i++) {
+      const env = Math.exp(-i / (thockLen * 0.15));
+      thockData[i] = (Math.random() * 2 - 1) * env;
+    }
+
+    const thock = ctx.createBufferSource();
+    thock.buffer = thockBuf;
+
+    const thockFilter = ctx.createBiquadFilter();
+    thockFilter.type = "lowpass";
+    thockFilter.frequency.value = 800 + Math.random() * 400;
+    thockFilter.Q.value = 2;
+
+    const thockGain = ctx.createGain();
+    const thockVol = 0.04 + Math.min(tierIndex * 0.008, 0.03);
+    thockGain.gain.setValueAtTime(thockVol, now + 0.008);
+    thockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+    thock.connect(thockFilter);
+    thockFilter.connect(thockGain);
+    thockGain.connect(ctx.destination);
+    thock.start(now + 0.008);
+    thock.stop(now + 0.055);
+
+    // --- Layer 3: At higher streaks, add a subtle resonant "ping" ---
+    // like a premium mechanical switch spring
+    if (tierIndex >= 2) {
       const osc = ctx.createOscillator();
       const oscGain = ctx.createGain();
-
-      // Pitch rises with tier
-      const baseFreq = 800 + result.index * 200;
-      // Slight random variation for each keystroke
-      osc.frequency.value = baseFreq + (Math.random() - 0.5) * 100;
       osc.type = "sine";
-
-      const oscVol = 0.02 + result.index * 0.008;
-      oscGain.gain.setValueAtTime(oscVol, now);
-      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-
+      // Subtle metallic ping, varies per keystroke
+      osc.frequency.value = 4000 + Math.random() * 1500;
+      const pingVol = 0.008 + (tierIndex - 2) * 0.004;
+      oscGain.gain.setValueAtTime(pingVol, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
       osc.connect(oscGain);
       oscGain.connect(ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.06);
+      osc.stop(now + 0.035);
     }
   }
 
-  // Tier-up fanfare
+  // Tier-up: satisfying typewriter carriage return "ding"
   playTierUp(tierIndex: number) {
     const ctx = this.getCtx();
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const notes = [523, 659, 784, 1047, 1319]; // C5, E5, G5, C6, E6
-    const noteFreq = notes[Math.min(tierIndex, notes.length - 1)];
 
-    // Quick ascending chime
-    for (let i = 0; i <= Math.min(tierIndex, 2); i++) {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = noteFreq * (1 + i * 0.25);
-      gain.gain.setValueAtTime(0.06, now + i * 0.06);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now + i * 0.06);
-      osc.stop(now + i * 0.06 + 0.15);
-    }
+    // Bell ding — like a typewriter margin bell
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 2200 + tierIndex * 300;
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.35);
+
+    // Slight harmonic overtone for richness
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = "sine";
+    osc2.frequency.value = (2200 + tierIndex * 300) * 2.5;
+    gain2.gain.setValueAtTime(0.02, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now);
+    osc2.stop(now + 0.2);
   }
 }
 
-const typingSounds = new TypingSounds();
+const typingSounds = new TypewriterSounds();
 
 // ---- Particle Interface ----
 
@@ -162,7 +190,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
   const streakRef = useRef(0);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevTierRef = useRef(-1);
-  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [streak, setStreak] = useState(0);
   const [tierLabel, setTierLabel] = useState("");
@@ -203,24 +230,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
     }
   }, [editor, containerRef]);
 
-  // Screen shake — uses CSS class approach to avoid overflow issues
-  const shake = useCallback((intensity: number) => {
-    const container = containerRef.current;
-    if (!container || intensity === 0) return;
-
-    // Apply random offset via CSS custom properties
-    const dx = (Math.random() - 0.5) * intensity * 2;
-    const dy = (Math.random() - 0.5) * intensity * 2;
-    container.style.setProperty("--shake-x", `${dx}px`);
-    container.style.setProperty("--shake-y", `${dy}px`);
-    container.classList.add("streak-shaking");
-
-    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
-    shakeTimerRef.current = setTimeout(() => {
-      container.classList.remove("streak-shaking");
-    }, 50);
-  }, [containerRef]);
-
   // Handle keystroke
   const handleKeystroke = useCallback(() => {
     if (pauseTimerRef.current) {
@@ -233,15 +242,13 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
 
     const result = getTier(s);
 
-    // Play keystroke sound
+    // Play typewriter keystroke sound
     typingSounds.playKeystroke(s);
 
     if (result) {
       const { tier, index } = result;
 
       spawnParticles(tier.particles, index);
-
-      if (tier.shake > 0) shake(tier.shake);
 
       // Tier change
       if (index !== prevTierRef.current && tier.label) {
@@ -260,7 +267,7 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
       setTierLabel("");
       prevTierRef.current = -1;
     }, 2000);
-  }, [spawnParticles, shake]);
+  }, [spawnParticles]);
 
   // Listen for editor updates
   useEffect(() => {
@@ -269,7 +276,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
     return () => {
       editor.off("update", handler);
       if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
     };
   }, [editor, handleKeystroke]);
 
