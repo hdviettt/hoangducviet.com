@@ -28,7 +28,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   const pathname = usePathname();
   const { theme, toggleTheme, mounted } = useTheme();
   const navRef = useRef<HTMLElement>(null);
-  const [underline, setUnderline] = useState({ left: 0, width: 0 });
+  const [dot, setDot] = useState({ left: 0 });
   const [readingProgress, setReadingProgress] = useState(0);
 
   const isPostPage = pathname.startsWith("/posts/") && pathname !== "/posts";
@@ -42,9 +42,8 @@ export default function FileExplorer({ children }: FileExplorerProps) {
     if (activeLink) {
       const navRect = navRef.current.getBoundingClientRect();
       const linkRect = activeLink.getBoundingClientRect();
-      setUnderline({
-        left: linkRect.left - navRect.left,
-        width: linkRect.width,
+      setDot({
+        left: linkRect.right - navRect.left + 4,
       });
     }
   }, [activeIndex]);
@@ -77,7 +76,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               key={item.href}
               href={item.href}
               data-nav-index={i}
-              className={`text-sm pb-1 transition-colors ${
+              className={`text-sm transition-colors ${
                 item.match(pathname)
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -87,11 +86,16 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             </Link>
           ))}
 
-          {/* Sliding underline */}
+          {/* Sliding dot indicator */}
           {activeIndex >= 0 && (
             <div
-              className="absolute bottom-2 h-[2px] bg-primary transition-all duration-300 ease-out"
-              style={{ left: underline.left, width: underline.width }}
+              className="absolute w-1 h-1 bg-primary transition-all duration-300 ease-out"
+              style={{
+                left: dot.left,
+                top: "50%",
+                transform: "translateY(-50%)",
+                borderRadius: "50%",
+              }}
             />
           )}
 
