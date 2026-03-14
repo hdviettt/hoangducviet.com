@@ -31,6 +31,7 @@ interface SlashItem {
   description: string;
   icon: string;
   command: (editor: Editor) => void;
+  isImagePicker?: boolean;
 }
 
 const slashItems: SlashItem[] = [
@@ -94,23 +95,12 @@ const slashItems: SlashItem[] = [
   },
   {
     title: "Image",
-    description: "Upload or paste an image",
+    description: "Choose from library or upload",
     icon: "🖼",
-    command: (editor) => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = async () => {
-        const file = input.files?.[0];
-        if (file) {
-          const url = await uploadImage(file);
-          if (url) {
-            editor.chain().focus().setImage({ src: url }).run();
-          }
-        }
-      };
-      input.click();
+    command: () => {
+      // Handled specially via onImagePicker callback in SlashMenu
     },
+    isImagePicker: true,
   },
 ];
 
@@ -134,9 +124,11 @@ async function uploadImage(file: File): Promise<string | null> {
 function SlashMenu({
   editor,
   onClose,
+  onImagePicker,
 }: {
   editor: Editor;
   onClose: () => void;
+  onImagePicker: () => void;
 }) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
@@ -167,10 +159,15 @@ function SlashMenu({
           to: editor.state.selection.from,
         })
         .run();
-      item.command(editor);
-      onClose();
+      if (item.isImagePicker) {
+        onClose();
+        onImagePicker();
+      } else {
+        item.command(editor);
+        onClose();
+      }
     },
-    [editor, onClose, query],
+    [editor, onClose, onImagePicker, query],
   );
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -285,6 +282,48 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   const [slashPos, setSlashPos] = useState({ top: 0, left: 0 });
   const editorRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Image picker modal state
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [imagePickerItems, setImagePickerItems] = useState<Array<{ id: number; filename: string; originalName: string; mimeType: string | null }>>([]);
+  const [imagePickerLoading, setImagePickerLoading] = useState(false);
+  const [imagePickerSearch, setImagePickerSearch] = useState("");
+  const [imagePickerUploading, setImagePickerUploading] = useState(false);
+
+  const openImagePicker = useCallback(async () => {
+    setShowImagePicker(true);
+    setImagePickerSearch("");
+    setImagePickerLoading(true);
+    const res = await fetch("/api/media");
+    if (res.ok) setImagePickerItems(await res.json());
+    setImagePickerLoading(false);
+  }, []);
+
+  const handleImagePickerUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImagePickerUploading(true);
+    const url = await uploadImage(file);
+    if (url) {
+      setShowImagePicker(false);
+      // Insert after a tick so editor regains focus
+      setTimeout(() => {
+        editorInstance.current?.chain().focus().setImage({ src: url }).run();
+      }, 10);
+    }
+    setImagePickerUploading(false);
+    e.target.value = "";
+  }, []);
+
+  const selectImageFromPicker = useCallback((filename: string) => {
+    const url = `/uploads/${filename}`;
+    setShowImagePicker(false);
+    setTimeout(() => {
+      editorInstance.current?.chain().focus().setImage({ src: url }).run();
+    }, 10);
+  }, []);
+
+  const editorInstance = useRef<ReturnType<typeof useEditor> | null>(null);
 
   const editor = useEditor({
     extensions: [
@@ -405,6 +444,9 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
     return () => document.removeEventListener("click", handler);
   }, [showSlash]);
 
+  // Keep ref in sync for callbacks
+  editorInstance.current = editor;
+
   if (!editor) return null;
 
   return (
@@ -522,22 +564,8 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           🔗
         </ToolbarButton>
         <ToolbarButton
-          onClick={() => {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = "image/*";
-            input.onchange = async () => {
-              const file = input.files?.[0];
-              if (file) {
-                const url = await uploadImage(file);
-                if (url) {
-                  editor.chain().focus().setImage({ src: url }).run();
-                }
-              }
-            };
-            input.click();
-          }}
-          title="Upload image"
+          onClick={openImagePicker}
+          title="Insert image"
         >
           IMG
         </ToolbarButton>
@@ -557,10 +585,81 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         {/* Slash Command Menu */}
         {showSlash && (
           <div style={{ position: "absolute", top: slashPos.top, left: slashPos.left }}>
-            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} />
+            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} onImagePicker={openImagePicker} />
           </div>
         )}
       </div>
+
+      {/* Image Picker Modal */}
+      {showImagePicker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-background border border-border w-full max-w-3xl max-h-[80vh] flex flex-col">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
+              <span className="text-sm font-medium shrink-0">insert image</span>
+              <input
+                type="text"
+                value={imagePickerSearch}
+                onChange={(e) => setImagePickerSearch(e.target.value)}
+                placeholder="search..."
+                className="bg-background border border-border px-2 py-1 text-xs focus:outline-none focus:border-primary flex-1"
+              />
+              <label className="bg-primary text-primary-foreground px-3 py-1 text-xs hover:opacity-90 cursor-pointer shrink-0">
+                {imagePickerUploading ? "uploading..." : "upload new"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImagePickerUpload}
+                  className="hidden"
+                  disabled={imagePickerUploading}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowImagePicker(false)}
+                className="text-muted-foreground hover:text-foreground text-lg leading-none shrink-0"
+              >
+                x
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              {imagePickerLoading ? (
+                <div className="text-sm text-muted-foreground text-center py-10">loading...</div>
+              ) : (() => {
+                const images = imagePickerItems.filter((i) => {
+                  if (!i.mimeType?.startsWith("image/")) return false;
+                  if (imagePickerSearch) {
+                    const q = imagePickerSearch.toLowerCase();
+                    return i.originalName.toLowerCase().includes(q) || i.filename.toLowerCase().includes(q);
+                  }
+                  return true;
+                });
+                return images.length === 0 ? (
+                  <div className="text-sm text-muted-foreground text-center py-10">
+                    no images found. upload one above.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                    {images.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => selectImageFromPicker(item.filename)}
+                        className="aspect-square border border-border overflow-hidden hover:border-primary transition-colors"
+                      >
+                        <img
+                          src={`/uploads/${item.filename}`}
+                          alt={item.originalName}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
