@@ -4,7 +4,7 @@ import Link from "next/link";
 import InlineTableOfContents from "@/components/posts/InlineTableOfContents";
 import MarkdownContent from "@/components/content/MarkdownContent";
 import PostNavigation from "@/components/posts/PostNavigation";
-import ReadingProgress from "@/components/posts/ReadingProgress";
+
 import { getGlobalMetadata } from "@/lib/global";
 import { getAdjacentPosts, getPostBySlug } from "@/lib/posts";
 
@@ -83,7 +83,6 @@ export default async function PostPage({ params }: PostParams) {
 
   return (
     <>
-      <ReadingProgress />
       <div className="py-8 sm:py-12 md:py-16">
         {/* Back button */}
         <Link

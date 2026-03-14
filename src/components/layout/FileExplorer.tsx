@@ -29,6 +29,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   const { theme, toggleTheme, mounted } = useTheme();
   const navRef = useRef<HTMLElement>(null);
   const [underline, setUnderline] = useState({ left: 0, width: 0 });
+  const [readingProgress, setReadingProgress] = useState(0);
 
   const isPostPage = pathname.startsWith("/posts/") && pathname !== "/posts";
   const activeIndex = navItems.findIndex((item) => item.match(pathname));
@@ -47,6 +48,21 @@ export default function FileExplorer({ children }: FileExplorerProps) {
       });
     }
   }, [activeIndex]);
+
+  useEffect(() => {
+    if (!isPostPage) {
+      setReadingProgress(0);
+      return;
+    }
+    const onScroll = () => {
+      const scrollTop = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setReadingProgress(scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isPostPage]);
 
   return (
     <div className="min-h-screen bg-background font-mono">
@@ -95,6 +111,17 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               <Sun className="w-4 h-4" />
             )}
           </button>
+
+          {/* Reading progress bar */}
+          {isPostPage && readingProgress > 0 && (
+            <div
+              className="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-150 ease-out"
+              style={{
+                width: `${readingProgress}%`,
+                borderRadius: "0 0 9999px 9999px",
+              }}
+            />
+          )}
         </nav>
       </header>
 
