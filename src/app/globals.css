@@ -529,6 +529,55 @@ small,
   outline: 2px solid hsl(var(--primary));
 }
 
+/* Table styles */
+.prose-editor table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  overflow: hidden;
+}
+
+.prose-editor th,
+.prose-editor td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5em 0.75em;
+  min-width: 80px;
+  vertical-align: top;
+  position: relative;
+  text-align: left;
+}
+
+.prose-editor th {
+  background: hsl(var(--muted));
+  font-weight: 600;
+  font-size: 0.875em;
+}
+
+.prose-editor td > p,
+.prose-editor th > p {
+  margin: 0;
+}
+
+.prose-editor .selectedCell {
+  background: hsl(var(--primary) / 0.08);
+}
+
+.prose-editor .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: hsl(var(--primary));
+  cursor: col-resize;
+  z-index: 10;
+}
+
+.prose-editor .tableWrapper {
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
 /* Remove all shadows */
 * {
   box-shadow: none !important;

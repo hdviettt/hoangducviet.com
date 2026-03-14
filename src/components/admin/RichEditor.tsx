@@ -6,6 +6,10 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
 import { Markdown } from "tiptap-markdown";
 import { common, createLowlight } from "lowlight";
 import {
@@ -78,6 +82,13 @@ const slashItems: SlashItem[] = [
     description: "Divider line",
     icon: "—",
     command: (editor) => editor.chain().focus().setHorizontalRule().run(),
+  },
+  {
+    title: "Table",
+    description: "Insert a table",
+    icon: "⊞",
+    command: (editor) =>
+      editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
   },
   {
     title: "Image",
@@ -280,6 +291,10 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       CodeBlockLowlight.configure({ lowlight }),
       Image.configure({ inline: false, allowBase64: true }),
       Link.configure({ openOnClick: false }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableCell,
+      TableHeader,
       Placeholder.configure({ placeholder: 'Start writing, or type "/" for commands...' }),
       Markdown.configure({
         html: true,
@@ -523,6 +538,43 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         >
           IMG
         </ToolbarButton>
+
+        {/* Table controls — shown when cursor is in a table */}
+        {editor.isActive("table") && (
+          <>
+            <span className="w-px h-5 bg-border mx-1" />
+            <ToolbarButton
+              onClick={() => editor.chain().focus().addColumnAfter().run()}
+              title="Add column after"
+            >
+              +col
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().deleteColumn().run()}
+              title="Delete column"
+            >
+              -col
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().addRowAfter().run()}
+              title="Add row after"
+            >
+              +row
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().deleteRow().run()}
+              title="Delete row"
+            >
+              -row
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().deleteTable().run()}
+              title="Delete table"
+            >
+              ×tbl
+            </ToolbarButton>
+          </>
+        )}
       </div>
 
       {/* Editor Content */}
