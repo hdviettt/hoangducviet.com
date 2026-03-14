@@ -28,139 +28,123 @@ function getTier(streak: number) {
   return null;
 }
 
-// ---- Typewriter Audio Engine ----
+// ---- Mechanical Keyboard Audio ----
+// Deep, thocky mechanical switch sounds — no high pitched tones
 
-class TypewriterSounds {
+class MechKeyboardSounds {
   private ctx: AudioContext | null = null;
+  // Pre-generated click buffers for variation
+  private clickBuffers: AudioBuffer[] = [];
 
-  private getCtx(): AudioContext | null {
+  private getCtx(): AudioContext {
     if (!this.ctx) {
-      try { this.ctx = new AudioContext(); } catch { return null; }
+      this.ctx = new AudioContext();
+      this.generateClickBuffers();
     }
     if (this.ctx.state === "suspended") this.ctx.resume();
     return this.ctx;
   }
 
-  // Mechanical keyboard click — two layered noise bursts
-  // simulating the key strike and key bottom-out
+  // Pre-generate several click variations so each keystroke sounds slightly different
+  private generateClickBuffers() {
+    const ctx = this.ctx!;
+    const sampleRate = ctx.sampleRate;
+
+    for (let v = 0; v < 6; v++) {
+      // Each click is ~30ms of shaped noise
+      const len = Math.floor(sampleRate * 0.035);
+      const buf = ctx.createBuffer(1, len, sampleRate);
+      const data = buf.getChannelData(0);
+
+      // Resonant frequency varies per buffer (deep thock character)
+      const resonance = 300 + v * 80; // 300-700 Hz range — deep
+      const damping = 0.12 + Math.random() * 0.06;
+
+      for (let i = 0; i < len; i++) {
+        const t = i / sampleRate;
+        // Fast exponential decay envelope
+        const env = Math.exp(-t / damping) * (1 - Math.exp(-t * 8000));
+        // Mix of: noise (click texture) + low resonance (thock body)
+        const noise = (Math.random() * 2 - 1) * 0.6;
+        const tone = Math.sin(2 * Math.PI * resonance * t) * 0.4;
+        const subTone = Math.sin(2 * Math.PI * (resonance * 0.5) * t) * 0.25;
+        data[i] = (noise + tone + subTone) * env;
+      }
+
+      this.clickBuffers.push(buf);
+    }
+  }
+
   playKeystroke(streak: number) {
     const ctx = this.getCtx();
-    if (!ctx) return;
-
     const now = ctx.currentTime;
     const tierResult = getTier(streak);
     const tierIndex = tierResult ? tierResult.index : -1;
 
-    // --- Layer 1: Initial key strike (sharp, high click) ---
-    const strikeLen = 256;
-    const strikeBuf = ctx.createBuffer(1, strikeLen, ctx.sampleRate);
-    const strikeData = strikeBuf.getChannelData(0);
-    for (let i = 0; i < strikeLen; i++) {
-      // Sharp attack that decays quickly
-      const env = Math.exp(-i / (strikeLen * 0.08));
-      strikeData[i] = (Math.random() * 2 - 1) * env;
-    }
+    // Pick a random click buffer
+    const buf = this.clickBuffers[Math.floor(Math.random() * this.clickBuffers.length)];
+    if (!buf) return;
 
-    const strike = ctx.createBufferSource();
-    strike.buffer = strikeBuf;
+    const source = ctx.createBufferSource();
+    source.buffer = buf;
+    // Slight playback rate variation for natural feel
+    source.playbackRate.value = 0.9 + Math.random() * 0.2;
 
-    const strikeFilter = ctx.createBiquadFilter();
-    strikeFilter.type = "bandpass";
-    // Random pitch variation for natural feel
-    strikeFilter.frequency.value = 3000 + Math.random() * 2000;
-    strikeFilter.Q.value = 1.5;
+    // Low-pass to keep it deep and thocky
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 1800 + Math.min(tierIndex * 200, 600);
+    filter.Q.value = 0.7;
 
-    const strikeGain = ctx.createGain();
-    const baseVol = 0.06 + Math.min(tierIndex * 0.01, 0.04);
-    strikeGain.gain.setValueAtTime(baseVol, now);
-    strikeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+    // Volume: audible baseline, gets a bit fuller with streak
+    const gain = ctx.createGain();
+    const vol = 0.25 + Math.min(tierIndex * 0.04, 0.15);
+    gain.gain.setValueAtTime(vol, now);
 
-    strike.connect(strikeFilter);
-    strikeFilter.connect(strikeGain);
-    strikeGain.connect(ctx.destination);
-    strike.start(now);
-    strike.stop(now + 0.025);
-
-    // --- Layer 2: Bottom-out thock (lower, slightly delayed) ---
-    const thockLen = 384;
-    const thockBuf = ctx.createBuffer(1, thockLen, ctx.sampleRate);
-    const thockData = thockBuf.getChannelData(0);
-    for (let i = 0; i < thockLen; i++) {
-      const env = Math.exp(-i / (thockLen * 0.15));
-      thockData[i] = (Math.random() * 2 - 1) * env;
-    }
-
-    const thock = ctx.createBufferSource();
-    thock.buffer = thockBuf;
-
-    const thockFilter = ctx.createBiquadFilter();
-    thockFilter.type = "lowpass";
-    thockFilter.frequency.value = 800 + Math.random() * 400;
-    thockFilter.Q.value = 2;
-
-    const thockGain = ctx.createGain();
-    const thockVol = 0.04 + Math.min(tierIndex * 0.008, 0.03);
-    thockGain.gain.setValueAtTime(thockVol, now + 0.008);
-    thockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-
-    thock.connect(thockFilter);
-    thockFilter.connect(thockGain);
-    thockGain.connect(ctx.destination);
-    thock.start(now + 0.008);
-    thock.stop(now + 0.055);
-
-    // --- Layer 3: At higher streaks, add a subtle resonant "ping" ---
-    // like a premium mechanical switch spring
-    if (tierIndex >= 2) {
-      const osc = ctx.createOscillator();
-      const oscGain = ctx.createGain();
-      osc.type = "sine";
-      // Subtle metallic ping, varies per keystroke
-      osc.frequency.value = 4000 + Math.random() * 1500;
-      const pingVol = 0.008 + (tierIndex - 2) * 0.004;
-      oscGain.gain.setValueAtTime(pingVol, now);
-      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
-      osc.connect(oscGain);
-      oscGain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.035);
-    }
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    source.start(now);
   }
 
-  // Tier-up: satisfying typewriter carriage return "ding"
-  playTierUp(tierIndex: number) {
+  // Tier-up: satisfying deep "clack" — like pressing a big switch
+  playTierUp() {
     const ctx = this.getCtx();
-    if (!ctx) return;
-
     const now = ctx.currentTime;
 
-    // Bell ding — like a typewriter margin bell
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = 2200 + tierIndex * 300;
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.35);
+    const sampleRate = ctx.sampleRate;
+    const len = Math.floor(sampleRate * 0.08);
+    const buf = ctx.createBuffer(1, len, sampleRate);
+    const data = buf.getChannelData(0);
 
-    // Slight harmonic overtone for richness
-    const osc2 = ctx.createOscillator();
-    const gain2 = ctx.createGain();
-    osc2.type = "sine";
-    osc2.frequency.value = (2200 + tierIndex * 300) * 2.5;
-    gain2.gain.setValueAtTime(0.02, now);
-    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-    osc2.connect(gain2);
-    gain2.connect(ctx.destination);
-    osc2.start(now);
-    osc2.stop(now + 0.2);
+    for (let i = 0; i < len; i++) {
+      const t = i / sampleRate;
+      const env = Math.exp(-t / 0.04) * (1 - Math.exp(-t * 5000));
+      const noise = (Math.random() * 2 - 1) * 0.5;
+      const thock = Math.sin(2 * Math.PI * 200 * t) * 0.5;
+      const body = Math.sin(2 * Math.PI * 120 * t) * 0.3;
+      data[i] = (noise + thock + body) * env;
+    }
+
+    const source = ctx.createBufferSource();
+    source.buffer = buf;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.value = 1200;
+    filter.Q.value = 1;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.35, now);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    source.start(now);
   }
 }
 
-const typingSounds = new TypewriterSounds();
+const mechSounds = new MechKeyboardSounds();
 
 // ---- Particle Interface ----
 
@@ -195,7 +179,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
   const [tierLabel, setTierLabel] = useState("");
   const [tierChanged, setTierChanged] = useState(false);
 
-  // Spawn particles at cursor position
   const spawnParticles = useCallback((count: number, colorIndex: number) => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -230,7 +213,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
     }
   }, [editor, containerRef]);
 
-  // Handle keystroke
   const handleKeystroke = useCallback(() => {
     if (pauseTimerRef.current) {
       clearTimeout(pauseTimerRef.current);
@@ -242,25 +224,23 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
 
     const result = getTier(s);
 
-    // Play typewriter keystroke sound
-    typingSounds.playKeystroke(s);
+    // Play mechanical keyboard click
+    mechSounds.playKeystroke(s);
 
     if (result) {
       const { tier, index } = result;
 
       spawnParticles(tier.particles, index);
 
-      // Tier change
       if (index !== prevTierRef.current && tier.label) {
         setTierLabel(tier.label);
         setTierChanged(true);
-        typingSounds.playTierUp(index);
+        mechSounds.playTierUp();
         setTimeout(() => setTierChanged(false), 300);
       }
       prevTierRef.current = index;
     }
 
-    // Reset streak after 2s of inactivity
     pauseTimerRef.current = setTimeout(() => {
       streakRef.current = 0;
       setStreak(0);
@@ -269,7 +249,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
     }, 2000);
   }, [spawnParticles]);
 
-  // Listen for editor updates
   useEffect(() => {
     const handler = () => handleKeystroke();
     editor.on("update", handler);
@@ -279,7 +258,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
     };
   }, [editor, handleKeystroke]);
 
-  // Animation loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
