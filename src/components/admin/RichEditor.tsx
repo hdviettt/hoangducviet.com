@@ -172,6 +172,18 @@ function SlashMenu({
       if (filtered[selected]) execute(filtered[selected]);
     } else if (e.key === "Escape") {
       onClose();
+    } else if (e.key === "Backspace" && query === "") {
+      e.preventDefault();
+      // Delete the "/" and close menu, returning focus to editor
+      editor
+        .chain()
+        .focus()
+        .deleteRange({
+          from: editor.state.selection.from - 1,
+          to: editor.state.selection.from,
+        })
+        .run();
+      onClose();
     }
   };
 
