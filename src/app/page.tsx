@@ -1,5 +1,6 @@
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
+import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -65,6 +66,27 @@ export default async function Home() {
             dangerouslySetInnerHTML={{ __html: mainProfile.description }}
           />
         )}
+
+        {/* Social Links */}
+        <div className="flex items-center gap-3 mt-4">
+          {[
+            { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
+            { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
+            { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
+            { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
+          ].map(({ href, icon: Icon, label }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              aria-label={label}
+            >
+              <Icon className="w-4 h-4" />
+            </a>
+          ))}
+        </div>
       </section>
 
       {/* Recent Posts Section */}

@@ -1,123 +1,101 @@
 "use client";
 
-import { Facebook, Github, Instagram, Linkedin, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
 interface FileExplorerProps {
   children: ReactNode;
 }
 
+const navItems = [
+  { href: "/", label: "home", match: (p: string) => p === "/" },
+  {
+    href: "/posts",
+    label: "posts",
+    match: (p: string) => p.startsWith("/posts"),
+  },
+  {
+    href: "/projects",
+    label: "projects",
+    match: (p: string) => p.startsWith("/projects"),
+  },
+];
+
 export default function FileExplorer({ children }: FileExplorerProps) {
   const pathname = usePathname();
   const { theme, toggleTheme, mounted } = useTheme();
-
-  // Get current path for terminal display
-  const getTerminalPath = () => {
-    if (pathname === "/") return "~";
-    return "~" + pathname;
-  };
+  const navRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
   const isPostPage = pathname.startsWith("/posts/") && pathname !== "/posts";
+  const activeIndex = navItems.findIndex((item) => item.match(pathname));
+
+  useEffect(() => {
+    if (!navRef.current) return;
+    const activeLink = navRef.current.querySelector(
+      `[data-nav-index="${activeIndex}"]`,
+    ) as HTMLElement | null;
+    if (activeLink) {
+      const navRect = navRef.current.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+      setIndicator({
+        left: linkRect.left - navRect.left,
+        width: linkRect.width,
+      });
+    }
+  }, [activeIndex]);
 
   return (
     <div className="min-h-screen bg-background font-mono">
-      {/* Terminal Header */}
+      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          {/* Terminal title bar */}
-          <div className="h-8 flex items-center justify-between border-b border-border/50 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-primary shrink-0">●</span>
-              <span className="hidden sm:inline shrink-0">hdviet@blog</span>
-              <span className="text-muted-foreground/50 shrink-0">:</span>
-              <span className="text-foreground truncate">
-                {getTerminalPath()}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              <a
-                href="https://github.com/hdviettt"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors p-1"
-              >
-                <Github className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href="https://www.facebook.com/hoangducviettt/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors p-1"
-              >
-                <Facebook className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href="https://www.instagram.com/_hdviet/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors p-1"
-              >
-                <Instagram className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/hdviet/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors p-1"
-              >
-                <Linkedin className="w-3.5 h-3.5" />
-              </a>
-              <button
-                onClick={toggleTheme}
-                className="hover:text-primary transition-colors p-1"
-              >
-                {!mounted ? (
-                  <div className="w-3.5 h-3.5" />
-                ) : theme === "light" ? (
-                  <Moon className="w-3.5 h-3.5" />
-                ) : (
-                  <Sun className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-          </div>
+          <div className="h-12 flex items-center justify-between">
+            {/* Pill Navigation */}
+            <nav
+              ref={navRef}
+              className="relative flex items-center gap-1 bg-muted/50 rounded-full p-1"
+            >
+              {/* Sliding indicator */}
+              {activeIndex >= 0 && (
+                <div
+                  className="absolute top-1 bottom-1 bg-primary/15 rounded-full transition-all duration-300 ease-out"
+                  style={{ left: indicator.left, width: indicator.width }}
+                />
+              )}
+              {navItems.map((item, i) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  data-nav-index={i}
+                  className={`relative z-10 px-3 sm:px-4 py-1 text-xs sm:text-sm transition-colors rounded-full ${
+                    item.match(pathname)
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-          {/* Navigation */}
-          <nav className="h-10 flex items-center gap-4 sm:gap-6 text-sm overflow-x-auto">
-            <Link
-              href="/"
-              className={`transition-colors whitespace-nowrap ${
-                pathname === "/"
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="hover:text-primary transition-colors p-1.5 text-muted-foreground"
             >
-              home
-            </Link>
-            <Link
-              href="/posts"
-              className={`transition-colors whitespace-nowrap ${
-                pathname.startsWith("/posts")
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              posts
-            </Link>
-            <Link
-              href="/projects"
-              className={`transition-colors whitespace-nowrap ${
-                pathname.startsWith("/projects")
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              projects
-            </Link>
-          </nav>
+              {!mounted ? (
+                <div className="w-4 h-4" />
+              ) : theme === "light" ? (
+                <Moon className="w-4 h-4" />
+              ) : (
+                <Sun className="w-4 h-4" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
