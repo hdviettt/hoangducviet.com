@@ -584,3 +584,13 @@ small,
   text-shadow: none !important;
 }
 
+/* Streak effects */
+@keyframes streak-flash {
+  0% { opacity: 0; transform: scale(1.5); }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; transform: scale(1); }
+}
+.animate-streak-flash {
+  animation: streak-flash 0.3s ease-out both;
+}
+

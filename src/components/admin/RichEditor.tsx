@@ -13,6 +13,7 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { Markdown } from "tiptap-markdown";
 import { common, createLowlight } from "lowlight";
 import TableControls from "@/components/admin/TableControls";
+import StreakEffects from "@/components/admin/StreakEffects";
 import {
   useEffect,
   useState,
@@ -546,6 +547,9 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       {/* Editor Content */}
       <div ref={contentRef} className="flex-1 overflow-y-auto min-h-0 relative">
         <EditorContent editor={editor} />
+
+        {/* Streak Effects */}
+        <StreakEffects editor={editor} containerRef={contentRef} />
 
         {/* Table Controls */}
         <TableControls editor={editor} containerRef={contentRef} />
