@@ -40,28 +40,26 @@ export default async function Home() {
     <div className="py-8 sm:py-12">
       {/* Profile Section */}
       <section className="mb-10 sm:mb-12">
-        <div className="flex flex-col md:flex-row md:items-start md:gap-10">
+        <div className="flex items-start gap-5">
+          {/* Image column */}
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt={mainProfile.name || "Profile"}
+              className="w-16 h-16 md:w-28 md:h-28 object-cover border border-border shrink-0"
+            />
+          )}
+
           {/* Text column */}
-          <div className="min-w-0 md:max-w-md">
-            <div className="flex items-start gap-4 mb-6 md:mb-4">
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt={mainProfile.name || "Profile"}
-                  className="w-16 h-16 object-cover border border-border shrink-0 md:hidden"
-                />
-              )}
-              <div className="min-w-0">
-                {mainProfile?.name && (
-                  <h1 className="text-lg sm:text-xl font-medium text-foreground mb-1">
-                    {mainProfile.name}
-                  </h1>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  <span className="text-primary">@</span>hdviet
-                </p>
-              </div>
-            </div>
+          <div className="min-w-0">
+            {mainProfile?.name && (
+              <h1 className="text-lg sm:text-xl font-medium text-foreground mb-1">
+                {mainProfile.name}
+              </h1>
+            )}
+            <p className="text-xs text-muted-foreground mb-3">
+              <span className="text-primary">@</span>hdviet
+            </p>
 
             {mainProfile?.description && (
               <div
@@ -91,26 +89,17 @@ export default async function Home() {
               ))}
             </div>
           </div>
-
-          {/* Image column - desktop only */}
-          {imageUrl && (
-            <img
-              src={imageUrl}
-              alt={mainProfile.name || "Profile"}
-              className="hidden md:block w-36 h-36 object-cover border border-border shrink-0"
-            />
-          )}
         </div>
       </section>
 
-      {/* Recent Posts Section */}
+      {/* Posts Section */}
       {latestPosts.length > 0 && (
         <section>
           <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 pb-2 border-b border-border">
-            Recent Posts
+            Posts
           </h2>
 
-          <ul className="space-y-2 mb-6">
+          <ul className="space-y-2">
             {latestPosts.map((post) => {
               const date = post.date_created
                 ? new Date(post.date_created).toLocaleDateString("en-US", {
@@ -136,13 +125,6 @@ export default async function Home() {
               );
             })}
           </ul>
-
-          <Link
-            href="/posts"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            View all posts →
-          </Link>
         </section>
       )}
     </div>
