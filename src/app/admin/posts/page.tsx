@@ -3,6 +3,7 @@ import { posts } from "@/db/schema";
 import { desc } from "drizzle-orm";
 import Link from "next/link";
 import StatusToggle from "@/components/admin/StatusToggle";
+import DeleteButton from "@/components/admin/DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export default async function AdminPostsPage() {
             <span className="text-xs text-muted-foreground w-24 text-right">
               {post.dateCreated?.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
+            <DeleteButton slug={post.slug} name={post.title} apiPath="posts" />
           </div>
         ))}
         {allPosts.length === 0 && (

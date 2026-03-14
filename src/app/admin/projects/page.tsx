@@ -3,6 +3,7 @@ import { projects } from "@/db/schema";
 import { desc } from "drizzle-orm";
 import Link from "next/link";
 import StatusToggle from "@/components/admin/StatusToggle";
+import DeleteButton from "@/components/admin/DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export default async function AdminProjectsPage() {
             <span className="text-xs text-muted-foreground w-24 text-right">
               {project.dateCreated?.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
+            <DeleteButton slug={project.slug} name={project.title} apiPath="projects" />
           </div>
         ))}
         {allProjects.length === 0 && (
