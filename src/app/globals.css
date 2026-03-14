@@ -594,3 +594,8 @@ small,
   animation: streak-flash 0.3s ease-out both;
 }
 
+.streak-shaking {
+  transform: translate(var(--shake-x, 0), var(--shake-y, 0));
+  overflow: clip !important;
+}
+

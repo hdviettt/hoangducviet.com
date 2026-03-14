@@ -15,11 +15,11 @@ const STREAK_TIERS = [
 
 // Orange-themed particle colors that escalate
 const PARTICLE_COLORS = [
-  ["#fb923c", "#fdba74", "#fed7aa"], // light orange (5+)
-  ["#f97316", "#fb923c", "#fdba74"], // orange (15+)
-  ["#ea580c", "#f97316", "#fb923c"], // deep orange (30+)
-  ["#dc2626", "#f97316", "#fbbf24", "#fb923c"], // orange + red + yellow (60+)
-  ["#dc2626", "#f97316", "#fbbf24", "#ffffff", "#fb923c"], // full fire (120+)
+  ["#fb923c", "#fdba74", "#fed7aa"],
+  ["#f97316", "#fb923c", "#fdba74"],
+  ["#ea580c", "#f97316", "#fb923c"],
+  ["#dc2626", "#f97316", "#fbbf24", "#fb923c"],
+  ["#dc2626", "#f97316", "#fbbf24", "#ffffff", "#fb923c"],
 ];
 
 function getTier(streak: number) {
@@ -28,6 +28,111 @@ function getTier(streak: number) {
   }
   return null;
 }
+
+// ---- Audio Engine ----
+
+class TypingSounds {
+  private ctx: AudioContext | null = null;
+  private initialized = false;
+
+  private getCtx(): AudioContext | null {
+    if (!this.ctx) {
+      try {
+        this.ctx = new AudioContext();
+        this.initialized = true;
+      } catch {
+        return null;
+      }
+    }
+    if (this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+    return this.ctx;
+  }
+
+  // Base typing click — short noise burst
+  playKeystroke(streak: number) {
+    const ctx = this.getCtx();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const result = getTier(streak);
+
+    // Base click: filtered noise
+    const bufferSize = 512;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * 0.3;
+    }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = "highpass";
+    filter.frequency.value = 4000 + (result ? result.index * 800 : 0);
+
+    const gain = ctx.createGain();
+    const baseVol = 0.04;
+    const tierBonus = result ? result.index * 0.015 : 0;
+    gain.gain.setValueAtTime(baseVol + tierBonus, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start(now);
+    noise.stop(now + 0.04);
+
+    // At higher tiers, add a pitched tone
+    if (result && result.index >= 2) {
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+
+      // Pitch rises with tier
+      const baseFreq = 800 + result.index * 200;
+      // Slight random variation for each keystroke
+      osc.frequency.value = baseFreq + (Math.random() - 0.5) * 100;
+      osc.type = "sine";
+
+      const oscVol = 0.02 + result.index * 0.008;
+      oscGain.gain.setValueAtTime(oscVol, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+    }
+  }
+
+  // Tier-up fanfare
+  playTierUp(tierIndex: number) {
+    const ctx = this.getCtx();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const notes = [523, 659, 784, 1047, 1319]; // C5, E5, G5, C6, E6
+    const noteFreq = notes[Math.min(tierIndex, notes.length - 1)];
+
+    // Quick ascending chime
+    for (let i = 0; i <= Math.min(tierIndex, 2); i++) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = noteFreq * (1 + i * 0.25);
+      gain.gain.setValueAtTime(0.06, now + i * 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.06);
+      osc.stop(now + i * 0.06 + 0.15);
+    }
+  }
+}
+
+const typingSounds = new TypingSounds();
 
 // ---- Particle Interface ----
 
@@ -57,6 +162,7 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
   const streakRef = useRef(0);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevTierRef = useRef(-1);
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [streak, setStreak] = useState(0);
   const [tierLabel, setTierLabel] = useState("");
@@ -68,13 +174,12 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    // Get cursor position from the editor
     const { from } = editor.state.selection;
     const coords = editor.view.coordsAtPos(from);
     const containerRect = container.getBoundingClientRect();
 
     const cx = coords.left - containerRect.left;
-    const cy = coords.top - containerRect.top;
+    const cy = coords.top - containerRect.top + container.scrollTop;
 
     const colors = PARTICLE_COLORS[colorIndex] || PARTICLE_COLORS[0];
 
@@ -93,51 +198,56 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
       });
     }
 
-    // Cap particles
     if (particlesRef.current.length > 50) {
       particlesRef.current = particlesRef.current.slice(-50);
     }
   }, [editor, containerRef]);
 
-  // Screen shake
+  // Screen shake — uses CSS class approach to avoid overflow issues
   const shake = useCallback((intensity: number) => {
     const container = containerRef.current;
     if (!container || intensity === 0) return;
+
+    // Apply random offset via CSS custom properties
     const dx = (Math.random() - 0.5) * intensity * 2;
     const dy = (Math.random() - 0.5) * intensity * 2;
-    container.style.transform = `translate(${dx}px, ${dy}px)`;
-    setTimeout(() => {
-      container.style.transform = "";
+    container.style.setProperty("--shake-x", `${dx}px`);
+    container.style.setProperty("--shake-y", `${dy}px`);
+    container.classList.add("streak-shaking");
+
+    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    shakeTimerRef.current = setTimeout(() => {
+      container.classList.remove("streak-shaking");
     }, 50);
   }, [containerRef]);
 
   // Handle keystroke
   const handleKeystroke = useCallback(() => {
-    // Clear pause timer
     if (pauseTimerRef.current) {
       clearTimeout(pauseTimerRef.current);
     }
 
-    // Increment streak
     streakRef.current += 1;
     const s = streakRef.current;
     setStreak(s);
 
-    // Get tier
     const result = getTier(s);
+
+    // Play keystroke sound
+    typingSounds.playKeystroke(s);
+
     if (result) {
       const { tier, index } = result;
 
-      // Spawn particles
       spawnParticles(tier.particles, index);
 
-      // Screen shake
       if (tier.shake > 0) shake(tier.shake);
 
-      // Tier label
+      // Tier change
       if (index !== prevTierRef.current && tier.label) {
         setTierLabel(tier.label);
         setTierChanged(true);
+        typingSounds.playTierUp(index);
         setTimeout(() => setTierChanged(false), 300);
       }
       prevTierRef.current = index;
@@ -152,17 +262,14 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
     }, 2000);
   }, [spawnParticles, shake]);
 
-  // Listen for editor transactions (typing)
+  // Listen for editor updates
   useEffect(() => {
-    const handler = () => {
-      // Only count actual content changes, not selection changes
-      handleKeystroke();
-    };
-
+    const handler = () => handleKeystroke();
     editor.on("update", handler);
     return () => {
       editor.off("update", handler);
       if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
     };
   }, [editor, handleKeystroke]);
 
@@ -175,7 +282,7 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
       const container = containerRef.current;
       if (!container) return;
       canvas.width = container.offsetWidth;
-      canvas.height = container.offsetHeight;
+      canvas.height = container.scrollHeight;
     };
 
     resizeCanvas();
@@ -201,7 +308,7 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
         }
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 2 * dt; // gravity
+        p.vy += 2 * dt;
 
         ctx.globalAlpha = p.life;
         ctx.fillStyle = p.color;
@@ -225,13 +332,11 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
 
   return (
     <>
-      {/* Particle canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none z-20"
       />
 
-      {/* Streak counter */}
       {currentTier && (
         <div className="absolute top-2 right-3 z-20 pointer-events-none flex items-baseline gap-1.5">
           <span
