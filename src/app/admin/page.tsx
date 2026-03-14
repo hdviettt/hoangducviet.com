@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { media, posts, projects } from "@/db/schema";
 import { count, desc } from "drizzle-orm";
 import Link from "next/link";
+import StatusToggle from "@/components/admin/StatusToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -46,16 +47,21 @@ export default async function AdminDashboard() {
       </h2>
       <div className="space-y-0">
         {recentPosts.map((post) => (
-          <Link
+          <div
             key={post.slug}
-            href={`/admin/posts/${post.slug}/edit`}
-            className="flex items-center justify-between py-2 hover:text-primary transition-colors group"
+            className="flex items-center gap-3 py-2 hover:bg-muted/30 transition-colors"
           >
-            <span className="text-sm">{post.title}</span>
+            <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
+            <Link
+              href={`/admin/posts/${post.slug}/edit`}
+              className="text-sm flex-1 truncate hover:text-primary transition-colors"
+            >
+              {post.title}
+            </Link>
             <span className={`text-xs ${post.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
               {post.status}
             </span>
-          </Link>
+          </div>
         ))}
       </div>
     </div>
