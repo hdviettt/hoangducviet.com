@@ -301,7 +301,7 @@ export default function RichEditor({ content, onChange }: RichEditorProps) {
         }
         return false;
       },
-      handlePaste: (_view, event) => {
+      handlePaste: (view, event) => {
         const items = event.clipboardData?.items;
         if (!items) return false;
 
@@ -311,8 +311,11 @@ export default function RichEditor({ content, onChange }: RichEditorProps) {
             const file = item.getAsFile();
             if (file) {
               uploadImage(file).then((url) => {
-                if (url && editor) {
-                  editor.chain().focus().setImage({ src: url }).run();
+                if (url) {
+                  const { schema } = view.state;
+                  const node = schema.nodes.image.create({ src: url });
+                  const tr = view.state.tr.replaceSelectionWith(node);
+                  view.dispatch(tr);
                 }
               });
             }
@@ -321,16 +324,20 @@ export default function RichEditor({ content, onChange }: RichEditorProps) {
         }
         return false;
       },
-      handleDrop: (_view, event) => {
+      handleDrop: (view, event) => {
         const files = event.dataTransfer?.files;
         if (!files?.length) return false;
 
         for (const file of files) {
           if (file.type.startsWith("image/")) {
             event.preventDefault();
+            const pos = view.posAtCoords({ left: event.clientX, top: event.clientY })?.pos;
             uploadImage(file).then((url) => {
-              if (url && editor) {
-                editor.chain().focus().setImage({ src: url }).run();
+              if (url) {
+                const { schema } = view.state;
+                const node = schema.nodes.image.create({ src: url });
+                const tr = view.state.tr.insert(pos ?? view.state.selection.from, node);
+                view.dispatch(tr);
               }
             });
             return true;
