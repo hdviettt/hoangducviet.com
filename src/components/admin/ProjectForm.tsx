@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import RichEditor from "@/components/admin/RichEditor";
+import MediaPicker from "@/components/admin/MediaPicker";
 
 interface ProjectFormProps {
   initialData?: {
@@ -124,27 +126,14 @@ export default function ProjectForm({
 
       <div>
         <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          Description (HTML)
+          Description
         </label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary min-h-[200px] resize-y"
-        />
+        <RichEditor content={description} onChange={setDescription} outputFormat="html" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-            Thumbnail URL
-          </label>
-          <input
-            type="text"
-            value={thumbnail}
-            onChange={(e) => setThumbnail(e.target.value)}
-            className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
-            placeholder="/uploads/image.jpg"
-          />
+          <MediaPicker value={thumbnail} onChange={setThumbnail} label="Thumbnail" />
         </div>
         <div>
           <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">

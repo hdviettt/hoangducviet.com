@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import RichEditor from "@/components/admin/RichEditor";
+import MediaPicker from "@/components/admin/MediaPicker";
 
 export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -73,14 +75,11 @@ export default function AdminSettingsPage() {
                 className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">description (html)</label>
-              <textarea value={profileDescription} onChange={(e) => setProfileDescription(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary min-h-[100px] resize-y" />
+              <label className="block text-xs text-muted-foreground mb-1">description</label>
+              <RichEditor content={profileDescription} onChange={setProfileDescription} outputFormat="html" />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">image url</label>
-              <input type="text" value={profileImage} onChange={(e) => setProfileImage(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="/uploads/profile.jpg" />
+              <MediaPicker value={profileImage} onChange={setProfileImage} label="profile image" />
             </div>
           </div>
         </section>

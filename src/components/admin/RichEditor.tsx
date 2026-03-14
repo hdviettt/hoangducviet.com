@@ -251,10 +251,11 @@ function ToolbarButton({
 
 interface RichEditorProps {
   content: string;
-  onChange: (markdown: string) => void;
+  onChange: (value: string) => void;
+  outputFormat?: "markdown" | "html";
 }
 
-export default function RichEditor({ content, onChange }: RichEditorProps) {
+export default function RichEditor({ content, onChange, outputFormat = "markdown" }: RichEditorProps) {
   const [showSlash, setShowSlash] = useState(false);
   const [slashPos, setSlashPos] = useState({ top: 0, left: 0 });
   const editorRef = useRef<HTMLDivElement>(null);
@@ -347,8 +348,10 @@ export default function RichEditor({ content, onChange }: RichEditorProps) {
       },
     },
     onUpdate: ({ editor }) => {
-      const md = (editor.storage as any).markdown?.getMarkdown?.() ?? "";
-      onChange(md);
+      const value = outputFormat === "html"
+        ? editor.getHTML()
+        : ((editor.storage as any).markdown?.getMarkdown?.() ?? "");
+      onChange(value);
       // Close slash menu if user typed something else
       if (showSlash) {
         const { from } = editor.state.selection;

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import RichEditor from "@/components/admin/RichEditor";
+import MediaPicker from "@/components/admin/MediaPicker";
 
 interface PostFormProps {
   initialData?: {
@@ -104,9 +105,7 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
             </div>
           </div>
           <div>
-            <label className="block text-xs text-muted-foreground mb-1">thumbnail</label>
-            <input type="text" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="/uploads/image.jpg" />
+            <MediaPicker value={thumbnail} onChange={setThumbnail} label="thumbnail" />
           </div>
           {allCategories.length > 0 && (
             <div>
