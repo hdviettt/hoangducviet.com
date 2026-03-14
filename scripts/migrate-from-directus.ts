@@ -250,34 +250,8 @@ async function main() {
     console.log(`  Migrated ${postsData.length} posts`);
   }
 
-  // ---- 6. Migrate pages ----
-  console.log("6. Migrating pages...");
-  const pagesData = await fetchDirectus("/items/pages?limit=-1&fields=*");
-  if (pagesData) {
-    for (const page of pagesData) {
-      let body = page.body;
-      if (body && typeof body === "object") {
-        body = JSON.parse(rewriteDirectusUrls(JSON.stringify(body)));
-      }
-
-      await db
-        .insert(schema.pages)
-        .values({
-          slug: page.slug,
-          title: page.title,
-          body,
-          navigation: page.navigation || "no",
-          dateCreated: page.date_created
-            ? new Date(page.date_created)
-            : new Date(),
-        })
-        .onConflictDoNothing();
-      console.log(`  Page: "${page.title}"`);
-    }
-  }
-
-  // ---- 7. Migrate projects ----
-  console.log("7. Migrating projects...");
+  // ---- 6. Migrate projects ----
+  console.log("6. Migrating projects...");
   const projectsData = await fetchDirectus(
     "/items/projects?limit=-1&sort=date_created&fields=*,thumbnail.id,thumbnail.filename_disk,posts.posts_slug",
   );
@@ -374,7 +348,6 @@ async function main() {
   console.log("\nMigration complete!");
   console.log(`  Categories: ${catsData?.length ?? 0}`);
   console.log(`  Posts: ${postsData?.length ?? 0}`);
-  console.log(`  Pages: ${pagesData?.length ?? 0}`);
   console.log(`  Projects: ${projectsData?.length ?? 0}`);
   console.log(`  Files: ${fileMap.size}`);
 

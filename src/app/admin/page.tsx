@@ -1,15 +1,14 @@
 import { db } from "@/db";
-import { media, pages, posts, projects } from "@/db/schema";
+import { media, posts, projects } from "@/db/schema";
 import { count, desc } from "drizzle-orm";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [postCount, pageCount, projectCount, mediaCount, recentPosts] =
+  const [postCount, projectCount, mediaCount, recentPosts] =
     await Promise.all([
       db.select({ value: count() }).from(posts),
-      db.select({ value: count() }).from(pages),
       db.select({ value: count() }).from(projects),
       db.select({ value: count() }).from(media),
       db
@@ -21,7 +20,6 @@ export default async function AdminDashboard() {
 
   const stats = [
     { label: "posts", count: postCount[0].value, href: "/admin/posts" },
-    { label: "pages", count: pageCount[0].value, href: "/admin/pages" },
     { label: "projects", count: projectCount[0].value, href: "/admin/projects" },
     { label: "media", count: mediaCount[0].value, href: "/admin/media" },
   ];
@@ -30,7 +28,7 @@ export default async function AdminDashboard() {
     <div className="max-w-4xl">
       <h1 className="text-lg font-medium mb-6">dashboard</h1>
 
-      <div className="grid grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-3 gap-3 mb-8">
         {stats.map((stat) => (
           <Link
             key={stat.label}

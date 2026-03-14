@@ -1,6 +1,5 @@
 import {
   integer,
-  jsonb,
   pgTable,
   primaryKey,
   serial,
@@ -84,17 +83,6 @@ export const projectsPosts = pgTable(
   },
   (table) => [primaryKey({ columns: [table.projectSlug, table.postSlug] })],
 );
-
-// Pages (block editor content)
-export const pages = pgTable("pages", {
-  slug: text("slug").primaryKey(),
-  title: text("title").notNull(),
-  body: jsonb("body"), // Editor.js block format
-  navigation: text("navigation").default("no"),
-  dateCreated: timestamp("date_created", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
 
 // Admin user (single user for personal blog)
 export const adminUser = pgTable("admin_user", {
