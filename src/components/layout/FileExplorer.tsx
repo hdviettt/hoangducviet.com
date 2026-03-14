@@ -50,8 +50,8 @@ export default function FileExplorer({ children }: FileExplorerProps) {
 
   return (
     <div className="min-h-screen bg-background font-mono">
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-4 flex items-center justify-center gap-6">
           {/* Navigation */}
           <nav
             ref={navRef}
@@ -62,7 +62,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 key={item.href}
                 href={item.href}
                 data-nav-index={i}
-                className={`text-sm py-1 transition-colors ${
+                className={`text-sm pb-1 transition-colors ${
                   item.match(pathname)
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -75,7 +75,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             {/* Sliding underline */}
             {activeIndex >= 0 && (
               <div
-                className="absolute -bottom-[14px] h-[2px] bg-primary transition-all duration-300 ease-out"
+                className="absolute bottom-0 h-[2px] bg-primary transition-all duration-300 ease-out"
                 style={{ left: underline.left, width: underline.width }}
               />
             )}
@@ -84,7 +84,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            className="p-1 text-muted-foreground hover:text-foreground transition-colors"
           >
             {!mounted ? (
               <div className="w-4 h-4" />
