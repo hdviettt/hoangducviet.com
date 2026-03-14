@@ -150,12 +150,13 @@ function SlashMenu({
 
   const execute = useCallback(
     (item: SlashItem) => {
-      // Delete the "/" character that triggered the menu
+      // Delete only the "/" character that triggered the menu
+      // (query characters go into the filter input, not the editor)
       editor
         .chain()
         .focus()
         .deleteRange({
-          from: editor.state.selection.from - 1 - query.length,
+          from: editor.state.selection.from - 1,
           to: editor.state.selection.from,
         })
         .run();
@@ -167,7 +168,7 @@ function SlashMenu({
         onClose();
       }
     },
-    [editor, onClose, onImagePicker, query],
+    [editor, onClose, onImagePicker],
   );
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
