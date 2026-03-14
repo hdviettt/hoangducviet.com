@@ -14,8 +14,7 @@ import {
   LogOut,
   Moon,
   Sun,
-  PanelLeftClose,
-  PanelLeftOpen,
+  ChevronLeft,
   ExternalLink,
 } from "lucide-react";
 
@@ -52,10 +51,21 @@ export default function AdminSidebar() {
 
   return (
     <aside
-      className={`border-r border-border bg-card min-h-screen py-4 flex flex-col shrink-0 transition-all duration-200 ${
+      className={`relative border-r border-border bg-card min-h-screen py-4 flex flex-col shrink-0 transition-all duration-200 ${
         collapsed ? "w-14 px-1.5" : "w-48 px-3"
       }`}
     >
+      {/* Collapse toggle — circle on the edge */}
+      <button
+        type="button"
+        onClick={toggle}
+        title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        className="absolute top-1/2 -translate-y-1/2 -right-3 z-30 w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors shadow-sm"
+      >
+        <ChevronLeft
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${collapsed ? "rotate-180" : ""}`}
+        />
+      </button>
       {/* Header */}
       <div className={`mb-6 ${collapsed ? "px-1" : "px-3"}`}>
         <Link
@@ -117,23 +127,6 @@ export default function AdminSidebar() {
             <Sun className="w-4 h-4 shrink-0" />
           )}
           {!collapsed && <span>{theme === "light" ? "dark mode" : "light mode"}</span>}
-        </button>
-
-        {/* Collapse toggle */}
-        <button
-          type="button"
-          onClick={toggle}
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={`flex items-center gap-2.5 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-full ${
-            collapsed ? "justify-center px-1" : "px-3"
-          }`}
-        >
-          {collapsed ? (
-            <PanelLeftOpen className="w-4 h-4 shrink-0" />
-          ) : (
-            <PanelLeftClose className="w-4 h-4 shrink-0" />
-          )}
-          {!collapsed && <span>collapse</span>}
         </button>
 
         {/* Logout */}
