@@ -9,51 +9,44 @@ export default async function AdminPagesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-medium">Pages</h1>
-        <Link
-          href="/admin/pages/new"
-          className="bg-primary text-primary-foreground px-4 py-2 text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
-        >
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-semibold text-white">Pages</h1>
+        <Link href="/admin/pages/new" className="admin-btn">
           New Page
         </Link>
       </div>
 
-      <div className="border border-border">
-        <div className="grid grid-cols-[1fr_100px_80px] px-4 py-2 border-b border-border text-xs text-muted-foreground uppercase tracking-wider">
+      <div className="admin-card p-0">
+        <div className="grid grid-cols-[1fr_100px_60px] px-5 py-2.5 border-b border-[#222] text-xs text-[#666] uppercase tracking-wider">
           <span>Title</span>
           <span>Navigation</span>
-          <span>Actions</span>
+          <span />
         </div>
-        <div className="divide-y divide-border">
-          {allPages.map((page) => (
-            <div
-              key={page.slug}
-              className="grid grid-cols-[1fr_100px_80px] px-4 py-3 items-center"
+        {allPages.map((page) => (
+          <div
+            key={page.slug}
+            className="grid grid-cols-[1fr_100px_60px] px-5 py-3 border-b border-[#222] last:border-0 items-center hover:bg-[#1a1a1a] transition-colors"
+          >
+            <Link
+              href={`/admin/pages/${page.slug}/edit`}
+              className="text-sm text-[#ccc] hover:text-white"
             >
-              <Link
-                href={`/admin/pages/${page.slug}/edit`}
-                className="text-sm hover:text-primary transition-colors"
-              >
-                {page.title}
-              </Link>
-              <span className="text-xs text-muted-foreground">
-                {page.navigation}
-              </span>
-              <Link
-                href={`/admin/pages/${page.slug}/edit`}
-                className="text-xs text-primary hover:underline"
-              >
-                Edit
-              </Link>
-            </div>
-          ))}
-          {allPages.length === 0 && (
-            <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-              No pages yet.
-            </div>
-          )}
-        </div>
+              {page.title}
+            </Link>
+            <span className="text-xs text-[#666]">{page.navigation}</span>
+            <Link
+              href={`/admin/pages/${page.slug}/edit`}
+              className="text-xs text-blue-400 hover:text-blue-300"
+            >
+              Edit
+            </Link>
+          </div>
+        ))}
+        {allPages.length === 0 && (
+          <div className="px-5 py-10 text-center text-sm text-[#666]">
+            No pages yet.
+          </div>
+        )}
       </div>
     </div>
   );

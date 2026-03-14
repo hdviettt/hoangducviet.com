@@ -28,67 +28,42 @@ export default function PostForm({
 
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
-  const [description, setDescription] = useState(
-    initialData?.description ?? "",
-  );
+  const [description, setDescription] = useState(initialData?.description ?? "");
   const [content, setContent] = useState(initialData?.content ?? "");
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
-  const [categories, setCategories] = useState<string[]>(
-    initialData?.categories ?? [],
-  );
+  const [categories, setCategories] = useState<string[]>(initialData?.categories ?? []);
   const [showMeta, setShowMeta] = useState(false);
 
-  const generateSlug = (text: string) => {
-    return text
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-  };
+  const generateSlug = (text: string) =>
+    text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
-    if (!isEdit) {
-      setSlug(generateSlug(value));
-    }
+    if (!isEdit) setSlug(generateSlug(value));
   };
 
   const toggleCategory = (catSlug: string) => {
     setCategories((prev) =>
-      prev.includes(catSlug)
-        ? prev.filter((c) => c !== catSlug)
-        : [...prev, catSlug],
+      prev.includes(catSlug) ? prev.filter((c) => c !== catSlug) : [...prev, catSlug],
     );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-
     try {
       const url = isEdit ? `/api/posts/${initialData?.slug}` : "/api/posts";
-      const method = isEdit ? "PUT" : "POST";
-
       const res = await fetch(url, {
-        method,
+        method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          slug,
-          description,
-          content,
-          thumbnail,
-          status,
-          categories,
-        }),
+        body: JSON.stringify({ title, slug, description, content, thumbnail, status, categories }),
       });
-
       if (!res.ok) {
         const data = await res.json();
         alert(data.error || "Failed to save");
         return;
       }
-
       router.push("/admin/posts");
       router.refresh();
     } catch {
@@ -99,53 +74,45 @@ export default function PostForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Title */}
+    <form onSubmit={handleSubmit} className="space-y-6">
       <input
         type="text"
         value={title}
         onChange={(e) => handleTitleChange(e.target.value)}
         placeholder="Post title..."
-        className="w-full bg-transparent text-2xl font-medium focus:outline-none placeholder:text-muted-foreground/50"
+        className="w-full bg-transparent text-2xl font-semibold text-white focus:outline-none placeholder:text-[#444]"
         required
       />
 
-      {/* Editor */}
       <RichEditor content={content} onChange={setContent} />
 
-      {/* Meta toggle */}
       <button
         type="button"
         onClick={() => setShowMeta(!showMeta)}
-        className="text-xs text-muted-foreground hover:text-primary transition-colors uppercase tracking-wider"
+        className="text-xs text-[#666] hover:text-[#aaa] transition-colors"
       >
-        {showMeta ? "Hide" : "Show"} post settings
+        {showMeta ? "Hide settings ▲" : "Post settings ▼"}
       </button>
 
-      {/* Collapsible Meta */}
       {showMeta && (
-        <div className="space-y-4 border border-border p-4 bg-card">
+        <div className="admin-card space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-                Slug
-              </label>
+              <label className="block text-xs text-[#888] mb-1.5">Slug</label>
               <input
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                className="admin-input"
                 required
               />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-                Status
-              </label>
+              <label className="block text-xs text-[#888] mb-1.5">Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                className="admin-select"
               >
                 <option value="draft">Draft</option>
                 <option value="published">Published</option>
@@ -154,46 +121,40 @@ export default function PostForm({
           </div>
 
           <div>
-            <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-              Description
-            </label>
+            <label className="block text-xs text-[#888] mb-1.5">Description</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+              className="admin-input"
               placeholder="Short excerpt for SEO"
             />
           </div>
 
           <div>
-            <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-              Thumbnail URL
-            </label>
+            <label className="block text-xs text-[#888] mb-1.5">Thumbnail URL</label>
             <input
               type="text"
               value={thumbnail}
               onChange={(e) => setThumbnail(e.target.value)}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+              className="admin-input"
               placeholder="/uploads/image.jpg"
             />
           </div>
 
           {allCategories.length > 0 && (
             <div>
-              <label className="block text-xs text-muted-foreground mb-2 uppercase tracking-wider">
-                Categories
-              </label>
+              <label className="block text-xs text-[#888] mb-2">Categories</label>
               <div className="flex flex-wrap gap-2">
                 {allCategories.map((cat) => (
                   <button
                     key={cat.slug}
                     type="button"
                     onClick={() => toggleCategory(cat.slug)}
-                    className={`px-3 py-1 text-xs border transition-colors ${
+                    className={`px-3 py-1 text-xs rounded-full border transition-colors ${
                       categories.includes(cat.slug)
-                        ? "border-primary text-primary bg-primary/10"
-                        : "border-border text-muted-foreground hover:border-foreground"
+                        ? "border-blue-500 text-blue-400 bg-blue-500/10"
+                        : "border-[#333] text-[#888] hover:border-[#555]"
                     }`}
                   >
                     {cat.title}
@@ -205,19 +166,14 @@ export default function PostForm({
         </div>
       )}
 
-      {/* Submit */}
       <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          className="bg-primary text-primary-foreground px-6 py-2 text-sm uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          {saving ? "Saving..." : isEdit ? "Update Post" : "Create Post"}
+        <button type="submit" disabled={saving} className="admin-btn">
+          {saving ? "Saving..." : isEdit ? "Update" : "Publish"}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-2 text-sm text-muted-foreground border border-border hover:border-foreground transition-colors"
+          className="px-4 py-2 text-sm text-[#888] hover:text-white transition-colors"
         >
           Cancel
         </button>

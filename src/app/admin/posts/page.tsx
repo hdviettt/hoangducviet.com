@@ -13,65 +13,56 @@ export default async function AdminPostsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-medium">Posts</h1>
-        <Link
-          href="/admin/posts/new"
-          className="bg-primary text-primary-foreground px-4 py-2 text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
-        >
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-semibold text-white">Posts</h1>
+        <Link href="/admin/posts/new" className="admin-btn">
           New Post
         </Link>
       </div>
 
-      <div className="border border-border">
-        <div className="grid grid-cols-[1fr_100px_120px_80px] px-4 py-2 border-b border-border text-xs text-muted-foreground uppercase tracking-wider">
+      <div className="admin-card p-0">
+        <div className="grid grid-cols-[1fr_90px_110px_60px] px-5 py-2.5 border-b border-[#222] text-xs text-[#666] uppercase tracking-wider">
           <span>Title</span>
           <span>Status</span>
           <span>Date</span>
-          <span>Actions</span>
+          <span />
         </div>
-        <div className="divide-y divide-border">
-          {allPosts.map((post) => (
-            <div
-              key={post.slug}
-              className="grid grid-cols-[1fr_100px_120px_80px] px-4 py-3 items-center"
+        {allPosts.map((post) => (
+          <div
+            key={post.slug}
+            className="grid grid-cols-[1fr_90px_110px_60px] px-5 py-3 border-b border-[#222] last:border-0 items-center hover:bg-[#1a1a1a] transition-colors"
+          >
+            <Link
+              href={`/admin/posts/${post.slug}/edit`}
+              className="text-sm text-[#ccc] hover:text-white truncate"
             >
-              <Link
-                href={`/admin/posts/${post.slug}/edit`}
-                className="text-sm hover:text-primary transition-colors truncate"
-              >
-                {post.title}
-              </Link>
-              <span
-                className={`text-xs px-2 py-0.5 w-fit ${
-                  post.status === "published"
-                    ? "text-green-500 bg-green-500/10"
-                    : "text-yellow-500 bg-yellow-500/10"
-                }`}
-              >
-                {post.status}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {post.dateCreated?.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
-                })}
-              </span>
-              <Link
-                href={`/admin/posts/${post.slug}/edit`}
-                className="text-xs text-primary hover:underline"
-              >
-                Edit
-              </Link>
-            </div>
-          ))}
-          {allPosts.length === 0 && (
-            <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-              No posts yet.
-            </div>
-          )}
-        </div>
+              {post.title}
+            </Link>
+            <span
+              className={`admin-badge ${post.status === "published" ? "admin-badge-green" : "admin-badge-yellow"}`}
+            >
+              {post.status}
+            </span>
+            <span className="text-xs text-[#666]">
+              {post.dateCreated?.toLocaleDateString("en-US", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              })}
+            </span>
+            <Link
+              href={`/admin/posts/${post.slug}/edit`}
+              className="text-xs text-blue-400 hover:text-blue-300"
+            >
+              Edit
+            </Link>
+          </div>
+        ))}
+        {allPosts.length === 0 && (
+          <div className="px-5 py-10 text-center text-sm text-[#666]">
+            No posts yet.
+          </div>
+        )}
       </div>
     </div>
   );

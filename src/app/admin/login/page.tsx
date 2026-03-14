@@ -39,17 +39,12 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="border border-border p-6">
-        <h1 className="text-lg font-medium mb-6 uppercase tracking-wider">
-          Admin Login
-        </h1>
+      <div className="admin-card p-8">
+        <h1 className="text-xl font-semibold text-white mb-6">Sign in</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label
-              htmlFor="username"
-              className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider"
-            >
+            <label htmlFor="username" className="block text-xs text-[#888] mb-1.5">
               Username
             </label>
             <input
@@ -57,16 +52,13 @@ export default function LoginPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+              className="admin-input"
               required
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider"
-            >
+            <label htmlFor="password" className="block text-xs text-[#888] mb-1.5">
               Password
             </label>
             <input
@@ -74,19 +66,15 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+              className="admin-input"
               required
             />
           </div>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-2 text-sm uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50"
-          >
-            {loading ? "Logging in..." : "Login"}
+          <button type="submit" disabled={loading} className="admin-btn w-full">
+            {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
       </div>
