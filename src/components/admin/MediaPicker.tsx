@@ -20,6 +20,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [search, setSearch] = useState("");
 
   const fetchMedia = useCallback(async () => {
     setLoading(true);
@@ -58,7 +59,14 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
     setOpen(false);
   };
 
-  const images = items.filter((i) => i.mimeType?.startsWith("image/"));
+  const images = items.filter((i) => {
+    if (!i.mimeType?.startsWith("image/")) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      return i.originalName.toLowerCase().includes(q) || i.filename.toLowerCase().includes(q);
+    }
+    return true;
+  });
 
   return (
     <div>
@@ -99,27 +107,32 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="bg-background border border-border w-full max-w-3xl max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
-              <span className="text-sm font-medium">media library</span>
-              <div className="flex items-center gap-3">
-                <label className="bg-primary text-primary-foreground px-3 py-1 text-xs hover:opacity-90 cursor-pointer">
-                  {uploading ? "uploading..." : "upload new"}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleUpload}
-                    className="hidden"
-                    disabled={uploading}
-                  />
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="text-muted-foreground hover:text-foreground text-lg leading-none"
-                >
-                  x
-                </button>
-              </div>
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
+              <span className="text-sm font-medium shrink-0">media library</span>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="search..."
+                className="bg-background border border-border px-2 py-1 text-xs focus:outline-none focus:border-primary flex-1"
+              />
+              <label className="bg-primary text-primary-foreground px-3 py-1 text-xs hover:opacity-90 cursor-pointer shrink-0">
+                {uploading ? "uploading..." : "upload new"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="hidden"
+                  disabled={uploading}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => { setOpen(false); setSearch(""); }}
+                className="text-muted-foreground hover:text-foreground text-lg leading-none shrink-0"
+              >
+                x
+              </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {loading ? (
