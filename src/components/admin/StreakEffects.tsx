@@ -28,73 +28,60 @@ function getTier(streak: number) {
   return null;
 }
 
-// ---- Audio Engine (real recorded samples) ----
+// ---- Audio Engine (same as booktyper project) ----
 
-const CLICK_FILES = [
-  "/sounds/click1.wav",
-  "/sounds/click2.wav",
-  "/sounds/click3.wav",
-  "/sounds/click4.wav",
-  "/sounds/click5.wav",
-  "/sounds/click6.wav",
-];
+let audioCtx: AudioContext | null = null;
 
-class KeyboardSounds {
-  private ctx: AudioContext | null = null;
-  private buffers: AudioBuffer[] = [];
-  private loaded = false;
-
-  private async getCtx(): Promise<AudioContext> {
-    if (!this.ctx) {
-      this.ctx = new AudioContext();
-      await this.loadSamples();
-    }
-    if (this.ctx.state === "suspended") await this.ctx.resume();
-    return this.ctx;
+function getAudioCtx(): AudioContext {
+  if (!audioCtx) {
+    audioCtx = new AudioContext();
   }
-
-  private async loadSamples() {
-    if (this.loaded || !this.ctx) return;
-    const ctx = this.ctx;
-
-    const results = await Promise.allSettled(
-      CLICK_FILES.map(async (url) => {
-        const res = await fetch(url);
-        const arrayBuf = await res.arrayBuffer();
-        return ctx.decodeAudioData(arrayBuf);
-      }),
-    );
-
-    for (const r of results) {
-      if (r.status === "fulfilled") this.buffers.push(r.value);
-    }
-    this.loaded = true;
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
   }
-
-  async playKeystroke(streak: number) {
-    const ctx = await this.getCtx();
-    if (this.buffers.length === 0) return;
-
-    const buf = this.buffers[Math.floor(Math.random() * this.buffers.length)];
-    const source = ctx.createBufferSource();
-    source.buffer = buf;
-
-    // Slight pitch variation for natural feel
-    source.playbackRate.value = 0.95 + Math.random() * 0.1;
-
-    const gain = ctx.createGain();
-    const tierResult = getTier(streak);
-    const tierIndex = tierResult ? tierResult.index : -1;
-    // Base volume + slight increase with streak
-    gain.gain.value = 0.5 + Math.min(tierIndex * 0.08, 0.3);
-
-    source.connect(gain);
-    gain.connect(ctx.destination);
-    source.start();
-  }
+  return audioCtx;
 }
 
-const keyboardSounds = new KeyboardSounds();
+function playClick(frequency: number, duration: number, volume: number) {
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+
+  // Noise burst for the mechanical "clack"
+  const bufferSize = Math.floor(ctx.sampleRate * duration);
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    // Sharp attack, fast decay
+    const envelope = Math.exp(-i / (bufferSize * 0.08));
+    data[i] = (Math.random() * 2 - 1) * envelope;
+  }
+
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+
+  // Bandpass filter to shape the click tone
+  const filter = ctx.createBiquadFilter();
+  filter.type = "bandpass";
+  filter.frequency.value = frequency;
+  filter.Q.value = 1.5;
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(volume, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+
+  noise.start(now);
+  noise.stop(now + duration);
+}
+
+function playKeystrokeSound() {
+  // Vary the pitch slightly for each keystroke
+  const freq = 1800 + Math.random() * 800;
+  playClick(freq, 0.04, 0.08);
+}
 
 // ---- Particle Interface ----
 
@@ -174,8 +161,8 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
 
     const result = getTier(s);
 
-    // Play real keyboard click
-    keyboardSounds.playKeystroke(s);
+    // Play keyboard click
+    playKeystrokeSound();
 
     if (result) {
       const { tier, index } = result;
