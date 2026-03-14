@@ -40,7 +40,7 @@ export default async function Home() {
     <div className="py-8 sm:py-12">
       {/* Profile Section */}
       <section className="mb-10 sm:mb-12">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-8">
+        <div className="flex flex-col md:flex-row md:items-start md:gap-10">
           {/* Text column */}
           <div className="min-w-0">
             <div className="flex items-start gap-4 mb-6 md:mb-4">
