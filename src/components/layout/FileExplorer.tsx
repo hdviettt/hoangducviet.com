@@ -115,7 +115,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           {/* Reading progress bar */}
           {isPostPage && readingProgress > 0 && (
             <div
-              className="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-150 ease-out"
+              className="absolute bottom-0 left-0 h-[2px] bg-primary"
               style={{
                 width: `${readingProgress}%`,
                 borderRadius: "0 0 9999px 9999px",
