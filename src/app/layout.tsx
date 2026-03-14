@@ -3,9 +3,9 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-import ClientFileExplorer from "@/components/ClientFileExplorer";
-import { PostHogProvider } from "@/components/PostHogProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import ClientFileExplorer from "@/components/layout/ClientFileExplorer";
+import { PostHogProvider } from "@/components/providers/PostHogProvider";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { getGlobalMetadata } from "@/lib/global";
 
 const inter = Inter({

@@ -1,4 +1,4 @@
-import PostsList from "@/components/PostsList";
+import PostsList from "@/components/posts/PostsList";
 import { getPosts } from "@/lib/posts";
 import type { Metadata } from "next";
 

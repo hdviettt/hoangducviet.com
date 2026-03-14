@@ -1,5 +1,5 @@
-import Block from "@/components/Block";
-import Container from "@/components/Container";
+import Block from "@/components/content/Block";
+import Container from "@/components/layout/Container";
 import { getPageBySlug } from "@/lib/pages";
 import type { Metadata } from "next";
 

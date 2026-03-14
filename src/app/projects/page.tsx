@@ -1,4 +1,4 @@
-import ProjectsList from "@/components/ProjectsList";
+import ProjectsList from "@/components/posts/ProjectsList";
 import { getGlobalMetadata } from "@/lib/global";
 import { type Project, getProjects } from "@/lib/projects";
 import type { Metadata } from "next";

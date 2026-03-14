@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import InlineTableOfContents from "@/components/InlineTableOfContents";
-import MarkdownContent from "@/components/MarkdownContent";
-import PostNavigation from "@/components/PostNavigation";
-import ReadingProgress from "@/components/ReadingProgress";
+import InlineTableOfContents from "@/components/posts/InlineTableOfContents";
+import MarkdownContent from "@/components/content/MarkdownContent";
+import PostNavigation from "@/components/posts/PostNavigation";
+import ReadingProgress from "@/components/posts/ReadingProgress";
 import { getGlobalMetadata } from "@/lib/global";
 import { getAdjacentPosts, getPostBySlug } from "@/lib/posts";
 
