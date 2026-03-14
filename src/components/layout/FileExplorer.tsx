@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Github, Instagram, Moon, Sun } from "lucide-react";
+import { Facebook, Github, Instagram, Linkedin, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -61,6 +61,14 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 className="hover:text-primary transition-colors p-1"
               >
                 <Instagram className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/hdviet/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors p-1"
+              >
+                <Linkedin className="w-3.5 h-3.5" />
               </a>
               <button
                 onClick={toggleTheme}
