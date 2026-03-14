@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-
-import InlineTableOfContents from "@/components/InlineTableOfContents";
-import MarkdownContent from "@/components/MarkdownContent";
-import PostNavigation from "@/components/PostNavigation";
-import ReadingProgress from "@/components/ReadingProgress";
 import { getGlobalMetadata } from "@/lib/global";
 import { getAdjacentPosts, getPostBySlug } from "@/lib/posts";
+import MarkdownContent from "@/components/MarkdownContent";
 
 interface PostParams {
-  params: {
-    postSlug: string;
-  };
+  params: { postSlug: string };
 }
 
 export async function generateMetadata({
@@ -22,41 +16,18 @@ export async function generateMetadata({
     const globalData = await getGlobalMetadata();
     const siteTitle =
       globalData && globalData.length > 0 ? globalData[0].title : "Blog";
-    const siteDescription =
-      globalData && globalData.length > 0 ? globalData[0].tagline : "";
-
-    const thumbnailUrl = post.thumbnail || null;
-    const postUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com"}/posts/${params.postSlug}`;
-
     return {
       title: `${post.title} | ${siteTitle}`,
-      description: post.description || siteDescription,
+      description: post.description || "",
       openGraph: {
         title: post.title,
-        description: post.description || siteDescription,
-        url: postUrl,
-        siteName: siteTitle,
+        description: post.description || "",
         type: "article",
-        images: thumbnailUrl
-          ? [
-              {
-                url: thumbnailUrl,
-                alt: post.title,
-              },
-            ]
-          : [],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: post.title,
-        description: post.description || siteDescription,
-        images: thumbnailUrl ? [thumbnailUrl] : [],
+        images: post.thumbnail ? [{ url: post.thumbnail }] : [],
       },
     };
-  } catch (error) {
-    return {
-      title: "Post",
-    };
+  } catch {
+    return { title: "Post" };
   }
 }
 
@@ -74,67 +45,61 @@ export default async function PostPage({ params }: PostParams) {
   }
 
   if (!data) {
-    return (
-      <div className="min-h-full flex items-center justify-center">
-        <p className="text-muted-foreground">Post not found</p>
-      </div>
-    );
+    return <p className="text-neutral-500">Post not found</p>;
   }
 
   return (
-    <>
-      <ReadingProgress />
-      <div className="py-8 sm:py-12 md:py-16">
-        {/* Back button */}
-        <Link
-          href="/posts"
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors mb-8 uppercase tracking-wider"
-        >
-          cd ..
-        </Link>
+    <article>
+      <Link
+        href="/"
+        className="text-sm text-neutral-400 hover:text-neutral-600 mb-8 inline-block"
+      >
+        ← back
+      </Link>
 
-        <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
-          {/* Main Content */}
-          <div className="min-w-0">
-            {/* Article Header */}
-            <header className="mb-10 sm:mb-12">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 leading-tight">
-                {data.title}
-              </h1>
-              <time
-                className="text-xs sm:text-sm text-muted-foreground"
-                dateTime={data.date_created ?? ""}
-              >
-                {data.date_created &&
-                  new Date(data.date_created).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-              </time>
-            </header>
+      <header className="mb-8">
+        <h1 className="text-2xl font-semibold mb-2">{data.title}</h1>
+        <time className="text-sm text-neutral-400" dateTime={data.date_created ?? ""}>
+          {data.date_created &&
+            new Date(data.date_created).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+        </time>
+      </header>
 
-            {/* Article Content */}
-            {data.content ? (
-              <div className="article-content">
-                <MarkdownContent content={data.content} />
-              </div>
-            ) : (
-              <p className="text-muted-foreground">No content available</p>
-            )}
-          </div>
-
-          {/* Table of Contents Sidebar */}
-          <aside className="hidden lg:block sticky top-24 self-start">
-            {data.content && <InlineTableOfContents content={data.content} />}
-          </aside>
+      {data.content && (
+        <div className="prose-blog">
+          <MarkdownContent content={data.content} />
         </div>
+      )}
 
-        <PostNavigation
-          previous={adjacentPosts.previous}
-          next={adjacentPosts.next}
-        />
-      </div>
-    </>
+      {/* Prev / Next */}
+      {(adjacentPosts.previous || adjacentPosts.next) && (
+        <nav className="mt-12 pt-8 border-t border-neutral-200 flex justify-between text-sm">
+          {adjacentPosts.previous ? (
+            <Link
+              href={`/posts/${adjacentPosts.previous.slug}`}
+              className="text-blue-600 hover:underline"
+            >
+              ← {adjacentPosts.previous.title}
+            </Link>
+          ) : (
+            <span />
+          )}
+          {adjacentPosts.next ? (
+            <Link
+              href={`/posts/${adjacentPosts.next.slug}`}
+              className="text-blue-600 hover:underline"
+            >
+              {adjacentPosts.next.title} →
+            </Link>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+    </article>
   );
 }
