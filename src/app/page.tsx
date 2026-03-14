@@ -40,14 +40,13 @@ export default async function Home() {
     <div className="py-8 sm:py-12">
       {/* Profile Section */}
       <section className="mb-10 sm:mb-12">
-        <div className="flex items-stretch gap-5">
-          {/* Image column - square, height matches text column */}
+        <div className="flex items-start gap-5">
+          {/* Image column */}
           {imageUrl && (
             <img
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              className="object-cover border border-border shrink-0 self-stretch"
-              style={{ aspectRatio: "1 / 1" }}
+              className="w-20 h-20 md:w-32 md:h-32 object-cover border border-border shrink-0"
             />
           )}
 
