@@ -92,9 +92,8 @@ export default async function Home() {
       {/* Posts Section */}
       {latestPosts.length > 0 && (
         <section>
-          <Link href="/posts" className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 pb-2 border-b border-border w-fit">
+          <Link href="/posts" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 pb-2 border-b border-border block">
             <h2>Posts</h2>
-            <span className="text-[10px]">→</span>
           </Link>
 
           <ul className="space-y-2">
