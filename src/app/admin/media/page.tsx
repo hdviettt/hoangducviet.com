@@ -216,7 +216,7 @@ export default function AdminMediaPage() {
       </div>
 
       {/* Toolbar: search, sort, batch actions */}
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
+      <div className="flex items-center gap-3 mb-4 flex-wrap sticky top-0 z-10 bg-background py-2 -mt-2">
         <input
           type="text"
           value={search}
