@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
+import { useMemo } from "react";
 
 interface Project {
   slug?: string;
@@ -15,14 +15,18 @@ interface ProjectsListProps {
 
 export default function ProjectsList({ projects }: ProjectsListProps) {
   const sortedProjects = useMemo(() => {
-    return [...projects].sort((a, b) =>
-      new Date(b.date_created || 0).getTime() - new Date(a.date_created || 0).getTime()
+    return [...projects].sort(
+      (a, b) =>
+        new Date(b.date_created || 0).getTime() -
+        new Date(a.date_created || 0).getTime(),
     );
   }, [projects]);
 
   return (
     <div className="py-8 sm:py-12">
-      <h1 className="text-xl sm:text-2xl font-medium mb-8 sm:mb-10">Projects</h1>
+      <h1 className="text-xl sm:text-2xl font-medium mb-8 sm:mb-10">
+        Projects
+      </h1>
 
       {sortedProjects.length === 0 ? (
         <p className="text-muted-foreground text-sm">No projects found.</p>
@@ -31,7 +35,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
           {sortedProjects.map((project, index) => {
             const year = project.date_created
               ? new Date(project.date_created).getFullYear()
-              : '';
+              : "";
 
             return (
               <li key={project.slug || index}>

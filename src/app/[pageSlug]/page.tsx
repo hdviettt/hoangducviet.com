@@ -1,31 +1,25 @@
-import type { Metadata } from "next";
-import { getGlobalMetadata } from "@/lib/directus";
-import { getPageBySlug } from "@/lib/pages";
-import Container from "@/components/Container";
 import Block from "@/components/Block";
-
+import Container from "@/components/Container";
+import { getPageBySlug } from "@/lib/pages";
+import type { Metadata } from "next";
 
 interface PageParams {
   params: {
     pageSlug: string;
-  }
+  };
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
-  // const global = await getGlobalMetadata();
-  const page = await getPageBySlug(params.pageSlug, {
-    fields: ["title"],
-  });
+export async function generateMetadata({
+  params,
+}: PageParams): Promise<Metadata> {
+  const page = await getPageBySlug(params.pageSlug);
   return {
     title: `${page.title}`,
-    // description: '' // Add new field for excerpt or SEO Metadata
-  }
+  };
 }
 
 export default async function Post({ params }: PageParams) {
-  const data = await getPageBySlug(params.pageSlug, {
-    fields: ["title", "body"],
-  });
+  const data = await getPageBySlug(params.pageSlug);
 
   return (
     <>
@@ -36,7 +30,9 @@ export default async function Post({ params }: PageParams) {
           </header>
           {Array.isArray(data.body?.blocks) && (
             <div>
-              {data.body.blocks.map((block) => <Block key={block.id} {...block} />)}
+              {data.body.blocks.map((block) => (
+                <Block key={block.id} {...block} />
+              ))}
             </div>
           )}
         </Container>

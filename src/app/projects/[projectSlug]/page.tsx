@@ -1,28 +1,25 @@
-import Link from "next/link";
-import type { Metadata } from "next";
-// import { getGlobalMetadata } from "@/lib/directus";
 import { getProjectBySlug } from "@/lib/projects";
-
+import type { Metadata } from "next";
+import Link from "next/link";
 
 interface ProjectParams {
   params: {
     projectSlug: string;
-  }
+  };
 }
 
-export async function generateMetadata({ params }: ProjectParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ProjectParams): Promise<Metadata> {
   try {
-    const project = await getProjectBySlug(params.projectSlug, {
-      fields: ["title"],
-    });
-    // const global = await getGlobalMetadata();
+    const project = await getProjectBySlug(params.projectSlug);
     return {
       title: `${project.title}`,
-    }
+    };
   } catch (error) {
     return {
       title: "Project",
-    }
+    };
   }
 }
 
@@ -31,24 +28,8 @@ export default async function ProjectPage({ params }: ProjectParams) {
   let posts: any[] = [];
 
   try {
-    // Fetch project with expanded posts relationship through the junction table
-    project = await getProjectBySlug(params.projectSlug, {
-      fields: [
-        "title",
-        "description",
-        "date_created",
-        "posts.posts_slug.slug",
-        "posts.posts_slug.title",
-        "posts.posts_slug.date_created"
-      ],
-    });
-
-    // Extract posts from the many-to-many relationship
-    if (project.posts && Array.isArray(project.posts)) {
-      posts = project.posts
-        .map((junction: any) => junction.posts_slug)
-        .filter((post: any) => post && typeof post === 'object');
-    }
+    project = await getProjectBySlug(params.projectSlug);
+    posts = project.posts ?? [];
   } catch (error) {
     console.error("Error fetching project:", error);
   }
@@ -76,12 +57,15 @@ export default async function ProjectPage({ params }: ProjectParams) {
         <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-tight">
           {project.title}
         </h1>
-        <time dateTime={project.date_created} className="text-xs sm:text-sm text-muted-foreground">
+        <time
+          dateTime={project.date_created ?? ""}
+          className="text-xs sm:text-sm text-muted-foreground"
+        >
           {project.date_created &&
-            new Date(project.date_created).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
+            new Date(project.date_created).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
             })}
         </time>
       </header>
@@ -109,9 +93,9 @@ export default async function ProjectPage({ params }: ProjectParams) {
                 >
                   <span className="text-muted-foreground text-xs shrink-0 order-2 sm:order-1">
                     {post.date_created &&
-                      new Date(post.date_created).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: '2-digit'
+                      new Date(post.date_created).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "2-digit",
                       })}
                   </span>
                   <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">

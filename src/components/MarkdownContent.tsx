@@ -9,14 +9,14 @@ interface MarkdownContentProps {
 const generateId = (text: string) => {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
     .trim();
 };
 
 const HeadingWithAnchor = ({ level, children, ...props }: any) => {
-  const text = typeof children === 'string' ? children : String(children);
+  const text = typeof children === "string" ? children : String(children);
   const id = generateId(text);
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 
@@ -45,17 +45,22 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
         h4: (props: any) => <HeadingWithAnchor level={4} {...props} />,
         h5: (props: any) => <HeadingWithAnchor level={5} {...props} />,
         h6: (props: any) => <HeadingWithAnchor level={6} {...props} />,
-        table: ({children, ...props}: any) => {
+        table: ({ children, ...props }: any) => {
           return (
             <div className="table-wrapper">
               <table {...props}>{children}</table>
             </div>
           );
         },
-        img: ({src, alt, ...props}: any) => {
+        img: ({ src, alt, ...props }: any) => {
           return (
             <figure className="my-6">
-              <img src={src} alt={alt || ''} className="w-full h-auto" {...props} />
+              <img
+                src={src}
+                alt={alt || ""}
+                className="w-full h-auto"
+                {...props}
+              />
               {alt && (
                 <figcaption className="text-center text-sm text-muted-foreground mt-3">
                   {alt}

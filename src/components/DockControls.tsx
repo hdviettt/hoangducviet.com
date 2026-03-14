@@ -1,6 +1,14 @@
 "use client";
 
-import { Home, FolderOpen, Briefcase, User, FileText, Github, Grid3x3 } from "lucide-react";
+import {
+  Briefcase,
+  FileText,
+  FolderOpen,
+  Github,
+  Grid3x3,
+  Home,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import DarkModeToggle from "./DarkModeToggle";
 
@@ -39,7 +47,12 @@ export default function DockControls({ pages, title }: DockControlsProps) {
         {pages.map(({ title, slug }) => {
           const Icon = slug.includes("about") ? User : FileText;
           return (
-            <Link key={slug} href={`/${slug}`} className="dock-item" title={title}>
+            <Link
+              key={slug}
+              href={`/${slug}`}
+              className="dock-item"
+              title={title}
+            >
               <Icon className="w-5 h-5" />
             </Link>
           );
@@ -73,7 +86,10 @@ export default function DockControls({ pages, title }: DockControlsProps) {
 function ClientTime() {
   return (
     <div className="text-[10px] text-foreground font-mono">
-      {new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+      {new Date().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}
     </div>
   );
 }

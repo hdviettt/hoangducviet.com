@@ -1,36 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { getGlobalMetadata } from "@/lib/directus";
-import { getPostBySlug, getAdjacentPosts } from "@/lib/posts";
 import InlineTableOfContents from "@/components/InlineTableOfContents";
 import MarkdownContent from "@/components/MarkdownContent";
 import PostNavigation from "@/components/PostNavigation";
 import ReadingProgress from "@/components/ReadingProgress";
-
+import { getGlobalMetadata } from "@/lib/global";
+import { getAdjacentPosts, getPostBySlug } from "@/lib/posts";
 
 interface PostParams {
   params: {
     postSlug: string;
-  }
+  };
 }
 
-export async function generateMetadata({ params }: PostParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PostParams): Promise<Metadata> {
   try {
-    const post = await getPostBySlug(params.postSlug, {
-      fields: ["title", "description", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
-    });
+    const post = await getPostBySlug(params.postSlug);
     const globalData = await getGlobalMetadata();
-    const siteTitle = globalData && globalData.length > 0 ? globalData[0].title : "Blog";
-    const siteDescription = globalData && globalData.length > 0 ? globalData[0].tagline : "";
-    
-    // Build thumbnail URL if available
-    const thumbnailUrl = post.thumbnail && typeof post.thumbnail === 'object'
-      ? `${process.env.NEXT_PUBLIC_DIRECTUS_API_ENDPOINT}/assets/${post.thumbnail.filename_disk}`
-      : null;
-    
-    const postUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com'}/posts/${params.postSlug}`;
-    
+    const siteTitle =
+      globalData && globalData.length > 0 ? globalData[0].title : "Blog";
+    const siteDescription =
+      globalData && globalData.length > 0 ? globalData[0].tagline : "";
+
+    const thumbnailUrl = post.thumbnail || null;
+    const postUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com"}/posts/${params.postSlug}`;
+
     return {
       title: `${post.title} | ${siteTitle}`,
       description: post.description || siteDescription,
@@ -39,25 +36,27 @@ export async function generateMetadata({ params }: PostParams): Promise<Metadata
         description: post.description || siteDescription,
         url: postUrl,
         siteName: siteTitle,
-        type: 'article',
-        images: thumbnailUrl ? [{
-          url: thumbnailUrl,
-          width: typeof post.thumbnail === 'object' ? post.thumbnail.width : 1200,
-          height: typeof post.thumbnail === 'object' ? post.thumbnail.height : 630,
-          alt: post.title,
-        }] : [],
+        type: "article",
+        images: thumbnailUrl
+          ? [
+              {
+                url: thumbnailUrl,
+                alt: post.title,
+              },
+            ]
+          : [],
       },
       twitter: {
-        card: 'summary_large_image',
+        card: "summary_large_image",
         title: post.title,
         description: post.description || siteDescription,
         images: thumbnailUrl ? [thumbnailUrl] : [],
       },
-    }
+    };
   } catch (error) {
     return {
       title: "Post",
-    }
+    };
   }
 }
 
@@ -67,9 +66,7 @@ export default async function PostPage({ params }: PostParams) {
 
   try {
     [data, adjacentPosts] = await Promise.all([
-      getPostBySlug(params.postSlug, {
-        fields: ["title", "content", "date_created"],
-      }),
+      getPostBySlug(params.postSlug),
       getAdjacentPosts(params.postSlug),
     ]);
   } catch (error) {
@@ -104,12 +101,16 @@ export default async function PostPage({ params }: PostParams) {
               <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 leading-tight">
                 {data.title}
               </h1>
-              <time className="text-xs sm:text-sm text-muted-foreground" dateTime={data.date_created}>
-                {data.date_created && new Date(data.date_created).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
+              <time
+                className="text-xs sm:text-sm text-muted-foreground"
+                dateTime={data.date_created ?? ""}
+              >
+                {data.date_created &&
+                  new Date(data.date_created).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
               </time>
             </header>
 
@@ -129,7 +130,10 @@ export default async function PostPage({ params }: PostParams) {
           </aside>
         </div>
 
-        <PostNavigation previous={adjacentPosts.previous} next={adjacentPosts.next} />
+        <PostNavigation
+          previous={adjacentPosts.previous}
+          next={adjacentPosts.next}
+        />
       </div>
     </>
   );

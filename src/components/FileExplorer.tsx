@@ -1,9 +1,9 @@
 "use client";
 
+import { Facebook, Github, Instagram, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
-import { Moon, Sun, Github, Facebook, Instagram } from "lucide-react";
+import type { ReactNode } from "react";
 import { useTheme } from "./ThemeProvider";
 
 interface FileExplorerProps {
@@ -20,7 +20,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
     return "~" + pathname;
   };
 
-  const isPostPage = pathname.startsWith('/posts/') && pathname !== '/posts';
+  const isPostPage = pathname.startsWith("/posts/") && pathname !== "/posts";
 
   return (
     <div className="min-h-screen bg-background font-mono">
@@ -33,7 +33,9 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               <span className="text-primary shrink-0">●</span>
               <span className="hidden sm:inline shrink-0">hdviet@blog</span>
               <span className="text-muted-foreground/50 shrink-0">:</span>
-              <span className="text-foreground truncate">{getTerminalPath()}</span>
+              <span className="text-foreground truncate">
+                {getTerminalPath()}
+              </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <a
@@ -112,7 +114,11 @@ export default function FileExplorer({ children }: FileExplorerProps) {
       </header>
 
       {/* Content */}
-      <main className={`mx-auto px-4 sm:px-6 pb-16 ${isPostPage ? 'max-w-5xl' : 'max-w-4xl'}`}>{children}</main>
+      <main
+        className={`mx-auto px-4 sm:px-6 pb-16 ${isPostPage ? "max-w-5xl" : "max-w-4xl"}`}
+      >
+        {children}
+      </main>
     </div>
   );
 }

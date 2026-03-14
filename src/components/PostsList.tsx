@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
+import { useMemo } from "react";
 
 interface Post {
   slug?: string;
@@ -22,15 +22,19 @@ interface PostsByYear {
 
 export default function PostsList({ posts }: PostsListProps) {
   const postsByYear = useMemo(() => {
-    const sorted = [...posts].sort((a, b) =>
-      new Date(b.date_created || 0).getTime() - new Date(a.date_created || 0).getTime()
+    const sorted = [...posts].sort(
+      (a, b) =>
+        new Date(b.date_created || 0).getTime() -
+        new Date(a.date_created || 0).getTime(),
     );
 
     const grouped: PostsByYear[] = [];
     let currentYear: number | null = null;
 
     for (const post of sorted) {
-      const year = post.date_created ? new Date(post.date_created).getFullYear() : 0;
+      const year = post.date_created
+        ? new Date(post.date_created).getFullYear()
+        : 0;
       if (year !== currentYear) {
         currentYear = year;
         grouped.push({ year, posts: [] });
@@ -59,20 +63,20 @@ export default function PostsList({ posts }: PostsListProps) {
               {/* Posts list */}
               <ul className="space-y-2">
                 {yearPosts.map((post, index) => {
-                  const isUnpublished = post.status !== 'published';
+                  const isUnpublished = post.status !== "published";
                   const date = post.date_created
-                    ? new Date(post.date_created).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: '2-digit'
+                    ? new Date(post.date_created).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "2-digit",
                       })
-                    : '';
+                    : "";
 
                   return (
                     <li key={post.slug || index}>
                       <Link
                         href={`/posts/${post.slug}`}
                         className={`flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm ${
-                          isUnpublished ? 'opacity-40' : ''
+                          isUnpublished ? "opacity-40" : ""
                         }`}
                       >
                         <span className="text-muted-foreground text-xs w-16 shrink-0 order-2 sm:order-1">

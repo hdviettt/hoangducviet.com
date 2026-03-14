@@ -12,13 +12,15 @@ interface InlineTableOfContentsProps {
   content: string;
 }
 
-export default function InlineTableOfContents({ content }: InlineTableOfContentsProps) {
+export default function InlineTableOfContents({
+  content,
+}: InlineTableOfContentsProps) {
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
   // Extract headings from markdown content
   useEffect(() => {
-    const lines = content.split('\n');
+    const lines = content.split("\n");
     const items: TOCItem[] = [];
 
     lines.forEach((line) => {
@@ -28,9 +30,9 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
         const text = match[2].trim();
         const id = text
           .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
           .trim();
 
         items.push({ id, text, level });
@@ -46,7 +48,7 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
 
     const handleScroll = () => {
       const headingElements = headings
-        .map(h => document.getElementById(h.id))
+        .map((h) => document.getElementById(h.id))
         .filter((el): el is HTMLElement => el !== null);
 
       if (headingElements.length === 0) return;
@@ -76,7 +78,7 @@ export default function InlineTableOfContents({ content }: InlineTableOfContents
 
   if (headings.length === 0) return null;
 
-  const minLevel = Math.min(...headings.map(h => h.level));
+  const minLevel = Math.min(...headings.map((h) => h.level));
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();

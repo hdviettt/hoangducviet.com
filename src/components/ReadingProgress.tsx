@@ -6,21 +6,26 @@ export default function ReadingProgress() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const scrollContainer = document.querySelector('.h-full.overflow-auto') as HTMLElement;
+    const scrollContainer = document.querySelector(
+      ".h-full.overflow-auto",
+    ) as HTMLElement;
     if (!scrollContainer) return;
 
     const updateProgress = () => {
       const scrollTop = scrollContainer.scrollTop;
-      const scrollHeight = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+      const scrollHeight =
+        scrollContainer.scrollHeight - scrollContainer.clientHeight;
       const scrollProgress = (scrollTop / scrollHeight) * 100;
       setProgress(scrollProgress);
     };
 
-    scrollContainer.addEventListener('scroll', updateProgress, { passive: true });
+    scrollContainer.addEventListener("scroll", updateProgress, {
+      passive: true,
+    });
     updateProgress(); // Initial calculation
 
     return () => {
-      scrollContainer.removeEventListener('scroll', updateProgress);
+      scrollContainer.removeEventListener("scroll", updateProgress);
     };
   }, []);
 

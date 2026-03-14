@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import { getGlobalMetadata } from "@/lib/directus";
-import { getProjects, type Project } from "@/lib/projects";
 import ProjectsList from "@/components/ProjectsList";
+import { getGlobalMetadata } from "@/lib/global";
+import { type Project, getProjects } from "@/lib/projects";
+import type { Metadata } from "next";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const global = await getGlobalMetadata();
@@ -11,23 +11,21 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Projects - ${siteTitle}`,
     description: "Browse our collection of projects and case studies.",
-  }
+  };
 }
 
 export default async function ProjectsPage() {
-  let projects: Project[] = [];
+  let projectsList: Project[] = [];
 
   try {
-    projects = await getProjects({
-      fields: ["slug", "title", "date_created", "description", "thumbnail.filename_disk", "thumbnail.width", "thumbnail.height"],
-    });
+    projectsList = await getProjects();
   } catch (error) {
     console.error("Error fetching projects:", error);
   }
 
   return (
     <div className="h-full flex flex-col min-h-0">
-      <ProjectsList projects={projects} />
+      <ProjectsList projects={projectsList} />
     </div>
   );
 }

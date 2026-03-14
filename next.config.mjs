@@ -1,18 +1,11 @@
 /** @type {import('next').NextConfig} */
 
-const DIRECTUS_URL = 'https://directus-production-b969.up.railway.app';
-
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'directus-production-b969.up.railway.app',
-      },
-    ],
+  experimental: {
+    serverComponentsExternalPackages: ["pg"],
   },
-  env: {
-    NEXT_PUBLIC_DIRECTUS_API_ENDPOINT: DIRECTUS_URL,
+  images: {
+    remotePatterns: [],
   },
   async rewrites() {
     return [

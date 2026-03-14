@@ -5,7 +5,10 @@ interface PostNavigationProps {
   next: { slug?: string; title?: string } | null;
 }
 
-export default function PostNavigation({ previous, next }: PostNavigationProps) {
+export default function PostNavigation({
+  previous,
+  next,
+}: PostNavigationProps) {
   if (!previous && !next) return null;
 
   return (

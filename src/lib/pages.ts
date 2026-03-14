@@ -1,29 +1,64 @@
-import { readItem, readItems } from "@directus/sdk";
-
-import { type ItemsQuery, directus } from "@/lib/directus";
-import { Block } from "@/types/fields";
+import { db } from "@/db";
+import { pages } from "@/db/schema";
+import type { Block } from "@/types/fields";
+import { and, eq } from "drizzle-orm";
 
 export interface Page {
-  date_created?: string;
+  slug?: string;
+  title?: string;
   body?: {
     time: number;
     blocks: Array<Block>;
     version: string;
   };
   navigation?: string;
-  slug?: string;
-  title?: string;
+  dateCreated?: Date | null;
 }
 
-export async function getPages(options?: ItemsQuery): Promise<Array<Page>> {
-  return directus.request(readItems("pages", options));
+interface GetPagesOptions {
+  navigation?: string;
 }
 
-export async function getPageBySlug(
-  slug: Page["slug"],
-  options?: ItemsQuery,
-): Promise<Page> {
+export async function getPages(
+  options?: GetPagesOptions,
+): Promise<Array<Page>> {
+  const conditions = [];
+  if (options?.navigation) {
+    conditions.push(eq(pages.navigation, options.navigation));
+  }
+
+  const result = conditions.length
+    ? await db
+        .select()
+        .from(pages)
+        .where(and(...conditions))
+    : await db.select().from(pages);
+
+  return result.map(mapPage);
+}
+
+export async function getPageBySlug(slug: string): Promise<Page> {
   if (!slug) throw new Error("Invalid slug");
-  return directus.request(readItem("pages", slug, options));
+
+  const result = await db
+    .select()
+    .from(pages)
+    .where(eq(pages.slug, slug))
+    .limit(1);
+
+  if (!result || result.length === 0) {
+    throw new Error(`Page with slug "${slug}" not found`);
+  }
+
+  return mapPage(result[0]);
 }
 
+function mapPage(row: typeof pages.$inferSelect): Page {
+  return {
+    slug: row.slug,
+    title: row.title,
+    body: row.body as Page["body"],
+    navigation: row.navigation ?? undefined,
+    dateCreated: row.dateCreated,
+  };
+}

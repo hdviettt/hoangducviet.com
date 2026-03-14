@@ -1,4 +1,4 @@
-import { getGlobalMetadata } from "@/lib/directus";
+import { getGlobalMetadata } from "@/lib/global";
 import { getPages } from "@/lib/pages";
 import DockControls from "./DockControls";
 
@@ -8,20 +8,14 @@ async function Header() {
 
   try {
     const metadata = await getGlobalMetadata();
-    title = metadata && metadata.length > 0 ? metadata[0].title || "VIET" : "VIET";
+    title =
+      metadata && metadata.length > 0 ? metadata[0].title || "VIET" : "VIET";
   } catch (error) {
     console.error("Error fetching global metadata:", error);
   }
 
   try {
-    pages = await getPages({
-      fields: ["title", "slug", "navigation"],
-      filter: {
-        navigation: {
-          _eq: "yes"
-        }
-      }
-    });
+    pages = await getPages({ navigation: "yes" });
   } catch (error) {
     console.error("Error fetching pages:", error);
     pages = [];

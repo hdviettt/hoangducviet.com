@@ -9,4 +9,4 @@ cmds = ["bun install --frozen-lockfile"]
 cmds = ["bun run build"]
 
 [start]
-cmd = "bun run start"
+cmd = "cp -rn public/uploads/* /data/uploads/ 2>/dev/null; ln -sf /data/uploads public/uploads && bun run start"

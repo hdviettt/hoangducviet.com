@@ -1,24 +1,20 @@
-import Link from "next/link";
-import Image from "next/image";
-import { getHdviet } from "@/lib/directus";
 import { getPosts } from "@/lib/posts";
+import { getProfile } from "@/lib/profile";
+import Image from "next/image";
+import Link from "next/link";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  let hdvietData: any[] = [];
+  let profileData: any[] = [];
   let latestPosts: any[] = [];
 
   try {
-    const [hdvietResult, postsResult] = await Promise.all([
-      getHdviet(),
-      getPosts({
-        fields: ["slug", "title", "date_created"],
-        sort: ["-date_created"],
-        limit: 5,
-      }),
+    const [profileResult, postsResult] = await Promise.all([
+      getProfile(),
+      getPosts({ limit: 5 }),
     ]);
-    hdvietData = hdvietResult;
+    profileData = profileResult;
     latestPosts = postsResult;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -29,7 +25,7 @@ export default async function Home() {
     );
   }
 
-  if (hdvietData.length === 0) {
+  if (profileData.length === 0) {
     return (
       <div className="py-12">
         <p className="text-muted-foreground text-sm">No content available.</p>
@@ -37,17 +33,8 @@ export default async function Home() {
     );
   }
 
-  const mainProfile = hdvietData[0];
-
-  const directusUrl = 'https://directus-production-b969.up.railway.app';
-  let imageUrl = null;
-  if (mainProfile.image) {
-    if (typeof mainProfile.image === 'object' && mainProfile.image.filename_disk) {
-      imageUrl = `${directusUrl}/assets/${mainProfile.image.filename_disk}`;
-    } else if (typeof mainProfile.image === 'string') {
-      imageUrl = `${directusUrl}/assets/${mainProfile.image}`;
-    }
-  }
+  const mainProfile = profileData[0];
+  const imageUrl = mainProfile.image || null;
 
   return (
     <div className="py-8 sm:py-12">
@@ -57,7 +44,7 @@ export default async function Home() {
           {imageUrl && (
             <Image
               src={imageUrl}
-              alt={mainProfile.name || 'Profile'}
+              alt={mainProfile.name || "Profile"}
               width={64}
               height={64}
               className="w-14 h-14 sm:w-16 sm:h-16 object-cover border border-border shrink-0"
@@ -94,11 +81,11 @@ export default async function Home() {
           <ul className="space-y-2 mb-6">
             {latestPosts.map((post) => {
               const date = post.date_created
-                ? new Date(post.date_created).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: '2-digit'
+                ? new Date(post.date_created).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "2-digit",
                   })
-                : '';
+                : "";
 
               return (
                 <li key={post.slug}>
