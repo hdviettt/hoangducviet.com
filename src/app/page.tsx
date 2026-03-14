@@ -40,26 +40,23 @@ export default async function Home() {
     <div className="py-8 sm:py-12">
       {/* Profile Section */}
       <section className="mb-10 sm:mb-12">
-        <div className="flex items-start gap-5">
+        <div className="flex items-stretch gap-5">
           {/* Image column */}
           {imageUrl && (
             <img
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              className="w-16 h-16 md:w-28 md:h-28 object-cover border border-border shrink-0"
+              className="w-16 md:w-28 object-cover border border-border shrink-0 self-stretch"
             />
           )}
 
           {/* Text column */}
           <div className="min-w-0">
             {mainProfile?.name && (
-              <h1 className="text-lg sm:text-xl font-medium text-foreground mb-1">
+              <h1 className="text-lg sm:text-xl font-medium text-foreground mb-3">
                 {mainProfile.name}
               </h1>
             )}
-            <p className="text-xs text-muted-foreground mb-3">
-              <span className="text-primary">@</span>hdviet
-            </p>
 
             {mainProfile?.description && (
               <div
