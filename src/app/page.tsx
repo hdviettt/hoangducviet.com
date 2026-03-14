@@ -40,13 +40,13 @@ export default async function Home() {
     <div className="py-8 sm:py-12">
       {/* Profile Section */}
       <section className="mb-10 sm:mb-12">
-        <div className="flex items-start gap-5">
-          {/* Image column */}
+        <div className="flex flex-col md:flex-row md:items-start gap-5">
+          {/* Image */}
           {imageUrl && (
             <img
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              className="w-20 h-20 md:w-32 md:h-32 object-cover border border-border shrink-0"
+              className="w-16 h-16 md:w-32 md:h-32 object-cover border border-border shrink-0"
             />
           )}
 
