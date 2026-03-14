@@ -57,13 +57,18 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             {/* Pill Navigation */}
             <nav
               ref={navRef}
-              className="relative flex items-center gap-1 bg-muted/50 rounded-full p-1"
+              className="relative flex items-center gap-1 bg-muted/50 p-1"
+              style={{ borderRadius: "9999px" }}
             >
               {/* Sliding indicator */}
               {activeIndex >= 0 && (
                 <div
-                  className="absolute top-1 bottom-1 bg-primary/15 rounded-full transition-all duration-300 ease-out"
-                  style={{ left: indicator.left, width: indicator.width }}
+                  className="absolute top-1 bottom-1 bg-primary/15 transition-all duration-300 ease-out"
+                  style={{
+                    left: indicator.left,
+                    width: indicator.width,
+                    borderRadius: "9999px",
+                  }}
                 />
               )}
               {navItems.map((item, i) => (
@@ -71,11 +76,12 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                   key={item.href}
                   href={item.href}
                   data-nav-index={i}
-                  className={`relative z-10 px-3 sm:px-4 py-1 text-xs sm:text-sm transition-colors rounded-full ${
+                  className={`relative z-10 px-3 sm:px-4 py-1 text-xs sm:text-sm transition-colors ${
                     item.match(pathname)
                       ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
+                  style={{ borderRadius: "9999px" }}
                 >
                   {item.label}
                 </Link>
