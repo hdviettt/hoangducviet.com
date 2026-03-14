@@ -18,6 +18,9 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
   const [addColBtn, setAddColBtn] = useState<Pos | null>(null);
   const [addRowBtn, setAddRowBtn] = useState<Pos | null>(null);
   const [hoveredTable, setHoveredTable] = useState<HTMLTableElement | null>(null);
+  const addColRef = useRef<HTMLButtonElement>(null);
+  const addRowRef = useRef<HTMLButtonElement>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Context menu
   const [ctx, setCtx] = useState<ContextMenuState>({ open: false, pos: { top: 0, left: 0 } });
@@ -40,27 +43,51 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
     });
   }, [containerRef]);
 
+  const clearHideTimer = () => {
+    if (hideTimer.current) {
+      clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+  };
+
+  const scheduleHide = () => {
+    clearHideTimer();
+    hideTimer.current = setTimeout(() => {
+      setHoveredTable(null);
+      setAddColBtn(null);
+      setAddRowBtn(null);
+    }, 150);
+  };
+
   // Track mouse hover over tables
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const table = (e.target as HTMLElement).closest("table") as HTMLTableElement | null;
+      const target = e.target as HTMLElement;
+
+      // Check if hovering over a "+" button
+      if (
+        addColRef.current?.contains(target) ||
+        addRowRef.current?.contains(target)
+      ) {
+        clearHideTimer();
+        return;
+      }
+
+      const table = target.closest("table") as HTMLTableElement | null;
       if (table && container.contains(table)) {
+        clearHideTimer();
         setHoveredTable(table);
         updateButtons(table);
       } else {
-        setHoveredTable(null);
-        setAddColBtn(null);
-        setAddRowBtn(null);
+        scheduleHide();
       }
     };
 
     const handleMouseLeave = () => {
-      setHoveredTable(null);
-      setAddColBtn(null);
-      setAddRowBtn(null);
+      scheduleHide();
     };
 
     container.addEventListener("mousemove", handleMouseMove);
@@ -68,6 +95,7 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
+      clearHideTimer();
     };
   }, [containerRef, updateButtons]);
 
@@ -134,14 +162,12 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
       {/* Add column button — right edge */}
       {hoveredTable && addColBtn && (
         <button
+          ref={addColRef}
           type="button"
+          onMouseEnter={clearHideTimer}
+          onMouseLeave={scheduleHide}
           onClick={() => {
-            // Focus on the table first, then add column
-            const cell = hoveredTable.querySelector("td, th");
-            if (cell) {
-              // Place cursor in last column cell, then add after
-              editor.chain().focus().addColumnAfter().run();
-            }
+            editor.chain().focus().addColumnAfter().run();
           }}
           className="absolute z-20 w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
           style={{ top: addColBtn.top, left: addColBtn.left }}
@@ -154,7 +180,10 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
       {/* Add row button — bottom edge */}
       {hoveredTable && addRowBtn && (
         <button
+          ref={addRowRef}
           type="button"
+          onMouseEnter={clearHideTimer}
+          onMouseLeave={scheduleHide}
           onClick={() => {
             editor.chain().focus().addRowAfter().run();
           }}
