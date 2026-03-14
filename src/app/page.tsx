@@ -48,7 +48,7 @@ export default async function Home() {
                 <img
                   src={imageUrl}
                   alt={mainProfile.name || "Profile"}
-                  className="w-14 h-14 sm:w-16 sm:h-16 object-cover border border-border shrink-0 md:hidden"
+                  className="w-16 h-16 object-cover border border-border shrink-0 md:hidden"
                 />
               )}
               <div className="min-w-0">
@@ -97,7 +97,7 @@ export default async function Home() {
             <img
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              className="hidden md:block w-24 h-24 object-cover border border-border shrink-0"
+              className="hidden md:block w-36 h-36 object-cover border border-border shrink-0"
             />
           )}
         </div>
