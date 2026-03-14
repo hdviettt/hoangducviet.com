@@ -12,6 +12,7 @@ import { TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { Markdown } from "tiptap-markdown";
 import { common, createLowlight } from "lowlight";
+import TableControls from "@/components/admin/TableControls";
 import {
   useEffect,
   useState,
@@ -282,6 +283,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   const [showSlash, setShowSlash] = useState(false);
   const [slashPos, setSlashPos] = useState({ top: 0, left: 0 });
   const editorRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -539,47 +541,14 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           IMG
         </ToolbarButton>
 
-        {/* Table controls — shown when cursor is in a table */}
-        {editor.isActive("table") && (
-          <>
-            <span className="w-px h-5 bg-border mx-1" />
-            <ToolbarButton
-              onClick={() => editor.chain().focus().addColumnAfter().run()}
-              title="Add column after"
-            >
-              +col
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().deleteColumn().run()}
-              title="Delete column"
-            >
-              -col
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().addRowAfter().run()}
-              title="Add row after"
-            >
-              +row
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().deleteRow().run()}
-              title="Delete row"
-            >
-              -row
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().deleteTable().run()}
-              title="Delete table"
-            >
-              ×tbl
-            </ToolbarButton>
-          </>
-        )}
       </div>
 
       {/* Editor Content */}
-      <div className="flex-1 overflow-y-auto min-h-0 relative">
+      <div ref={contentRef} className="flex-1 overflow-y-auto min-h-0 relative">
         <EditorContent editor={editor} />
+
+        {/* Table Controls */}
+        <TableControls editor={editor} containerRef={contentRef} />
 
         {/* Slash Command Menu */}
         {showSlash && (
