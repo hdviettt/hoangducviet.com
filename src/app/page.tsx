@@ -92,7 +92,7 @@ export default async function Home() {
       {/* Posts Section */}
       {latestPosts.length > 0 && (
         <section>
-          <Link href="/posts" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 pb-2 border-b border-border block">
+          <Link href="/posts" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 block">
             <h2>Posts</h2>
           </Link>
 
