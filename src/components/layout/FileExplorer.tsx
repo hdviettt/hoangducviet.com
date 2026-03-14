@@ -50,41 +50,42 @@ export default function FileExplorer({ children }: FileExplorerProps) {
 
   return (
     <div className="min-h-screen bg-background font-mono">
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-4 flex items-center justify-center gap-6">
-          {/* Navigation */}
-          <nav
-            ref={navRef}
-            className="relative flex items-center gap-6"
-          >
-            {navItems.map((item, i) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                data-nav-index={i}
-                className={`text-sm pb-1 transition-colors ${
-                  item.match(pathname)
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+      <header className="sticky top-0 z-50 flex justify-center pt-4 pointer-events-none">
+        <nav
+          ref={navRef}
+          className="relative flex items-center gap-5 px-5 py-2 border border-border/60 bg-background/80 backdrop-blur-md shadow-lg pointer-events-auto"
+          style={{ borderRadius: "9999px" }}
+        >
+          {navItems.map((item, i) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              data-nav-index={i}
+              className={`text-sm pb-1 transition-colors ${
+                item.match(pathname)
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
 
-            {/* Sliding underline */}
-            {activeIndex >= 0 && (
-              <div
-                className="absolute bottom-0 h-[2px] bg-primary transition-all duration-300 ease-out"
-                style={{ left: underline.left, width: underline.width }}
-              />
-            )}
-          </nav>
+          {/* Sliding underline */}
+          {activeIndex >= 0 && (
+            <div
+              className="absolute bottom-2 h-[2px] bg-primary transition-all duration-300 ease-out"
+              style={{ left: underline.left, width: underline.width }}
+            />
+          )}
+
+          {/* Separator */}
+          <div className="w-px h-4 bg-border/60" />
 
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+            className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"
           >
             {!mounted ? (
               <div className="w-4 h-4" />
@@ -94,7 +95,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               <Sun className="w-4 h-4" />
             )}
           </button>
-        </div>
+        </nav>
       </header>
 
       {/* Content */}
