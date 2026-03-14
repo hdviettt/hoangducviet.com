@@ -1,5 +1,4 @@
 import type { Block } from "@/types/fields";
-import Image from "next/image";
 
 const Block = (props: Block) => {
   if (props.type === "header") {
@@ -57,11 +56,9 @@ const Block = (props: Block) => {
 
     return (
       <figure key={props.id} className={props.data.stretched ? "w-full" : ""}>
-        <Image
+        <img
           src={imageUrl}
           alt={props.data.caption || ""}
-          width={props.data.file.width || 800}
-          height={props.data.file.height || 600}
           className={`w-full h-auto ${props.data.withBorder ? "border" : ""} ${props.data.withBackground ? "bg-gray-100 p-4" : ""}`}
         />
         {props.data.caption && (

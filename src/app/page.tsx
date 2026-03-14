@@ -1,6 +1,5 @@
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -42,13 +41,10 @@ export default async function Home() {
       <section className="mb-10 sm:mb-12">
         <div className="flex items-start gap-4 mb-6">
           {imageUrl && (
-            <Image
+            <img
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              width={64}
-              height={64}
               className="w-14 h-14 sm:w-16 sm:h-16 object-cover border border-border shrink-0"
-              priority
             />
           )}
           <div className="min-w-0">
