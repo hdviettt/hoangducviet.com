@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
+import { useToast } from "@/components/admin/Toast";
 
 interface PostFormProps {
   initialData?: {
@@ -21,6 +22,7 @@ interface PostFormProps {
 
 export default function PostForm({ initialData, allCategories, isEdit }: PostFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
@@ -55,10 +57,10 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, slug, description, content, thumbnail, status, categories }),
       });
-      if (!res.ok) { alert((await res.json()).error || "Failed to save"); return; }
+      if (!res.ok) { toast((await res.json()).error || "Failed to save", "error"); return; }
       router.push("/admin/posts");
       router.refresh();
-    } catch { alert("Network error"); }
+    } catch { toast("Network error", "error"); }
     finally { setSaving(false); }
   };
 

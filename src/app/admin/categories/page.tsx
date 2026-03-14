@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 
 interface Category { slug: string; title: string; }
 
@@ -9,6 +10,10 @@ export default function AdminCategoriesPage() {
   const [newSlug, setNewSlug] = useState("");
   const [newTitle, setNewTitle] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
 
   const fetchCategories = async () => {
     const res = await fetch("/api/categories");
@@ -28,10 +33,13 @@ export default function AdminCategoriesPage() {
     if (res.ok) { setNewSlug(""); setNewTitle(""); fetchCategories(); }
   };
 
-  const handleDelete = async (slug: string) => {
-    if (!confirm(`Delete "${slug}"?`)) return;
-    await fetch(`/api/categories/${slug}`, { method: "DELETE" });
-    fetchCategories();
+  const handleDelete = (slug: string) => {
+    setConfirmMessage(`Delete category "${slug}"?`);
+    setConfirmAction(() => async () => {
+      await fetch(`/api/categories/${slug}`, { method: "DELETE" });
+      fetchCategories();
+    });
+    setConfirmOpen(true);
   };
 
   if (loading) return <div className="text-sm text-muted-foreground">loading...</div>;
@@ -71,6 +79,17 @@ export default function AdminCategoriesPage() {
           <div className="px-4 py-8 text-center text-sm text-muted-foreground">no categories yet.</div>
         )}
       </div>
+
+      <ConfirmModal
+        open={confirmOpen}
+        message={confirmMessage}
+        confirmLabel="delete"
+        onConfirm={() => {
+          setConfirmOpen(false);
+          confirmAction?.();
+        }}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   );
 }

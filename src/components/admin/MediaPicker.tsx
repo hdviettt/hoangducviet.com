@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useToast } from "@/components/admin/Toast";
 
 interface MediaItem {
   id: number;
@@ -16,6 +17,7 @@ interface MediaPickerProps {
 }
 
 export default function MediaPicker({ value, onChange, label }: MediaPickerProps) {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,7 +49,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
         setOpen(false);
       }
     } catch {
-      alert("Upload failed");
+      toast("Upload failed", "error");
     } finally {
       setUploading(false);
       e.target.value = "";

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
+import { useToast } from "@/components/admin/Toast";
 
 interface ProjectFormProps {
   initialData?: {
@@ -24,6 +25,7 @@ export default function ProjectForm({
   isEdit,
 }: ProjectFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
   const [saving, setSaving] = useState(false);
 
   const [title, setTitle] = useState(initialData?.title ?? "");
@@ -82,14 +84,14 @@ export default function ProjectForm({
 
       if (!res.ok) {
         const data = await res.json();
-        alert(data.error || "Failed to save");
+        toast(data.error || "Failed to save", "error");
         return;
       }
 
       router.push("/admin/projects");
       router.refresh();
     } catch {
-      alert("Network error");
+      toast("Network error", "error");
     } finally {
       setSaving(false);
     }

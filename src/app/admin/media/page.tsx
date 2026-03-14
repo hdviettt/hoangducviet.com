@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 
 interface MediaItem {
   id: number;
@@ -37,6 +38,11 @@ export default function AdminMediaPage() {
   // Inline editing
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
+
+  // Confirm modal
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
 
   const fetchMedia = useCallback(async () => {
     const res = await fetch("/api/media");
@@ -90,29 +96,40 @@ export default function AdminMediaPage() {
     e.target.value = "";
   };
 
+  const requestConfirm = (message: string, action: () => void) => {
+    setConfirmMessage(message);
+    setConfirmAction(() => action);
+    setConfirmOpen(true);
+  };
+
   // Single delete
-  const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`Delete "${name}"?`)) return;
-    await fetch(`/api/media/${id}`, { method: "DELETE" });
-    setSelected((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
+  const handleDelete = (id: number, name: string) => {
+    requestConfirm(`Delete "${name}"?`, async () => {
+      await fetch(`/api/media/${id}`, { method: "DELETE" });
+      setSelected((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+      fetchMedia();
     });
-    fetchMedia();
   };
 
   // Batch delete
-  const handleBatchDelete = async () => {
+  const handleBatchDelete = () => {
     if (selected.size === 0) return;
-    if (!confirm(`Delete ${selected.size} item${selected.size > 1 ? "s" : ""}?`)) return;
-    await fetch("/api/media/batch-delete", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: [...selected] }),
-    });
-    setSelected(new Set());
-    fetchMedia();
+    requestConfirm(
+      `Delete ${selected.size} item${selected.size > 1 ? "s" : ""}?`,
+      async () => {
+        await fetch("/api/media/batch-delete", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids: [...selected] }),
+        });
+        setSelected(new Set());
+        fetchMedia();
+      },
+    );
   };
 
   // Selection helpers
@@ -351,6 +368,17 @@ export default function AdminMediaPage() {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        open={confirmOpen}
+        message={confirmMessage}
+        confirmLabel="delete"
+        onConfirm={() => {
+          setConfirmOpen(false);
+          confirmAction?.();
+        }}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   );
 }

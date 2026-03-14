@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
+import { useToast } from "@/components/admin/Toast";
 
 export default function AdminSettingsPage() {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [siteTitle, setSiteTitle] = useState("");
@@ -38,8 +40,8 @@ export default function AdminSettingsPage() {
           profile: { name: profileName, description: profileDescription, image: profileImage },
         }),
       });
-      alert(res.ok ? "saved" : "failed");
-    } catch { alert("Network error"); }
+      toast(res.ok ? "Settings saved" : "Failed to save", res.ok ? "success" : "error");
+    } catch { toast("Network error", "error"); }
     finally { setSaving(false); }
   };
 
