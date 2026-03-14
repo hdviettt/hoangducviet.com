@@ -12,9 +12,9 @@ export default function AdminLayout({
 }) {
   return (
     <ToastProvider>
-      <div className="flex min-h-screen bg-background font-mono">
+      <div className="flex h-screen bg-background font-mono">
         <AdminSidebar />
-        <main className="flex-1 p-8 overflow-auto">{children}</main>
+        <main className="flex-1 p-8 overflow-y-auto">{children}</main>
       </div>
     </ToastProvider>
   );

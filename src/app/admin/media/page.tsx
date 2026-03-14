@@ -200,73 +200,73 @@ export default function AdminMediaPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-lg font-medium">media</h1>
-        <label className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 cursor-pointer">
-          {uploading ? "uploading..." : "upload"}
-          <input
-            type="file"
-            multiple
-            onChange={handleUpload}
-            className="hidden"
-            disabled={uploading}
-          />
-        </label>
-      </div>
-
-      {/* Toolbar: search, sort, batch actions */}
-      <div className="flex items-center gap-3 mb-4 flex-wrap sticky top-0 z-10 bg-background py-2 -mt-2">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="search media..."
-          className="bg-background border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary w-60"
-        />
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <span>sort:</span>
-          {(["date", "name", "size"] as SortKey[]).map((key) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => toggleSort(key)}
-              className={`px-2 py-1 transition-colors ${
-                sortKey === key
-                  ? "text-primary"
-                  : "hover:text-foreground"
-              }`}
-            >
-              {sortLabel(key)}
-            </button>
-          ))}
+      {/* Sticky header + toolbar */}
+      <div className="sticky top-[-32px] z-10 bg-background pb-3 -mx-8 px-8 -mt-8 pt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-lg font-medium">media</h1>
+          <label className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 cursor-pointer">
+            {uploading ? "uploading..." : "upload"}
+            <input
+              type="file"
+              multiple
+              onChange={handleUpload}
+              className="hidden"
+              disabled={uploading}
+            />
+          </label>
         </div>
-        <div className="flex-1" />
-        {filtered.length > 0 && (
-          <button
-            type="button"
-            onClick={selectAll}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {selected.size === filtered.length ? "deselect all" : "select all"}
-          </button>
-        )}
-        {selected.size > 0 && (
-          <button
-            type="button"
-            onClick={handleBatchDelete}
-            className="text-xs text-destructive hover:underline"
-          >
-            delete {selected.size} selected
-          </button>
-        )}
-      </div>
 
-      {/* Count */}
-      <div className="text-xs text-muted-foreground mb-3">
-        {filtered.length} item{filtered.length !== 1 ? "s" : ""}
-        {search && ` matching "${search}"`}
-        {selected.size > 0 && ` · ${selected.size} selected`}
+        <div className="flex items-center gap-3 flex-wrap">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="search media..."
+            className="bg-background border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary w-60"
+          />
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <span>sort:</span>
+            {(["date", "name", "size"] as SortKey[]).map((key) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => toggleSort(key)}
+                className={`px-2 py-1 transition-colors ${
+                  sortKey === key
+                    ? "text-primary"
+                    : "hover:text-foreground"
+                }`}
+              >
+                {sortLabel(key)}
+              </button>
+            ))}
+          </div>
+          <div className="flex-1" />
+          {filtered.length > 0 && (
+            <button
+              type="button"
+              onClick={selectAll}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {selected.size === filtered.length ? "deselect all" : "select all"}
+            </button>
+          )}
+          {selected.size > 0 && (
+            <button
+              type="button"
+              onClick={handleBatchDelete}
+              className="text-xs text-destructive hover:underline"
+            >
+              delete {selected.size} selected
+            </button>
+          )}
+        </div>
+
+        <div className="text-xs text-muted-foreground mt-3">
+          {filtered.length} item{filtered.length !== 1 ? "s" : ""}
+          {search && ` matching "${search}"`}
+          {selected.size > 0 && ` · ${selected.size} selected`}
+        </div>
       </div>
 
       {/* Grid */}
