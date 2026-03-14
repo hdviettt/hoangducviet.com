@@ -76,7 +76,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               key={item.href}
               href={item.href}
               data-nav-index={i}
-              className={`text-sm transition-colors ${
+              className={`nav-link text-sm transition-colors ${
                 item.match(pathname)
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"

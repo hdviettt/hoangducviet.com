@@ -71,8 +71,8 @@
     color: hsl(var(--primary-foreground));
   }
 
-  /* All links get orange hover */
-  a:hover {
+  /* All links get orange hover (except nav links) */
+  a:not(.nav-link):hover {
     color: hsl(var(--primary));
   }
 }
