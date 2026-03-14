@@ -28,123 +28,73 @@ function getTier(streak: number) {
   return null;
 }
 
-// ---- Mechanical Keyboard Audio ----
-// Deep, thocky mechanical switch sounds — no high pitched tones
+// ---- Audio Engine (real recorded samples) ----
 
-class MechKeyboardSounds {
+const CLICK_FILES = [
+  "/sounds/click1.wav",
+  "/sounds/click2.wav",
+  "/sounds/click3.wav",
+  "/sounds/click4.wav",
+  "/sounds/click5.wav",
+  "/sounds/click6.wav",
+];
+
+class KeyboardSounds {
   private ctx: AudioContext | null = null;
-  // Pre-generated click buffers for variation
-  private clickBuffers: AudioBuffer[] = [];
+  private buffers: AudioBuffer[] = [];
+  private loaded = false;
 
-  private getCtx(): AudioContext {
+  private async getCtx(): Promise<AudioContext> {
     if (!this.ctx) {
       this.ctx = new AudioContext();
-      this.generateClickBuffers();
+      await this.loadSamples();
     }
-    if (this.ctx.state === "suspended") this.ctx.resume();
+    if (this.ctx.state === "suspended") await this.ctx.resume();
     return this.ctx;
   }
 
-  // Pre-generate several click variations so each keystroke sounds slightly different
-  private generateClickBuffers() {
-    const ctx = this.ctx!;
-    const sampleRate = ctx.sampleRate;
+  private async loadSamples() {
+    if (this.loaded || !this.ctx) return;
+    const ctx = this.ctx;
 
-    for (let v = 0; v < 6; v++) {
-      // Each click is ~30ms of shaped noise
-      const len = Math.floor(sampleRate * 0.035);
-      const buf = ctx.createBuffer(1, len, sampleRate);
-      const data = buf.getChannelData(0);
+    const results = await Promise.allSettled(
+      CLICK_FILES.map(async (url) => {
+        const res = await fetch(url);
+        const arrayBuf = await res.arrayBuffer();
+        return ctx.decodeAudioData(arrayBuf);
+      }),
+    );
 
-      // Resonant frequency varies per buffer (deep thock character)
-      const resonance = 300 + v * 80; // 300-700 Hz range — deep
-      const damping = 0.12 + Math.random() * 0.06;
-
-      for (let i = 0; i < len; i++) {
-        const t = i / sampleRate;
-        // Fast exponential decay envelope
-        const env = Math.exp(-t / damping) * (1 - Math.exp(-t * 8000));
-        // Mix of: noise (click texture) + low resonance (thock body)
-        const noise = (Math.random() * 2 - 1) * 0.6;
-        const tone = Math.sin(2 * Math.PI * resonance * t) * 0.4;
-        const subTone = Math.sin(2 * Math.PI * (resonance * 0.5) * t) * 0.25;
-        data[i] = (noise + tone + subTone) * env;
-      }
-
-      this.clickBuffers.push(buf);
+    for (const r of results) {
+      if (r.status === "fulfilled") this.buffers.push(r.value);
     }
+    this.loaded = true;
   }
 
-  playKeystroke(streak: number) {
-    const ctx = this.getCtx();
-    const now = ctx.currentTime;
+  async playKeystroke(streak: number) {
+    const ctx = await this.getCtx();
+    if (this.buffers.length === 0) return;
+
+    const buf = this.buffers[Math.floor(Math.random() * this.buffers.length)];
+    const source = ctx.createBufferSource();
+    source.buffer = buf;
+
+    // Slight pitch variation for natural feel
+    source.playbackRate.value = 0.95 + Math.random() * 0.1;
+
+    const gain = ctx.createGain();
     const tierResult = getTier(streak);
     const tierIndex = tierResult ? tierResult.index : -1;
+    // Base volume + slight increase with streak
+    gain.gain.value = 0.5 + Math.min(tierIndex * 0.08, 0.3);
 
-    // Pick a random click buffer
-    const buf = this.clickBuffers[Math.floor(Math.random() * this.clickBuffers.length)];
-    if (!buf) return;
-
-    const source = ctx.createBufferSource();
-    source.buffer = buf;
-    // Slight playback rate variation for natural feel
-    source.playbackRate.value = 0.9 + Math.random() * 0.2;
-
-    // Low-pass to keep it deep and thocky
-    const filter = ctx.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 1800 + Math.min(tierIndex * 200, 600);
-    filter.Q.value = 0.7;
-
-    // Volume: audible baseline, gets a bit fuller with streak
-    const gain = ctx.createGain();
-    const vol = 0.25 + Math.min(tierIndex * 0.04, 0.15);
-    gain.gain.setValueAtTime(vol, now);
-
-    source.connect(filter);
-    filter.connect(gain);
+    source.connect(gain);
     gain.connect(ctx.destination);
-    source.start(now);
-  }
-
-  // Tier-up: satisfying deep "clack" — like pressing a big switch
-  playTierUp() {
-    const ctx = this.getCtx();
-    const now = ctx.currentTime;
-
-    const sampleRate = ctx.sampleRate;
-    const len = Math.floor(sampleRate * 0.08);
-    const buf = ctx.createBuffer(1, len, sampleRate);
-    const data = buf.getChannelData(0);
-
-    for (let i = 0; i < len; i++) {
-      const t = i / sampleRate;
-      const env = Math.exp(-t / 0.04) * (1 - Math.exp(-t * 5000));
-      const noise = (Math.random() * 2 - 1) * 0.5;
-      const thock = Math.sin(2 * Math.PI * 200 * t) * 0.5;
-      const body = Math.sin(2 * Math.PI * 120 * t) * 0.3;
-      data[i] = (noise + thock + body) * env;
-    }
-
-    const source = ctx.createBufferSource();
-    source.buffer = buf;
-
-    const filter = ctx.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 1200;
-    filter.Q.value = 1;
-
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.35, now);
-
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    source.start(now);
+    source.start();
   }
 }
 
-const mechSounds = new MechKeyboardSounds();
+const keyboardSounds = new KeyboardSounds();
 
 // ---- Particle Interface ----
 
@@ -224,8 +174,8 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
 
     const result = getTier(s);
 
-    // Play mechanical keyboard click
-    mechSounds.playKeystroke(s);
+    // Play real keyboard click
+    keyboardSounds.playKeystroke(s);
 
     if (result) {
       const { tier, index } = result;
@@ -235,7 +185,6 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
       if (index !== prevTierRef.current && tier.label) {
         setTierLabel(tier.label);
         setTierChanged(true);
-        mechSounds.playTierUp();
         setTimeout(() => setTierChanged(false), 300);
       }
       prevTierRef.current = index;
