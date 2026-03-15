@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Light theme - with orange accent */
+    /* Light theme - with blue accent */
     --background: 72 20% 95%;
     --foreground: 0 0% 9%;
     --foreground-muted: 0 0% 20%;
@@ -13,18 +13,18 @@
     --border: 0 0% 91%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 9%;
-    --primary: 32 95% 44%;
+    --primary: 217 91% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 9%;
-    --accent: 32 95% 44%;
+    --accent: 217 91% 50%;
     --accent-foreground: 0 0% 100%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 9%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --input: 0 0% 91%;
-    --ring: 32 95% 44%;
+    --ring: 217 91% 50%;
     --radius: 0;
   }
 
@@ -38,18 +38,18 @@
     --border: 0 0% 15%;
     --card: 0 0% 7%;
     --card-foreground: 0 0% 87%;
-    --primary: 32 95% 55%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 5%;
     --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 87%;
-    --accent: 32 95% 55%;
+    --accent: 217 91% 60%;
     --accent-foreground: 0 0% 5%;
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 87%;
     --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
     --input: 0 0% 15%;
-    --ring: 32 95% 55%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -65,13 +65,13 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Selection - Orange highlight */
+  /* Selection - Blue highlight */
   ::selection {
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
   }
 
-  /* All links get orange hover (except nav links) */
+  /* All links get blue hover (except nav links) */
   a:not(.nav-link):hover {
     color: hsl(var(--primary));
   }
