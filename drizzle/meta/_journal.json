@@ -8,6 +8,13 @@
       "when": 1773512884051,
       "tag": "0000_many_iron_fist",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773600000000,
+      "tag": "0001_add_project_groups",
+      "breakpoints": true
     }
   ]
 }

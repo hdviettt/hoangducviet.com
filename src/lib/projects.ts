@@ -1,7 +1,6 @@
 import { db } from "@/db";
-import { posts, projects, projectsPosts } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { desc } from "drizzle-orm";
+import { posts, projectGroups, projects, projectsPosts } from "@/db/schema";
+import { asc, desc, eq } from "drizzle-orm";
 
 export interface Project {
   slug: string;
@@ -9,6 +8,8 @@ export interface Project {
   description?: string;
   thumbnail?: string | null;
   status?: string;
+  group_slug?: string | null;
+  group_title?: string | null;
   date_created?: string;
   date_updated?: string;
   posts?: Array<{
@@ -18,21 +19,66 @@ export interface Project {
   }>;
 }
 
+export interface ProjectGroup {
+  slug: string;
+  title: string;
+  sortOrder: number;
+}
+
 export async function getProjects(): Promise<Array<Project>> {
   const result = await db
-    .select()
+    .select({
+      slug: projects.slug,
+      title: projects.title,
+      description: projects.description,
+      thumbnail: projects.thumbnail,
+      status: projects.status,
+      groupSlug: projects.groupSlug,
+      groupTitle: projectGroups.title,
+      dateCreated: projects.dateCreated,
+      dateUpdated: projects.dateUpdated,
+    })
     .from(projects)
-    .orderBy(desc(projects.dateCreated));
+    .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
+    .orderBy(asc(projectGroups.sortOrder), desc(projects.dateCreated));
 
-  return result.map(mapProject);
+  return result.map((row) => ({
+    slug: row.slug,
+    title: row.title,
+    description: row.description ?? undefined,
+    thumbnail: row.thumbnail,
+    status: row.status,
+    group_slug: row.groupSlug,
+    group_title: row.groupTitle,
+    date_created: row.dateCreated?.toISOString(),
+    date_updated: row.dateUpdated?.toISOString(),
+  }));
+}
+
+export async function getProjectGroups(): Promise<Array<ProjectGroup>> {
+  return db
+    .select()
+    .from(projectGroups)
+    .orderBy(asc(projectGroups.sortOrder), asc(projectGroups.title));
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project> {
   if (!slug) throw new Error("Invalid slug");
 
   const result = await db
-    .select()
+    .select({
+      slug: projects.slug,
+      title: projects.title,
+      description: projects.description,
+      thumbnail: projects.thumbnail,
+      status: projects.status,
+      groupSlug: projects.groupSlug,
+      groupTitle: projectGroups.title,
+      dateCreated: projects.dateCreated,
+      dateUpdated: projects.dateUpdated,
+    })
     .from(projects)
+    .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
     .where(eq(projects.slug, slug))
     .limit(1);
 
@@ -51,24 +97,21 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
     .where(eq(projectsPosts.projectSlug, slug));
 
-  return {
-    ...mapProject(result[0]),
-    posts: relatedPosts.map((p) => ({
-      slug: p.slug,
-      title: p.title,
-      date_created: p.dateCreated?.toISOString() ?? null,
-    })),
-  };
-}
-
-function mapProject(row: typeof projects.$inferSelect): Project {
+  const row = result[0];
   return {
     slug: row.slug,
     title: row.title,
     description: row.description ?? undefined,
     thumbnail: row.thumbnail,
     status: row.status,
+    group_slug: row.groupSlug,
+    group_title: row.groupTitle,
     date_created: row.dateCreated?.toISOString(),
     date_updated: row.dateUpdated?.toISOString(),
+    posts: relatedPosts.map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      date_created: p.dateCreated?.toISOString() ?? null,
+    })),
   };
 }

@@ -6,6 +6,11 @@ import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
 import { useToast } from "@/components/admin/Toast";
 
+interface ProjectGroup {
+  slug: string;
+  title: string;
+}
+
 interface ProjectFormProps {
   initialData?: {
     slug: string;
@@ -13,15 +18,18 @@ interface ProjectFormProps {
     description: string;
     thumbnail: string;
     status: string;
+    groupSlug: string;
     postSlugs: string[];
   };
   allPosts: Array<{ slug: string; title: string }>;
+  allGroups: ProjectGroup[];
   isEdit?: boolean;
 }
 
 export default function ProjectForm({
   initialData,
   allPosts,
+  allGroups: initialGroups,
   isEdit,
 }: ProjectFormProps) {
   const router = useRouter();
@@ -35,9 +43,13 @@ export default function ProjectForm({
   );
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
+  const [groupSlug, setGroupSlug] = useState(initialData?.groupSlug ?? "");
   const [postSlugs, setPostSlugs] = useState<string[]>(
     initialData?.postSlugs ?? [],
   );
+  const [groups, setGroups] = useState<ProjectGroup[]>(initialGroups);
+  const [newGroupTitle, setNewGroupTitle] = useState("");
+  const [creatingGroup, setCreatingGroup] = useState(false);
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -59,6 +71,30 @@ export default function ProjectForm({
     );
   };
 
+  const handleCreateGroup = async () => {
+    if (!newGroupTitle.trim()) return;
+    setCreatingGroup(true);
+    try {
+      const res = await fetch("/api/project-groups", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: newGroupTitle.trim() }),
+      });
+      if (!res.ok) {
+        toast("Failed to create group", "error");
+        return;
+      }
+      const created = await res.json();
+      setGroups((prev) => [...prev, created]);
+      setGroupSlug(created.slug);
+      setNewGroupTitle("");
+    } catch {
+      toast("Network error", "error");
+    } finally {
+      setCreatingGroup(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -78,6 +114,7 @@ export default function ProjectForm({
           description,
           thumbnail,
           status,
+          groupSlug: groupSlug || null,
           postSlugs,
         }),
       });
@@ -149,6 +186,49 @@ export default function ProjectForm({
             <option value="draft">Draft</option>
             <option value="published">Published</option>
           </select>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+          Group
+        </label>
+        <div className="flex gap-2">
+          <select
+            value={groupSlug}
+            onChange={(e) => setGroupSlug(e.target.value)}
+            className="flex-1 bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+          >
+            <option value="">No group</option>
+            {groups.map((g) => (
+              <option key={g.slug} value={g.slug}>
+                {g.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex gap-2 mt-2">
+          <input
+            type="text"
+            value={newGroupTitle}
+            onChange={(e) => setNewGroupTitle(e.target.value)}
+            placeholder="New group name..."
+            className="flex-1 bg-background border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleCreateGroup();
+              }
+            }}
+          />
+          <button
+            type="button"
+            onClick={handleCreateGroup}
+            disabled={creatingGroup || !newGroupTitle.trim()}
+            className="px-3 py-1.5 text-xs border border-border text-muted-foreground hover:border-foreground hover:text-foreground transition-colors disabled:opacity-50"
+          >
+            {creatingGroup ? "..." : "+ add"}
+          </button>
         </div>
       </div>
 

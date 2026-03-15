@@ -66,6 +66,7 @@ export async function PUT(request: Request, { params }: Params) {
         description: body.description ?? null,
         thumbnail: body.thumbnail ?? null,
         status: body.status,
+        groupSlug: body.groupSlug ?? null,
         dateUpdated: new Date(),
       })
       .where(eq(projects.slug, params.slug))

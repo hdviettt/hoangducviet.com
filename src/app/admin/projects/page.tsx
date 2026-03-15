@@ -1,14 +1,25 @@
-import { db } from "@/db";
-import { projects } from "@/db/schema";
-import { desc } from "drizzle-orm";
-import Link from "next/link";
-import StatusToggle from "@/components/admin/StatusToggle";
 import DeleteButton from "@/components/admin/DeleteButton";
+import StatusToggle from "@/components/admin/StatusToggle";
+import { db } from "@/db";
+import { projectGroups, projects } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminProjectsPage() {
-  const allProjects = await db.select().from(projects).orderBy(desc(projects.dateCreated));
+  const allProjects = await db
+    .select({
+      slug: projects.slug,
+      title: projects.title,
+      status: projects.status,
+      dateCreated: projects.dateCreated,
+      groupSlug: projects.groupSlug,
+      groupTitle: projectGroups.title,
+    })
+    .from(projects)
+    .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
+    .orderBy(desc(projects.dateCreated));
 
   return (
     <div className="max-w-4xl">
@@ -35,6 +46,11 @@ export default async function AdminProjectsPage() {
             >
               {project.title}
             </Link>
+            {project.groupTitle && (
+              <span className="text-xs text-muted-foreground border border-border px-2 py-0.5">
+                {project.groupTitle}
+              </span>
+            )}
             <span className={`text-xs ${project.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
               {project.status}
             </span>

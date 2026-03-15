@@ -57,6 +57,13 @@ export const postsCategories = pgTable(
   (table) => [primaryKey({ columns: [table.postId, table.categorySlug] })],
 );
 
+// Project groups (e.g. "Personal", "AI", "Machine Learning")
+export const projectGroups = pgTable("project_groups", {
+  slug: text("slug").primaryKey(),
+  title: text("title").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
 // Projects
 export const projects = pgTable("projects", {
   slug: text("slug").primaryKey(),
@@ -64,6 +71,9 @@ export const projects = pgTable("projects", {
   description: text("description"), // HTML
   thumbnail: text("thumbnail"),
   status: text("status").notNull().default("draft"),
+  groupSlug: text("group_slug").references(() => projectGroups.slug, {
+    onDelete: "set null",
+  }),
   dateCreated: timestamp("date_created", { withTimezone: true })
     .notNull()
     .defaultNow(),
