@@ -38,19 +38,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Script to prevent theme flash - runs before React hydration
-// Default is dark mode, only switch to light if explicitly stored
+// Default is light mode, only switch to dark if explicitly stored
 const themeScript = `
   (function() {
     try {
       var theme = localStorage.getItem('theme');
-      if (theme === 'light') {
-        document.documentElement.classList.remove('dark');
-      } else {
+      if (theme === 'dark') {
         document.documentElement.classList.add('dark');
       }
-    } catch (e) {
-      document.documentElement.classList.add('dark');
-    }
+    } catch (e) {}
   })();
 `;
 
