@@ -1,13 +1,9 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { db } from "@/db";
 import { media } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
+import { uploadToR2 } from "@/lib/r2";
 import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
-
-const UPLOADS_DIR =
-  process.env.UPLOADS_PATH || join(process.cwd(), "public/uploads");
 
 export async function GET() {
   try {
@@ -46,11 +42,8 @@ export async function POST(request: Request) {
     const sanitized = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
     const filename = `${Date.now()}-${sanitized}`;
 
-    // Ensure uploads directory exists
-    await mkdir(UPLOADS_DIR, { recursive: true });
-
-    const filepath = join(UPLOADS_DIR, filename);
-    await writeFile(filepath, buffer);
+    // Upload to Cloudflare R2
+    const url = await uploadToR2(filename, buffer, file.type);
 
     const result = await db
       .insert(media)
@@ -65,7 +58,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ...result[0],
-        url: `/uploads/${filename}`,
+        url,
       },
       { status: 201 },
     );

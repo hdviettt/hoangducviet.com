@@ -21,6 +21,7 @@ import {
   useRef,
   type KeyboardEvent,
 } from "react";
+import { getMediaUrl } from "@/lib/media-url";
 
 const lowlight = createLowlight(common);
 
@@ -317,7 +318,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   }, []);
 
   const selectImageFromPicker = useCallback((filename: string) => {
-    const url = `/uploads/${filename}`;
+    const url = getMediaUrl(filename);
     setShowImagePicker(false);
     setTimeout(() => {
       editorInstance.current?.chain().focus().setImage({ src: url }).run();
@@ -648,7 +649,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                         className="aspect-square border border-border overflow-hidden hover:border-primary transition-colors"
                       >
                         <img
-                          src={`/uploads/${item.filename}`}
+                          src={getMediaUrl(item.filename)}
                           alt={item.originalName}
                           className="w-full h-full object-cover"
                         />

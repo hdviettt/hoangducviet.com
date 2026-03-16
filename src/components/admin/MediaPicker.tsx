@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/admin/Toast";
+import { getMediaUrl } from "@/lib/media-url";
 
 interface MediaItem {
   id: number;
@@ -57,7 +58,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
   };
 
   const select = (filename: string) => {
-    onChange(`/uploads/${filename}`);
+    onChange(getMediaUrl(filename));
     setOpen(false);
   };
 
@@ -146,7 +147,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
               ) : (
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                   {images.map((item) => {
-                    const url = `/uploads/${item.filename}`;
+                    const url = getMediaUrl(item.filename);
                     const isSelected = value === url;
                     return (
                       <button

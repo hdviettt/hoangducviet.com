@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/admin/ConfirmModal";
+import { getMediaUrl } from "@/lib/media-url";
 
 interface MediaItem {
   id: number;
@@ -176,7 +177,7 @@ export default function AdminMediaPage() {
 
   // Copy path
   const copyPath = (filename: string) =>
-    navigator.clipboard.writeText(`/uploads/${filename}`);
+    navigator.clipboard.writeText(getMediaUrl(filename));
 
   // Sort toggle
   const toggleSort = (key: SortKey) => {
@@ -289,7 +290,7 @@ export default function AdminMediaPage() {
                   onClick={() => toggleSelect(item.id)}
                 >
                   <img
-                    src={`/uploads/${item.filename}`}
+                    src={getMediaUrl(item.filename)}
                     alt={item.originalName}
                     className="w-full h-full object-cover"
                   />

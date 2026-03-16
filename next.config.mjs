@@ -5,7 +5,16 @@ const nextConfig = {
     serverComponentsExternalPackages: ["pg"],
   },
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.r2.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "**.cloudflare.com",
+      },
+    ],
   },
   async rewrites() {
     return [

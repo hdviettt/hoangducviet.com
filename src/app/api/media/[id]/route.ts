@@ -1,13 +1,9 @@
-import { unlink } from "node:fs/promises";
-import { join } from "node:path";
 import { db } from "@/db";
 import { media } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
+import { deleteFromR2 } from "@/lib/r2";
 import { eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
-
-const UPLOADS_DIR =
-  process.env.UPLOADS_PATH || join(process.cwd(), "public/uploads");
 
 interface Params {
   params: { id: string };
@@ -29,7 +25,7 @@ export async function PATCH(request: Request, { params }: Params) {
         .returning();
       for (const item of deleted) {
         try {
-          await unlink(join(UPLOADS_DIR, item.filename));
+          await deleteFromR2(item.filename);
         } catch {}
       }
       return NextResponse.json({ deleted: deleted.length });
@@ -81,9 +77,9 @@ export async function DELETE(_request: Request, { params }: Params) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    // Try to delete the file
+    // Try to delete from R2
     try {
-      await unlink(join(UPLOADS_DIR, result[0].filename));
+      await deleteFromR2(result[0].filename);
     } catch {
       // File may already be deleted
     }

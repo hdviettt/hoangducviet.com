@@ -19,7 +19,7 @@ export const profile = pgTable("profile", {
   id: integer("id").primaryKey().default(1),
   name: text("name"),
   description: text("description"), // HTML
-  image: text("image"), // relative path: /uploads/profile.jpg
+  image: text("image"), // R2 URL or legacy /uploads/ path
 });
 
 // Post categories
@@ -35,7 +35,7 @@ export const posts = pgTable("posts", {
   title: text("title").notNull(),
   description: text("description"),
   content: text("content"), // markdown
-  thumbnail: text("thumbnail"), // relative path: /uploads/posts/thumb.jpg
+  thumbnail: text("thumbnail"), // R2 URL or legacy /uploads/ path
   status: text("status").notNull().default("draft"),
   dateCreated: timestamp("date_created", { withTimezone: true })
     .notNull()
