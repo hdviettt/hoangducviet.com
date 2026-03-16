@@ -8,11 +8,16 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     await requireAuth();
+    const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "";
     const result = await db
       .select()
       .from(media)
       .orderBy(desc(media.uploadedAt));
-    return NextResponse.json(result);
+    const withUrls = result.map((item) => ({
+      ...item,
+      url: `${R2_PUBLIC_URL}/${item.filename}`,
+    }));
+    return NextResponse.json(withUrls);
   } catch (error: any) {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

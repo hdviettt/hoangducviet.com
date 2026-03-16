@@ -2,13 +2,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/admin/Toast";
-import { getMediaUrl } from "@/lib/media-url";
 
 interface MediaItem {
   id: number;
   filename: string;
   originalName: string;
   mimeType: string | null;
+  url: string;
 }
 
 interface MediaPickerProps {
@@ -55,11 +55,6 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
       setUploading(false);
       e.target.value = "";
     }
-  };
-
-  const select = (filename: string) => {
-    onChange(getMediaUrl(filename));
-    setOpen(false);
   };
 
   const images = items.filter((i) => {
@@ -147,13 +142,12 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
               ) : (
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                   {images.map((item) => {
-                    const url = getMediaUrl(item.filename);
-                    const isSelected = value === url;
+                    const isSelected = value === item.url;
                     return (
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => select(item.filename)}
+                        onClick={() => { onChange(item.url); setOpen(false); }}
                         className={`aspect-square border overflow-hidden transition-all ${
                           isSelected
                             ? "border-primary ring-2 ring-primary"
@@ -161,7 +155,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
                         }`}
                       >
                         <img
-                          src={url}
+                          src={item.url}
                           alt={item.originalName}
                           className="w-full h-full object-cover"
                         />

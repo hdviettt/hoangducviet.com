@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/admin/ConfirmModal";
-import { getMediaUrl } from "@/lib/media-url";
 
 interface MediaItem {
   id: number;
@@ -11,6 +10,7 @@ interface MediaItem {
   mimeType: string | null;
   size: number | null;
   uploadedAt: string;
+  url: string;
 }
 
 type SortKey = "date" | "name" | "size";
@@ -176,8 +176,8 @@ export default function AdminMediaPage() {
   const cancelEdit = () => setEditingId(null);
 
   // Copy path
-  const copyPath = (filename: string) =>
-    navigator.clipboard.writeText(getMediaUrl(filename));
+  const copyPath = (url: string) =>
+    navigator.clipboard.writeText(url);
 
   // Sort toggle
   const toggleSort = (key: SortKey) => {
@@ -290,7 +290,7 @@ export default function AdminMediaPage() {
                   onClick={() => toggleSelect(item.id)}
                 >
                   <img
-                    src={getMediaUrl(item.filename)}
+                    src={item.url}
                     alt={item.originalName}
                     className="w-full h-full object-cover"
                   />
@@ -345,7 +345,7 @@ export default function AdminMediaPage() {
                   <div className="flex gap-2">
                     <button
                       type="button"
-                      onClick={() => copyPath(item.filename)}
+                      onClick={() => copyPath(item.url)}
                       className="text-xs text-primary hover:underline"
                     >
                       copy

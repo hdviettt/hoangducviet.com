@@ -21,7 +21,7 @@ import {
   useRef,
   type KeyboardEvent,
 } from "react";
-import { getMediaUrl } from "@/lib/media-url";
+
 
 const lowlight = createLowlight(common);
 
@@ -287,7 +287,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
 
   // Image picker modal state
   const [showImagePicker, setShowImagePicker] = useState(false);
-  const [imagePickerItems, setImagePickerItems] = useState<Array<{ id: number; filename: string; originalName: string; mimeType: string | null }>>([]);
+  const [imagePickerItems, setImagePickerItems] = useState<Array<{ id: number; filename: string; originalName: string; mimeType: string | null; url: string }>>([]);
   const [imagePickerLoading, setImagePickerLoading] = useState(false);
   const [imagePickerSearch, setImagePickerSearch] = useState("");
   const [imagePickerUploading, setImagePickerUploading] = useState(false);
@@ -317,8 +317,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
     e.target.value = "";
   }, []);
 
-  const selectImageFromPicker = useCallback((filename: string) => {
-    const url = getMediaUrl(filename);
+  const selectImageFromPicker = useCallback((url: string) => {
     setShowImagePicker(false);
     setTimeout(() => {
       editorInstance.current?.chain().focus().setImage({ src: url }).run();
@@ -645,11 +644,11 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => selectImageFromPicker(item.filename)}
+                        onClick={() => selectImageFromPicker(item.url)}
                         className="aspect-square border border-border overflow-hidden hover:border-primary transition-colors"
                       >
                         <img
-                          src={getMediaUrl(item.filename)}
+                          src={item.url}
                           alt={item.originalName}
                           className="w-full h-full object-cover"
                         />
