@@ -21,14 +21,9 @@ import {
   useRef,
   type KeyboardEvent,
 } from "react";
-import markdownit from "markdown-it";
 
 
 const lowlight = createLowlight(common);
-
-// Pre-parse markdown to HTML so editor always gets properly structured content.
-// This avoids timing issues with tiptap-markdown's onBeforeCreate in Next.js.
-const md = markdownit({ html: true, linkify: false, breaks: false });
 
 // ---- Slash Command Menu ----
 
@@ -337,11 +332,10 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   }, []);
 
   const editorInstance = useRef<ReturnType<typeof useEditor> | null>(null);
-
-  // Pre-render markdown → HTML so headings/blocks are always parsed correctly
-  const [initialHtml] = useState(() => (content ? md.render(content) : ""));
+  const initialContent = useRef(content);
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         codeBlock: false, // replaced by CodeBlockLowlight
@@ -360,7 +354,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         transformCopiedText: true,
       }),
     ],
-    content: initialHtml,
+    content: "",
     editorProps: {
       attributes: {
         class: "article-content prose-editor focus:outline-none min-h-[400px] px-4 py-3",
@@ -450,6 +444,14 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       }
     },
   });
+
+  // Set content after editor is created — bypasses onBeforeCreate timing issues
+  useEffect(() => {
+    if (!editor || editor.isDestroyed) return;
+    if (initialContent.current) {
+      editor.commands.setContent(initialContent.current, { emitUpdate: false });
+    }
+  }, [editor]);
 
   // Close slash menu on click outside
   useEffect(() => {
