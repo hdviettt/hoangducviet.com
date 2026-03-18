@@ -30,25 +30,25 @@
 
   .dark {
     /* Dark theme - Claude Code terminal style */
-    --background: 0 0% 5%;
+    --background: 0 0% 12%;
     --foreground: 0 0% 88%;
     --foreground-muted: 0 0% 78%;
-    --muted: 0 0% 8%;
+    --muted: 0 0% 15%;
     --muted-foreground: 0 0% 55%;
-    --border: 0 0% 15%;
-    --card: 0 0% 7%;
+    --border: 0 0% 20%;
+    --card: 0 0% 14%;
     --card-foreground: 0 0% 87%;
     --primary: 32 95% 55%;
-    --primary-foreground: 0 0% 5%;
-    --secondary: 0 0% 8%;
+    --primary-foreground: 0 0% 12%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 87%;
     --accent: 32 95% 55%;
-    --accent-foreground: 0 0% 5%;
-    --popover: 0 0% 7%;
+    --accent-foreground: 0 0% 12%;
+    --popover: 0 0% 14%;
     --popover-foreground: 0 0% 87%;
     --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
-    --input: 0 0% 15%;
+    --input: 0 0% 20%;
     --ring: 32 95% 55%;
   }
 }
