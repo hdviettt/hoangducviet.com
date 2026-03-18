@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import RenderedVisual from "./RenderedVisual";
 
 interface MarkdownContentProps {
   content: string;
@@ -51,6 +52,18 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
               <table {...props}>{children}</table>
             </div>
           );
+        },
+        pre: ({ children, ...props }: any) => {
+          const codeEl = Array.isArray(children) ? children[0] : children;
+          const className = codeEl?.props?.className || "";
+          if (className === "language-render") {
+            const html = String(codeEl?.props?.children || "").replace(
+              /\n$/,
+              "",
+            );
+            return <RenderedVisual html={html} />;
+          }
+          return <pre {...props}>{children}</pre>;
         },
         img: ({ src, alt, ...props }: any) => {
           return (

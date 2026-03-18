@@ -95,6 +95,13 @@ const slashItems: SlashItem[] = [
       editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
   },
   {
+    title: "Visual Embed",
+    description: "Render HTML/SVG code inline",
+    icon: "◆",
+    command: (editor) =>
+      editor.chain().focus().setCodeBlock({ language: "render" }).run(),
+  },
+  {
     title: "Image",
     description: "Choose from library or upload",
     icon: "🖼",
