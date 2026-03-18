@@ -218,10 +218,7 @@ small,
   padding-left: 1.5rem;
 }
 
-.article-content ul {
-  list-style-type: none;
-}
-.article-content ul li::before {
+.article-content ul li::marker {
   content: "- ";
   color: hsl(var(--muted-foreground));
 }
