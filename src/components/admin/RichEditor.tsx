@@ -443,6 +443,20 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
     },
   });
 
+  // Re-sync content on initial load if tiptap-markdown's onBeforeCreate
+  // didn't parse markdown properly (timing issue in Next.js)
+  const initialContentSet = useRef(false);
+  useEffect(() => {
+    if (!editor || editor.isDestroyed || initialContentSet.current) return;
+    initialContentSet.current = true;
+    if (!content) return;
+    const currentMd =
+      (editor.storage as any).markdown?.getMarkdown?.() ?? "";
+    if (currentMd.trim() !== content.trim()) {
+      editor.commands.setContent(content, { emitUpdate: false });
+    }
+  }, [editor, content]);
+
   // Close slash menu on click outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
