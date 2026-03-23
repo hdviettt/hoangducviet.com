@@ -588,6 +588,63 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           IMG
         </ToolbarButton>
 
+        {/* Table controls — visible when cursor is inside a table */}
+        {editor.isActive("table") && (
+          <>
+            <span className="w-px h-5 bg-border mx-1" />
+            <ToolbarButton
+              onClick={() => editor.chain().focus().addColumnBefore().run()}
+              title="Insert column before"
+            >
+              ←Col
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().addColumnAfter().run()}
+              title="Insert column after"
+            >
+              Col→
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().deleteColumn().run()}
+              title="Delete column"
+            >
+              ×Col
+            </ToolbarButton>
+            <span className="w-px h-5 bg-border mx-1" />
+            <ToolbarButton
+              onClick={() => editor.chain().focus().addRowBefore().run()}
+              title="Insert row above"
+            >
+              ↑Row
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().addRowAfter().run()}
+              title="Add row below"
+            >
+              Row↓
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().deleteRow().run()}
+              title="Delete row"
+            >
+              ×Row
+            </ToolbarButton>
+            <span className="w-px h-5 bg-border mx-1" />
+            <ToolbarButton
+              onClick={() => editor.chain().focus().toggleHeaderRow().run()}
+              title="Toggle header row"
+            >
+              TH
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor.chain().focus().deleteTable().run()}
+              title="Delete table"
+            >
+              ×Table
+            </ToolbarButton>
+          </>
+        )}
+
       </div>
 
       {/* Editor Content */}

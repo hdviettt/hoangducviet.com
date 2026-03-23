@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import type { Editor } from "@tiptap/react";
 
 interface Pos {
@@ -14,7 +15,7 @@ interface ContextMenuState {
 }
 
 export default function TableControls({ editor, containerRef }: { editor: Editor; containerRef: React.RefObject<HTMLDivElement | null> }) {
-  // Floating "+" buttons
+  // Floating "+" buttons (viewport coordinates for fixed positioning)
   const [addColBtn, setAddColBtn] = useState<Pos | null>(null);
   const [addRowBtn, setAddRowBtn] = useState<Pos | null>(null);
   const [hoveredTable, setHoveredTable] = useState<HTMLTableElement | null>(null);
@@ -22,26 +23,23 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
   const addRowRef = useRef<HTMLButtonElement>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Context menu
+  // Context menu (viewport coordinates)
   const [ctx, setCtx] = useState<ContextMenuState>({ open: false, pos: { top: 0, left: 0 } });
   const ctxRef = useRef<HTMLDivElement>(null);
 
-  // Position the "+" buttons relative to the hovered table
+  // Position buttons using viewport coordinates (for fixed positioning via portal)
   const updateButtons = useCallback((table: HTMLTableElement) => {
-    const container = containerRef.current;
-    if (!container) return;
-    const cRect = container.getBoundingClientRect();
     const tRect = table.getBoundingClientRect();
 
     setAddColBtn({
-      top: tRect.top - cRect.top + tRect.height / 2 - 12,
-      left: tRect.right - cRect.left + 4,
+      top: tRect.top + tRect.height / 2 - 12,
+      left: tRect.right + 4,
     });
     setAddRowBtn({
-      top: tRect.bottom - cRect.top + 4,
-      left: tRect.left - cRect.left + tRect.width / 2 - 12,
+      top: tRect.bottom + 4,
+      left: tRect.left + tRect.width / 2 - 12,
     });
-  }, [containerRef]);
+  }, []);
 
   const clearHideTimer = () => {
     if (hideTimer.current) {
@@ -67,7 +65,7 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
     const handleMouseMove = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
 
-      // Check if hovering over a "+" button
+      // Check if hovering over a "+" button (rendered in portal)
       if (
         addColRef.current?.contains(target) ||
         addRowRef.current?.contains(target)
@@ -90,14 +88,23 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
       scheduleHide();
     };
 
+    // Update button positions on scroll (viewport coords change)
+    const handleScroll = () => {
+      if (hoveredTable) {
+        updateButtons(hoveredTable);
+      }
+    };
+
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
+    container.addEventListener("scroll", handleScroll);
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
+      container.removeEventListener("scroll", handleScroll);
       clearHideTimer();
     };
-  }, [containerRef, updateButtons]);
+  }, [containerRef, updateButtons, hoveredTable]);
 
   // Right-click context menu
   useEffect(() => {
@@ -109,12 +116,11 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
       if (!cell || !container.contains(cell)) return;
 
       e.preventDefault();
-      const cRect = container.getBoundingClientRect();
       setCtx({
         open: true,
         pos: {
-          top: e.clientY - cRect.top,
-          left: e.clientX - cRect.left,
+          top: e.clientY,
+          left: e.clientX,
         },
       });
     };
@@ -157,7 +163,8 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
     { label: "Delete table", action: () => editor.chain().focus().deleteTable().run(), destructive: true },
   ];
 
-  return (
+  // Render floating UI via portal to avoid overflow clipping
+  const portalContent = (
     <>
       {/* Add column button — right edge */}
       {hoveredTable && addColBtn && (
@@ -169,7 +176,7 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
           onClick={() => {
             editor.chain().focus().addColumnAfter().run();
           }}
-          className="absolute z-20 w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+          className="fixed z-[9999] w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
           style={{ top: addColBtn.top, left: addColBtn.left }}
           title="Add column"
         >
@@ -187,7 +194,7 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
           onClick={() => {
             editor.chain().focus().addRowAfter().run();
           }}
-          className="absolute z-20 w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+          className="fixed z-[9999] w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
           style={{ top: addRowBtn.top, left: addRowBtn.left }}
           title="Add row"
         >
@@ -199,7 +206,7 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
       {ctx.open && (
         <div
           ref={ctxRef}
-          className="absolute z-50 bg-card border border-border py-1 min-w-[180px]"
+          className="fixed z-[9999] bg-card border border-border py-1 min-w-[180px] shadow-lg"
           style={{ top: ctx.pos.top, left: ctx.pos.left }}
         >
           {contextMenuItems.map((item, i) =>
@@ -224,4 +231,6 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
       )}
     </>
   );
+
+  return createPortal(portalContent, document.body);
 }
