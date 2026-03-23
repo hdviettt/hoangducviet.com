@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
 interface FileExplorerProps {
@@ -30,6 +30,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   const navRef = useRef<HTMLElement>(null);
   const [dot, setDot] = useState({ left: 0 });
   const [readingProgress, setReadingProgress] = useState(0);
+  const [navSize, setNavSize] = useState({ width: 0, height: 0 });
 
   const isPostPage = pathname.startsWith("/posts/") && pathname !== "/posts";
   const activeIndex = navItems.findIndex((item) => item.match(pathname));
@@ -62,6 +63,37 @@ export default function FileExplorer({ children }: FileExplorerProps) {
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, [isPostPage]);
+
+  useEffect(() => {
+    if (!navRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      const { width, height } = entries[0].borderBoxSize[0]
+        ? { width: entries[0].borderBoxSize[0].inlineSize, height: entries[0].borderBoxSize[0].blockSize }
+        : navRef.current!.getBoundingClientRect();
+      setNavSize({ width, height });
+    });
+    observer.observe(navRef.current);
+    const rect = navRef.current.getBoundingClientRect();
+    setNavSize({ width: rect.width, height: rect.height });
+    return () => observer.disconnect();
+  }, []);
+
+  const pillPath = useMemo(() => {
+    const { width: w, height: h } = navSize;
+    if (!w || !h) return "";
+    const sw = 2;
+    const o = sw / 2;
+    const r = h / 2;
+    const ir = r - o;
+    return [
+      `M ${w / 2} ${o}`,
+      `L ${w - r} ${o}`,
+      `A ${ir} ${ir} 0 0 1 ${w - r} ${h - o}`,
+      `L ${r} ${h - o}`,
+      `A ${ir} ${ir} 0 0 1 ${r} ${o}`,
+      `Z`,
+    ].join(" ");
+  }, [navSize]);
 
   return (
     <div className="min-h-screen bg-background font-mono">
@@ -116,15 +148,25 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             )}
           </button>
 
-          {/* Reading progress bar */}
-          {isPostPage && readingProgress > 0 && (
-            <div
-              className="absolute bottom-0 left-0 h-[2px] bg-primary"
-              style={{
-                width: `${readingProgress}%`,
-                borderRadius: "0 0 9999px 9999px",
-              }}
-            />
+          {/* Reading progress — wraps around the pill */}
+          {isPostPage && readingProgress > 0 && pillPath && (
+            <svg
+              className="absolute inset-0 pointer-events-none"
+              width={navSize.width}
+              height={navSize.height}
+              style={{ overflow: "visible" }}
+            >
+              <path
+                d={pillPath}
+                fill="none"
+                stroke="hsl(var(--primary))"
+                strokeWidth="2"
+                pathLength="100"
+                strokeDasharray="100"
+                strokeDashoffset={100 - readingProgress}
+                className="transition-[stroke-dashoffset] duration-150 ease-out"
+              />
+            </svg>
           )}
         </nav>
       </header>
