@@ -46,7 +46,7 @@ export default async function Home() {
             <img
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              className="w-16 h-16 md:w-32 md:h-32 object-cover border border-border shrink-0"
+              className="w-16 h-16 md:w-32 md:h-32 object-cover border border-border shrink-0 rounded-full"
             />
           )}
 
