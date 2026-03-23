@@ -36,6 +36,13 @@ const HeadingWithAnchor = ({ level, children, ...props }: any) => {
 };
 
 export default function MarkdownContent({ content }: MarkdownContentProps) {
+  // Fix malformed markdown where image and heading are concatenated without
+  // a blank line (caused by tiptap-markdown's image serializer missing closeBlock)
+  const fixedContent = content.replace(
+    /(\!\[[^\]]*\]\([^)]*\))(\s*)(#{1,6}\s)/g,
+    "$1\n\n$3",
+  );
+
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -84,7 +91,7 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
         },
       }}
     >
-      {content}
+      {fixedContent}
     </ReactMarkdown>
   );
 }

@@ -341,7 +341,28 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         codeBlock: false, // replaced by CodeBlockLowlight
       }),
       CodeBlockLowlight.configure({ lowlight }),
-      Image.configure({ inline: false, allowBase64: true }),
+      Image.extend({
+        addStorage() {
+          return {
+            markdown: {
+              serialize(state: any, node: any) {
+                state.write(
+                  "![" +
+                    state.esc(node.attrs.alt || "") +
+                    "](" +
+                    state.esc(node.attrs.src || "") +
+                    (node.attrs.title
+                      ? ' "' + node.attrs.title.replace(/"/g, '\\"') + '"'
+                      : "") +
+                    ")",
+                );
+                state.closeBlock(node);
+              },
+              parse: {},
+            },
+          };
+        },
+      }).configure({ inline: false, allowBase64: true }),
       Link.configure({ openOnClick: false }),
       Table.configure({ resizable: true }),
       TableRow,

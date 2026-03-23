@@ -20,7 +20,12 @@ export default function InlineTableOfContents({
 
   // Extract headings from markdown content
   useEffect(() => {
-    const lines = content.split("\n");
+    // Fix malformed markdown where image and heading are concatenated
+    const fixed = content.replace(
+      /(\!\[[^\]]*\]\([^)]*\))(\s*)(#{1,6}\s)/g,
+      "$1\n$3",
+    );
+    const lines = fixed.split("\n");
     const items: TOCItem[] = [];
 
     lines.forEach((line) => {
