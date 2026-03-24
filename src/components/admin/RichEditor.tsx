@@ -16,6 +16,11 @@ import TableControls from "@/components/admin/TableControls";
 import StreakEffects from "@/components/admin/StreakEffects";
 import { widgetRegistry } from "@/components/widgets/registry";
 import {
+  MathInline,
+  MathBlock,
+  preprocessMathInMarkdown,
+} from "@/components/admin/extensions/MathExtension";
+import {
   useEffect,
   useState,
   useCallback,
@@ -109,6 +114,28 @@ const slashItems: SlashItem[] = [
     icon: "⚡",
     command: () => {},
     isWidgetPicker: true,
+  },
+  {
+    title: "Math Inline",
+    description: "Inline LaTeX formula ($...$)",
+    icon: "∑",
+    command: (editor) =>
+      editor
+        .chain()
+        .focus()
+        .insertContent({ type: "mathInline", attrs: { latex: "" } })
+        .run(),
+  },
+  {
+    title: "Math Block",
+    description: "Display equation ($$...$$)",
+    icon: "∫",
+    command: (editor) =>
+      editor
+        .chain()
+        .focus()
+        .insertContent({ type: "mathBlock", attrs: { latex: "" } })
+        .run(),
   },
   {
     title: "Image",
@@ -410,6 +437,8 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       TableRow,
       TableCell,
       TableHeader,
+      MathInline,
+      MathBlock,
       Placeholder.configure({ placeholder: 'Start writing, or type "/" for commands...' }),
       Markdown.configure({
         html: true,
@@ -512,7 +541,10 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   useEffect(() => {
     if (!editor || editor.isDestroyed) return;
     if (initialContent.current) {
-      editor.commands.setContent(initialContent.current, { emitUpdate: false });
+      editor.commands.setContent(
+        preprocessMathInMarkdown(initialContent.current),
+        { emitUpdate: false },
+      );
     }
   }, [editor]);
 
