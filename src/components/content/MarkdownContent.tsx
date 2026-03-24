@@ -1,5 +1,8 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import RenderedVisual from "./RenderedVisual";
 import WidgetBlock from "../widgets/WidgetBlock";
 
@@ -46,7 +49,8 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
 
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeKatex]}
       components={{
         h1: (props: any) => <HeadingWithAnchor level={1} {...props} />,
         h2: (props: any) => <HeadingWithAnchor level={2} {...props} />,
