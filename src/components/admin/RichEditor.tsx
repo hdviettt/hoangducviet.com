@@ -14,6 +14,7 @@ import { Markdown } from "tiptap-markdown";
 import { common, createLowlight } from "lowlight";
 import TableControls from "@/components/admin/TableControls";
 import StreakEffects from "@/components/admin/StreakEffects";
+import { widgetRegistry } from "@/components/widgets/registry";
 import {
   useEffect,
   useState,
@@ -33,6 +34,7 @@ interface SlashItem {
   icon: string;
   command: (editor: Editor) => void;
   isImagePicker?: boolean;
+  isWidgetPicker?: boolean;
 }
 
 const slashItems: SlashItem[] = [
@@ -102,6 +104,13 @@ const slashItems: SlashItem[] = [
       editor.chain().focus().setCodeBlock({ language: "render" }).run(),
   },
   {
+    title: "Widget",
+    description: "Insert interactive widget",
+    icon: "⚡",
+    command: () => {},
+    isWidgetPicker: true,
+  },
+  {
     title: "Image",
     description: "Choose from library or upload",
     icon: "🖼",
@@ -133,10 +142,12 @@ function SlashMenu({
   editor,
   onClose,
   onImagePicker,
+  onWidgetPicker,
 }: {
   editor: Editor;
   onClose: () => void;
   onImagePicker: () => void;
+  onWidgetPicker: () => void;
 }) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
@@ -171,6 +182,9 @@ function SlashMenu({
       if (item.isImagePicker) {
         onClose();
         onImagePicker();
+      } else if (item.isWidgetPicker) {
+        onClose();
+        onWidgetPicker();
       } else {
         item.command(editor);
         onClose();
@@ -299,6 +313,17 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   const [imagePickerSearch, setImagePickerSearch] = useState("");
   const [imagePickerUploading, setImagePickerUploading] = useState(false);
 
+  // Widget picker state
+  const [showWidgetPicker, setShowWidgetPicker] = useState(false);
+  const [selectedWidget, setSelectedWidget] = useState<string | null>(null);
+  const [widgetPropsText, setWidgetPropsText] = useState("");
+
+  const openWidgetPicker = useCallback(() => {
+    setShowWidgetPicker(true);
+    setSelectedWidget(null);
+    setWidgetPropsText("");
+  }, []);
+
   const openImagePicker = useCallback(async () => {
     setShowImagePicker(true);
     setImagePickerSearch("");
@@ -330,6 +355,23 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       editorInstance.current?.chain().focus().setImage({ src: url }).run();
     }, 10);
   }, []);
+
+  const insertWidget = useCallback(() => {
+    if (!selectedWidget) return;
+    setShowWidgetPicker(false);
+    const propsText = widgetPropsText.trim() || "{}";
+    setTimeout(() => {
+      editorInstance.current
+        ?.chain()
+        .focus()
+        .insertContent({
+          type: "codeBlock",
+          attrs: { language: `widget:${selectedWidget}` },
+          content: [{ type: "text", text: propsText }],
+        })
+        .run();
+    }, 10);
+  }, [selectedWidget, widgetPropsText]);
 
   const editorInstance = useRef<ReturnType<typeof useEditor> | null>(null);
   const initialContent = useRef(content);
@@ -681,7 +723,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         {/* Slash Command Menu */}
         {showSlash && (
           <div style={{ position: "absolute", top: slashPos.top, left: slashPos.left }}>
-            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} onImagePicker={openImagePicker} />
+            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} onImagePicker={openImagePicker} onWidgetPicker={openWidgetPicker} />
           </div>
         )}
       </div>
@@ -753,6 +795,78 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                 );
               })()}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Widget Picker Modal */}
+      {showWidgetPicker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-background border border-border w-full max-w-lg max-h-[80vh] flex flex-col">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
+              <span className="text-sm font-medium flex-1">insert widget</span>
+              <button
+                type="button"
+                onClick={() => setShowWidgetPicker(false)}
+                className="text-muted-foreground hover:text-foreground text-lg leading-none"
+              >
+                x
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {Object.entries(widgetRegistry).map(([key, widget]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => {
+                    setSelectedWidget(key);
+                    setWidgetPropsText(
+                      JSON.stringify(widget.defaultProps, null, 2),
+                    );
+                  }}
+                  className={`w-full text-left px-4 py-3 border transition-colors ${
+                    selectedWidget === key
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-foreground/30"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-mono text-muted-foreground">
+                      {widget.icon}
+                    </span>
+                    <span className="font-medium text-sm">{widget.name}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {widget.description}
+                  </p>
+                </button>
+              ))}
+              {Object.keys(widgetRegistry).length === 0 && (
+                <div className="text-sm text-muted-foreground text-center py-10">
+                  no widgets registered.
+                </div>
+              )}
+            </div>
+            {selectedWidget && (
+              <div className="border-t border-border p-4 space-y-3 shrink-0">
+                <label className="block text-xs text-muted-foreground">
+                  props (JSON)
+                </label>
+                <textarea
+                  value={widgetPropsText}
+                  onChange={(e) => setWidgetPropsText(e.target.value)}
+                  rows={4}
+                  className="w-full bg-background border border-border px-3 py-2 text-sm font-mono focus:outline-none focus:border-primary resize-none"
+                />
+                <button
+                  type="button"
+                  onClick={insertWidget}
+                  className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 transition-opacity"
+                >
+                  insert
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
