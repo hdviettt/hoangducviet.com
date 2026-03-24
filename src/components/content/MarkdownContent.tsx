@@ -1,6 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import RenderedVisual from "./RenderedVisual";
+import WidgetBlock from "../widgets/WidgetBlock";
 
 interface MarkdownContentProps {
   content: string;
@@ -69,6 +70,20 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
               "",
             );
             return <RenderedVisual html={html} />;
+          }
+          if (className.startsWith("language-widget:")) {
+            const widgetName = className.replace("language-widget:", "");
+            const raw = String(codeEl?.props?.children || "").trim();
+            let widgetProps: Record<string, unknown> = {};
+            if (raw) {
+              try {
+                widgetProps = JSON.parse(raw);
+              } catch {
+                // If not valid JSON, pass raw as "children" prop
+                widgetProps = { children: raw };
+              }
+            }
+            return <WidgetBlock name={widgetName} props={widgetProps} />;
           }
           return <pre {...props}>{children}</pre>;
         },
