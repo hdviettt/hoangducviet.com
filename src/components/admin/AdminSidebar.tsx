@@ -99,7 +99,7 @@ export default function AdminSidebar() {
                 collapsed ? "justify-center px-1" : "px-3"
               } ${
                 isActive
-                  ? "text-primary border-l-2 border-primary bg-primary/5"
+                  ? "text-primary border-l-2 border-primary"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
