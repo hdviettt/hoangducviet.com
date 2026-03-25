@@ -88,11 +88,7 @@ export default async function PostPage({ params }: PostParams) {
         <Link
           href="/posts"
           className="inline-flex items-center gap-1 text-sm transition-colors mb-8"
-          style={{
-            color: "var(--article-link)",
-            fontFamily:
-              "var(--font-inter), system-ui, -apple-system, sans-serif",
-          }}
+          style={{ color: "var(--article-link)" }}
         >
           &larr; All posts
         </Link>
@@ -103,12 +99,8 @@ export default async function PostPage({ params }: PostParams) {
             {/* Article Header */}
             <header className="mb-10 sm:mb-12">
               <h1
-                className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight tracking-tight"
-                style={{
-                  fontFamily:
-                    "var(--font-inter), system-ui, -apple-system, sans-serif",
-                  color: "var(--article-heading)",
-                }}
+                className="text-3xl sm:text-4xl md:text-[2.75rem] font-normal mb-4 leading-snug"
+                style={{ color: "var(--article-heading)" }}
               >
                 {data.title}
               </h1>

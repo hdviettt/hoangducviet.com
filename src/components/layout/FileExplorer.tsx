@@ -96,7 +96,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   }, [navSize]);
 
   return (
-    <div className="min-h-screen bg-background font-mono">
+    <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 flex justify-center pt-4 pointer-events-none">
         <nav
           ref={navRef}

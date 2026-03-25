@@ -97,10 +97,13 @@ export default function InlineTableOfContents({
 
   return (
     <div>
-      <div className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">
+      <div
+        className="text-xs font-medium mb-4 uppercase tracking-wider"
+        style={{ color: "var(--article-text)" }}
+      >
         On this page
       </div>
-      <nav className="space-y-1 border-l border-border">
+      <nav className="space-y-0.5 border-l-2" style={{ borderColor: "var(--article-border)" }}>
         {headings.map((heading) => {
           const indent = heading.level - minLevel;
           const isActive = activeId === heading.id;
@@ -110,12 +113,18 @@ export default function InlineTableOfContents({
               key={heading.id}
               href={`#${heading.id}`}
               onClick={(e) => handleClick(e, heading.id)}
-              className={`block text-xs py-1 transition-colors border-l-2 -ml-px ${
-                isActive
-                  ? "text-primary border-primary font-medium"
-                  : "text-muted-foreground hover:text-foreground border-transparent"
+              className={`block text-[13px] py-1.5 transition-colors border-l-2 -ml-0.5 ${
+                isActive ? "font-medium" : ""
               }`}
-              style={{ paddingLeft: `${12 + indent * 12}px` }}
+              style={{
+                paddingLeft: `${14 + indent * 14}px`,
+                color: isActive
+                  ? "var(--article-heading)"
+                  : "var(--article-text)",
+                borderColor: isActive
+                  ? "var(--article-link)"
+                  : "transparent",
+              }}
             >
               {heading.text}
             </a>
