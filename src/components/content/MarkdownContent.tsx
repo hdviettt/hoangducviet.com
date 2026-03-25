@@ -97,11 +97,14 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
               <img
                 src={src}
                 alt={alt || ""}
-                className="w-full h-auto"
+                className="w-full h-auto rounded-lg"
                 {...props}
               />
               {alt && (
-                <figcaption className="text-center text-sm text-muted-foreground mt-3">
+                <figcaption
+                  className="text-center text-sm mt-3"
+                  style={{ color: "var(--article-text)" }}
+                >
                   {alt}
                 </figcaption>
               )}

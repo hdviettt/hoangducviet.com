@@ -26,6 +26,15 @@
     --input: 0 0% 91%;
     --ring: 0 0% 15%;
     --radius: 0;
+
+    /* Article content - Google Blog inspired */
+    --article-text: #5f6368;
+    --article-heading: #202124;
+    --article-link: #1a73e8;
+    --article-link-hover: #174ea6;
+    --article-border: #dadce0;
+    --article-code-bg: #f1f3f4;
+    --article-blockquote: #5f6368;
   }
 
   .dark {
@@ -50,6 +59,15 @@
     --destructive-foreground: 0 0% 100%;
     --input: 0 0% 18%;
     --ring: 0 0% 85%;
+
+    /* Article content - dark mode */
+    --article-text: #bdc1c6;
+    --article-heading: #e8eaed;
+    --article-link: #8ab4f8;
+    --article-link-hover: #aecbfa;
+    --article-border: #3c4043;
+    --article-code-bg: #1a1a1a;
+    --article-blockquote: #9aa0a6;
   }
 }
 
@@ -136,14 +154,15 @@ small,
 }
 
 /* ================================
-   ARTICLE CONTENT - Terminal style
+   ARTICLE CONTENT - Google Blog style
    ================================ */
 
 .article-content {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: hsl(var(--foreground-muted));
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--article-text);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.01em;
 }
 
 .article-content h1,
@@ -153,7 +172,9 @@ small,
 .article-content h5,
 .article-content h6 {
   scroll-margin-top: 80px;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  color: var(--article-heading);
+  letter-spacing: -0.01em;
 }
 
 .article-content .heading-anchor:hover {
@@ -161,60 +182,53 @@ small,
 }
 
 .article-content h1 {
-  font-size: 1.75em;
+  font-size: 2rem;
   font-weight: 700;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  line-height: 1.3;
-  color: hsl(var(--primary));
+  line-height: 1.25;
 }
 
 .article-content h2 {
-  font-size: 1.375em;
+  font-size: 1.625rem;
   font-weight: 700;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
   line-height: 1.3;
-  border-bottom: 1px solid hsl(var(--border));
-  color: hsl(var(--primary));
 }
 
 .article-content h3 {
-  font-size: 1.125em;
+  font-size: 1.3125rem;
   font-weight: 600;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   margin-bottom: 0.5rem;
-  line-height: 1.4;
-  color: hsl(var(--primary));
+  line-height: 1.35;
 }
 
 .article-content h4 {
-  font-size: 1em;
+  font-size: 1.125rem;
   font-weight: 600;
-  margin-top: 1.25rem;
+  margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  color: hsl(var(--primary));
 }
 
 .article-content h5,
 .article-content h6 {
-  font-size: 0.875em;
+  font-size: 1rem;
   font-weight: 600;
-  margin-top: 1.25rem;
+  margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  color: hsl(var(--primary));
 }
 
 .article-content p {
   margin-bottom: 1.25rem;
-  color: hsl(var(--foreground-muted));
+  color: var(--article-text);
 }
 
 .article-content ul,
 .article-content ol {
-  margin-bottom: 1rem;
-  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1.75rem;
 }
 
 .article-content ul {
@@ -222,7 +236,7 @@ small,
 }
 
 .article-content ul li::marker {
-  color: hsl(var(--muted-foreground));
+  color: var(--article-text);
 }
 .article-content ol {
   list-style-type: decimal;
@@ -230,33 +244,35 @@ small,
 
 .article-content li {
   margin-bottom: 0.5rem;
-  color: hsl(var(--foreground-muted));
+  color: var(--article-text);
 }
 
 .article-content a {
-  color: hsl(var(--primary));
+  color: var(--article-link);
   text-decoration: none;
 }
 
 .article-content a:hover {
+  color: var(--article-link-hover);
   text-decoration: underline;
 }
 
 .article-content strong {
   font-weight: 600;
-  color: hsl(var(--foreground));
+  color: var(--article-heading);
 }
 
 .article-content pre {
-  background: hsl(var(--muted));
+  background: var(--article-code-bg);
   padding: 1rem 1.25rem;
   overflow-x: auto;
-  margin: 1.25rem 0;
+  margin: 1.5rem 0;
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
     "DejaVu Sans Mono", monospace;
   font-size: 0.875rem;
   line-height: 1.6;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid var(--article-border);
+  border-radius: 8px;
   white-space: pre;
   tab-size: 4;
   letter-spacing: 0;
@@ -277,61 +293,60 @@ small,
 }
 
 .article-content :not(pre) > code {
-  background: hsl(var(--muted));
-  padding: 0.15em 0.35em;
-  font-size: 0.9em;
+  background: var(--article-code-bg);
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
   font-family: var(--font-mono), ui-monospace, monospace;
-  color: hsl(var(--primary));
+  color: var(--article-heading);
+  border-radius: 4px;
 }
 
 .article-content blockquote {
-  border-left: 3px solid hsl(var(--primary));
-  padding-left: 1rem;
-  margin: 1.25rem 0;
-  color: hsl(var(--muted-foreground));
-  font-style: normal;
+  border-left: 3px solid var(--article-link);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  color: var(--article-blockquote);
+  font-style: italic;
 }
 
 .article-content img {
   max-width: 100%;
   height: auto;
-  margin: 1.25rem 0;
-  border: 1px solid hsl(var(--border));
+  margin: 1.5rem 0;
+  border-radius: 8px;
 }
 
 .article-content hr {
   border: none;
-  border-top: 1px dashed hsl(var(--border));
-  margin: 2rem 0;
+  border-top: 1px solid var(--article-border);
+  margin: 2.5rem 0;
 }
 
 /* Table wrapper for mobile scroll */
 .article-content .table-wrapper {
   overflow-x: auto;
-  margin: 1.25rem 0;
+  margin: 1.5rem 0;
   -webkit-overflow-scrolling: touch;
 }
 
 .article-content table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.25rem 0;
-  font-size: 0.875rem;
+  margin: 1.5rem 0;
+  font-size: 0.9375rem;
 }
 
 .article-content th,
 .article-content td {
-  padding: 0.625rem 0.75rem;
-  border: 1px solid hsl(var(--border));
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--article-border);
   text-align: left;
 }
 
 .article-content th {
-  background: hsl(var(--muted));
+  background: var(--article-code-bg);
   font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  font-size: 0.875rem;
 }
 
 /* ================================

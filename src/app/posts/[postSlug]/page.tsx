@@ -87,9 +87,14 @@ export default async function PostPage({ params }: PostParams) {
         {/* Back button */}
         <Link
           href="/posts"
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors mb-8 uppercase tracking-wider"
+          className="inline-flex items-center gap-1 text-sm transition-colors mb-8"
+          style={{
+            color: "var(--article-link)",
+            fontFamily:
+              "var(--font-inter), system-ui, -apple-system, sans-serif",
+          }}
         >
-          cd ..
+          &larr; All posts
         </Link>
 
         <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
@@ -97,12 +102,20 @@ export default async function PostPage({ params }: PostParams) {
           <div className="min-w-0">
             {/* Article Header */}
             <header className="mb-10 sm:mb-12">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 leading-tight">
+              <h1
+                className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight tracking-tight"
+                style={{
+                  fontFamily:
+                    "var(--font-inter), system-ui, -apple-system, sans-serif",
+                  color: "var(--article-heading)",
+                }}
+              >
                 {data.title}
               </h1>
               <time
-                className="text-xs sm:text-sm text-muted-foreground"
+                className="text-sm"
                 dateTime={data.date_created ?? ""}
+                style={{ color: "var(--article-text)" }}
               >
                 {data.date_created &&
                   new Date(data.date_created).toLocaleDateString("en-US", {
