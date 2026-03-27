@@ -37,36 +37,36 @@ export default async function Home() {
   const imageUrl = mainProfile.image || null;
 
   return (
-    <div className="py-8 sm:py-12">
+    <div className="py-8 sm:py-12 md:py-16">
       {/* Profile Section */}
-      <section className="mb-10 sm:mb-12">
-        <div className="flex flex-col md:flex-row md:items-start gap-5">
+      <section className="mb-10 sm:mb-12 md:mb-16">
+        <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-8">
           {/* Image */}
           {imageUrl && (
             <img
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              className="w-16 h-16 md:w-32 md:h-32 object-cover border border-border shrink-0 rounded-full"
+              className="w-16 h-16 md:w-40 md:h-40 object-cover border border-border shrink-0 rounded-full"
             />
           )}
 
           {/* Text column */}
           <div className="min-w-0">
             {mainProfile?.name && (
-              <h1 className="text-lg sm:text-xl font-medium text-foreground mb-3">
+              <h1 className="text-lg sm:text-xl md:text-3xl font-medium text-foreground mb-3 md:mb-4">
                 {mainProfile.name}
               </h1>
             )}
 
             {mainProfile?.description && (
               <div
-                className="text-sm text-muted-foreground leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-3 [&_p:last-child]:mb-0"
+                className="text-sm md:text-base text-muted-foreground leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-3 [&_p:last-child]:mb-0"
                 dangerouslySetInnerHTML={{ __html: mainProfile.description }}
               />
             )}
 
             {/* Social Links */}
-            <div className="flex items-center gap-3 mt-4">
+            <div className="flex items-center gap-3 md:gap-4 mt-4 md:mt-5">
               {[
                 { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
                 { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
@@ -81,7 +81,7 @@ export default async function Home() {
                   className="text-muted-foreground hover:text-primary transition-colors"
                   aria-label={label}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 md:w-5 md:h-5" />
                 </a>
               ))}
             </div>
@@ -92,11 +92,11 @@ export default async function Home() {
       {/* Posts Section */}
       {latestPosts.length > 0 && (
         <section>
-          <Link href="/posts" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 block">
+          <Link href="/posts" className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-5 block">
             <h2>Posts</h2>
           </Link>
 
-          <ul className="space-y-2">
+          <ul className="space-y-2 md:space-y-3">
             {latestPosts.map((post) => {
               const date = post.date_created
                 ? new Date(post.date_created).toLocaleDateString("en-US", {
@@ -109,9 +109,9 @@ export default async function Home() {
                 <li key={post.slug}>
                   <Link
                     href={`/posts/${post.slug}`}
-                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
+                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
                   >
-                    <span className="text-muted-foreground text-xs w-16 shrink-0 order-2 sm:order-1">
+                    <span className="text-muted-foreground text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
                       {date}
                     </span>
                     <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">

@@ -66,21 +66,21 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
   const hasGroups = grouped.some((g) => g.groupTitle !== null);
 
   return (
-    <div className="py-8 sm:py-12">
-      <h1 className="text-xl sm:text-2xl font-medium mb-8 sm:mb-10">
+    <div className="py-8 sm:py-12 md:py-16">
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-8 sm:mb-10 md:mb-12">
         Projects
       </h1>
 
       {grouped.length === 0 ? (
-        <p className="text-muted-foreground text-sm">No projects found.</p>
+        <p className="text-muted-foreground text-sm md:text-base">No projects found.</p>
       ) : hasGroups ? (
-        <div className="space-y-8 sm:space-y-10">
+        <div className="space-y-8 sm:space-y-10 md:space-y-12">
           {grouped.map(({ groupTitle, projects: groupProjects }) => (
             <section key={groupTitle ?? "_ungrouped"}>
-              <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4 pb-2 border-b border-border">
+              <h2 className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground mb-4 md:mb-5 pb-2 border-b border-border">
                 {groupTitle ?? "Other"}
               </h2>
-              <ul className="space-y-2">
+              <ul className="space-y-2 md:space-y-3">
                 {groupProjects.map((project, index) => {
                   const year = project.date_created
                     ? new Date(project.date_created).getFullYear()
@@ -89,9 +89,9 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
                     <li key={project.slug || index}>
                       <Link
                         href={`/projects/${project.slug}`}
-                        className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
+                        className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
                       >
-                        <span className="text-muted-foreground text-xs w-12 shrink-0 order-2 sm:order-1">
+                        <span className="text-muted-foreground text-xs md:text-sm w-12 shrink-0 order-2 sm:order-1">
                           {year}
                         </span>
                         <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
@@ -106,7 +106,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
           ))}
         </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2 md:space-y-3">
           {grouped[0]?.projects.map((project, index) => {
             const year = project.date_created
               ? new Date(project.date_created).getFullYear()
@@ -115,9 +115,9 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
               <li key={project.slug || index}>
                 <Link
                   href={`/projects/${project.slug}`}
-                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
+                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
                 >
-                  <span className="text-muted-foreground text-xs w-12 shrink-0 order-2 sm:order-1">
+                  <span className="text-muted-foreground text-xs md:text-sm w-12 shrink-0 order-2 sm:order-1">
                     {year}
                   </span>
                   <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
