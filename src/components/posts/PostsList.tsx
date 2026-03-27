@@ -97,11 +97,9 @@ export default function PostsList({ posts }: PostsListProps) {
                     <ul className="space-y-2 md:space-y-3">
                       {monthPosts.map((post, index) => {
                         const isUnpublished = post.status !== "published";
-                        const day = post.date_created
-                          ? new Date(post.date_created).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "2-digit",
-                            })
+                        const d = post.date_created ? new Date(post.date_created) : null;
+                        const day = d
+                          ? `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`
                           : "";
 
                         return (
@@ -112,7 +110,7 @@ export default function PostsList({ posts }: PostsListProps) {
                                 isUnpublished ? "opacity-40" : ""
                               }`}
                             >
-                              <span className="text-muted-foreground text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
+                              <span className="text-muted-foreground text-xs md:text-sm w-24 shrink-0 order-2 sm:order-1">
                                 {day}
                               </span>
                               <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
