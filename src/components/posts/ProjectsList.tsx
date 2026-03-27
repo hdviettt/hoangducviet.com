@@ -59,11 +59,6 @@ function ProjectCard({ project }: { project: Project }) {
       {/* Content */}
       <div className="p-4 md:p-5 flex flex-col gap-2 flex-1">
         <div className="flex items-center justify-between gap-2">
-          {project.group_title && (
-            <span className="text-xs uppercase tracking-wider text-primary/70">
-              {project.group_title}
-            </span>
-          )}
           {year && (
             <span className="text-xs text-muted-foreground ml-auto">{year}</span>
           )}
