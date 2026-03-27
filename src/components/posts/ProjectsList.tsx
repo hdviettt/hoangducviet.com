@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 interface Project {
   slug?: string;
@@ -19,28 +19,43 @@ interface ProjectsListProps {
   projects: Project[];
 }
 
-interface ProjectsByGroup {
-  groupTitle: string | null;
-  projects: Project[];
-}
-
 function ProjectCard({ project }: { project: Project }) {
   const year = project.date_created
     ? new Date(project.date_created).getFullYear()
     : null;
-  const snippet = project.summary
-    ? project.summary.length > 200
-      ? project.summary.slice(0, 200).trimEnd() + "…"
-      : project.summary
-    : "";
+  const hostname = project.url
+    ? (() => { try { return new URL(project.url).hostname; } catch { return project.url; } })()
+    : null;
 
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group flex flex-col border border-border hover:border-primary/50 transition-colors bg-background overflow-hidden"
+      className="group flex flex-col border border-border hover:border-primary/40 transition-colors bg-background overflow-hidden"
     >
-      {/* Thumbnail */}
-      <div className="aspect-video bg-muted overflow-hidden">
+      {/* Text content on top — like SEONGON */}
+      <div className="p-5 md:p-6 flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-2">
+          {hostname && (
+            <span className="text-xs text-muted-foreground truncate">{hostname}</span>
+          )}
+          {year && (
+            <span className="text-xs text-muted-foreground ml-auto shrink-0">{year}</span>
+          )}
+        </div>
+
+        <h3 className="text-lg md:text-xl font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
+          {project.title || "Untitled"}
+        </h3>
+
+        {project.summary && (
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+            {project.summary}
+          </p>
+        )}
+      </div>
+
+      {/* Image preview at bottom */}
+      <div className="aspect-video bg-muted overflow-hidden mt-auto">
         {project.thumbnail ? (
           <img
             src={project.thumbnail}
@@ -49,34 +64,10 @@ function ProjectCard({ project }: { project: Project }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="text-3xl md:text-4xl font-medium text-muted-foreground/20 select-none">
+            <span className="text-5xl md:text-6xl font-medium text-muted-foreground/10 select-none">
               {(project.title || "?")[0].toUpperCase()}
             </span>
           </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="p-4 md:p-5 flex flex-col gap-2 flex-1">
-        <div className="flex items-center justify-between gap-2">
-          {project.url && (
-            <span className="text-xs text-muted-foreground truncate">
-              {(() => { try { return new URL(project.url).hostname; } catch { return project.url; } })()}
-            </span>
-          )}
-          {year && (
-            <span className="text-xs text-muted-foreground ml-auto shrink-0">{year}</span>
-          )}
-        </div>
-
-        <h3 className="text-base md:text-lg font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
-          {project.title || "Untitled"}
-        </h3>
-
-        {snippet && (
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-            {snippet}
-          </p>
         )}
       </div>
     </Link>
@@ -84,40 +75,31 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export default function ProjectsList({ projects }: ProjectsListProps) {
-  const grouped = useMemo(() => {
+  const [activeGroup, setActiveGroup] = useState<string | null>(null);
+
+  const { groups, sorted } = useMemo(() => {
     const sorted = [...projects].sort(
       (a, b) =>
         new Date(b.date_created || 0).getTime() -
         new Date(a.date_created || 0).getTime(),
     );
 
-    const groupMap = new Map<string | null, Project[]>();
-    const groupOrder: (string | null)[] = [];
-
-    for (const project of sorted) {
-      const key = project.group_slug ?? null;
-      if (!groupMap.has(key)) {
-        groupMap.set(key, []);
-        groupOrder.push(key);
-      }
-      groupMap.get(key)!.push(project);
-    }
-
-    const result: ProjectsByGroup[] = [];
-    for (const key of groupOrder) {
-      if (key !== null) {
-        const items = groupMap.get(key)!;
-        result.push({ groupTitle: items[0].group_title ?? key, projects: items });
+    // Collect unique groups in order of first appearance
+    const seen = new Set<string>();
+    const groups: { slug: string; title: string }[] = [];
+    for (const p of sorted) {
+      if (p.group_slug && !seen.has(p.group_slug)) {
+        seen.add(p.group_slug);
+        groups.push({ slug: p.group_slug, title: p.group_title ?? p.group_slug });
       }
     }
-    if (groupMap.has(null)) {
-      result.push({ groupTitle: null, projects: groupMap.get(null)! });
-    }
 
-    return result;
+    return { groups, sorted };
   }, [projects]);
 
-  const hasGroups = grouped.some((g) => g.groupTitle !== null);
+  const visible = activeGroup
+    ? sorted.filter((p) => p.group_slug === activeGroup)
+    : sorted;
 
   return (
     <div className="py-8 sm:py-12 md:py-16">
@@ -125,28 +107,40 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
         Projects
       </h1>
 
-      {grouped.length === 0 ? (
-        <p className="text-muted-foreground text-sm md:text-base">No projects found.</p>
-      ) : hasGroups ? (
-        <div className="space-y-10 md:space-y-14">
-          {grouped.map(({ groupTitle, projects: groupProjects }) => (
-            <section key={groupTitle ?? "_ungrouped"}>
-              {groupTitle && (
-                <h2 className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground mb-5 md:mb-6 pb-2 border-b border-border">
-                  {groupTitle}
-                </h2>
-              )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                {groupProjects.map((project) => (
-                  <ProjectCard key={project.slug} project={project} />
-                ))}
-              </div>
-            </section>
+      {/* Filter tabs */}
+      {groups.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-8 md:mb-10">
+          <button
+            onClick={() => setActiveGroup(null)}
+            className={`px-4 py-1.5 text-sm transition-colors border ${
+              activeGroup === null
+                ? "border-foreground text-foreground"
+                : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+            }`}
+          >
+            All
+          </button>
+          {groups.map((g) => (
+            <button
+              key={g.slug}
+              onClick={() => setActiveGroup(g.slug)}
+              className={`px-4 py-1.5 text-sm transition-colors border ${
+                activeGroup === g.slug
+                  ? "border-foreground text-foreground"
+                  : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+              }`}
+            >
+              {g.title}
+            </button>
           ))}
         </div>
+      )}
+
+      {visible.length === 0 ? (
+        <p className="text-muted-foreground text-sm md:text-base">No projects found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-          {grouped[0]?.projects.map((project) => (
+          {visible.map((project) => (
             <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
