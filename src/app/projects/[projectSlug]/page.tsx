@@ -108,46 +108,30 @@ export default async function ProjectPage({ params }: ProjectParams) {
             Posts in this project
           </h2>
 
-          <div className="space-y-px">
-            {posts.map((post: any, index: number) => {
+          <ul className="space-y-2 md:space-y-3">
+            {posts.map((post: any) => {
               const d = post.date_created ? new Date(post.date_created) : null;
               const date = d
                 ? `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`
                 : "";
 
               return (
-                <Link
-                  key={post.slug}
-                  href={`/posts/${post.slug}`}
-                  className="group flex gap-4 md:gap-6 py-4 border-b border-border/50 hover:border-primary/30 transition-colors"
-                >
-                  {/* Index */}
-                  <span className="text-xs text-muted-foreground/40 font-mono w-6 shrink-0 pt-0.5 text-right">
-                    {String(posts.length - index).padStart(2, "0")}
-                  </span>
-
-                  {/* Content */}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 mb-1">
-                      <span className="text-foreground font-medium group-hover:text-primary transition-colors text-sm md:text-base leading-snug">
-                        {post.title}
-                      </span>
-                      {date && (
-                        <span className="text-xs text-muted-foreground shrink-0">
-                          {date}
-                        </span>
-                      )}
-                    </div>
-                    {post.description && (
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                        {post.description}
-                      </p>
-                    )}
-                  </div>
-                </Link>
+                <li key={post.slug}>
+                  <Link
+                    href={`/posts/${post.slug}`}
+                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
+                  >
+                    <span className="text-muted-foreground/50 text-xs md:text-sm w-24 shrink-0 order-2 sm:order-1">
+                      {date}
+                    </span>
+                    <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
+                      {post.title}
+                    </span>
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </section>
       )}
     </div>

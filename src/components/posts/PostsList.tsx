@@ -110,7 +110,7 @@ export default function PostsList({ posts }: PostsListProps) {
                                 isUnpublished ? "opacity-40" : ""
                               }`}
                             >
-                              <span className="text-muted-foreground text-xs md:text-sm w-24 shrink-0 order-2 sm:order-1">
+                              <span className="text-muted-foreground/50 text-xs md:text-sm w-24 shrink-0 order-2 sm:order-1">
                                 {day}
                               </span>
                               <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">

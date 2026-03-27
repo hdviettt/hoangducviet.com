@@ -111,7 +111,7 @@ export default async function Home() {
                     href={`/posts/${post.slug}`}
                     className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
                   >
-                    <span className="text-muted-foreground text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
+                    <span className="text-muted-foreground/50 text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
                       {date}
                     </span>
                     <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
