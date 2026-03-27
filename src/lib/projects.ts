@@ -45,6 +45,7 @@ export async function getProjects(): Promise<Array<Project>> {
     })
     .from(projects)
     .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
+    .where(eq(projects.status, "published"))
     .orderBy(asc(projectGroups.sortOrder), desc(projects.dateCreated));
 
   return result.map((row) => ({
