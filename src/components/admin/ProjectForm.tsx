@@ -15,6 +15,8 @@ interface ProjectFormProps {
   initialData?: {
     slug: string;
     title: string;
+    url: string;
+    summary: string;
     description: string;
     thumbnail: string;
     status: string;
@@ -38,6 +40,8 @@ export default function ProjectForm({
 
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
+  const [url, setUrl] = useState(initialData?.url ?? "");
+  const [summary, setSummary] = useState(initialData?.summary ?? "");
   const [description, setDescription] = useState(
     initialData?.description ?? "",
   );
@@ -100,17 +104,19 @@ export default function ProjectForm({
     setSaving(true);
 
     try {
-      const url = isEdit
+      const url_ = isEdit
         ? `/api/projects/${initialData?.slug}`
         : "/api/projects";
       const method = isEdit ? "PUT" : "POST";
 
-      const res = await fetch(url, {
+      const res = await fetch(url_, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
           slug,
+          url: url || null,
+          summary: summary || null,
           description,
           thumbnail,
           status,
@@ -165,7 +171,33 @@ export default function ProjectForm({
 
       <div>
         <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          Description
+          Project URL
+        </label>
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://..."
+          className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+          Summary <span className="normal-case">(shown on cards)</span>
+        </label>
+        <textarea
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          rows={3}
+          placeholder="Short description for the project card..."
+          className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary resize-none"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+          Content <span className="normal-case">(shown on project page)</span>
         </label>
         <RichEditor content={description} onChange={setDescription} outputFormat="html" />
       </div>

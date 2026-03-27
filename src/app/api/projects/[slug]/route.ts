@@ -63,6 +63,8 @@ export async function PUT(request: Request, { params }: Params) {
       .set({
         title: body.title,
         slug: body.slug,
+        url: body.url ?? null,
+        summary: body.summary ?? null,
         description: body.description ?? null,
         thumbnail: body.thumbnail ?? null,
         status: body.status,

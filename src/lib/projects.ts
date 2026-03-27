@@ -5,6 +5,8 @@ import { asc, desc, eq } from "drizzle-orm";
 export interface Project {
   slug: string;
   title?: string;
+  url?: string | null;
+  summary?: string | null;
   description?: string;
   thumbnail?: string | null;
   status?: string;
@@ -15,6 +17,7 @@ export interface Project {
   posts?: Array<{
     slug: string;
     title: string;
+    description: string | null;
     date_created: string | null;
   }>;
 }
@@ -30,6 +33,8 @@ export async function getProjects(): Promise<Array<Project>> {
     .select({
       slug: projects.slug,
       title: projects.title,
+      url: projects.url,
+      summary: projects.summary,
       description: projects.description,
       thumbnail: projects.thumbnail,
       status: projects.status,
@@ -45,6 +50,8 @@ export async function getProjects(): Promise<Array<Project>> {
   return result.map((row) => ({
     slug: row.slug,
     title: row.title,
+    url: row.url,
+    summary: row.summary,
     description: row.description ?? undefined,
     thumbnail: row.thumbnail,
     status: row.status,
@@ -69,6 +76,8 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     .select({
       slug: projects.slug,
       title: projects.title,
+      url: projects.url,
+      summary: projects.summary,
       description: projects.description,
       thumbnail: projects.thumbnail,
       status: projects.status,
@@ -86,21 +95,25 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     throw new Error(`Project with slug "${slug}" not found`);
   }
 
-  // Fetch related posts
+  // Fetch related posts sorted newest first
   const relatedPosts = await db
     .select({
       slug: posts.slug,
       title: posts.title,
+      description: posts.description,
       dateCreated: posts.dateCreated,
     })
     .from(projectsPosts)
     .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
-    .where(eq(projectsPosts.projectSlug, slug));
+    .where(eq(projectsPosts.projectSlug, slug))
+    .orderBy(desc(posts.dateCreated));
 
   const row = result[0];
   return {
     slug: row.slug,
     title: row.title,
+    url: row.url,
+    summary: row.summary,
     description: row.description ?? undefined,
     thumbnail: row.thumbnail,
     status: row.status,
@@ -111,6 +124,7 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     posts: relatedPosts.map((p) => ({
       slug: p.slug,
       title: p.title,
+      description: p.description ?? null,
       date_created: p.dateCreated?.toISOString() ?? null,
     })),
   };

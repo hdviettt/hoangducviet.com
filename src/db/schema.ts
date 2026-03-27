@@ -68,7 +68,9 @@ export const projectGroups = pgTable("project_groups", {
 export const projects = pgTable("projects", {
   slug: text("slug").primaryKey(),
   title: text("title").notNull(),
-  description: text("description"), // HTML
+  url: text("url"),
+  summary: text("summary"),
+  description: text("description"), // HTML — WYSIWYG content for detail page
   thumbnail: text("thumbnail"),
   status: text("status").notNull().default("draft"),
   groupSlug: text("group_slug").references(() => projectGroups.slug, {

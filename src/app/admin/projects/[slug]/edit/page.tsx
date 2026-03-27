@@ -38,6 +38,8 @@ export default async function EditProjectPage({ params }: Params) {
         initialData={{
           slug: project.slug,
           title: project.title,
+          url: project.url ?? "",
+          summary: project.summary ?? "",
           description: project.description ?? "",
           thumbnail: project.thumbnail ?? "",
           status: project.status,

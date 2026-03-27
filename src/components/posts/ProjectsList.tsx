@@ -6,6 +6,8 @@ import { useMemo } from "react";
 interface Project {
   slug?: string;
   title?: string;
+  url?: string | null;
+  summary?: string | null;
   description?: string;
   thumbnail?: string | null;
   date_created?: string;
@@ -22,16 +24,15 @@ interface ProjectsByGroup {
   projects: Project[];
 }
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").trim();
-}
-
 function ProjectCard({ project }: { project: Project }) {
   const year = project.date_created
     ? new Date(project.date_created).getFullYear()
     : null;
-  const description = project.description ? stripHtml(project.description) : "";
-  const snippet = description.length > 120 ? description.slice(0, 120).trimEnd() + "…" : description;
+  const snippet = project.summary
+    ? project.summary.length > 120
+      ? project.summary.slice(0, 120).trimEnd() + "…"
+      : project.summary
+    : "";
 
   return (
     <Link

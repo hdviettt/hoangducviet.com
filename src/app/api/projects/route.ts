@@ -33,6 +33,8 @@ export async function POST(request: Request) {
       .values({
         slug: body.slug,
         title: body.title,
+        url: body.url || null,
+        summary: body.summary || null,
         description: body.description || null,
         thumbnail: body.thumbnail || null,
         status: body.status || "draft",

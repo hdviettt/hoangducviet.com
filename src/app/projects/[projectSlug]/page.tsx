@@ -1,5 +1,6 @@
 import { getProjectBySlug } from "@/lib/projects";
 import type { Metadata } from "next";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 interface ProjectParams {
@@ -29,6 +30,7 @@ export default async function ProjectPage({ params }: ProjectParams) {
 
   try {
     project = await getProjectBySlug(params.projectSlug);
+    // Already sorted newest first from lib/projects.ts
     posts = project.posts ?? [];
   } catch (error) {
     console.error("Error fetching project:", error);
@@ -57,20 +59,41 @@ export default async function ProjectPage({ params }: ProjectParams) {
         <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-tight">
           {project.title}
         </h1>
-        <time
-          dateTime={project.date_created ?? ""}
-          className="text-xs sm:text-sm text-muted-foreground"
-        >
-          {project.date_created &&
-            new Date(project.date_created).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-        </time>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <time
+            dateTime={project.date_created ?? ""}
+            className="text-xs sm:text-sm text-muted-foreground"
+          >
+            {project.date_created &&
+              new Date(project.date_created).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+          </time>
+
+          {project.url && (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs sm:text-sm text-primary hover:underline transition-colors"
+            >
+              {(() => {
+                try {
+                  return new URL(project.url).hostname;
+                } catch {
+                  return project.url;
+                }
+              })()}
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+        </div>
       </header>
 
-      {/* Project Description */}
+      {/* Project Content */}
       {project.description && (
         <div
           className="article-content mb-10"
@@ -81,30 +104,50 @@ export default async function ProjectPage({ params }: ProjectParams) {
       {/* Related Posts */}
       {posts.length > 0 && (
         <section className="mt-10 pt-8 border-t border-border">
-          <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-4">
-            Related Posts
+          <h2 className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground mb-6">
+            Posts in this project
           </h2>
-          <ul className="space-y-2">
-            {posts.map((post: any) => (
-              <li key={post.slug}>
+
+          <div className="space-y-px">
+            {posts.map((post: any, index: number) => {
+              const d = post.date_created ? new Date(post.date_created) : null;
+              const date = d
+                ? `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`
+                : "";
+
+              return (
                 <Link
+                  key={post.slug}
                   href={`/posts/${post.slug}`}
-                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 group text-sm"
+                  className="group flex gap-4 md:gap-6 py-4 border-b border-border/50 hover:border-primary/30 transition-colors"
                 >
-                  <span className="text-muted-foreground text-xs shrink-0 order-2 sm:order-1">
-                    {post.date_created &&
-                      new Date(post.date_created).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "2-digit",
-                      })}
+                  {/* Index */}
+                  <span className="text-xs text-muted-foreground/40 font-mono w-6 shrink-0 pt-0.5 text-right">
+                    {String(posts.length - index).padStart(2, "0")}
                   </span>
-                  <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
-                    {post.title}
-                  </span>
+
+                  {/* Content */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 mb-1">
+                      <span className="text-foreground font-medium group-hover:text-primary transition-colors text-sm md:text-base leading-snug">
+                        {post.title}
+                      </span>
+                      {date && (
+                        <span className="text-xs text-muted-foreground shrink-0">
+                          {date}
+                        </span>
+                      )}
+                    </div>
+                    {post.description && (
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                        {post.description}
+                      </p>
+                    )}
+                  </div>
                 </Link>
-              </li>
-            ))}
-          </ul>
+              );
+            })}
+          </div>
         </section>
       )}
     </div>
