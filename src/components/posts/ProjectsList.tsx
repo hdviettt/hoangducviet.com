@@ -29,8 +29,8 @@ function ProjectCard({ project }: { project: Project }) {
     ? new Date(project.date_created).getFullYear()
     : null;
   const snippet = project.summary
-    ? project.summary.length > 120
-      ? project.summary.slice(0, 120).trimEnd() + "…"
+    ? project.summary.length > 200
+      ? project.summary.slice(0, 200).trimEnd() + "…"
       : project.summary
     : "";
 
@@ -59,8 +59,13 @@ function ProjectCard({ project }: { project: Project }) {
       {/* Content */}
       <div className="p-4 md:p-5 flex flex-col gap-2 flex-1">
         <div className="flex items-center justify-between gap-2">
+          {project.url && (
+            <span className="text-xs text-muted-foreground truncate">
+              {(() => { try { return new URL(project.url).hostname; } catch { return project.url; } })()}
+            </span>
+          )}
           {year && (
-            <span className="text-xs text-muted-foreground ml-auto">{year}</span>
+            <span className="text-xs text-muted-foreground ml-auto shrink-0">{year}</span>
           )}
         </div>
 
@@ -69,7 +74,7 @@ function ProjectCard({ project }: { project: Project }) {
         </h3>
 
         {snippet && (
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
             {snippet}
           </p>
         )}
