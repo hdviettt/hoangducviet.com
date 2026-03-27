@@ -15,9 +15,16 @@ interface PostsListProps {
   categories?: string[];
 }
 
+interface PostsByMonth {
+  year: number;
+  month: number;
+  label: string;
+  posts: Post[];
+}
+
 interface PostsByYear {
   year: number;
-  posts: Post[];
+  months: PostsByMonth[];
 }
 
 export default function PostsList({ posts }: PostsListProps) {
@@ -28,21 +35,41 @@ export default function PostsList({ posts }: PostsListProps) {
         new Date(a.date_created || 0).getTime(),
     );
 
-    const grouped: PostsByYear[] = [];
-    let currentYear: number | null = null;
+    const yearMap = new Map<number, Map<number, Post[]>>();
+    const yearOrder: number[] = [];
 
     for (const post of sorted) {
-      const year = post.date_created
-        ? new Date(post.date_created).getFullYear()
-        : 0;
-      if (year !== currentYear) {
-        currentYear = year;
-        grouped.push({ year, posts: [] });
+      const d = post.date_created ? new Date(post.date_created) : null;
+      const year = d ? d.getFullYear() : 0;
+      const month = d ? d.getMonth() : 0; // 0-indexed
+
+      if (!yearMap.has(year)) {
+        yearMap.set(year, new Map());
+        yearOrder.push(year);
       }
-      grouped[grouped.length - 1].posts.push(post);
+      const monthMap = yearMap.get(year)!;
+      if (!monthMap.has(month)) {
+        monthMap.set(month, []);
+      }
+      monthMap.get(month)!.push(post);
     }
 
-    return grouped;
+    const result: PostsByYear[] = [];
+    for (const year of yearOrder) {
+      const monthMap = yearMap.get(year)!;
+      const monthOrder = Array.from(monthMap.keys()).sort((a, b) => b - a);
+      const months: PostsByMonth[] = monthOrder.map((month) => ({
+        year,
+        month,
+        label: new Date(year, month, 1).toLocaleDateString("en-US", {
+          month: "long",
+        }),
+        posts: monthMap.get(month)!,
+      }));
+      result.push({ year, months });
+    }
+
+    return result;
   }, [posts]);
 
   return (
@@ -52,44 +79,53 @@ export default function PostsList({ posts }: PostsListProps) {
       {postsByYear.length === 0 ? (
         <p className="text-muted-foreground text-sm md:text-base">No articles found.</p>
       ) : (
-        <div className="space-y-8 sm:space-y-10 md:space-y-12">
-          {postsByYear.map(({ year, posts: yearPosts }) => (
+        <div className="space-y-10 sm:space-y-12 md:space-y-16">
+          {postsByYear.map(({ year, months }) => (
             <section key={year}>
               {/* Year header */}
-              <h2 className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground mb-4 md:mb-5 pb-2 border-b border-border">
+              <h2 className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground mb-6 md:mb-8 pb-2 border-b border-border">
                 {year}
               </h2>
 
-              {/* Posts list */}
-              <ul className="space-y-2 md:space-y-3">
-                {yearPosts.map((post, index) => {
-                  const isUnpublished = post.status !== "published";
-                  const date = post.date_created
-                    ? new Date(post.date_created).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "2-digit",
-                      })
-                    : "";
+              {/* Months */}
+              <div className="space-y-6 md:space-y-8">
+                {months.map(({ month, label, posts: monthPosts }) => (
+                  <div key={month}>
+                    <h3 className="text-xs md:text-sm text-muted-foreground mb-2 md:mb-3">
+                      {label}
+                    </h3>
+                    <ul className="space-y-2 md:space-y-3">
+                      {monthPosts.map((post, index) => {
+                        const isUnpublished = post.status !== "published";
+                        const day = post.date_created
+                          ? new Date(post.date_created).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "2-digit",
+                            })
+                          : "";
 
-                  return (
-                    <li key={post.slug || index}>
-                      <Link
-                        href={`/posts/${post.slug}`}
-                        className={`flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base ${
-                          isUnpublished ? "opacity-40" : ""
-                        }`}
-                      >
-                        <span className="text-muted-foreground text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
-                          {date}
-                        </span>
-                        <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
-                          {post.title || "Untitled"}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+                        return (
+                          <li key={post.slug || index}>
+                            <Link
+                              href={`/posts/${post.slug}`}
+                              className={`flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base ${
+                                isUnpublished ? "opacity-40" : ""
+                              }`}
+                            >
+                              <span className="text-muted-foreground text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
+                                {day}
+                              </span>
+                              <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
+                                {post.title || "Untitled"}
+                              </span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </section>
           ))}
         </div>
