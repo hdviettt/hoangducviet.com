@@ -81,9 +81,9 @@ export async function getAdjacentPosts(currentSlug: string): Promise<{
   previous: Pick<Post, "slug" | "title"> | null;
   next: Pick<Post, "slug" | "title"> | null;
 }> {
-  // Get current post's date
+  // Use id (serial integer) to avoid timestamp microsecond precision issues
   const current = await db
-    .select({ dateCreated: posts.dateCreated })
+    .select({ id: posts.id })
     .from(posts)
     .where(and(eq(posts.slug, currentSlug), eq(posts.status, "published")))
     .limit(1);
@@ -92,26 +92,22 @@ export async function getAdjacentPosts(currentSlug: string): Promise<{
     return { previous: null, next: null };
   }
 
-  const currentDate = current[0].dateCreated;
+  const currentId = current[0].id;
 
-  // Previous = older post (date < current, ordered desc, limit 1)
   const [previousResult, nextResult] = await Promise.all([
+    // Previous = lower id (older post)
     db
       .select({ slug: posts.slug, title: posts.title })
       .from(posts)
-      .where(
-        and(eq(posts.status, "published"), lt(posts.dateCreated, currentDate)),
-      )
-      .orderBy(desc(posts.dateCreated))
+      .where(and(eq(posts.status, "published"), lt(posts.id, currentId)))
+      .orderBy(desc(posts.id))
       .limit(1),
-    // Next = newer post (date > current, ordered asc, limit 1)
+    // Next = higher id (newer post)
     db
       .select({ slug: posts.slug, title: posts.title })
       .from(posts)
-      .where(
-        and(eq(posts.status, "published"), gt(posts.dateCreated, currentDate)),
-      )
-      .orderBy(posts.dateCreated)
+      .where(and(eq(posts.status, "published"), gt(posts.id, currentId)))
+      .orderBy(posts.id)
       .limit(1),
   ]);
 
