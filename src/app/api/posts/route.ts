@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { posts, postsCategories } from "@/db/schema";
+import { posts, postsCategories, projectsPosts } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -50,6 +50,14 @@ export async function POST(request: Request) {
           categorySlug: slug,
         })),
       );
+    }
+
+    // Handle project association
+    if (body.projectSlug) {
+      await db.insert(projectsPosts).values({
+        projectSlug: body.projectSlug,
+        postSlug: post.slug,
+      });
     }
 
     return NextResponse.json(post, { status: 201 });

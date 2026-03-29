@@ -1,5 +1,11 @@
 import { db } from "@/db";
-import { postCategories, posts, postsCategories } from "@/db/schema";
+import {
+  postCategories,
+  posts,
+  postsCategories,
+  projects,
+  projectsPosts,
+} from "@/db/schema";
 import { and, desc, eq, gt, lt } from "drizzle-orm";
 
 export interface Post {
@@ -115,6 +121,26 @@ export async function getAdjacentPosts(currentSlug: string): Promise<{
     previous: previousResult.length ? previousResult[0] : null,
     next: nextResult.length ? nextResult[0] : null,
   };
+}
+
+export async function getProjectForPost(
+  postSlug: string,
+): Promise<{ slug: string; title: string } | null> {
+  try {
+    const result = await db
+      .select({
+        slug: projects.slug,
+        title: projects.title,
+      })
+      .from(projectsPosts)
+      .innerJoin(projects, eq(projectsPosts.projectSlug, projects.slug))
+      .where(eq(projectsPosts.postSlug, postSlug))
+      .limit(1);
+
+    return result.length ? result[0] : null;
+  } catch {
+    return null;
+  }
 }
 
 function mapPost(row: typeof posts.$inferSelect): Post {

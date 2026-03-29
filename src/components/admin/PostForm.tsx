@@ -15,12 +15,14 @@ interface PostFormProps {
     thumbnail: string;
     status: string;
     categories: string[];
+    projectSlug: string;
   };
   allCategories: Array<{ slug: string; title: string }>;
+  allProjects: Array<{ slug: string; title: string }>;
   isEdit?: boolean;
 }
 
-export default function PostForm({ initialData, allCategories, isEdit }: PostFormProps) {
+export default function PostForm({ initialData, allCategories, allProjects, isEdit }: PostFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
@@ -31,6 +33,7 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
   const [categories, setCategories] = useState<string[]>(initialData?.categories ?? []);
+  const [projectSlug, setProjectSlug] = useState(initialData?.projectSlug ?? "");
   const [showMeta, setShowMeta] = useState(false);
 
   const generateSlug = (text: string) =>
@@ -55,7 +58,7 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
       const res = await fetch(url, {
         method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, slug, description, content, thumbnail, status, categories }),
+        body: JSON.stringify({ title, slug, description, content, thumbnail, status, categories, projectSlug: projectSlug || null }),
       });
       if (!res.ok) { toast((await res.json()).error || "Failed to save", "error"); return; }
       router.push("/admin/posts");
@@ -109,6 +112,18 @@ export default function PostForm({ initialData, allCategories, isEdit }: PostFor
           <div>
             <MediaPicker value={thumbnail} onChange={setThumbnail} label="thumbnail" />
           </div>
+          {allProjects.length > 0 && (
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">project</label>
+              <select value={projectSlug} onChange={(e) => setProjectSlug(e.target.value)}
+                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                <option value="">none</option>
+                {allProjects.map((p) => (
+                  <option key={p.slug} value={p.slug}>{p.title}</option>
+                ))}
+              </select>
+            </div>
+          )}
           {allCategories.length > 0 && (
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5">categories</label>

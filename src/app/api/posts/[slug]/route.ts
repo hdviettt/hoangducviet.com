@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { posts, postsCategories } from "@/db/schema";
+import { posts, postsCategories, projectsPosts } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -88,6 +88,16 @@ export async function PUT(request: Request, { params }: Params) {
           categorySlug: slug,
         })),
       );
+    }
+
+    // Update project association: delete old, insert new
+    await db.delete(projectsPosts).where(eq(projectsPosts.postSlug, post.slug));
+
+    if (body.projectSlug) {
+      await db.insert(projectsPosts).values({
+        projectSlug: body.projectSlug,
+        postSlug: post.slug,
+      });
     }
 
     return NextResponse.json(post);

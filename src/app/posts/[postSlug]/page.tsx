@@ -6,7 +6,7 @@ import MarkdownContent from "@/components/content/MarkdownContent";
 import PostNavigation from "@/components/posts/PostNavigation";
 
 import { getGlobalMetadata } from "@/lib/global";
-import { getAdjacentPosts, getPostBySlug } from "@/lib/posts";
+import { getAdjacentPosts, getPostBySlug, getProjectForPost } from "@/lib/posts";
 
 interface PostParams {
   params: {
@@ -63,11 +63,13 @@ export async function generateMetadata({
 export default async function PostPage({ params }: PostParams) {
   let data: any = null;
   let adjacentPosts = { previous: null as any, next: null as any };
+  let project: { slug: string; title: string } | null = null;
 
   try {
-    [data, adjacentPosts] = await Promise.all([
+    [data, adjacentPosts, project] = await Promise.all([
       getPostBySlug(params.postSlug),
       getAdjacentPosts(params.postSlug),
+      getProjectForPost(params.postSlug), // returns null on error
     ]);
   } catch (error) {
     console.error("Error fetching post:", error);
@@ -104,18 +106,33 @@ export default async function PostPage({ params }: PostParams) {
               >
                 {data.title}
               </h1>
-              <time
-                className="text-sm"
-                dateTime={data.date_created ?? ""}
-                style={{ color: "var(--article-text)" }}
-              >
-                {data.date_created &&
-                  new Date(data.date_created).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-              </time>
+              <div className="flex flex-wrap items-center gap-3">
+                <time
+                  className="text-sm"
+                  dateTime={data.date_created ?? ""}
+                  style={{ color: "var(--article-text)" }}
+                >
+                  {data.date_created &&
+                    new Date(data.date_created).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                </time>
+                {project && (
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 border transition-colors"
+                    style={{
+                      color: "var(--article-link)",
+                      borderColor: "color-mix(in srgb, var(--article-link) 40%, transparent)",
+                    }}
+                  >
+                    <span className="opacity-60">#</span>
+                    {project.title}
+                  </Link>
+                )}
+              </div>
             </header>
 
             {/* Article Content */}
