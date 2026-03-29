@@ -25,8 +25,11 @@ export async function generateMetadata({
     const siteDescription =
       globalData && globalData.length > 0 ? globalData[0].tagline : "";
 
-    const thumbnailUrl = post.thumbnail || null;
-    const postUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com"}/posts/${params.postSlug}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    const thumbnailUrl = post.thumbnail
+      ? post.thumbnail.startsWith("http") ? post.thumbnail : `${baseUrl}${post.thumbnail}`
+      : null;
+    const postUrl = `${baseUrl}/posts/${params.postSlug}`;
 
     return {
       title: `${post.title} | ${siteTitle}`,

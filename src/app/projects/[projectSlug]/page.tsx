@@ -1,4 +1,5 @@
 import { getProjectBySlug } from "@/lib/projects";
+import { getGlobalMetadata } from "@/lib/global";
 import type { Metadata } from "next";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -13,9 +14,38 @@ export async function generateMetadata({
   params,
 }: ProjectParams): Promise<Metadata> {
   try {
-    const project = await getProjectBySlug(params.projectSlug);
+    const [project, globalData] = await Promise.all([
+      getProjectBySlug(params.projectSlug),
+      getGlobalMetadata(),
+    ]);
+    const siteTitle =
+      globalData && globalData.length > 0 ? globalData[0].title : "Blog";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    const thumbnailUrl = project.thumbnail
+      ? project.thumbnail.startsWith("http") ? project.thumbnail : `${baseUrl}${project.thumbnail}`
+      : null;
+    const projectUrl = `${baseUrl}/projects/${params.projectSlug}`;
+    const description = project.summary || "";
+
     return {
-      title: `${project.title}`,
+      title: `${project.title} | ${siteTitle}`,
+      description,
+      openGraph: {
+        title: project.title,
+        description,
+        url: projectUrl,
+        siteName: siteTitle,
+        type: "website",
+        images: thumbnailUrl
+          ? [{ url: thumbnailUrl, alt: project.title }]
+          : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: project.title,
+        description,
+        images: thumbnailUrl ? [thumbnailUrl] : [],
+      },
     };
   } catch (error) {
     return {
