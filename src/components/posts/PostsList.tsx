@@ -88,41 +88,37 @@ export default function PostsList({ posts }: PostsListProps) {
               </h2>
 
               {/* Months */}
-              <div className="space-y-6 md:space-y-8">
-                {months.map(({ month, label, posts: monthPosts }) => (
-                  <div key={month}>
-                    <h3 className="text-xs md:text-sm text-muted-foreground mb-2 md:mb-3">
-                      {label}
-                    </h3>
-                    <ul className="space-y-2 md:space-y-3">
-                      {monthPosts.map((post, index) => {
-                        const isUnpublished = post.status !== "published";
-                        const d = post.date_created ? new Date(post.date_created) : null;
-                        const day = d
-                          ? `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`
-                          : "";
+              <div className="space-y-1 md:space-y-1.5">
+                {months.map(({ month, label, posts: monthPosts }) =>
+                  monthPosts.map((post, index) => {
+                    const isUnpublished = post.status !== "published";
+                    const d = post.date_created ? new Date(post.date_created) : null;
+                    const day = d
+                      ? `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`
+                      : "";
 
-                        return (
-                          <li key={post.slug || index}>
-                            <Link
-                              href={`/posts/${post.slug}`}
-                              className={`flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base ${
-                                isUnpublished ? "opacity-40" : ""
-                              }`}
-                            >
-                              <span className="text-muted-foreground/50 text-xs md:text-sm w-24 shrink-0 order-2 sm:order-1">
-                                {day}
-                              </span>
-                              <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
-                                {post.title || "Untitled"}
-                              </span>
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ))}
+                    return (
+                      <div key={`${month}-${post.slug || index}`}>
+                        <Link
+                          href={`/posts/${post.slug}`}
+                          className={`flex items-baseline gap-4 py-1.5 md:py-2 group text-sm md:text-base ${
+                            isUnpublished ? "opacity-40" : ""
+                          }`}
+                        >
+                          <span className="text-muted-foreground/40 text-xs md:text-sm w-16 md:w-20 shrink-0 text-right">
+                            {index === 0 ? label : ""}
+                          </span>
+                          <span className="text-muted-foreground/50 text-xs md:text-sm w-20 md:w-24 shrink-0">
+                            {day}
+                          </span>
+                          <span className="text-foreground group-hover:text-primary transition-colors">
+                            {post.title || "Untitled"}
+                          </span>
+                        </Link>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </section>
           ))}
