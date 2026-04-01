@@ -125,13 +125,9 @@ export default async function PostPage({ params }: PostParams) {
                 {project && (
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-1.5 text-xs px-2 py-0.5 border transition-colors"
-                    style={{
-                      color: "var(--article-link)",
-                      borderColor: "color-mix(in srgb, var(--article-link) 40%, transparent)",
-                    }}
+                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
                   >
-                    <span className="opacity-60">#</span>
+                    <span className="text-primary/60">#</span>
                     {project.title}
                   </Link>
                 )}
