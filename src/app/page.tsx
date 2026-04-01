@@ -1,5 +1,6 @@
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
+import { getProjects } from "@/lib/projects";
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import Link from "next/link";
 
@@ -8,14 +9,17 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   let profileData: any[] = [];
   let latestPosts: any[] = [];
+  let projectsList: any[] = [];
 
   try {
-    const [profileResult, postsResult] = await Promise.all([
+    const [profileResult, postsResult, projectsResult] = await Promise.all([
       getProfile(),
       getPosts({ limit: 5 }),
+      getProjects(),
     ]);
     profileData = profileResult;
     latestPosts = postsResult;
+    projectsList = projectsResult;
   } catch (error) {
     console.error("Error fetching data:", error);
     return (
@@ -116,6 +120,39 @@ export default async function Home() {
                     </span>
                     <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
                       {post.title}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      {/* Projects Section */}
+      {projectsList.length > 0 && (
+        <section className="mt-10 sm:mt-12 md:mt-16">
+          <Link href="/projects" className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-5 block">
+            <h2>Projects</h2>
+          </Link>
+
+          <ul className="space-y-2 md:space-y-3">
+            {projectsList.map((project: any) => {
+              const year = project.date_created
+                ? new Date(project.date_created).getFullYear()
+                : "";
+
+              return (
+                <li key={project.slug}>
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
+                  >
+                    <span className="text-muted-foreground/50 text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
+                      {year}
+                    </span>
+                    <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
+                      {project.title}
                     </span>
                   </Link>
                 </li>
