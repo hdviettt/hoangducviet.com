@@ -1,7 +1,7 @@
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
 import { getProjects } from "@/lib/projects";
-import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
+import { Facebook, Github, Instagram, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -89,6 +89,15 @@ export default async function Home() {
                 </a>
               ))}
             </div>
+
+            {/* Contact */}
+            <a
+              href="mailto:viethd2704@gmail.com"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mt-3 md:mt-4"
+            >
+              <Mail className="w-4 h-4" />
+              <span>viethd2704@gmail.com</span>
+            </a>
           </div>
         </div>
       </section>
