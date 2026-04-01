@@ -104,7 +104,7 @@ export default async function PostPage({ params }: PostParams) {
             {/* Article Header */}
             <header className="mb-10 sm:mb-12">
               <h1
-                className="text-3xl sm:text-4xl md:text-[2.75rem] font-normal mb-4 leading-snug"
+                className="text-3xl sm:text-4xl md:text-[2.75rem] font-normal mb-4 leading-normal"
                 style={{ color: "var(--article-heading)" }}
               >
                 {data.title}
