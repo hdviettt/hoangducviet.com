@@ -136,29 +136,41 @@ export default async function Home() {
             <h2>Projects</h2>
           </Link>
 
-          <ul className="space-y-2 md:space-y-3">
-            {projectsList.map((project: any) => {
-              const year = project.date_created
-                ? new Date(project.date_created).getFullYear()
-                : "";
-
-              return (
-                <li key={project.slug}>
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
-                  >
-                    <span className="text-muted-foreground/50 text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
-                      {year}
-                    </span>
-                    <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
-                      {project.title}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            {projectsList.map((project: any) => (
+              <Link
+                key={project.slug}
+                href={`/projects/${project.slug}`}
+                className="group flex flex-col border border-border hover:border-primary/40 transition-colors bg-background overflow-hidden"
+              >
+                <div className="aspect-video bg-muted overflow-hidden">
+                  {project.thumbnail ? (
+                    <img
+                      src={project.thumbnail}
+                      alt={project.title || ""}
+                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <span className="text-5xl md:text-6xl font-medium text-muted-foreground/10 select-none">
+                        {(project.title || "?")[0].toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4 md:p-5 flex flex-col gap-1.5">
+                  <h3 className="text-base md:text-lg font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
+                    {project.title || "Untitled"}
+                  </h3>
+                  {project.summary && (
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                      {project.summary}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
         </section>
       )}
     </div>
