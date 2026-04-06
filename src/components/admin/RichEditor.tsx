@@ -474,9 +474,25 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         return false;
       },
       handlePaste: (view, event) => {
-        const items = event.clipboardData?.items;
-        if (!items) return false;
+        const clipboardData = event.clipboardData;
+        if (!clipboardData) return false;
 
+        // VS Code puts vscode-editor-data on the clipboard and wraps text
+        // in <pre><code>, which Tiptap interprets as a code block.
+        // Force plain text paste so tiptap-markdown handles it correctly.
+        const hasVSCode = clipboardData.types.some(
+          (t) => t === "vscode-editor-data",
+        );
+        if (hasVSCode) {
+          const text = clipboardData.getData("text/plain");
+          if (text) {
+            event.preventDefault();
+            editor?.commands.insertContent(text);
+            return true;
+          }
+        }
+
+        const items = clipboardData.items;
         for (const item of items) {
           if (item.type.startsWith("image/")) {
             event.preventDefault();
