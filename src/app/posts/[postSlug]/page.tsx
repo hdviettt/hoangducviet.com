@@ -112,6 +112,7 @@ export default async function PostPage({ params }: PostParams) {
       description: data.description || "",
       url: postUrl,
       datePublished: data.date_created || "",
+      dateModified: data.date_updated || data.date_created || "",
       image: thumbnailUrl,
       authorName: "Hoang Duc Viet",
       authorUrl: baseUrl,

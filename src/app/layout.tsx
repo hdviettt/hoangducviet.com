@@ -3,9 +3,17 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
+import dynamic from "next/dynamic";
 import ClientFileExplorer from "@/components/layout/ClientFileExplorer";
-import { PostHogProvider } from "@/components/providers/PostHogProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+
+const PostHogProvider = dynamic(
+  () =>
+    import("@/components/providers/PostHogProvider").then(
+      (mod) => mod.PostHogProvider,
+    ),
+  { ssr: false },
+);
 import { getGlobalMetadata } from "@/lib/global";
 
 const inter = Inter({
@@ -70,6 +78,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="preconnect" href="https://us.i.posthog.com" />
+        <link rel="preconnect" href="https://us-assets.i.posthog.com" />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">

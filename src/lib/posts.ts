@@ -17,6 +17,7 @@ export interface Post {
   thumbnail?: string | null;
   status?: string;
   date_created?: string;
+  date_updated?: string;
   categories?: Array<{ title: string }>;
 }
 
@@ -153,5 +154,6 @@ function mapPost(row: typeof posts.$inferSelect): Post {
     thumbnail: row.thumbnail,
     status: row.status,
     date_created: row.dateCreated?.toISOString(),
+    date_updated: row.dateUpdated?.toISOString(),
   };
 }
