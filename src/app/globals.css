@@ -39,7 +39,7 @@
 
   .dark {
     /* Dark theme - monochrome terminal style */
-    --background: 0 0% 7%;
+    --background: 0 0% 5%;
     --foreground: 0 0% 88%;
     --foreground-muted: 0 0% 78%;
     --muted: 0 0% 11%;
