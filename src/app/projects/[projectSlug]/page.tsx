@@ -1,8 +1,18 @@
-import { getProjectBySlug } from "@/lib/projects";
+import { getProjectBySlug, getProjects } from "@/lib/projects";
 import { getGlobalMetadata } from "@/lib/global";
+import { createBreadcrumbSchema } from "@/lib/jsonld";
 import type { Metadata } from "next";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
+
+export async function generateStaticParams() {
+  try {
+    const allProjects = await getProjects();
+    return allProjects.map((project) => ({ projectSlug: project.slug }));
+  } catch {
+    return [];
+  }
+}
 
 interface ProjectParams {
   params: {
@@ -30,6 +40,7 @@ export async function generateMetadata({
     return {
       title: `${project.title} | ${siteTitle}`,
       description,
+      alternates: { canonical: `/projects/${params.projectSlug}` },
       openGraph: {
         title: project.title,
         description,
@@ -74,8 +85,22 @@ export default async function ProjectPage({ params }: ProjectParams) {
     );
   }
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const projectUrl = `${baseUrl}/projects/${params.projectSlug}`;
+
+  const jsonLd = createBreadcrumbSchema([
+    { name: "Home", url: baseUrl },
+    { name: "Projects", url: `${baseUrl}/projects` },
+    { name: project.title || "", url: projectUrl },
+  ]);
+
   return (
     <div className="py-8 sm:py-12 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Back button */}
       <Link
         href="/projects"

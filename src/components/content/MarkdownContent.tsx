@@ -3,6 +3,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
+import Image from "next/image";
 import RenderedVisual from "./RenderedVisual";
 import WidgetBlock from "../widgets/WidgetBlock";
 
@@ -91,14 +92,16 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
           }
           return <pre {...props}>{children}</pre>;
         },
-        img: ({ src, alt, ...props }: any) => {
+        img: ({ src, alt }: any) => {
           return (
             <figure className="my-6">
-              <img
-                src={src}
+              <Image
+                src={src || ""}
                 alt={alt || ""}
+                width={800}
+                height={600}
                 className="w-full h-auto rounded-lg"
-                {...props}
+                sizes="(max-width: 768px) 100vw, 720px"
               />
               {alt && (
                 <figcaption

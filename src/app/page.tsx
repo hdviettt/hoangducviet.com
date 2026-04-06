@@ -1,10 +1,59 @@
+import type { Metadata } from "next";
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
 import { getProjects } from "@/lib/projects";
+import { getGlobalMetadata } from "@/lib/global";
+import { createWebSiteSchema, createPersonSchema } from "@/lib/jsonld";
 import { Facebook, Github, Instagram, Linkedin, Mail } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const [global, profileData] = await Promise.all([
+      getGlobalMetadata(),
+      getProfile(),
+    ]);
+    const siteTitle =
+      global && global.length > 0 ? global[0].title : "Hoang Duc Viet";
+    const siteTagline =
+      global && global.length > 0
+        ? global[0].tagline
+        : "Hoang Duc Viet's personal blog";
+    const profileImage = profileData?.[0]?.image || null;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    const imageUrl = profileImage
+      ? profileImage.startsWith("http")
+        ? profileImage
+        : `${baseUrl}${profileImage}`
+      : null;
+
+    return {
+      title: siteTitle,
+      description: siteTagline,
+      alternates: { canonical: "/" },
+      openGraph: {
+        title: siteTitle,
+        description: siteTagline || "",
+        url: baseUrl,
+        siteName: siteTitle,
+        type: "website",
+        images: imageUrl ? [{ url: imageUrl, alt: siteTitle || "" }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: siteTitle,
+        description: siteTagline || "",
+        images: imageUrl ? [imageUrl] : [],
+      },
+    };
+  } catch {
+    return { title: "Hoang Duc Viet" };
+  }
+}
 
 export default async function Home() {
   let profileData: any[] = [];
@@ -39,18 +88,51 @@ export default async function Home() {
 
   const mainProfile = profileData[0];
   const imageUrl = mainProfile.image || null;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const profileImageUrl = imageUrl
+    ? imageUrl.startsWith("http")
+      ? imageUrl
+      : `${baseUrl}${imageUrl}`
+    : undefined;
+
+  const jsonLd = [
+    createWebSiteSchema({
+      name: mainProfile.name || "Hoang Duc Viet",
+      description: "Personal blog",
+      url: baseUrl,
+    }),
+    createPersonSchema({
+      name: mainProfile.name || "Hoang Duc Viet",
+      url: baseUrl,
+      image: profileImageUrl,
+      sameAs: [
+        "https://github.com/hdviettt",
+        "https://www.facebook.com/hoangducviettt/",
+        "https://www.instagram.com/_hdviet/",
+        "https://www.linkedin.com/in/hdviet/",
+      ],
+    }),
+  ];
 
   return (
     <div className="py-8 sm:py-12 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Profile Section */}
       <section className="mb-10 sm:mb-12 md:mb-16">
         <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-8">
           {/* Image */}
           {imageUrl && (
-            <img
+            <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
+              width={160}
+              height={160}
               className="w-16 h-16 md:w-40 md:h-40 object-cover border border-border shrink-0 rounded-full"
+              priority
             />
           )}
 
@@ -152,12 +234,14 @@ export default async function Home() {
                 href={`/projects/${project.slug}`}
                 className="group flex flex-col border border-border hover:border-primary/40 transition-colors bg-background overflow-hidden"
               >
-                <div className="aspect-video bg-muted overflow-hidden">
+                <div className="relative aspect-video bg-muted overflow-hidden">
                   {project.thumbnail ? (
-                    <img
+                    <Image
                       src={project.thumbnail}
                       alt={project.title || ""}
-                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                      fill
+                      className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                      sizes="(max-width: 640px) 100vw, 50vw"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">

@@ -28,11 +28,19 @@ export async function generateMetadata(): Promise<Metadata> {
     global && global.length > 0
       ? global[0].tagline
       : "Hoang Duc Viet's personal blog";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
   return {
+    metadataBase: new URL(baseUrl),
     title: siteTitle,
     description: siteTagline,
     icons: {
       icon: "/favicon.svg",
+    },
+    alternates: {
+      types: {
+        "application/rss+xml": "/feed.xml",
+      },
     },
   };
 }

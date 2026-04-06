@@ -6,7 +6,17 @@ import MarkdownContent from "@/components/content/MarkdownContent";
 import PostNavigation from "@/components/posts/PostNavigation";
 
 import { getGlobalMetadata } from "@/lib/global";
-import { getAdjacentPosts, getPostBySlug, getProjectForPost } from "@/lib/posts";
+import { getAdjacentPosts, getPostBySlug, getPosts, getProjectForPost } from "@/lib/posts";
+import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
+
+export async function generateStaticParams() {
+  try {
+    const allPosts = await getPosts();
+    return allPosts.map((post) => ({ postSlug: post.slug! }));
+  } catch {
+    return [];
+  }
+}
 
 interface PostParams {
   params: {
@@ -34,6 +44,7 @@ export async function generateMetadata({
     return {
       title: `${post.title} | ${siteTitle}`,
       description: post.description || siteDescription,
+      alternates: { canonical: `/posts/${params.postSlug}` },
       openGraph: {
         title: post.title,
         description: post.description || siteDescription,
@@ -86,9 +97,39 @@ export default async function PostPage({ params }: PostParams) {
     );
   }
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const postUrl = `${baseUrl}/posts/${params.postSlug}`;
+  const thumbnailUrl = data.thumbnail
+    ? data.thumbnail.startsWith("http")
+      ? data.thumbnail
+      : `${baseUrl}${data.thumbnail}`
+    : undefined;
+
+  const jsonLd = [
+    createBlogPostingSchema({
+      title: data.title || "",
+      description: data.description || "",
+      url: postUrl,
+      datePublished: data.date_created || "",
+      image: thumbnailUrl,
+      authorName: "Hoang Duc Viet",
+      authorUrl: baseUrl,
+    }),
+    createBreadcrumbSchema([
+      { name: "Home", url: baseUrl },
+      { name: "Posts", url: `${baseUrl}/posts` },
+      { name: data.title || "", url: postUrl },
+    ]),
+  ];
+
   return (
     <>
-      <div className="py-8 sm:py-12 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <article className="py-8 sm:py-12 md:py-16">
         {/* Back button */}
         <Link
           href="/posts"
@@ -154,7 +195,7 @@ export default async function PostPage({ params }: PostParams) {
           previous={adjacentPosts.previous}
           next={adjacentPosts.next}
         />
-      </div>
+      </article>
     </>
   );
 }

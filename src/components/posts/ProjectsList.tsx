@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -55,12 +56,14 @@ function ProjectCard({ project }: { project: Project }) {
       </div>
 
       {/* Image preview at bottom */}
-      <div className="aspect-video bg-muted overflow-hidden mt-auto">
+      <div className="relative aspect-video bg-muted overflow-hidden mt-auto">
         {project.thumbnail ? (
-          <img
+          <Image
             src={project.thumbnail}
             alt={project.title || ""}
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            fill
+            className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            sizes="(max-width: 640px) 100vw, 50vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
