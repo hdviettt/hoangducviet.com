@@ -99,8 +99,8 @@ export default function AdminSidebar() {
                 collapsed ? "justify-center px-1" : "px-3"
               } ${
                 isActive
-                  ? "text-primary border-l-2 border-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-primary border-l-2 border-primary bg-primary/5"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
               }`}
             >
               <Icon className="w-[18px] h-[18px] shrink-0" />
@@ -117,7 +117,7 @@ export default function AdminSidebar() {
           type="button"
           onClick={toggleTheme}
           title={theme === "light" ? "Dark mode" : "Light mode"}
-          className={`flex items-center gap-3 py-2 text-[15px] text-muted-foreground hover:text-foreground transition-colors w-full ${
+          className={`flex items-center gap-3 py-2 text-[15px] text-muted-foreground hover:text-foreground transition-colors w-full btn-press ${
             collapsed ? "justify-center px-1" : "px-3"
           }`}
         >
@@ -134,7 +134,7 @@ export default function AdminSidebar() {
           type="button"
           onClick={handleLogout}
           title="Logout"
-          className={`flex items-center gap-3 py-2 text-[15px] text-muted-foreground hover:text-destructive transition-colors w-full ${
+          className={`flex items-center gap-3 py-2 text-[15px] text-muted-foreground hover:text-destructive transition-colors w-full btn-press ${
             collapsed ? "justify-center px-1" : "px-3"
           }`}
         >

@@ -60,12 +60,12 @@ export default function AdminCategoriesPage() {
           <input type="text" value={newSlug} onChange={(e) => setNewSlug(e.target.value)}
             className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
         </div>
-        <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 text-sm hover:opacity-90">add</button>
+        <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 text-sm hover:opacity-90 btn-press">add</button>
       </form>
 
-      <div className="border border-border divide-y divide-border">
+      <div className="border border-border divide-y divide-border stagger-list">
         {categories.map((cat) => (
-          <div key={cat.slug} className="flex items-center justify-between px-4 py-3">
+          <div key={cat.slug} className="flex items-center justify-between px-4 py-3 row-hover">
             <div>
               <span className="text-sm">{cat.title}</span>
               <span className="text-xs text-muted-foreground ml-2">({cat.slug})</span>

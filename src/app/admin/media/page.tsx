@@ -205,8 +205,8 @@ export default function AdminMediaPage() {
       <div className="sticky top-[-32px] z-10 bg-background pb-3 -mx-8 px-8 -mt-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-lg font-medium">media</h1>
-          <label className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 cursor-pointer">
-            {uploading ? "uploading..." : "upload"}
+          <label className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 cursor-pointer btn-press">
+            {uploading ? <span className="animate-pulse">uploading...</span> : "upload"}
             <input
               type="file"
               multiple
@@ -271,7 +271,7 @@ export default function AdminMediaPage() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 stagger-list">
         {filtered.map((item) => {
           const isSelected = selected.has(item.id);
           const isEditing = editingId === item.id;
@@ -292,7 +292,7 @@ export default function AdminMediaPage() {
                   <img
                     src={item.url}
                     alt={item.originalName}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover media-thumb-hover"
                   />
                   <div
                     className={`absolute top-1.5 left-1.5 w-5 h-5 border flex items-center justify-center text-xs transition-colors ${

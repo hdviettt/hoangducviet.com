@@ -27,17 +27,17 @@ export default async function AdminProjectsPage() {
         <h1 className="text-lg font-medium">projects</h1>
         <Link
           href="/admin/projects/new"
-          className="text-sm bg-primary text-primary-foreground px-4 py-1.5 hover:opacity-90 transition-opacity"
+          className="text-sm bg-primary text-primary-foreground px-4 py-1.5 hover:opacity-90 transition-opacity btn-press"
         >
           + new project
         </Link>
       </div>
 
-      <div className="border border-border divide-y divide-border">
+      <div className="border border-border divide-y divide-border stagger-list">
         {allProjects.map((project) => (
           <div
             key={project.slug}
-            className="flex items-center gap-4 px-4 py-3 hover:bg-muted/30 transition-colors"
+            className="flex items-center gap-4 px-4 py-3 row-hover"
           >
             <StatusToggle slug={project.slug} status={project.status} apiPath="projects" />
             <Link
@@ -51,7 +51,8 @@ export default async function AdminProjectsPage() {
                 {project.groupTitle}
               </span>
             )}
-            <span className={`text-xs ${project.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
+            <span className={`text-xs flex items-center gap-1.5 ${project.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${project.status === "published" ? "bg-green-500" : "bg-yellow-500"}`} />
               {project.status}
             </span>
             <span className="text-xs text-muted-foreground w-24 text-right">

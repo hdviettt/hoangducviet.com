@@ -357,16 +357,17 @@ small,
 
 /* Page transitions */
 .page-transition {
-  animation: fadeIn 0.3s ease;
+  animation: slideUp 0.25s ease-out;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Scrollbar - Terminal style */
@@ -608,5 +609,85 @@ small,
 }
 .animate-streak-flash {
   animation: streak-flash 0.3s ease-out both;
+}
+
+/* ================================
+   ADMIN UI — ANIMATIONS & UTILITIES
+   ================================ */
+
+@keyframes toastProgress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+@keyframes checkDraw {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes scanLine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Staggered list entrance */
+.stagger-list > * {
+  opacity: 0;
+  animation: slideUp 0.3s ease-out forwards;
+}
+.stagger-list > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-list > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-list > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-list > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-list > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-list > *:nth-child(6) { animation-delay: 200ms; }
+.stagger-list > *:nth-child(7) { animation-delay: 240ms; }
+.stagger-list > *:nth-child(8) { animation-delay: 280ms; }
+.stagger-list > *:nth-child(9) { animation-delay: 320ms; }
+.stagger-list > *:nth-child(10) { animation-delay: 360ms; }
+.stagger-list > *:nth-child(n+11) { animation-delay: 400ms; }
+
+/* Row hover with left accent */
+.row-hover {
+  transition: background-color 0.15s ease, border-left-color 0.15s ease;
+  border-left: 2px solid transparent;
+}
+.row-hover:hover {
+  background: hsl(var(--muted) / 0.4);
+  border-left-color: hsl(var(--primary) / 0.5);
+}
+
+/* Stat card outline glow (bypasses box-shadow:none) */
+.stat-card {
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  transition: outline-color 0.2s ease, background-color 0.2s ease;
+}
+.stat-card:hover {
+  outline-color: hsl(var(--primary) / 0.3);
+  background: hsl(var(--primary) / 0.03);
+}
+
+/* Toast countdown bar */
+.toast-progress {
+  transform-origin: left;
+  animation: toastProgress 3s linear forwards;
+}
+
+/* Button press feedback */
+.btn-press {
+  transition: transform 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.95);
+}
+
+/* Media thumbnail hover */
+.media-thumb-hover {
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.media-thumb-hover:hover {
+  transform: scale(1.04);
+  filter: brightness(1.1);
 }
 

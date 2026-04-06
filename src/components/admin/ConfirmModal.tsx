@@ -41,15 +41,15 @@ export default function ConfirmModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-background border border-border p-6 w-full max-w-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-in fade-in-0 duration-150">
+      <div className="bg-background border border-border p-6 w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-150">
         {title && <h3 className="text-sm font-medium mb-2">{title}</h3>}
         <p className="text-sm text-muted-foreground mb-5">{message}</p>
         <div className="flex justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="px-4 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors btn-press"
           >
             {cancelLabel}
           </button>
@@ -57,7 +57,7 @@ export default function ConfirmModal({
             ref={confirmRef}
             type="button"
             onClick={onConfirm}
-            className={`px-4 py-1.5 text-sm transition-opacity hover:opacity-90 ${
+            className={`px-4 py-1.5 text-sm transition-opacity hover:opacity-90 btn-press ${
               destructive
                 ? "bg-destructive text-destructive-foreground"
                 : "bg-primary text-primary-foreground"
