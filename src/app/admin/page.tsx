@@ -4,6 +4,7 @@ import { count, desc } from "drizzle-orm";
 import { FileText, FolderKanban, Image } from "lucide-react";
 import Link from "next/link";
 import StatusToggle from "@/components/admin/StatusToggle";
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -74,6 +75,8 @@ export default async function AdminDashboard() {
           </div>
         ))}
       </div>
+
+      <AnalyticsDashboard />
     </div>
   );
 }
