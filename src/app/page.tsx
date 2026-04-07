@@ -232,16 +232,30 @@ export default async function Home() {
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="group border border-border hover:border-primary/40 transition-colors bg-background p-4 md:p-5 flex flex-col gap-1.5"
+                className="group flex flex-col border border-border hover:border-primary/40 transition-colors bg-background overflow-hidden"
               >
-                <h3 className="text-base md:text-lg font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
-                  {project.title || "Untitled"}
-                </h3>
-                {project.summary && (
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                    {project.summary}
-                  </p>
-                )}
+                <div className="p-5 md:p-6 flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-2">
+                    {project.url && (
+                      <span className="text-xs text-muted-foreground truncate">
+                        {(() => { try { return new URL(project.url).hostname; } catch { return project.url; } })()}
+                      </span>
+                    )}
+                    {project.date_created && (
+                      <span className="text-xs text-muted-foreground ml-auto shrink-0">
+                        {new Date(project.date_created).getFullYear()}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-lg md:text-xl font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
+                    {project.title || "Untitled"}
+                  </h3>
+                  {project.summary && (
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                      {project.summary}
+                    </p>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
