@@ -232,35 +232,16 @@ export default async function Home() {
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="group flex flex-col border border-border hover:border-primary/40 transition-colors bg-background overflow-hidden"
+                className="group border border-border hover:border-primary/40 transition-colors bg-background p-4 md:p-5 flex flex-col gap-1.5"
               >
-                <div className="relative aspect-video bg-muted overflow-hidden">
-                  {project.thumbnail ? (
-                    <Image
-                      src={project.thumbnail}
-                      alt={project.title || ""}
-                      fill
-                      className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
-                      sizes="(max-width: 640px) 100vw, 50vw"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-5xl md:text-6xl font-medium text-muted-foreground/10 select-none">
-                        {(project.title || "?")[0].toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="p-4 md:p-5 flex flex-col gap-1.5">
-                  <h3 className="text-base md:text-lg font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
-                    {project.title || "Untitled"}
-                  </h3>
-                  {project.summary && (
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                      {project.summary}
-                    </p>
-                  )}
-                </div>
+                <h3 className="text-base md:text-lg font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
+                  {project.title || "Untitled"}
+                </h3>
+                {project.summary && (
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                    {project.summary}
+                  </p>
+                )}
               </Link>
             ))}
           </div>
