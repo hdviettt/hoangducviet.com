@@ -3,7 +3,7 @@ import { getPosts } from "@/lib/posts";
 import { getGlobalMetadata } from "@/lib/global";
 import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   try {

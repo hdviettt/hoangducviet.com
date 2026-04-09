@@ -9,6 +9,8 @@ import { getGlobalMetadata } from "@/lib/global";
 import { getAdjacentPosts, getPostBySlug, getPosts, getProjectForPost } from "@/lib/posts";
 import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   try {
     const allPosts = await getPosts();

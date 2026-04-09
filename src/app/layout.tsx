@@ -45,11 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: "/favicon.svg",
     },
-    alternates: {
-      types: {
-        "application/rss+xml": "/feed.xml",
-      },
-    },
+    alternates: {},
   };
 }
 
@@ -73,7 +69,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="vi"
+      lang="en"
       className={`${inter.variable} ${jetbrainsMono.variable} overflow-x-hidden`}
       suppressHydrationWarning
     >

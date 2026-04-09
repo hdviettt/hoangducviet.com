@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { posts, projects } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
