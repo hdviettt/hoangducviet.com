@@ -10,6 +10,7 @@ import {
   FolderKanban,
   Tags,
   Image,
+  Link2,
   Settings,
   LogOut,
   Moon,
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/admin/projects", label: "projects", icon: FolderKanban },
   { href: "/admin/categories", label: "categories", icon: Tags },
   { href: "/admin/media", label: "media", icon: Image },
+  { href: "/admin/internal-links", label: "internal links", icon: Link2 },
   { href: "/admin/settings", label: "settings", icon: Settings },
 ];
 
