@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   try {
