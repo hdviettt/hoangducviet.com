@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { FileText, FolderKanban, AlertTriangle, Link2, Unlink } from "lucide-react";
 import Link from "next/link";
 import LinkTable from "./LinkTable";
+import LinkGraph from "./LinkGraph";
 
 export const dynamic = "force-dynamic";
 
@@ -135,6 +136,17 @@ export default async function InternalLinksPage() {
 
   const totalLinks = uniqueEdges.length;
 
+  // Graph data — only edges between existing pages
+  const graphNodes = Array.from(pages.values()).map((page) => ({
+    id: page.path,
+    label: page.title,
+    type: page.type,
+    incoming: incoming.get(page.path)?.length ?? 0,
+  }));
+  const graphEdges = uniqueEdges
+    .filter((e) => pages.has(e.sourcePath) && pages.has(e.targetPath))
+    .map((e) => ({ source: e.sourcePath, target: e.targetPath }));
+
   return (
     <div className="max-w-5xl">
       <h1 className="text-lg font-medium mb-6">internal links</h1>
@@ -191,6 +203,16 @@ export default async function InternalLinksPage() {
           </div>
         ))}
       </div>
+
+      {/* Link graph */}
+      {graphNodes.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
+            link graph
+          </h2>
+          <LinkGraph nodes={graphNodes} edges={graphEdges} />
+        </section>
+      )}
 
       {/* Orphan pages */}
       {orphanPages.length > 0 && (
