@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { posts, projects } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { posts, projects, projectsPosts } from "@/db/schema";
+import { eq, asc } from "drizzle-orm";
 import { FileText, FolderKanban, AlertTriangle, Link2, Unlink } from "lucide-react";
 import Link from "next/link";
 import LinkTable from "./LinkTable";
@@ -18,6 +18,7 @@ type PageNode = {
 type LinkEdge = {
   sourcePath: string;
   targetPath: string;
+  linkType: "content" | "navigation" | "project-post";
 };
 
 function extractLinksFromMarkdown(content: string): string[] {
@@ -28,7 +29,7 @@ function extractLinksFromMarkdown(content: string): string[] {
   while ((match = mdLinkRegex.exec(content)) !== null) {
     links.push(`/${match[1]}/${match[2]}`);
   }
-  // Bare URLs in markdown: href="/posts/slug" or src="/posts/slug"
+  // HTML in markdown: href="/posts/slug" or src="/posts/slug"
   const hrefRegex = /(?:href|src)=["']\/(posts|projects)\/([^\s"'#]+)/g;
   while ((match = hrefRegex.exec(content)) !== null) {
     links.push(`/${match[1]}/${match[2]}`);
@@ -47,11 +48,17 @@ function extractLinksFromHtml(content: string): string[] {
 }
 
 export default async function InternalLinksPage() {
-  const [allPosts, allProjects] = await Promise.all([
+  const [allPosts, allProjects, allProjectPosts] = await Promise.all([
     db
-      .select({ slug: posts.slug, title: posts.title, content: posts.content })
+      .select({
+        slug: posts.slug,
+        title: posts.title,
+        content: posts.content,
+        dateCreated: posts.dateCreated,
+      })
       .from(posts)
-      .where(eq(posts.status, "published")),
+      .where(eq(posts.status, "published"))
+      .orderBy(asc(posts.dateCreated)),
     db
       .select({
         slug: projects.slug,
@@ -60,6 +67,7 @@ export default async function InternalLinksPage() {
       })
       .from(projects)
       .where(eq(projects.status, "published")),
+    db.select().from(projectsPosts),
   ]);
 
   // Build page map
@@ -78,23 +86,44 @@ export default async function InternalLinksPage() {
     });
   }
 
-  // Extract all links
   const edges: LinkEdge[] = [];
+
+  // 1. Content links (markdown in posts, HTML in projects)
   for (const post of allPosts) {
     if (!post.content) continue;
     const links = extractLinksFromMarkdown(post.content);
     for (const target of links) {
-      edges.push({ sourcePath: `/posts/${post.slug}`, targetPath: target });
+      edges.push({ sourcePath: `/posts/${post.slug}`, targetPath: target, linkType: "content" });
     }
   }
   for (const project of allProjects) {
     if (!project.description) continue;
     const links = extractLinksFromHtml(project.description);
     for (const target of links) {
-      edges.push({
-        sourcePath: `/projects/${project.slug}`,
-        targetPath: target,
-      });
+      edges.push({ sourcePath: `/projects/${project.slug}`, targetPath: target, linkType: "content" });
+    }
+  }
+
+  // 2. Project <-> Post relationships (from projectsPosts join table)
+  // These render as links on both sides: post pages show project tag, project pages list posts
+  for (const rel of allProjectPosts) {
+    const projectPath = `/projects/${rel.projectSlug}`;
+    const postPath = `/posts/${rel.postSlug}`;
+    // Project page links to post
+    edges.push({ sourcePath: projectPath, targetPath: postPath, linkType: "project-post" });
+    // Post page links to project (the #project tag)
+    edges.push({ sourcePath: postPath, targetPath: projectPath, linkType: "project-post" });
+  }
+
+  // 3. Adjacent post navigation (prev/next links)
+  // Posts are ordered by dateCreated — each post links to its prev and next
+  for (let i = 0; i < allPosts.length; i++) {
+    const current = `/posts/${allPosts[i].slug}`;
+    if (i > 0) {
+      edges.push({ sourcePath: current, targetPath: `/posts/${allPosts[i - 1].slug}`, linkType: "navigation" });
+    }
+    if (i < allPosts.length - 1) {
+      edges.push({ sourcePath: current, targetPath: `/posts/${allPosts[i + 1].slug}`, linkType: "navigation" });
     }
   }
 
