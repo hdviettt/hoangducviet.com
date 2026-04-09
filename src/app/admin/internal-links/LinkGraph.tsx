@@ -7,7 +7,6 @@ type GraphNode = {
   label: string;
   type: "post" | "project";
   incoming: number;
-  // simulation state
   x: number;
   y: number;
   vx: number;
@@ -20,11 +19,17 @@ type GraphEdge = {
 };
 
 type Props = {
-  nodes: { id: string; label: string; type: "post" | "project"; incoming: number }[];
+  nodes: {
+    id: string;
+    label: string;
+    type: "post" | "project";
+    incoming: number;
+  }[];
   edges: { source: string; target: string }[];
 };
 
 const NODE_RADIUS = 6;
+const HIT_RADIUS = 14;
 const COLORS = {
   post: "#3b82f6",
   project: "#a855f7",
@@ -35,31 +40,55 @@ const COLORS = {
 };
 
 export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
   const nodesRef = useRef<GraphNode[]>([]);
   const edgesRef = useRef<GraphEdge[]>(rawEdges);
   const hoveredRef = useRef<string | null>(null);
-  const dragRef = useRef<{ id: string; offsetX: number; offsetY: number } | null>(null);
+  const dragRef = useRef<{
+    id: string;
+    offsetX: number;
+    offsetY: number;
+  } | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
-  const sizeRef = useRef({ w: 800, h: 500 });
+  const sizeRef = useRef({ w: 0, h: 0 });
+  const initedRef = useRef(false);
 
-  // Init nodes with positions in a circle
+  // Measure container and init nodes
   useEffect(() => {
-    const w = sizeRef.current.w;
-    const h = sizeRef.current.h;
-    const cx = w / 2;
-    const cy = h / 2;
-    const r = Math.min(w, h) * 0.35;
+    const container = containerRef.current;
+    if (!container) return;
 
-    nodesRef.current = rawNodes.map((n, i) => ({
-      ...n,
-      x: cx + r * Math.cos((2 * Math.PI * i) / rawNodes.length),
-      y: cy + r * Math.sin((2 * Math.PI * i) / rawNodes.length),
-      vx: 0,
-      vy: 0,
-    }));
-    edgesRef.current = rawEdges;
+    const measure = () => {
+      const rect = container.getBoundingClientRect();
+      sizeRef.current.w = rect.width;
+      sizeRef.current.h = Math.max(400, Math.round(rect.width * 0.5));
+    };
+
+    measure();
+
+    // Init node positions in a circle
+    if (!initedRef.current) {
+      const w = sizeRef.current.w;
+      const h = sizeRef.current.h;
+      const cx = w / 2;
+      const cy = h / 2;
+      const r = Math.min(w, h) * 0.35;
+      nodesRef.current = rawNodes.map((n, i) => ({
+        ...n,
+        x: cx + r * Math.cos((2 * Math.PI * i) / rawNodes.length),
+        y: cy + r * Math.sin((2 * Math.PI * i) / rawNodes.length),
+        vx: 0,
+        vy: 0,
+      }));
+      edgesRef.current = rawEdges;
+      initedRef.current = true;
+    }
+
+    const obs = new ResizeObserver(() => measure());
+    obs.observe(container);
+    return () => obs.disconnect();
   }, [rawNodes, rawEdges]);
 
   const simulate = useCallback(() => {
@@ -67,16 +96,14 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
     const edges = edgesRef.current;
     const w = sizeRef.current.w;
     const h = sizeRef.current.h;
+    if (w === 0 || h === 0) return;
     const cx = w / 2;
     const cy = h / 2;
 
-    // Force simulation step
     for (const node of nodes) {
-      // Center gravity
       node.vx += (cx - node.x) * 0.001;
       node.vy += (cy - node.y) * 0.001;
 
-      // Repulsion from other nodes
       for (const other of nodes) {
         if (node.id === other.id) continue;
         const dx = node.x - other.x;
@@ -88,7 +115,6 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
       }
     }
 
-    // Edge attraction
     for (const edge of edges) {
       const source = nodes.find((n) => n.id === edge.source);
       const target = nodes.find((n) => n.id === edge.target);
@@ -103,16 +129,14 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
       target.vy -= (dy / dist) * force;
     }
 
-    // Apply velocity with damping
     for (const node of nodes) {
       if (dragRef.current?.id === node.id) continue;
       node.vx *= 0.85;
       node.vy *= 0.85;
       node.x += node.vx;
       node.y += node.vy;
-      // Keep in bounds
-      node.x = Math.max(NODE_RADIUS + 4, Math.min(w - NODE_RADIUS - 4, node.x));
-      node.y = Math.max(NODE_RADIUS + 4, Math.min(h - NODE_RADIUS - 4, node.y));
+      node.x = Math.max(20, Math.min(w - 20, node.x));
+      node.y = Math.max(20, Math.min(h - 20, node.y));
     }
   }, []);
 
@@ -122,13 +146,25 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = window.devicePixelRatio || 1;
     const w = sizeRef.current.w;
     const h = sizeRef.current.h;
+    if (w === 0 || h === 0) return;
 
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    ctx.scale(dpr, dpr);
+    const dpr = window.devicePixelRatio || 1;
+
+    // Set canvas buffer size to match CSS size * DPR
+    const bufW = Math.round(w * dpr);
+    const bufH = Math.round(h * dpr);
+    if (canvas.width !== bufW || canvas.height !== bufH) {
+      canvas.width = bufW;
+      canvas.height = bufH;
+    }
+
+    // Set CSS size explicitly so getBoundingClientRect matches our coordinate space
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
     const nodes = nodesRef.current;
@@ -136,28 +172,25 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
     const hovId = hoveredRef.current;
 
-    // Draw edges
+    // Edges
     for (const edge of edges) {
       const s = nodeMap.get(edge.source);
       const t = nodeMap.get(edge.target);
       if (!s || !t) continue;
-
-      const isHighlighted =
-        hovId && (edge.source === hovId || edge.target === hovId);
+      const isHl = hovId && (edge.source === hovId || edge.target === hovId);
 
       ctx.beginPath();
       ctx.moveTo(s.x, s.y);
       ctx.lineTo(t.x, t.y);
-      ctx.strokeStyle = isHighlighted ? COLORS.edgeHover : COLORS.edge;
-      ctx.lineWidth = isHighlighted ? 1.5 : 0.5;
+      ctx.strokeStyle = isHl ? COLORS.edgeHover : COLORS.edge;
+      ctx.lineWidth = isHl ? 1.5 : 0.5;
       ctx.stroke();
 
-      // Arrow
-      if (isHighlighted) {
+      if (isHl) {
         const angle = Math.atan2(t.y - s.y, t.x - s.x);
-        const arrowDist = NODE_RADIUS + 4;
-        const ax = t.x - Math.cos(angle) * arrowDist;
-        const ay = t.y - Math.sin(angle) * arrowDist;
+        const ad = NODE_RADIUS + 4;
+        const ax = t.x - Math.cos(angle) * ad;
+        const ay = t.y - Math.sin(angle) * ad;
         ctx.beginPath();
         ctx.moveTo(ax, ay);
         ctx.lineTo(
@@ -174,23 +207,20 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
       }
     }
 
-    // Draw nodes
+    // Nodes
     for (const node of nodes) {
-      const isHovered = hovId === node.id;
+      const isHov = hovId === node.id;
       const isOrphan = node.incoming === 0;
-      const radius = isHovered ? NODE_RADIUS + 2 : NODE_RADIUS;
+      const radius = isHov ? NODE_RADIUS + 2 : NODE_RADIUS;
 
       ctx.beginPath();
       ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = isOrphan
-        ? COLORS.orphan
-        : COLORS[node.type];
-      ctx.globalAlpha = hovId && !isHovered ? 0.4 : 1;
+      ctx.fillStyle = isOrphan ? COLORS.orphan : COLORS[node.type];
+      ctx.globalAlpha = hovId && !isHov ? 0.4 : 1;
       ctx.fill();
       ctx.globalAlpha = 1;
 
-      // Label
-      if (isHovered) {
+      if (isHov) {
         ctx.font = "12px var(--font-mono), monospace";
         ctx.fillStyle = COLORS.label;
         ctx.textAlign = "center";
@@ -215,45 +245,46 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
     };
   }, [simulate, draw]);
 
-  // Resize
-  useEffect(() => {
-    const container = canvasRef.current?.parentElement;
-    if (!container) return;
-    const obs = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        sizeRef.current.w = entry.contentRect.width;
-        sizeRef.current.h = Math.max(400, entry.contentRect.width * 0.5);
-      }
-    });
-    obs.observe(container);
-    return () => obs.disconnect();
-  }, []);
+  // Convert mouse event to canvas coordinates
+  const toCanvasCoords = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return { mx: 0, my: 0 };
+      const rect = canvas.getBoundingClientRect();
+      // Scale from CSS display size to our coordinate space
+      const scaleX = sizeRef.current.w / rect.width;
+      const scaleY = sizeRef.current.h / rect.height;
+      return {
+        mx: (e.clientX - rect.left) * scaleX,
+        my: (e.clientY - rect.top) * scaleY,
+      };
+    },
+    [],
+  );
 
-  // Mouse interaction
-  const getNodeAt = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return null;
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    for (const node of nodesRef.current) {
-      const dx = mx - node.x;
-      const dy = my - node.y;
-      if (dx * dx + dy * dy < (NODE_RADIUS + 4) ** 2) return node;
-    }
-    return null;
-  }, []);
+  const getNodeAt = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      const { mx, my } = toCanvasCoords(e);
+      for (const node of nodesRef.current) {
+        const dx = mx - node.x;
+        const dy = my - node.y;
+        if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) return node;
+      }
+      return null;
+    },
+    [toCanvasCoords],
+  );
 
   const onMouseMove = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
+      const { mx, my } = toCanvasCoords(e);
       if (dragRef.current) {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const rect = canvas.getBoundingClientRect();
-        const node = nodesRef.current.find((n) => n.id === dragRef.current!.id);
+        const node = nodesRef.current.find(
+          (n) => n.id === dragRef.current!.id,
+        );
         if (node) {
-          node.x = e.clientX - rect.left - dragRef.current.offsetX;
-          node.y = e.clientY - rect.top - dragRef.current.offsetY;
+          node.x = mx - dragRef.current.offsetX;
+          node.y = my - dragRef.current.offsetY;
           node.vx = 0;
           node.vy = 0;
         }
@@ -264,23 +295,21 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
       hoveredRef.current = id;
       if (id !== hovered) setHovered(id);
     },
-    [getNodeAt, hovered],
+    [toCanvasCoords, getNodeAt, hovered],
   );
 
   const onMouseDown = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
       const node = getNodeAt(e);
       if (!node) return;
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
+      const { mx, my } = toCanvasCoords(e);
       dragRef.current = {
         id: node.id,
-        offsetX: e.clientX - rect.left - node.x,
-        offsetY: e.clientY - rect.top - node.y,
+        offsetX: mx - node.x,
+        offsetY: my - node.y,
       };
     },
-    [getNodeAt],
+    [getNodeAt, toCanvasCoords],
   );
 
   const onMouseUp = useCallback(() => {
@@ -294,26 +323,34 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
   }, []);
 
   return (
-    <div className="w-full border border-border relative">
+    <div ref={containerRef} className="w-full border border-border relative">
       {/* Legend */}
       <div className="absolute top-3 left-3 flex gap-4 text-[10px] text-muted-foreground z-10">
         <span className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full" style={{ background: COLORS.post }} />
+          <span
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ background: COLORS.post }}
+          />
           post
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full" style={{ background: COLORS.project }} />
+          <span
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ background: COLORS.project }}
+          />
           project
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full" style={{ background: COLORS.orphan }} />
+          <span
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ background: COLORS.orphan }}
+          />
           orphan
         </span>
       </div>
       <canvas
         ref={canvasRef}
-        className="w-full cursor-grab active:cursor-grabbing"
-        style={{ height: "clamp(400px, 50vw, 600px)" }}
+        className="cursor-grab active:cursor-grabbing"
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
