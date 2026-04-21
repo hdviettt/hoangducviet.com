@@ -8,6 +8,12 @@ function wantsMarkdown(request: NextRequest): boolean {
   return accept.toLowerCase().includes("text/markdown");
 }
 
+function absoluteUrl(request: NextRequest, path: string): string {
+  const base =
+    process.env.NEXT_PUBLIC_BASE_URL ?? request.nextUrl.origin;
+  return `${base}${path}`;
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -20,11 +26,23 @@ export function middleware(request: NextRequest) {
   }
 
   const match = pathname.match(CONTENT_NEGOTIATED);
-  if (match && wantsMarkdown(request)) {
+  if (match) {
     const [, collection, slug] = match;
-    const url = request.nextUrl.clone();
-    url.pathname = `/${collection}/${slug}/md`;
-    return NextResponse.rewrite(url);
+
+    if (wantsMarkdown(request)) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${collection}/${slug}/md`;
+      return NextResponse.rewrite(url);
+    }
+
+    const response = NextResponse.next();
+    const canonical = absoluteUrl(request, `/${collection}/${slug}`);
+    const markdown = absoluteUrl(request, `/${collection}/${slug}/md`);
+    response.headers.set(
+      "Link",
+      `<${canonical}>; rel="canonical", <${markdown}>; rel="alternate"; type="text/markdown"`,
+    );
+    return response;
   }
 
   return NextResponse.next();
