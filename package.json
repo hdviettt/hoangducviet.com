@@ -25,6 +25,7 @@
     "@tiptap/react": "^3.20.1",
     "@tiptap/starter-kit": "^3.20.1",
     "@types/pg": "^8.18.0",
+    "@types/turndown": "^5.0.6",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.45.1",
@@ -44,7 +45,8 @@
     "remark-math": "^6.0.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "tiptap-markdown": "^0.9.0"
+    "tiptap-markdown": "^0.9.0",
+    "turndown": "^7.2.4"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",

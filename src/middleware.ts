@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-const POST_PATH = /^\/posts\/([^/]+)\/?$/;
+const CONTENT_NEGOTIATED = /^\/(posts|projects)\/([^/]+)\/?$/;
 
 function wantsMarkdown(request: NextRequest): boolean {
   const accept = request.headers.get("accept") ?? "";
@@ -19,10 +19,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const postMatch = pathname.match(POST_PATH);
-  if (postMatch && wantsMarkdown(request)) {
+  const match = pathname.match(CONTENT_NEGOTIATED);
+  if (match && wantsMarkdown(request)) {
+    const [, collection, slug] = match;
     const url = request.nextUrl.clone();
-    url.pathname = `/posts/${postMatch[1]}/md`;
+    url.pathname = `/${collection}/${slug}/md`;
     return NextResponse.rewrite(url);
   }
 
@@ -30,5 +31,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/posts/:slug"],
+  matcher: ["/admin/:path*", "/posts/:slug", "/projects/:slug"],
 };
