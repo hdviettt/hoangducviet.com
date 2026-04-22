@@ -55,12 +55,12 @@ export default function AdminCategoriesPage() {
             <label className="block text-xs text-muted-foreground mb-1">title</label>
             <input type="text" value={newTitle}
               onChange={(e) => { setNewTitle(e.target.value); setNewSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")); }}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
+              className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
           </div>
           <div className="flex-1">
             <label className="block text-xs text-muted-foreground mb-1">slug</label>
             <input type="text" value={newSlug} onChange={(e) => setNewSlug(e.target.value)}
-              className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
+              className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
           </div>
           <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 text-sm hover:opacity-90 btn-press">add</button>
         </form>

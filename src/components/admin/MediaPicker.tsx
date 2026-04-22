@@ -112,7 +112,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="search..."
-                className="bg-background border border-border px-2 py-1 text-xs focus:outline-none focus:border-primary flex-1"
+                className="bg-input border border-border px-2 py-1 text-xs focus:outline-none focus:border-primary flex-1"
               />
               <label className="bg-primary text-primary-foreground px-3 py-1 text-xs hover:opacity-90 cursor-pointer shrink-0">
                 {uploading ? "uploading..." : "upload new"}

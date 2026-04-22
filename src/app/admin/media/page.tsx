@@ -223,7 +223,7 @@ export default function AdminMediaPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="search media..."
-            className="bg-background border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary w-60"
+            className="bg-input border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary w-60"
           />
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <span>sort:</span>
@@ -318,7 +318,7 @@ export default function AdminMediaPage() {
                         if (e.key === "Enter") saveEdit();
                         if (e.key === "Escape") cancelEdit();
                       }}
-                      className="flex-1 bg-background border border-primary px-1.5 py-0.5 text-xs focus:outline-none min-w-0"
+                      className="flex-1 bg-input border border-primary px-1.5 py-0.5 text-xs focus:outline-none min-w-0"
                       autoFocus
                     />
                     <button

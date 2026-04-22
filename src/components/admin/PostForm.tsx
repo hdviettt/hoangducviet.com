@@ -69,7 +69,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+    <form onSubmit={handleSubmit} className="flex flex-col h-[calc(100vh-7.5rem)] overflow-hidden">
       {/* Sticky top bar: title + actions */}
       <div className="sticky top-0 z-20 bg-background border-b border-border pb-3 pt-3 mb-4 flex items-center gap-4">
         <input
@@ -81,7 +81,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
           required
         />
         <select value={status} onChange={(e) => setStatus(e.target.value)}
-          className="bg-background border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary shrink-0">
+          className="bg-input border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary shrink-0">
           <option value="draft">draft</option>
           <option value="published">published</option>
         </select>
@@ -104,12 +104,12 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
             <div>
               <label className="block text-xs text-muted-foreground mb-1">slug</label>
               <input type="text" value={slug} onChange={(e) => setSlug(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
+                className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" required />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1">description</label>
               <input type="text" value={description} onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="short excerpt for SEO" />
+                className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" placeholder="short excerpt for SEO" />
             </div>
           </div>
           <div>
@@ -119,7 +119,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
             <div>
               <label className="block text-xs text-muted-foreground mb-1">project</label>
               <select value={projectSlug} onChange={(e) => setProjectSlug(e.target.value)}
-                className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary">
                 <option value="">none</option>
                 {allProjects.map((p) => (
                   <option key={p.slug} value={p.slug}>{p.title}</option>

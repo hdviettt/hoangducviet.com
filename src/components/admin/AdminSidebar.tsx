@@ -107,7 +107,7 @@ export default function AdminSidebar() {
             )}
             {/* Section label for expanded state */}
             {!collapsed && (
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground/50 px-3 mb-1 mt-3 first:mt-0">
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-semibold px-3 mb-1 mt-4">
                 {section.label}
               </div>
             )}
