@@ -178,7 +178,7 @@ export default async function InternalLinksPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-lg font-medium mb-6">internal links</h1>
+      <h1 className="text-xl font-medium mb-6">internal links</h1>
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
@@ -214,20 +214,11 @@ export default async function InternalLinksPage() {
                 : "text-green-500",
           },
         ].map((stat) => (
-          <div
-            key={stat.label}
-            className="border border-border p-4"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className={`text-2xl font-medium ${stat.color}`}>
-                  {stat.value}
-                </div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  {stat.label}
-                </div>
-              </div>
-              <stat.icon className="w-5 h-5 text-muted-foreground/30" />
+          <div key={stat.label} className="border border-border p-5 stat-card relative overflow-hidden">
+            <stat.icon className="absolute right-4 bottom-3 w-12 h-12 text-border/60" />
+            <div className="relative">
+              <div className={`text-3xl font-medium tabular-nums leading-none ${stat.color}`}>{stat.value}</div>
+              <div className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">{stat.label}</div>
             </div>
           </div>
         ))}
@@ -249,7 +240,7 @@ export default async function InternalLinksPage() {
           <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
             orphan pages (no incoming links)
           </h2>
-          <div className="border border-border divide-y divide-border">
+          <div className="border border-border divide-y divide-border bg-card">
             {orphanPages.map((page) => (
               <div
                 key={page.path}
@@ -289,7 +280,7 @@ export default async function InternalLinksPage() {
           <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
             broken links
           </h2>
-          <div className="border border-border divide-y divide-border">
+          <div className="border border-border divide-y divide-border bg-card">
             {brokenLinks.map((edge) => {
               const source = pages.get(edge.sourcePath);
               return (

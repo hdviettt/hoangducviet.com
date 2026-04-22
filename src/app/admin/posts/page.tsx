@@ -14,7 +14,7 @@ export default async function AdminPostsPage() {
     <div className="max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <h1 className="text-lg font-medium">posts</h1>
+          <h1 className="text-xl font-medium">posts</h1>
           <span className="text-xs text-muted-foreground border border-border px-1.5 py-0.5 tabular-nums">{allPosts.length}</span>
         </div>
         <Link
@@ -25,7 +25,7 @@ export default async function AdminPostsPage() {
         </Link>
       </div>
 
-      <div className="border border-border">
+      <div className="border border-border bg-card">
         <div className="flex items-center gap-4 px-4 py-2 border-b border-border bg-muted/30 border-l-2 border-l-transparent">
           <div className="w-9 shrink-0" />
           <div className="text-xs text-muted-foreground uppercase tracking-wider flex-1">title</div>

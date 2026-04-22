@@ -661,11 +661,11 @@ small,
 .stat-card {
   outline: 1px solid transparent;
   outline-offset: -1px;
-  transition: outline-color 0.2s ease, background-color 0.2s ease;
+  background: hsl(var(--card));
+  transition: outline-color 0.2s ease;
 }
 .stat-card:hover {
   outline-color: hsl(var(--primary) / 0.3);
-  background: hsl(var(--primary) / 0.03);
 }
 
 /* Toast countdown bar */

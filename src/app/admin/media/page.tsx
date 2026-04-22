@@ -204,7 +204,7 @@ export default function AdminMediaPage() {
       {/* Sticky header + toolbar */}
       <div className="sticky top-[-32px] z-10 bg-background pb-3 -mx-8 px-8 -mt-8 pt-8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-lg font-medium">media</h1>
+          <h1 className="text-xl font-medium">media</h1>
           <label className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 cursor-pointer btn-press">
             {uploading ? <span className="animate-pulse">uploading...</span> : "upload"}
             <input
@@ -279,7 +279,7 @@ export default function AdminMediaPage() {
           return (
             <div
               key={item.id}
-              className={`border overflow-hidden transition-colors ${
+              className={`bg-card border overflow-hidden transition-colors ${
                 isSelected ? "border-primary ring-1 ring-primary" : "border-border"
               }`}
             >
@@ -307,7 +307,7 @@ export default function AdminMediaPage() {
               )}
 
               {/* Info */}
-              <div className="p-2">
+              <div className="p-3">
                 {isEditing ? (
                   <div className="flex gap-1">
                     <input

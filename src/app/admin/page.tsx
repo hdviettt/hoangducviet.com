@@ -29,7 +29,12 @@ export default async function AdminDashboard() {
 
   return (
     <div className="max-w-4xl">
-      <h1 className="text-lg font-medium mb-6">dashboard</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-xl font-medium">dashboard</h1>
+        <span className="text-xs text-muted-foreground">
+          {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+        </span>
+      </div>
 
       <div className="grid grid-cols-3 gap-3 mb-8 stagger-list">
         {stats.map((stat) => (
@@ -56,7 +61,7 @@ export default async function AdminDashboard() {
           view all →
         </Link>
       </div>
-      <div className="border border-border mb-8">
+      <div className="border border-border mb-8 bg-card">
         <div className="flex items-center gap-3 px-3 py-2 border-b border-border bg-muted/30 border-l-2 border-l-transparent">
           <div className="w-9 shrink-0" />
           <div className="text-xs text-muted-foreground uppercase tracking-wider flex-1">title</div>

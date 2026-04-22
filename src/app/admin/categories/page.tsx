@@ -46,7 +46,7 @@ export default function AdminCategoriesPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-lg font-medium mb-6">categories</h1>
+      <h1 className="text-xl font-medium mb-6">categories</h1>
 
       <div className="border border-border p-5 mb-8">
         <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-4">new category</h2>

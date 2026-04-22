@@ -49,7 +49,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-lg font-medium mb-6">settings</h1>
+      <h1 className="text-xl font-medium mb-6">settings</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <section className="border border-border p-5">

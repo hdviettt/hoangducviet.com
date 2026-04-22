@@ -5,6 +5,7 @@ import { useState } from "react";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
 import { useToast } from "@/components/admin/Toast";
+import { Settings, ChevronDown } from "lucide-react";
 
 interface PostFormProps {
   initialData?: {
@@ -70,7 +71,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
   return (
     <form onSubmit={handleSubmit} className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
       {/* Sticky top bar: title + actions */}
-      <div className="sticky top-0 z-20 bg-background border-b border-border pb-3 mb-4 flex items-center gap-4">
+      <div className="sticky top-0 z-20 bg-background border-b border-border pb-3 pt-3 mb-4 flex items-center gap-4">
         <input
           type="text"
           value={title}
@@ -80,7 +81,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
           required
         />
         <select value={status} onChange={(e) => setStatus(e.target.value)}
-          className="bg-background border border-border px-3 py-1.5 text-xs focus:outline-none focus:border-primary shrink-0">
+          className="bg-background border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary shrink-0">
           <option value="draft">draft</option>
           <option value="published">published</option>
         </select>
@@ -89,14 +90,16 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
           {saving ? "saving..." : isEdit ? "update" : "publish"}
         </button>
         <button type="button" onClick={() => setShowMeta(!showMeta)}
-          className="text-xs text-muted-foreground hover:text-primary transition-colors shrink-0">
-          {showMeta ? "▲ settings" : "⚙ settings"}
+          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors shrink-0">
+          <Settings className="w-3.5 h-3.5" />
+          settings
+          <ChevronDown className={`w-3 h-3 transition-transform ${showMeta ? "rotate-180" : ""}`} />
         </button>
       </div>
 
       {/* Collapsible metadata panel */}
       {showMeta && (
-        <div className="border border-border p-4 space-y-3 mb-4 shrink-0">
+        <div className="bg-card border border-border p-5 space-y-4 mb-4 shrink-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-muted-foreground mb-1">slug</label>

@@ -145,7 +145,7 @@ export default function ProjectForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-            Title
+            title
           </label>
           <input
             type="text"
@@ -157,7 +157,7 @@ export default function ProjectForm({
         </div>
         <div>
           <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-            Slug
+            slug
           </label>
           <input
             type="text"
@@ -171,7 +171,7 @@ export default function ProjectForm({
 
       <div>
         <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          Project URL
+          project url
         </label>
         <input
           type="url"
@@ -184,7 +184,7 @@ export default function ProjectForm({
 
       <div>
         <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          Summary <span className="normal-case">(shown on cards)</span>
+          summary <span className="normal-case">(shown on cards)</span>
         </label>
         <textarea
           value={summary}
@@ -197,33 +197,33 @@ export default function ProjectForm({
 
       <div>
         <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          Content <span className="normal-case">(shown on project page)</span>
+          content <span className="normal-case">(shown on project page)</span>
         </label>
         <RichEditor content={description} onChange={setDescription} outputFormat="html" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <MediaPicker value={thumbnail} onChange={setThumbnail} label="Thumbnail" />
+          <MediaPicker value={thumbnail} onChange={setThumbnail} label="thumbnail" />
         </div>
         <div>
           <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-            Status
+            status
           </label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="w-full bg-background border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
           >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
+            <option value="draft">draft</option>
+            <option value="published">published</option>
           </select>
         </div>
       </div>
 
       <div>
         <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          Group
+          group
         </label>
         <div className="flex gap-2">
           <select
@@ -267,9 +267,9 @@ export default function ProjectForm({
       {allPosts.length > 0 && (
         <div>
           <label className="block text-xs text-muted-foreground mb-2 uppercase tracking-wider">
-            Related Posts
+            related posts
           </label>
-          <div className="border border-border max-h-48 overflow-y-auto divide-y divide-border">
+          <div className="border border-border bg-card max-h-48 overflow-y-auto divide-y divide-border">
             {allPosts.map((post) => (
               <button
                 key={post.slug}
@@ -294,7 +294,7 @@ export default function ProjectForm({
           disabled={saving}
           className="bg-primary text-primary-foreground px-6 py-2 text-sm uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50"
         >
-          {saving ? "Saving..." : isEdit ? "Update Project" : "Create Project"}
+          {saving ? "saving..." : isEdit ? "update project" : "create project"}
         </button>
         <button
           type="button"
