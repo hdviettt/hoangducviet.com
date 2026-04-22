@@ -5,6 +5,7 @@ import { FileText, FolderKanban, Image } from "lucide-react";
 import Link from "next/link";
 import StatusToggle from "@/components/admin/StatusToggle";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import EmptyState, { StatusPill } from "@/components/admin/EmptyState";
 
 export const dynamic = "force-dynamic";
 
@@ -64,32 +65,37 @@ export default async function AdminDashboard() {
       <div className="border border-border mb-8 bg-card">
         <div className="flex items-center gap-3 px-3 py-2 border-b border-border bg-muted/30 border-l-2 border-l-transparent">
           <div className="w-9 shrink-0" />
-          <div className="text-xs text-muted-foreground uppercase tracking-wider flex-1">title</div>
-          <div className="text-xs text-muted-foreground uppercase tracking-wider">status</div>
+          <div className="text-[10px] text-muted-foreground uppercase tracking-widest flex-1 font-semibold">title</div>
+          <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">status</div>
         </div>
-        <div className="divide-y divide-border stagger-list">
-          {recentPosts.map((post) => (
-            <div
-              key={post.slug}
-              className="flex items-center gap-3 py-2 px-3 row-hover"
-            >
-              <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
-              <Link
-                href={`/admin/posts/${post.slug}/edit`}
-                className="text-sm flex-1 truncate hover:text-primary transition-colors"
-              >
-                {post.title}
+        {recentPosts.length === 0 ? (
+          <EmptyState
+            title="no posts yet"
+            hint={
+              <Link href="/admin/posts/new" className="text-primary hover:underline">
+                + new post
               </Link>
-              <span className={`text-xs flex items-center gap-1.5 ${post.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${post.status === "published" ? "bg-green-500" : "bg-yellow-500"}`} />
-                {post.status}
-              </span>
-            </div>
-          ))}
-          {recentPosts.length === 0 && (
-            <div className="px-4 py-8 text-center text-sm text-muted-foreground">no posts yet.</div>
-          )}
-        </div>
+            }
+          />
+        ) : (
+          <div className="divide-y divide-border stagger-list">
+            {recentPosts.map((post) => (
+              <div
+                key={post.slug}
+                className="flex items-center gap-3 py-2 px-3 row-hover"
+              >
+                <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
+                <Link
+                  href={`/admin/posts/${post.slug}/edit`}
+                  className="text-sm flex-1 truncate hover:text-primary transition-colors"
+                >
+                  {post.title}
+                </Link>
+                <StatusPill status={post.status} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <AnalyticsDashboard />
