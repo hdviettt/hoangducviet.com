@@ -113,7 +113,7 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Bottom actions */}
-      <div className={`space-y-1 mt-4 shrink-0 ${collapsed ? "px-1" : ""}`}>
+      <div className={`space-y-1 mt-4 pt-3 border-t border-border shrink-0 ${collapsed ? "px-1" : ""}`}>
         {/* Dark mode toggle */}
         <button
           type="button"

@@ -36,44 +36,55 @@ export default async function AdminDashboard() {
           <Link
             key={stat.label}
             href={stat.href}
-            className="group border border-border p-4 stat-card btn-press relative overflow-hidden"
+            className="group border border-border p-5 stat-card btn-press relative overflow-hidden"
           >
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
               <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary/5 to-transparent animate-[scanLine_2s_ease-in-out_infinite]" />
             </div>
-            <div className="flex items-center justify-between relative">
-              <div>
-                <div className="text-2xl font-medium text-primary">{stat.count}</div>
-                <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
-              </div>
-              <stat.icon className="w-5 h-5 text-muted-foreground/30 group-hover:text-primary/50 transition-colors" />
+            <stat.icon className="absolute right-4 bottom-3 w-12 h-12 text-border/60 group-hover:text-primary/15 transition-colors" />
+            <div className="relative">
+              <div className="text-3xl font-medium text-primary tabular-nums leading-none">{stat.count}</div>
+              <div className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">{stat.label}</div>
             </div>
           </Link>
         ))}
       </div>
 
-      <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
-        recent posts
-      </h2>
-      <div className="space-y-0 stagger-list">
-        {recentPosts.map((post) => (
-          <div
-            key={post.slug}
-            className="flex items-center gap-3 py-2 px-2 row-hover"
-          >
-            <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
-            <Link
-              href={`/admin/posts/${post.slug}/edit`}
-              className="text-sm flex-1 truncate hover:text-primary transition-colors"
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-border">
+        <h2 className="text-xs text-muted-foreground uppercase tracking-wider">recent posts</h2>
+        <Link href="/admin/posts" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+          view all →
+        </Link>
+      </div>
+      <div className="border border-border mb-8">
+        <div className="flex items-center gap-3 px-3 py-2 border-b border-border bg-muted/30 border-l-2 border-l-transparent">
+          <div className="w-9 shrink-0" />
+          <div className="text-xs text-muted-foreground uppercase tracking-wider flex-1">title</div>
+          <div className="text-xs text-muted-foreground uppercase tracking-wider">status</div>
+        </div>
+        <div className="divide-y divide-border stagger-list">
+          {recentPosts.map((post) => (
+            <div
+              key={post.slug}
+              className="flex items-center gap-3 py-2 px-3 row-hover"
             >
-              {post.title}
-            </Link>
-            <span className={`text-xs flex items-center gap-1.5 ${post.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${post.status === "published" ? "bg-green-500" : "bg-yellow-500"}`} />
-              {post.status}
-            </span>
-          </div>
-        ))}
+              <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
+              <Link
+                href={`/admin/posts/${post.slug}/edit`}
+                className="text-sm flex-1 truncate hover:text-primary transition-colors"
+              >
+                {post.title}
+              </Link>
+              <span className={`text-xs flex items-center gap-1.5 ${post.status === "published" ? "text-green-500" : "text-yellow-500"}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${post.status === "published" ? "bg-green-500" : "bg-yellow-500"}`} />
+                {post.status}
+              </span>
+            </div>
+          ))}
+          {recentPosts.length === 0 && (
+            <div className="px-4 py-8 text-center text-sm text-muted-foreground">no posts yet.</div>
+          )}
+        </div>
       </div>
 
       <AnalyticsDashboard />

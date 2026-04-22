@@ -51,9 +51,9 @@ export default function AdminSettingsPage() {
     <div className="max-w-2xl">
       <h1 className="text-lg font-medium mb-6">settings</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <section>
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">site</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <section className="border border-border p-5">
+          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-4 pb-2 border-b border-border">site</h2>
           <div className="space-y-3">
             <div>
               <label className="block text-xs text-muted-foreground mb-1">title</label>
@@ -68,8 +68,8 @@ export default function AdminSettingsPage() {
           </div>
         </section>
 
-        <section>
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">profile</h2>
+        <section className="border border-border p-5">
+          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-4 pb-2 border-b border-border">profile</h2>
           <div className="space-y-3">
             <div>
               <label className="block text-xs text-muted-foreground mb-1">name</label>
@@ -88,7 +88,7 @@ export default function AdminSettingsPage() {
 
         <button type="submit" disabled={saving}
           className="bg-primary text-primary-foreground px-6 py-2 text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
-          {saving ? "saving..." : "save"}
+          {saving ? "saving..." : "save settings"}
         </button>
       </form>
     </div>
