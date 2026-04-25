@@ -115,11 +115,6 @@ export default async function Home() {
     }),
   ];
 
-  // Split the bio HTML into a positioning headline (first <p>) and a body
-  // sub-headline (subsequent <p>s). The DB stores rich HTML with links, so
-  // we render both via dangerouslySetInnerHTML and preserve them.
-  const { headline, body: bioBody } = splitBio(mainProfile.description || "");
-
   return (
     <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
       <script
@@ -127,67 +122,62 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero — positioning fact as the visual hero, name as deck-label above */}
-      <section className="mb-32 md:mb-44">
-        {mainProfile?.name && (
-          <span className="deck-label">{mainProfile.name}</span>
-        )}
-        {headline ? (
-          <h1
-            className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-8 md:mb-12 max-w-5xl [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
-            dangerouslySetInnerHTML={{ __html: headline }}
-          />
-        ) : (
-          mainProfile?.name && (
-            <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-10 md:mb-14">
-              {mainProfile.name}
-            </h1>
-          )
-        )}
-        {bioBody && (
-          <div
-            className="text-lg md:text-2xl font-medium text-foreground/70 leading-snug max-w-3xl mb-12 md:mb-16 [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
-            dangerouslySetInnerHTML={{ __html: bioBody }}
-          />
-        )}
-
-        {/* Meta row — small photo + socials + email, sits below the hero copy */}
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+      {/* Hero — picture and name in the spotlight, bio as supporting copy */}
+      <section className="mb-32 md:mb-40">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-8 md:gap-10">
           {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              width={160}
-              height={160}
-              className="w-12 h-12 object-cover shrink-0 rounded-full"
+              width={256}
+              height={256}
+              className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover shrink-0 rounded-full"
               priority
             />
           )}
-          {[
-            { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
-            { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
-            { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
-            { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
-          ].map(({ href, icon: Icon, label }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
-              aria-label={label}
-            >
-              <Icon className="w-5 h-5" />
-            </a>
-          ))}
-          <span className="w-px h-4 bg-border" />
-          <a
-            href="mailto:viethd2704@gmail.com"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Mail className="w-4 h-4" />
-            <span>viethd2704@gmail.com</span>
-          </a>
+
+          <div className="flex-1 min-w-0">
+            {mainProfile?.name && (
+              <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl mb-5 md:mb-7">
+                {mainProfile.name}
+              </h1>
+            )}
+
+            {mainProfile?.description && (
+              <div
+                className="text-base md:text-lg text-foreground/75 leading-relaxed max-w-2xl [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-3 [&_p:last-child]:mb-0"
+                dangerouslySetInnerHTML={{ __html: mainProfile.description }}
+              />
+            )}
+
+            <div className="mt-7 md:mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+              {[
+                { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
+                { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
+                { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
+                { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  aria-label={label}
+                >
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
+              <span className="w-px h-4 bg-border" />
+              <a
+                href="mailto:viethd2704@gmail.com"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+                <span>viethd2704@gmail.com</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -271,25 +261,4 @@ export default async function Home() {
       )}
     </div>
   );
-}
-
-// Split bio HTML stored as <p>…</p><p>…</p> into a positioning headline (the
-// first paragraph) and a body sub-headline (the rest joined). Empty paragraphs
-// are dropped. Returned strings keep inline HTML (links, &nbsp;, etc.) so the
-// caller can render them via dangerouslySetInnerHTML.
-function splitBio(html: string): { headline: string; body: string } {
-  if (!html) return { headline: "", body: "" };
-  const paragraphs = html
-    .split(/<\/p>\s*<p[^>]*>/i)
-    .map((p) =>
-      p
-        .replace(/^\s*<p[^>]*>/i, "")
-        .replace(/<\/p>\s*$/i, "")
-        .trim(),
-    )
-    .filter(Boolean);
-  return {
-    headline: paragraphs[0] || "",
-    body: paragraphs.slice(1).join(" "),
-  };
 }
