@@ -115,88 +115,99 @@ export default async function Home() {
     }),
   ];
 
+  // Split the bio HTML into a positioning headline (first <p>) and a body
+  // sub-headline (subsequent <p>s). The DB stores rich HTML with links, so
+  // we render both via dangerouslySetInnerHTML and preserve them.
+  const { headline, body: bioBody } = splitBio(mainProfile.description || "");
+
   return (
-    <div className="py-8 sm:py-12 md:py-16">
+    <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Profile Section */}
-      <section className="mb-10 sm:mb-12 md:mb-16">
-        <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-8">
-          {/* Image */}
+
+      {/* Hero — positioning fact as the visual hero, name as deck-label above */}
+      <section className="mb-32 md:mb-44">
+        {mainProfile?.name && (
+          <span className="deck-label">{mainProfile.name}</span>
+        )}
+        {headline ? (
+          <h1
+            className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-8 md:mb-12 max-w-5xl [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
+            dangerouslySetInnerHTML={{ __html: headline }}
+          />
+        ) : (
+          mainProfile?.name && (
+            <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-10 md:mb-14">
+              {mainProfile.name}
+            </h1>
+          )
+        )}
+        {bioBody && (
+          <div
+            className="text-lg md:text-2xl font-medium text-foreground/70 leading-snug max-w-3xl mb-12 md:mb-16 [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
+            dangerouslySetInnerHTML={{ __html: bioBody }}
+          />
+        )}
+
+        {/* Meta row — small photo + socials + email, sits below the hero copy */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
           {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
               width={160}
               height={160}
-              className="w-16 h-16 md:w-40 md:h-40 object-cover border border-border shrink-0 rounded-full"
+              className="w-12 h-12 object-cover shrink-0 rounded-full"
               priority
             />
           )}
-
-          {/* Text column */}
-          <div className="min-w-0">
-            {mainProfile?.name && (
-              <h1 className="text-lg sm:text-xl md:text-3xl font-medium text-foreground mb-3 md:mb-4">
-                {mainProfile.name}
-              </h1>
-            )}
-
-            {mainProfile?.description && (
-              <div
-                className="text-sm md:text-base text-muted-foreground leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-3 [&_p:last-child]:mb-0"
-                dangerouslySetInnerHTML={{ __html: mainProfile.description }}
-              />
-            )}
-
-            {/* Social Links */}
-            <div className="flex items-center gap-3 md:gap-4 mt-4 md:mt-5">
-              {[
-                { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
-                { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
-                { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
-                { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
-              ].map(({ href, icon: Icon, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label={label}
-                >
-                  <Icon className="w-4 h-4 md:w-5 md:h-5" />
-                </a>
-              ))}
-            </div>
-
-            {/* Contact */}
+          {[
+            { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
+            { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
+            { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
+            { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
+          ].map(({ href, icon: Icon, label }) => (
             <a
-              href="mailto:viethd2704@gmail.com"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mt-3 md:mt-4"
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              aria-label={label}
             >
-              <Mail className="w-4 h-4" />
-              <span>viethd2704@gmail.com</span>
+              <Icon className="w-5 h-5" />
             </a>
-          </div>
+          ))}
+          <span className="w-px h-4 bg-border" />
+          <a
+            href="mailto:viethd2704@gmail.com"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Mail className="w-4 h-4" />
+            <span>viethd2704@gmail.com</span>
+          </a>
         </div>
       </section>
 
-      {/* Posts Section */}
+      {/* Posts — naked typographic list, deck-list style */}
       {latestPosts.length > 0 && (
-        <section>
-          <Link href="/posts" className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-5 block">
-            <h2>Posts</h2>
+        <section className="mb-32 md:mb-40">
+          <Link
+            href="/posts"
+            className="inline-block deck-label hover:text-primary transition-colors"
+          >
+            <h2 className="deck-label !mb-0">recent writing</h2>
           </Link>
 
-          <ul className="space-y-2 md:space-y-3">
+          <ul className="mt-2 divide-y divide-border/50">
             {latestPosts.map((post) => {
               const date = post.date_created
                 ? new Date(post.date_created).toLocaleDateString("en-US", {
                     month: "short",
-                    day: "2-digit",
+                    day: "numeric",
+                    year: "2-digit",
                   })
                 : "";
 
@@ -204,13 +215,13 @@ export default async function Home() {
                 <li key={post.slug}>
                   <Link
                     href={`/posts/${post.slug}`}
-                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
+                    className="flex items-baseline gap-6 py-5 md:py-6 group"
                   >
-                    <span className="text-muted-foreground/50 text-xs md:text-sm w-16 shrink-0 order-2 sm:order-1">
-                      {date}
-                    </span>
-                    <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
+                    <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {post.title}
+                    </span>
+                    <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                      {date}
                     </span>
                   </Link>
                 </li>
@@ -220,47 +231,65 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Projects Section */}
+      {/* Projects — same naked-list treatment, no card boxes */}
       {projectsList.length > 0 && (
-        <section className="mt-10 sm:mt-12 md:mt-16">
-          <Link href="/projects" className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-5 block">
-            <h2>Projects</h2>
+        <section>
+          <Link
+            href="/projects"
+            className="inline-block deck-label hover:text-primary transition-colors"
+          >
+            <h2 className="deck-label !mb-0">projects</h2>
           </Link>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+          <ul className="mt-2 divide-y divide-border/50">
             {projectsList.map((project: any) => (
-              <Link
-                key={project.slug}
-                href={`/projects/${project.slug}`}
-                className="group flex flex-col border border-border hover:border-primary/40 transition-colors bg-background overflow-hidden"
-              >
-                <div className="p-5 md:p-6 flex flex-col gap-3">
-                  <div className="flex items-center justify-between gap-2">
-                    {project.url && (
-                      <span className="text-xs text-muted-foreground truncate">
-                        {(() => { try { return new URL(project.url).hostname; } catch { return project.url; } })()}
-                      </span>
-                    )}
+              <li key={project.slug}>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="block py-6 md:py-7 group"
+                >
+                  <div className="flex items-baseline gap-6">
+                    <h3 className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                      {project.title || "Untitled"}
+                    </h3>
                     {project.date_created && (
-                      <span className="text-xs text-muted-foreground ml-auto shrink-0">
+                      <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
                         {new Date(project.date_created).getFullYear()}
                       </span>
                     )}
                   </div>
-                  <h3 className="text-lg md:text-xl font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
-                    {project.title || "Untitled"}
-                  </h3>
                   {project.summary && (
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                    <p className="mt-2 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl line-clamp-2">
                       {project.summary}
                     </p>
                   )}
-                </div>
-              </Link>
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       )}
     </div>
   );
+}
+
+// Split bio HTML stored as <p>…</p><p>…</p> into a positioning headline (the
+// first paragraph) and a body sub-headline (the rest joined). Empty paragraphs
+// are dropped. Returned strings keep inline HTML (links, &nbsp;, etc.) so the
+// caller can render them via dangerouslySetInnerHTML.
+function splitBio(html: string): { headline: string; body: string } {
+  if (!html) return { headline: "", body: "" };
+  const paragraphs = html
+    .split(/<\/p>\s*<p[^>]*>/i)
+    .map((p) =>
+      p
+        .replace(/^\s*<p[^>]*>/i, "")
+        .replace(/<\/p>\s*$/i, "")
+        .trim(),
+    )
+    .filter(Boolean);
+  return {
+    headline: paragraphs[0] || "",
+    body: paragraphs.slice(1).join(" "),
+  };
 }

@@ -97,30 +97,41 @@ export default async function ProjectPage({ params }: ProjectParams) {
     { name: project.title || "", url: projectUrl },
   ]);
 
+  const isSeries = posts.length >= 2;
+
   return (
-    <div className="py-8 sm:py-12 md:py-16">
+    <div className="pt-12 sm:pt-16 md:pt-24 pb-24 md:pb-32">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Back button */}
+      {/* Back */}
       <Link
         href="/projects"
-        className="inline-block text-sm text-muted-foreground hover:text-primary transition-colors mb-8"
+        className="inline-block text-sm text-muted-foreground hover:text-primary transition-colors mb-12 md:mb-20"
       >
-        ← Back to projects
+        ← all projects
       </Link>
 
-      {/* Project Header */}
-      <header className="mb-8 sm:mb-10">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-tight">
+      {/* Project Header — deck-label + display title */}
+      <header className="mb-16 sm:mb-20 md:mb-28">
+        <span className="deck-label">
+          {isSeries ? `series · ${posts.length} parts` : "project"}
+        </span>
+        <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-8 md:mb-10">
           {project.title}
         </h1>
 
-        <div className="flex flex-wrap items-center gap-4">
+        {project.summary && (
+          <p className="text-lg md:text-xl text-foreground/80 leading-relaxed max-w-2xl mb-6">
+            {project.summary}
+          </p>
+        )}
+
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
           <time
             dateTime={project.date_created ?? ""}
-            className="text-xs sm:text-sm text-muted-foreground"
+            className="tabular-nums text-muted-foreground/70"
           >
             {project.date_created &&
               new Date(project.date_created).toLocaleDateString("en-US", {
@@ -135,7 +146,7 @@ export default async function ProjectPage({ params }: ProjectParams) {
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs sm:text-sm text-primary hover:underline transition-colors"
+              className="inline-flex items-center gap-1 text-primary hover:underline transition-colors"
             >
               {(() => {
                 try {
@@ -144,54 +155,53 @@ export default async function ProjectPage({ params }: ProjectParams) {
                   return project.url;
                 }
               })()}
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
         </div>
       </header>
 
-      {/* Project Content */}
+      {/* Project Description */}
       {project.description && (
         <div
-          className="article-content mb-10"
+          className="article-content mb-20 max-w-2xl"
           dangerouslySetInnerHTML={{ __html: project.description }}
         />
       )}
 
-      {/* Related Posts — rendered as a series index when 2+ posts exist */}
+      {/* Series parts — naked typographic list */}
       {posts.length > 0 && (
-        <section className="mt-10 pt-8 border-t border-border">
-          <h2 className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-6">
-            {posts.length >= 2 ? `Series · ${posts.length} parts` : "Posts in this project"}
+        <section className="mt-12 md:mt-20">
+          <h2 className="deck-label">
+            {isSeries ? "all parts" : "posts in this project"}
           </h2>
 
-          <ol className="space-y-1 md:space-y-1.5">
+          <ol className="divide-y divide-border/50">
             {posts.map((post: any, i: number) => {
               const d = post.date_created ? new Date(post.date_created) : null;
               const date = d
                 ? d.toLocaleDateString("en-US", {
                     month: "short",
-                    day: "2-digit",
+                    day: "numeric",
                   })
                 : "";
               const cleanTitle = (post.title || "").replace(/^.*?#\d+:\s*/, "");
-              const isSeries = posts.length >= 2;
 
               return (
                 <li key={post.slug}>
                   <Link
                     href={`/posts/${post.slug}`}
-                    className="flex items-baseline gap-3 sm:gap-4 py-2 group text-sm md:text-base"
+                    className="flex items-baseline gap-5 md:gap-6 py-5 md:py-7 group"
                   >
                     {isSeries && (
-                      <span className="font-mono text-xs tabular-nums text-muted-foreground/60 w-8 shrink-0">
+                      <span className="text-base md:text-lg tabular-nums font-semibold text-primary/40 group-hover:text-primary transition-colors w-10 shrink-0">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                     )}
-                    <span className="text-foreground group-hover:text-primary transition-colors flex-1 min-w-0">
+                    <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {isSeries ? cleanTitle : post.title}
                     </span>
-                    <span className="text-muted-foreground/50 text-xs font-mono tabular-nums shrink-0">
+                    <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
                       {date}
                     </span>
                   </Link>

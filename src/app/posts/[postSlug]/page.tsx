@@ -142,21 +142,20 @@ export default async function PostPage({ params }: PostParams) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="py-8 sm:py-12 md:py-16">
+      <article className="pt-12 sm:pt-16 md:pt-24 pb-24">
         {/* Back button */}
         <Link
           href="/posts"
-          className="inline-flex items-center gap-1 text-sm transition-colors mb-8"
-          style={{ color: "var(--article-link)" }}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors mb-12 md:mb-20"
         >
-          &larr; All posts
+          ← all writing
         </Link>
 
         <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
           {/* Main Content */}
           <div className="min-w-0">
-            {/* Article Header */}
-            <header className="mb-10 sm:mb-12">
+            {/* Article Header — deck-label + display title pattern */}
+            <header className="mb-14 sm:mb-16 md:mb-20">
               {series && (
                 <SeriesHeader
                   project={series.project}
@@ -164,35 +163,31 @@ export default async function PostPage({ params }: PostParams) {
                   total={series.total}
                 />
               )}
+              {!series && project && (
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="deck-label hover:text-primary transition-colors"
+                >
+                  {project.title}
+                </Link>
+              )}
               <h1
-                className="text-3xl sm:text-4xl md:text-[2.75rem] font-normal mb-4 leading-normal"
+                className="deck-display text-4xl sm:text-5xl md:text-6xl mb-8 md:mb-10"
                 style={{ color: "var(--article-heading)" }}
               >
                 {data.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-3">
-                <time
-                  className="text-sm"
-                  dateTime={data.date_created ?? ""}
-                  style={{ color: "var(--article-text)" }}
-                >
-                  {data.date_created &&
-                    new Date(data.date_created).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                </time>
-                {!series && project && (
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <span className="text-primary/60">#</span>
-                    {project.title}
-                  </Link>
-                )}
-              </div>
+              <time
+                className="text-sm tabular-nums text-muted-foreground/70"
+                dateTime={data.date_created ?? ""}
+              >
+                {data.date_created &&
+                  new Date(data.date_created).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+              </time>
             </header>
 
             {/* Article Content */}

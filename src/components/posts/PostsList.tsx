@@ -46,46 +46,47 @@ export default function PostsList({ posts }: PostsListProps) {
   }, [posts]);
 
   return (
-    <div className="py-8 sm:py-12 md:py-16">
-      <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-8 sm:mb-10 md:mb-12">Posts</h1>
+    <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
+      <span className="deck-label">archive</span>
+      <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-20 md:mb-28">
+        writing.
+      </h1>
 
       {postsByYear.length === 0 ? (
-        <p className="text-muted-foreground text-sm md:text-base">No articles found.</p>
+        <p className="text-muted-foreground">No articles found.</p>
       ) : (
-        <div className="space-y-10 sm:space-y-12 md:space-y-16">
+        <div className="space-y-20 md:space-y-28">
           {postsByYear.map(({ year, posts: yearPosts }) => (
             <section key={year}>
-              <h2 className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground mb-6 md:mb-8 pb-2 border-b border-border">
-                {year}
-              </h2>
+              <h2 className="deck-label !text-base">{year}</h2>
 
-              <div className="space-y-1 md:space-y-1.5">
+              <ul className="divide-y divide-border/50">
                 {yearPosts.map((post, index) => {
                   const isUnpublished = post.status !== "published";
                   const d = post.date_created ? new Date(post.date_created) : null;
                   const date = d
-                    ? d.toLocaleDateString("en-US", { month: "short", day: "2-digit" })
+                    ? d.toLocaleDateString("en-US", { month: "short", day: "numeric" })
                     : "";
 
                   return (
-                    <div key={post.slug || index}>
+                    <li key={post.slug || index}>
                       <Link
                         href={`/posts/${post.slug}`}
-                        className={`flex items-baseline gap-4 py-1.5 md:py-2 group text-sm md:text-base ${
+                        className={`flex items-baseline gap-6 py-5 md:py-6 group ${
                           isUnpublished ? "opacity-40" : ""
                         }`}
                       >
-                        <span className="text-muted-foreground/50 text-xs md:text-sm w-14 shrink-0">
-                          {date}
-                        </span>
-                        <span className="text-foreground group-hover:text-primary transition-colors">
+                        <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
                           {post.title || "Untitled"}
                         </span>
+                        <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                          {date}
+                        </span>
                       </Link>
-                    </div>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </section>
           ))}
         </div>

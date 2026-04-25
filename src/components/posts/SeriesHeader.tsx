@@ -14,13 +14,13 @@ export default function SeriesHeader({
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group inline-flex items-center gap-2.5 mb-6 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors"
+      className="deck-label group hover:text-primary transition-colors"
     >
-      <span className="px-1.5 py-0.5 border border-border group-hover:border-primary/40 transition-colors tabular-nums">
-        Part {partNumber} / {total}
+      <span className="tabular-nums">
+        part {String(partNumber).padStart(2, "0")} / {String(total).padStart(2, "0")}
       </span>
-      <span className="opacity-60">·</span>
-      <span className="normal-case tracking-normal">{project.title}</span>
+      <span className="opacity-50 mx-2">·</span>
+      <span>{project.title}</span>
     </Link>
   );
 }

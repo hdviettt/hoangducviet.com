@@ -4,70 +4,70 @@
 
 @layer base {
   :root {
-    /* Light theme - monochrome */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
-    --foreground-muted: 0 0% 20%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --border: 0 0% 91%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
-    --primary: 0 0% 15%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 100%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --input: 0 0% 91%;
-    --ring: 0 0% 15%;
+    /* Light theme — cool off-white, electric indigo accent */
+    --background: 225 28% 98%;
+    --foreground: 230 18% 10%;
+    --foreground-muted: 230 12% 28%;
+    --muted: 225 22% 94%;
+    --muted-foreground: 230 10% 46%;
+    --border: 225 18% 90%;
+    --card: 225 28% 98%;
+    --card-foreground: 230 18% 10%;
+    --primary: 234 100% 66%;
+    --primary-foreground: 225 28% 98%;
+    --secondary: 225 22% 94%;
+    --secondary-foreground: 230 18% 10%;
+    --accent: 234 100% 66%;
+    --accent-foreground: 225 28% 98%;
+    --popover: 225 28% 98%;
+    --popover-foreground: 230 18% 10%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 225 28% 98%;
+    --input: 225 18% 90%;
+    --ring: 234 100% 66%;
     --radius: 0;
 
-    /* Article content - Google Blog inspired */
-    --article-text: #5f6368;
-    --article-heading: #202124;
-    --article-link: #1a73e8;
-    --article-link-hover: #174ea6;
-    --article-border: #dadce0;
-    --article-code-bg: #f1f3f4;
-    --article-blockquote: #5f6368;
+    /* Article content — clean modern */
+    --article-text: hsl(230 14% 22%);
+    --article-heading: hsl(230 22% 8%);
+    --article-link: hsl(234 80% 56%);
+    --article-link-hover: hsl(234 95% 46%);
+    --article-border: hsl(225 18% 88%);
+    --article-code-bg: hsl(225 22% 94%);
+    --article-blockquote: hsl(230 10% 40%);
   }
 
   .dark {
-    /* Dark theme - monochrome terminal style */
-    --background: 0 0% 5%;
-    --foreground: 0 0% 88%;
-    --foreground-muted: 0 0% 78%;
-    --muted: 0 0% 11%;
-    --muted-foreground: 0 0% 55%;
-    --border: 0 0% 18%;
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 87%;
-    --primary: 0 0% 85%;
-    --primary-foreground: 0 0% 7%;
-    --secondary: 0 0% 11%;
-    --secondary-foreground: 0 0% 87%;
-    --accent: 0 0% 85%;
-    --accent-foreground: 0 0% 7%;
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 87%;
-    --destructive: 0 62% 55%;
-    --destructive-foreground: 0 0% 100%;
-    --input: 0 0% 18%;
-    --ring: 0 0% 85%;
+    /* Dark theme — deep cool, brighter indigo for contrast */
+    --background: 230 18% 7%;
+    --foreground: 220 14% 92%;
+    --foreground-muted: 220 12% 80%;
+    --muted: 230 14% 12%;
+    --muted-foreground: 225 10% 58%;
+    --border: 230 14% 20%;
+    --card: 230 14% 10%;
+    --card-foreground: 220 14% 92%;
+    --primary: 234 100% 72%;
+    --primary-foreground: 230 18% 7%;
+    --secondary: 230 14% 12%;
+    --secondary-foreground: 220 14% 92%;
+    --accent: 234 100% 72%;
+    --accent-foreground: 230 18% 7%;
+    --popover: 230 14% 10%;
+    --popover-foreground: 220 14% 92%;
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 220 14% 92%;
+    --input: 230 14% 20%;
+    --ring: 234 100% 72%;
 
-    /* Article content - dark mode */
-    --article-text: #bdc1c6;
-    --article-heading: #e8eaed;
-    --article-link: #8ab4f8;
-    --article-link-hover: #aecbfa;
-    --article-border: #3c4043;
-    --article-code-bg: #1a1a1a;
-    --article-blockquote: #9aa0a6;
+    /* Article content — dark modern */
+    --article-text: hsl(220 12% 82%);
+    --article-heading: hsl(220 18% 96%);
+    --article-link: hsl(234 100% 78%);
+    --article-link-hover: hsl(234 100% 86%);
+    --article-border: hsl(230 14% 22%);
+    --article-code-bg: hsl(230 14% 12%);
+    --article-blockquote: hsl(225 10% 65%);
   }
 }
 
@@ -79,13 +79,14 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv11", "ss01", "ss03";
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Selection - Orange highlight */
+  /* Selection — soft indigo overlay */
   ::selection {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    background: hsl(var(--primary) / 0.22);
+    color: hsl(var(--foreground));
   }
 
   /* Links hover (except nav links) */
@@ -95,17 +96,17 @@
 }
 
 /* ================================
-   TYPOGRAPHY - Clean sans-serif
+   TYPOGRAPHY — Modern sans, deck-confident
    ================================ */
 
 /* Base body text */
 body {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
-  letter-spacing: 0;
+  letter-spacing: -0.005em;
 }
 
-/* Headings */
+/* Headings — heavier weights for the deck-confident feel */
 h1,
 h2,
 h3,
@@ -113,29 +114,34 @@ h4,
 h5,
 h6 {
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
   color: hsl(var(--foreground));
 }
 
 h1 {
-  font-size: 28px;
+  font-size: 32px;
+  letter-spacing: -0.025em;
 }
 h2 {
-  font-size: 22px;
+  font-size: 24px;
 }
 h3 {
-  font-size: 18px;
+  font-size: 19px;
+  font-weight: 600;
 }
 h4 {
   font-size: 16px;
+  font-weight: 600;
 }
 h5 {
   font-size: 15px;
+  font-weight: 600;
 }
 h6 {
   font-size: 14px;
+  font-weight: 600;
 }
 
 /* Paragraph */
@@ -158,11 +164,12 @@ small,
    ================================ */
 
 .article-content {
-  font-size: 1.125rem;
-  line-height: 1.75;
+  font-size: 1.0625rem;
+  line-height: 1.7;
   color: var(--article-text);
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  letter-spacing: 0.01em;
+  font-feature-settings: "kern" 1, "cv11", "ss01";
+  letter-spacing: -0.005em;
   overflow-wrap: break-word;
   word-break: break-word;
 }
@@ -176,7 +183,8 @@ small,
   scroll-margin-top: 80px;
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   color: var(--article-heading);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
+  font-weight: 700;
 }
 
 .article-content .heading-anchor:hover {
@@ -184,32 +192,32 @@ small,
 }
 
 .article-content h1 {
-  font-size: 2rem;
-  font-weight: 400;
+  font-size: 2.25rem;
+  font-weight: 800;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  line-height: 1.25;
+  line-height: 1.1;
 }
 
 .article-content h2 {
   font-size: 1.625rem;
-  font-weight: 400;
+  font-weight: 700;
   margin-top: 2.5rem;
   margin-bottom: 0.75rem;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .article-content h3 {
-  font-size: 1.3125rem;
-  font-weight: 400;
+  font-size: 1.25rem;
+  font-weight: 700;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  line-height: 1.35;
+  line-height: 1.25;
 }
 
 .article-content h4 {
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-size: 1.0625rem;
+  font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -217,7 +225,7 @@ small,
 .article-content h5,
 .article-content h6 {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -349,6 +357,44 @@ small,
   background: var(--article-code-bg);
   font-weight: 600;
   font-size: 0.875rem;
+}
+
+/* ================================
+   DECK UTILITIES — for the SEONGON-deck-inspired layout
+   ================================ */
+
+/* Faded indigo label that sits above a display heading.
+   Used on homepage, /posts, project page, and post detail. */
+.deck-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: hsl(var(--primary) / 0.55);
+  margin-bottom: 14px;
+}
+
+/* Massive display heading — use sparingly for hero/page-title slots. */
+.deck-display {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: hsl(var(--foreground));
+}
+
+/* Inline keyword highlight inside body prose — image 4 style.
+   `mark` is the natural HTML element; we just restyle it. */
+mark,
+.deck-mark {
+  background: transparent;
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+.article-content mark,
+.article-content .deck-mark {
+  color: hsl(var(--article-link));
 }
 
 /* ================================

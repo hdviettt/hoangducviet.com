@@ -14,33 +14,33 @@ export default function SeriesParts({
   currentSlug,
 }: SeriesPartsProps) {
   return (
-    <nav aria-label="All parts in this series" className="mt-8">
+    <nav aria-label="All parts in this series" className="mt-10">
       <Link
         href={`/projects/${project.slug}`}
-        className="block font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors mb-3"
+        className="block text-xs font-semibold uppercase tracking-wider text-primary/70 hover:text-primary transition-colors mb-3"
       >
         All parts
       </Link>
-      <ol className="space-y-1.5">
+      <ol className="space-y-2">
         {parts.map((part, i) => {
           const isCurrent = part.slug === currentSlug;
           return (
-            <li key={part.slug} className="flex items-baseline gap-2">
+            <li key={part.slug} className="flex items-baseline gap-2.5">
               <span
-                className={`font-mono text-xs tabular-nums shrink-0 ${
-                  isCurrent ? "text-primary" : "text-muted-foreground/50"
+                className={`text-xs tabular-nums font-medium shrink-0 ${
+                  isCurrent ? "text-primary" : "text-muted-foreground/60"
                 }`}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
               {isCurrent ? (
-                <span className="text-xs leading-snug text-foreground">
+                <span className="text-[13px] leading-snug font-medium text-foreground">
                   {stripPartPrefix(part.title)}
                 </span>
               ) : (
                 <Link
                   href={`/posts/${part.slug}`}
-                  className="text-xs leading-snug text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-[13px] leading-snug text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {stripPartPrefix(part.title)}
                 </Link>

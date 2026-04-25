@@ -19,41 +19,28 @@ interface ProjectsListProps {
   projects: Project[];
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectRow({ project }: { project: Project }) {
   const year = project.date_created
     ? new Date(project.date_created).getFullYear()
     : null;
-  const hostname = project.url
-    ? (() => { try { return new URL(project.url).hostname; } catch { return project.url; } })()
-    : null;
 
   return (
-    <Link
-      href={`/projects/${project.slug}`}
-      className="group flex flex-col border border-border hover:border-primary/40 transition-colors bg-background overflow-hidden"
-    >
-      {/* Text content on top — like SEONGON */}
-      <div className="p-5 md:p-6 flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-2">
-          {hostname && (
-            <span className="text-xs text-muted-foreground truncate">{hostname}</span>
-          )}
-          {year && (
-            <span className="text-xs text-muted-foreground ml-auto shrink-0">{year}</span>
-          )}
-        </div>
-
-        <h3 className="text-lg md:text-xl font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
+    <Link href={`/projects/${project.slug}`} className="block py-6 md:py-8 group">
+      <div className="flex items-baseline gap-6">
+        <h3 className="flex-1 min-w-0 text-2xl md:text-3xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
           {project.title || "Untitled"}
         </h3>
-
-        {project.summary && (
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-            {project.summary}
-          </p>
+        {year && (
+          <span className="text-sm tabular-nums text-muted-foreground/60 shrink-0">
+            {year}
+          </span>
         )}
       </div>
-
+      {project.summary && (
+        <p className="mt-3 text-base md:text-lg text-foreground/70 leading-relaxed max-w-2xl line-clamp-2">
+          {project.summary}
+        </p>
+      )}
     </Link>
   );
 }
@@ -68,7 +55,6 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
         new Date(a.date_created || 0).getTime(),
     );
 
-    // Collect unique groups in order of first appearance
     const seen = new Set<string>();
     const groups: { slug: string; title: string }[] = [];
     for (const p of sorted) {
@@ -86,48 +72,50 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
     : sorted;
 
   return (
-    <div className="py-8 sm:py-12 md:py-16">
-      <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mb-8 sm:mb-10 md:mb-12">
-        Projects
+    <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
+      <span className="deck-label">things i've built</span>
+      <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-16 md:mb-24">
+        projects.
       </h1>
 
-      {/* Filter tabs */}
       {groups.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-8 md:mb-10">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-16 md:mb-20">
           <button
             onClick={() => setActiveGroup(null)}
-            className={`px-4 py-1.5 text-sm transition-colors border ${
+            className={`text-sm font-medium transition-colors ${
               activeGroup === null
-                ? "border-foreground text-foreground"
-                : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                ? "text-foreground"
+                : "text-muted-foreground/60 hover:text-foreground"
             }`}
           >
-            All
+            all
           </button>
           {groups.map((g) => (
             <button
               key={g.slug}
               onClick={() => setActiveGroup(g.slug)}
-              className={`px-4 py-1.5 text-sm transition-colors border ${
+              className={`text-sm font-medium transition-colors ${
                 activeGroup === g.slug
-                  ? "border-foreground text-foreground"
-                  : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                  ? "text-foreground"
+                  : "text-muted-foreground/60 hover:text-foreground"
               }`}
             >
-              {g.title}
+              {g.title.toLowerCase()}
             </button>
           ))}
         </div>
       )}
 
       {visible.length === 0 ? (
-        <p className="text-muted-foreground text-sm md:text-base">No projects found.</p>
+        <p className="text-muted-foreground">No projects found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+        <ul className="divide-y divide-border/50">
           {visible.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+            <li key={project.slug}>
+              <ProjectRow project={project} />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );
