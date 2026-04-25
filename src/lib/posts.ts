@@ -6,7 +6,7 @@ import {
   projects,
   projectsPosts,
 } from "@/db/schema";
-import { and, desc, eq, gt, lt } from "drizzle-orm";
+import { and, asc, desc, eq, gt, lt } from "drizzle-orm";
 
 export interface Post {
   id?: number;
@@ -139,6 +139,62 @@ export async function getProjectForPost(
       .limit(1);
 
     return result.length ? result[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+export interface SeriesContext {
+  project: { slug: string; title: string };
+  total: number;
+  partNumber: number;
+  parts: Array<{ slug: string; title: string }>;
+  previous: { slug: string; title: string } | null;
+  next: { slug: string; title: string } | null;
+}
+
+// If this post belongs to a project with 2+ posts, treat the project as a
+// "series" and return the post's position plus prev/next within the series
+// (oldest first). Returns null if the post isn't part of a series.
+export async function getSeriesContext(
+  postSlug: string,
+): Promise<SeriesContext | null> {
+  try {
+    const projectRow = await db
+      .select({ slug: projects.slug, title: projects.title })
+      .from(projectsPosts)
+      .innerJoin(projects, eq(projectsPosts.projectSlug, projects.slug))
+      .where(eq(projectsPosts.postSlug, postSlug))
+      .limit(1);
+
+    if (!projectRow.length) return null;
+    const project = projectRow[0];
+
+    const allParts = await db
+      .select({ slug: posts.slug, title: posts.title })
+      .from(projectsPosts)
+      .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
+      .where(
+        and(
+          eq(projectsPosts.projectSlug, project.slug),
+          eq(posts.status, "published"),
+        ),
+      )
+      .orderBy(asc(posts.dateCreated));
+
+    if (allParts.length < 2) return null;
+
+    const idx = allParts.findIndex((p) => p.slug === postSlug);
+    if (idx === -1) return null;
+
+    return {
+      project,
+      total: allParts.length,
+      partNumber: idx + 1,
+      parts: allParts,
+      previous: idx > 0 ? allParts[idx - 1] : null,
+      next: idx < allParts.length - 1 ? allParts[idx + 1] : null,
+    };
   } catch {
     return null;
   }

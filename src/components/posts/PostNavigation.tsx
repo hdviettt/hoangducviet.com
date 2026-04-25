@@ -3,13 +3,20 @@ import Link from "next/link";
 interface PostNavigationProps {
   previous: { slug?: string; title?: string } | null;
   next: { slug?: string; title?: string } | null;
+  context?: { kind: "series"; title: string };
 }
 
 export default function PostNavigation({
   previous,
   next,
+  context,
 }: PostNavigationProps) {
   if (!previous && !next) return null;
+
+  const prevLabel =
+    context?.kind === "series" ? "← Previous in series" : "← Previous";
+  const nextLabel =
+    context?.kind === "series" ? "Next in series →" : "Next →";
 
   return (
     <nav
@@ -27,7 +34,7 @@ export default function PostNavigation({
               className="text-xs block mb-1"
               style={{ color: "var(--article-text)" }}
             >
-              ← Previous
+              {prevLabel}
             </span>
             <span
               className="text-sm transition-colors line-clamp-2"
@@ -49,7 +56,7 @@ export default function PostNavigation({
               className="text-xs block mb-1"
               style={{ color: "var(--article-text)" }}
             >
-              Next →
+              {nextLabel}
             </span>
             <span
               className="text-sm transition-colors line-clamp-2"

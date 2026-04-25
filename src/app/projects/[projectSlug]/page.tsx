@@ -158,37 +158,47 @@ export default async function ProjectPage({ params }: ProjectParams) {
         />
       )}
 
-      {/* Related Posts */}
+      {/* Related Posts — rendered as a series index when 2+ posts exist */}
       {posts.length > 0 && (
         <section className="mt-10 pt-8 border-t border-border">
-          <h2 className="text-xs md:text-sm uppercase tracking-wider text-muted-foreground mb-6">
-            Posts in this project
+          <h2 className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-6">
+            {posts.length >= 2 ? `Series · ${posts.length} parts` : "Posts in this project"}
           </h2>
 
-          <ul className="space-y-2 md:space-y-3">
-            {posts.map((post: any) => {
+          <ol className="space-y-1 md:space-y-1.5">
+            {posts.map((post: any, i: number) => {
               const d = post.date_created ? new Date(post.date_created) : null;
               const date = d
-                ? `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.${d.getFullYear()}`
+                ? d.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "2-digit",
+                  })
                 : "";
+              const cleanTitle = (post.title || "").replace(/^.*?#\d+:\s*/, "");
+              const isSeries = posts.length >= 2;
 
               return (
                 <li key={post.slug}>
                   <Link
                     href={`/posts/${post.slug}`}
-                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-1.5 md:py-2 group text-sm md:text-base"
+                    className="flex items-baseline gap-3 sm:gap-4 py-2 group text-sm md:text-base"
                   >
-                    <span className="text-muted-foreground/50 text-xs md:text-sm w-24 shrink-0 order-2 sm:order-1">
-                      {date}
+                    {isSeries && (
+                      <span className="font-mono text-xs tabular-nums text-muted-foreground/60 w-8 shrink-0">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    )}
+                    <span className="text-foreground group-hover:text-primary transition-colors flex-1 min-w-0">
+                      {isSeries ? cleanTitle : post.title}
                     </span>
-                    <span className="text-foreground group-hover:text-primary transition-colors order-1 sm:order-2">
-                      {post.title}
+                    <span className="text-muted-foreground/50 text-xs font-mono tabular-nums shrink-0">
+                      {date}
                     </span>
                   </Link>
                 </li>
               );
             })}
-          </ul>
+          </ol>
         </section>
       )}
     </div>

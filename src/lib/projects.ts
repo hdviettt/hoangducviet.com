@@ -96,7 +96,7 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     throw new Error(`Project with slug "${slug}" not found`);
   }
 
-  // Fetch related posts sorted newest first
+  // Fetch related posts in series order (oldest first — Part 1 → Part N)
   const relatedPosts = await db
     .select({
       slug: posts.slug,
@@ -107,7 +107,7 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
     .from(projectsPosts)
     .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
     .where(eq(projectsPosts.projectSlug, slug))
-    .orderBy(desc(posts.dateCreated));
+    .orderBy(asc(posts.dateCreated));
 
   const row = result[0];
   return {
