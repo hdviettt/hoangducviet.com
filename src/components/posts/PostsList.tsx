@@ -2,48 +2,77 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-
-interface Post {
-  slug?: string;
-  title?: string;
-  date_created?: string;
-  status?: string;
-}
+import type { FeedItem } from "@/lib/posts";
 
 interface PostsListProps {
-  posts: Post[];
-  categories?: string[];
+  items: FeedItem[];
 }
 
-interface PostsByYear {
+interface ItemsByYear {
   year: number;
-  posts: Post[];
+  items: FeedItem[];
 }
 
-export default function PostsList({ posts }: PostsListProps) {
-  const postsByYear = useMemo(() => {
-    const sorted = [...posts].sort(
-      (a, b) =>
-        new Date(b.date_created || 0).getTime() -
-        new Date(a.date_created || 0).getTime(),
+// Sort key for an item: ISO date string (lexicographic == chronological).
+function itemDate(item: FeedItem): string {
+  return item.kind === "series"
+    ? item.lastDate
+    : item.post.date_created || "";
+}
+
+function itemYear(item: FeedItem): number {
+  const iso = itemDate(item);
+  return iso ? new Date(iso).getFullYear() : 0;
+}
+
+// "Mar 16 – Mar 28" / "Mar 16 – Mar 28, 26" / "Mar 16, 25 – Mar 28, 26"
+function formatDateRange(firstIso: string, lastIso: string): string {
+  const first = new Date(firstIso);
+  const last = new Date(lastIso);
+  const sameDay =
+    first.getFullYear() === last.getFullYear() &&
+    first.getMonth() === last.getMonth() &&
+    first.getDate() === last.getDate();
+  if (sameDay) {
+    return last.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
+  const sameYear = first.getFullYear() === last.getFullYear();
+  if (sameYear) {
+    const start = first.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    const end = last.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    return `${start} – ${end}`;
+  }
+  const opts: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    year: "2-digit",
+  };
+  return `${first.toLocaleDateString("en-US", opts)} – ${last.toLocaleDateString("en-US", opts)}`;
+}
+
+export default function PostsList({ items }: PostsListProps) {
+  const itemsByYear = useMemo<ItemsByYear[]>(() => {
+    const sorted = [...items].sort((a, b) =>
+      itemDate(b).localeCompare(itemDate(a)),
     );
-
-    const yearMap = new Map<number, Post[]>();
+    const yearMap = new Map<number, FeedItem[]>();
     const yearOrder: number[] = [];
-
-    for (const post of sorted) {
-      const d = post.date_created ? new Date(post.date_created) : null;
-      const year = d ? d.getFullYear() : 0;
-
-      if (!yearMap.has(year)) {
-        yearMap.set(year, []);
-        yearOrder.push(year);
+    for (const item of sorted) {
+      const y = itemYear(item);
+      if (!yearMap.has(y)) {
+        yearMap.set(y, []);
+        yearOrder.push(y);
       }
-      yearMap.get(year)!.push(post);
+      yearMap.get(y)!.push(item);
     }
-
-    return yearOrder.map((year) => ({ year, posts: yearMap.get(year)! }));
-  }, [posts]);
+    return yearOrder.map((year) => ({ year, items: yearMap.get(year)! }));
+  }, [items]);
 
   return (
     <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
@@ -52,24 +81,52 @@ export default function PostsList({ posts }: PostsListProps) {
         writing.
       </h1>
 
-      {postsByYear.length === 0 ? (
+      {itemsByYear.length === 0 ? (
         <p className="text-muted-foreground">No articles found.</p>
       ) : (
         <div className="space-y-20 md:space-y-28">
-          {postsByYear.map(({ year, posts: yearPosts }) => (
+          {itemsByYear.map(({ year, items: yearItems }) => (
             <section key={year}>
               <h2 className="deck-label !text-base">{year}</h2>
 
               <ul className="divide-y divide-border/50">
-                {yearPosts.map((post, index) => {
+                {yearItems.map((item, idx) => {
+                  if (item.kind === "series") {
+                    const range = formatDateRange(item.firstDate, item.lastDate);
+                    return (
+                      <li key={`series-${item.project.slug}`}>
+                        <Link
+                          href={`/projects/${item.project.slug}`}
+                          className="flex items-baseline gap-6 py-5 md:py-6 group"
+                        >
+                          <span className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
+                            <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                              {item.project.title}
+                            </span>
+                            <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
+                              {item.parts.length} parts
+                            </span>
+                          </span>
+                          <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                            {range}
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  }
+                  const post = item.post;
                   const isUnpublished = post.status !== "published";
-                  const d = post.date_created ? new Date(post.date_created) : null;
+                  const d = post.date_created
+                    ? new Date(post.date_created)
+                    : null;
                   const date = d
-                    ? d.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+                    ? d.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
                     : "";
-
                   return (
-                    <li key={post.slug || index}>
+                    <li key={post.slug || idx}>
                       <Link
                         href={`/posts/${post.slug}`}
                         className={`flex items-baseline gap-6 py-5 md:py-6 group ${

@@ -153,6 +153,96 @@ export interface SeriesContext {
   next: { slug: string; title: string } | null;
 }
 
+// Feed items collapse multi-post projects into a single series row so a
+// chronological list isn't dominated by one project's parts. A standalone
+// post (not in a project, or in a project with only 1 published post)
+// renders as a `post` item; a project with 2+ published posts renders as
+// a single `series` item with date range and part count. All dates are ISO
+// strings so the type is safe to pass from server to client components.
+export type FeedItem =
+  | { kind: "post"; post: Post }
+  | {
+      kind: "series";
+      project: { slug: string; title: string };
+      parts: { slug: string; title: string; date_created: string }[];
+      firstDate: string;
+      lastDate: string;
+    };
+
+export async function getFeedItems(options?: {
+  limit?: number;
+}): Promise<FeedItem[]> {
+  // Pull all published posts with their (optional) project association.
+  const rows = await db
+    .select({
+      post: posts,
+      projectSlug: projects.slug,
+      projectTitle: projects.title,
+    })
+    .from(posts)
+    .leftJoin(projectsPosts, eq(projectsPosts.postSlug, posts.slug))
+    .leftJoin(projects, eq(projects.slug, projectsPosts.projectSlug))
+    .where(eq(posts.status, "published"))
+    .orderBy(desc(posts.dateCreated));
+
+  // Count published posts per project so we know which projects qualify
+  // as a series (2+ posts).
+  const projectPostCount = new Map<string, number>();
+  for (const r of rows) {
+    if (r.projectSlug) {
+      projectPostCount.set(
+        r.projectSlug,
+        (projectPostCount.get(r.projectSlug) || 0) + 1,
+      );
+    }
+  }
+
+  const items: FeedItem[] = [];
+  const seriesIndex = new Map<string, FeedItem & { kind: "series" }>();
+
+  for (const r of rows) {
+    const post = mapPost(r.post);
+    const dateIso = (r.post.dateCreated as Date).toISOString();
+    const isSeriesMember =
+      r.projectSlug != null &&
+      r.projectTitle != null &&
+      (projectPostCount.get(r.projectSlug) || 0) >= 2;
+
+    if (isSeriesMember && r.projectSlug && r.projectTitle) {
+      let series = seriesIndex.get(r.projectSlug);
+      if (!series) {
+        series = {
+          kind: "series",
+          project: { slug: r.projectSlug, title: r.projectTitle },
+          parts: [],
+          firstDate: dateIso,
+          lastDate: dateIso,
+        };
+        seriesIndex.set(r.projectSlug, series);
+        items.push(series);
+      }
+      series.parts.push({
+        slug: post.slug ?? "",
+        title: post.title ?? "",
+        date_created: dateIso,
+      });
+      if (dateIso < series.firstDate) series.firstDate = dateIso;
+      if (dateIso > series.lastDate) series.lastDate = dateIso;
+    } else {
+      items.push({ kind: "post", post });
+    }
+  }
+
+  // Sort items by their most recent activity date (series uses last part).
+  items.sort((a, b) => {
+    const aDate = a.kind === "series" ? a.lastDate : a.post.date_created || "";
+    const bDate = b.kind === "series" ? b.lastDate : b.post.date_created || "";
+    return bDate.localeCompare(aDate);
+  });
+
+  return options?.limit ? items.slice(0, options.limit) : items;
+}
+
 // If this post belongs to a project with 2+ posts, treat the project as a
 // "series" and return the post's position plus prev/next within the series
 // (oldest first). Returns null if the post isn't part of a series.
