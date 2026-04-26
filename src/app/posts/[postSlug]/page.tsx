@@ -203,12 +203,12 @@ export default async function PostPage({ params }: PostParams) {
               </div>
             </header>
 
-            {/* TL;DR — bordered block treatment so it reads as distinct
-                from the article body. Border-left in the brand indigo, no
-                background (keeps it clean against the page bg), with the
-                "tl;dr" deck-label making the role explicit. */}
+            {/* TL;DR — sits at the top of the article so readers can decide
+                whether to commit. Distinguished from the article body by the
+                "tl;dr" deck-label and slightly heavier paragraph weight, no
+                left-border chrome. */}
             {data.description && (
-              <div className="mb-10 md:mb-14 max-w-2xl border-l-2 border-primary/30 pl-5 sm:pl-6 py-1">
+              <div className="mb-10 md:mb-14 max-w-2xl">
                 <span className="deck-label">tl;dr</span>
                 <p className="text-base sm:text-lg text-foreground/80 leading-relaxed">
                   {data.description}
