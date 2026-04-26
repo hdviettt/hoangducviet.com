@@ -161,12 +161,15 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — sits at the top of the article so readers can decide
-                whether to commit. */}
+            {/* TL;DR — pulled out as a pull-quote-style block so it carries
+                visual weight without needing a colored bar/card chrome.
+                Indigo label, slightly larger and heavier paragraph type. */}
             {data.description && (
               <div className="mb-10 md:mb-14 max-w-2xl">
-                <span className="deck-label">tl;dr</span>
-                <p className="text-base sm:text-lg text-foreground/80 leading-relaxed">
+                <span className="block text-xs font-semibold uppercase tracking-widest text-primary mb-3">
+                  tl;dr
+                </span>
+                <p className="text-lg sm:text-xl md:text-2xl font-medium text-foreground leading-snug tracking-tight">
                   {data.description}
                 </p>
               </div>
