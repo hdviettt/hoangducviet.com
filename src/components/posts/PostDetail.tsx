@@ -116,7 +116,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
           {/* Main Content */}
           <div className="min-w-0">
             {/* Article Header — deck-label + display title pattern */}
-            <header className="mb-14 sm:mb-16 md:mb-20">
+            <header className="mb-8 sm:mb-10 md:mb-12">
               {seriesCtx && (
                 <SeriesHeader
                   series={seriesCtx.series}
@@ -133,7 +133,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                 </Link>
               )}
               <h1
-                className="deck-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-7 md:mb-10"
+                className="deck-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 md:mb-8"
                 style={{ color: "var(--article-heading)" }}
               >
                 {data.title}
@@ -161,15 +161,15 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — pulled out as a pull-quote-style block so it carries
-                visual weight without needing a colored bar/card chrome.
-                Indigo label, slightly larger and heavier paragraph type. */}
+            {/* TL;DR — editorial lede directly under the byline. Indigo label
+                anchors it; paragraph reads slightly larger than body but not
+                heading-scale, so it doesn't compete with the title. */}
             {data.description && (
-              <div className="mb-10 md:mb-14 max-w-2xl">
-                <span className="block text-xs font-semibold uppercase tracking-widest text-primary mb-3">
+              <div className="mb-12 md:mb-16 max-w-2xl">
+                <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-2.5">
                   tl;dr
                 </span>
-                <p className="text-lg sm:text-xl md:text-2xl font-medium text-foreground leading-snug tracking-tight">
+                <p className="text-base sm:text-lg text-foreground/90 leading-relaxed">
                   {data.description}
                 </p>
               </div>
