@@ -288,13 +288,6 @@ export default async function Home() {
           </ul>
         </section>
       )}
-
-      {/* Page wordmark — mirrors the SEONGON wordmark in the bottom-left of
-          your deck slides. Sits at the foot of the page so it doesn't punch
-          empty space into the hero. */}
-      <div className="mt-20 md:mt-24 text-xs font-semibold uppercase tracking-widest text-primary/40 select-none">
-        @hdviet · 2026
-      </div>
     </div>
   );
 }
