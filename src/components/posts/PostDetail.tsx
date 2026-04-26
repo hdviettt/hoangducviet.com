@@ -161,14 +161,15 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — italicized lede under the byline. Indigo label,
-                italic paragraph for editorial distinction. */}
+            {/* TL;DR — editorial lede in serif italic. Source Serif 4
+                provides typographic contrast against the Inter body, so
+                the lede pops without chrome (no card, no bar, no rule). */}
             {data.description && (
               <div className="mb-12 md:mb-16 max-w-2xl">
-                <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-2.5">
+                <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-3">
                   tl;dr
                 </span>
-                <p className="text-base sm:text-lg text-foreground/85 leading-relaxed italic">
+                <p className="font-serif italic text-lg sm:text-xl text-foreground leading-relaxed">
                   {data.description}
                 </p>
               </div>
