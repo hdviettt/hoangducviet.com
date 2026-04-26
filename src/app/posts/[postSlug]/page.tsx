@@ -143,12 +143,15 @@ export default async function PostPage({ params }: PostParams) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <article className="pt-12 sm:pt-16 md:pt-24 pb-24">
-        {/* Back button */}
+        {/* Back button — bracketed nav chip, slightly more present than a bare link */}
         <Link
           href="/posts"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors mb-12 md:mb-20"
+          className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-10 md:mb-16"
         >
-          ← all writing
+          <span className="text-primary/60 group-hover:text-primary transition-colors">
+            ←
+          </span>
+          all writing
         </Link>
 
         <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
@@ -172,22 +175,32 @@ export default async function PostPage({ params }: PostParams) {
                 </Link>
               )}
               <h1
-                className="deck-display text-4xl sm:text-5xl md:text-6xl mb-8 md:mb-10"
+                className="deck-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-7 md:mb-10"
                 style={{ color: "var(--article-heading)" }}
               >
                 {data.title}
               </h1>
-              <time
-                className="text-sm tabular-nums text-muted-foreground/70"
-                dateTime={data.date_created ?? ""}
-              >
-                {data.date_created &&
-                  new Date(data.date_created).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-              </time>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground/70">
+                <time
+                  className="tabular-nums"
+                  dateTime={data.date_created ?? ""}
+                >
+                  {data.date_created &&
+                    new Date(data.date_created).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                </time>
+                {data.content && (
+                  <>
+                    <span className="opacity-50">·</span>
+                    <span className="tabular-nums">
+                      {readingTimeMinutes(data.content)} min read
+                    </span>
+                  </>
+                )}
+              </div>
             </header>
 
             {/* Article Content */}
@@ -225,4 +238,17 @@ export default async function PostPage({ params }: PostParams) {
       </article>
     </>
   );
+}
+
+// ~200 wpm typical adult reading speed. Strip markdown image and code-fence
+// markers so they don't inflate the count. Round up so 30s reads still show 1.
+function readingTimeMinutes(markdown: string): number {
+  const stripped = markdown
+    .replace(/```[\s\S]*?```/g, " ") // fenced code blocks
+    .replace(/`[^`]*`/g, " ") // inline code
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ") // images
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links → keep visible text
+    .replace(/[#*_>~`-]/g, " ");
+  const words = stripped.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
 }

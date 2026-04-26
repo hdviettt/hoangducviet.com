@@ -3,7 +3,6 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import Image from "next/image";
 import RenderedVisual from "./RenderedVisual";
 import WidgetBlock from "../widgets/WidgetBlock";
 
@@ -93,15 +92,18 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
           return <pre {...props}>{children}</pre>;
         },
         img: ({ src, alt }: any) => {
+          // Plain <img> with auto sizing so the browser respects the source
+          // image's intrinsic aspect ratio. Hardcoding 800×600 via Next/Image
+          // warped vertical screenshots and panoramic captures.
           return (
             <figure className="my-6">
-              <Image
+              {/* biome-ignore lint/a11y/useAltText: alt is passed as prop */}
+              <img
                 src={src || ""}
                 alt={alt || ""}
-                width={800}
-                height={600}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-auto rounded-lg"
-                sizes="(max-width: 768px) 100vw, 720px"
               />
               {alt && (
                 <figcaption

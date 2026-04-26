@@ -77,14 +77,14 @@ export default function PostsList({ items }: PostsListProps) {
   return (
     <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
       <span className="deck-label">archive</span>
-      <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-20 md:mb-28">
+      <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-16 sm:mb-20 md:mb-28">
         writing.
       </h1>
 
       {itemsByYear.length === 0 ? (
         <p className="text-muted-foreground">No articles found.</p>
       ) : (
-        <div className="space-y-20 md:space-y-28">
+        <div className="space-y-16 sm:space-y-20 md:space-y-28">
           {itemsByYear.map(({ year, items: yearItems }) => (
             <section key={year}>
               <h2 className="deck-label !text-base">{year}</h2>

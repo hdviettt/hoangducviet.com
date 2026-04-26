@@ -108,17 +108,20 @@ export default async function ProjectPage({ params }: ProjectParams) {
       {/* Back */}
       <Link
         href="/projects"
-        className="inline-block text-sm text-muted-foreground hover:text-primary transition-colors mb-12 md:mb-20"
+        className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-10 md:mb-16"
       >
-        ← all projects
+        <span className="text-primary/60 group-hover:text-primary transition-colors">
+          ←
+        </span>
+        all projects
       </Link>
 
       {/* Project Header — deck-label + display title */}
-      <header className="mb-16 sm:mb-20 md:mb-28">
+      <header className="mb-12 sm:mb-16 md:mb-28">
         <span className="deck-label">
           {isSeries ? `series · ${posts.length} parts` : "project"}
         </span>
-        <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-8 md:mb-10">
+        <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 sm:mb-8 md:mb-10">
           {project.title}
         </h1>
 

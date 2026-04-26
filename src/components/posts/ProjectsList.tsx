@@ -74,7 +74,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
   return (
     <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
       <span className="deck-label">things i've built</span>
-      <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-16 md:mb-24">
+      <h1 className="deck-display text-5xl sm:text-6xl md:text-7xl mb-12 sm:mb-16 md:mb-24">
         projects.
       </h1>
 

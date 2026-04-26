@@ -123,7 +123,7 @@ export default async function Home() {
       />
 
       {/* Hero — picture and name in the spotlight, bio as supporting copy */}
-      <section className="mb-32 md:mb-40">
+      <section className="mb-24 sm:mb-32 md:mb-40">
         <div className="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-8 md:gap-10">
           {imageUrl && (
             <Image
@@ -184,7 +184,7 @@ export default async function Home() {
       {/* Recent writing — multi-post projects collapse to a single series row
           so a chronological list isn't dominated by one project's parts. */}
       {recentItems.length > 0 && (
-        <section className="mb-32 md:mb-40">
+        <section className="mb-24 sm:mb-32 md:mb-40">
           <Link
             href="/posts"
             className="inline-block deck-label hover:text-primary transition-colors"
