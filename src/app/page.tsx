@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-import { getProjects } from "@/lib/projects";
 import { getGlobalMetadata } from "@/lib/global";
 import { createWebSiteSchema, createPersonSchema } from "@/lib/jsonld";
 import { Facebook, Github, Instagram, Linkedin, Mail } from "lucide-react";
@@ -56,20 +55,38 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+function itemDate(item: FeedItem): string {
+  return item.kind === "series"
+    ? item.lastDate
+    : item.post.date_created || "";
+}
+
+function groupByYear(items: FeedItem[]): Array<{ year: number; items: FeedItem[] }> {
+  const yearMap = new Map<number, FeedItem[]>();
+  const yearOrder: number[] = [];
+  for (const item of items) {
+    const iso = itemDate(item);
+    const year = iso ? new Date(iso).getFullYear() : 0;
+    if (!yearMap.has(year)) {
+      yearMap.set(year, []);
+      yearOrder.push(year);
+    }
+    yearMap.get(year)!.push(item);
+  }
+  return yearOrder.map((year) => ({ year, items: yearMap.get(year)! }));
+}
+
 export default async function Home() {
   let profileData: any[] = [];
-  let recentItems: FeedItem[] = [];
-  let projectsList: any[] = [];
+  let allItems: FeedItem[] = [];
 
   try {
-    const [profileResult, itemsResult, projectsResult] = await Promise.all([
+    const [profileResult, itemsResult] = await Promise.all([
       getProfile(),
-      getFeedItems({ limit: 5 }),
-      getProjects({ excludeWritingSeries: true }),
+      getFeedItems(),
     ]);
     profileData = profileResult;
-    recentItems = itemsResult;
-    projectsList = projectsResult;
+    allItems = itemsResult;
   } catch (error) {
     console.error("Error fetching data:", error);
     return (
@@ -87,6 +104,7 @@ export default async function Home() {
     );
   }
 
+  const itemsByYear = groupByYear(allItems);
   const mainProfile = profileData[0];
   const imageUrl = mainProfile.image || null;
   const baseUrl =
@@ -184,100 +202,64 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Recent writing — multi-post projects collapse to a single series row
-          so a chronological list isn't dominated by one project's parts. */}
-      {recentItems.length > 0 && (
-        <section className="mb-12 sm:mb-16">
-          <Link href="/posts" className="group block mb-6 md:mb-8">
-            <h2 className="text-sm md:text-[15px] font-semibold uppercase tracking-widest text-foreground/55 group-hover:text-foreground transition-colors pb-3 border-b border-border/50">
-              recent writing
-            </h2>
-          </Link>
+      {/* Writing — single chronological list, year-grouped. Series collapse
+          to a SeriesBlock with parts visible inline; standalone posts render
+          as flat rows. */}
+      {itemsByYear.length > 0 && (
+        <div className="space-y-12 sm:space-y-16">
+          {itemsByYear.map(({ year, items }) => (
+            <section key={year}>
+              <h2 className="text-sm md:text-[15px] font-semibold uppercase tracking-widest text-foreground/55 mb-4 md:mb-6 pb-3 border-b border-border/50">
+                {year}
+              </h2>
 
-          <ul className="mt-2 divide-y divide-border/50 [&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
-            {recentItems.map((item) => {
-              if (item.kind === "series") {
-                return (
-                  <li key={`series-${item.project.slug}`}>
-                    <SeriesBlock
-                      project={item.project}
-                      parts={item.parts}
-                      firstDate={item.firstDate}
-                      lastDate={item.lastDate}
-                    />
-                  </li>
-                );
-              }
-              const date = item.post.date_created
-                ? new Date(item.post.date_created).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "2-digit",
-                  })
-                : "";
-              return (
-                <li key={item.post.slug}>
-                  <Link
-                    href={`/posts/${item.post.slug}`}
-                    className="block py-5 md:py-6 group"
-                  >
-                    <div className="flex items-baseline gap-6">
-                      <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                        {item.post.title}
-                      </span>
-                      <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                        {date}
-                      </span>
-                    </div>
-                    {item.post.description && (
-                      <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
-                        {item.post.description}
-                      </p>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
-
-      {/* Projects — same naked-list treatment, no card boxes */}
-      {projectsList.length > 0 && (
-        <section>
-          <Link href="/projects" className="group block mb-6 md:mb-8">
-            <h2 className="text-sm md:text-[15px] font-semibold uppercase tracking-widest text-foreground/55 group-hover:text-foreground transition-colors pb-3 border-b border-border/50">
-              projects
-            </h2>
-          </Link>
-
-          <ul className="mt-2 divide-y divide-border/50">
-            {projectsList.map((project: any) => (
-              <li key={project.slug}>
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="block py-5 md:py-6 group"
-                >
-                  <div className="flex items-baseline gap-6">
-                    <h3 className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      {project.title || "Untitled"}
-                    </h3>
-                    {project.date_created && (
-                      <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                        {new Date(project.date_created).getFullYear()}
-                      </span>
-                    )}
-                  </div>
-                  {project.summary && (
-                    <p className="mt-2 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl line-clamp-2">
-                      {project.summary}
-                    </p>
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
+              <ul className="divide-y divide-border/50 [&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
+                {items.map((item) => {
+                  if (item.kind === "series") {
+                    return (
+                      <li key={`series-${item.project.slug}`}>
+                        <SeriesBlock
+                          project={item.project}
+                          parts={item.parts}
+                          firstDate={item.firstDate}
+                          lastDate={item.lastDate}
+                        />
+                      </li>
+                    );
+                  }
+                  const date = item.post.date_created
+                    ? new Date(item.post.date_created).toLocaleDateString(
+                        "en-US",
+                        { month: "short", day: "numeric" },
+                      )
+                    : "";
+                  return (
+                    <li key={item.post.slug}>
+                      <Link
+                        href={`/posts/${item.post.slug}`}
+                        className="block py-5 md:py-6 group"
+                      >
+                        <div className="flex items-baseline gap-6">
+                          <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                            {item.post.title}
+                          </span>
+                          <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                            {date}
+                          </span>
+                        </div>
+                        {item.post.description && (
+                          <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
+                            {item.post.description}
+                          </p>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
       )}
     </div>
   );

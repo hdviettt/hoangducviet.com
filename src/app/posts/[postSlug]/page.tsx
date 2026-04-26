@@ -143,15 +143,15 @@ export default async function PostPage({ params }: PostParams) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <article className="pt-12 sm:pt-16 md:pt-24 pb-24">
-        {/* Back button — bracketed nav chip, slightly more present than a bare link */}
+        {/* Back button — there's only one place to go back to: home */}
         <Link
-          href="/posts"
+          href="/"
           className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-10 md:mb-16"
         >
           <span className="text-primary/60 group-hover:text-primary transition-colors">
             ←
           </span>
-          all writing
+          home
         </Link>
 
         <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">

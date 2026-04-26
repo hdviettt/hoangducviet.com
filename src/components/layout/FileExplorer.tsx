@@ -12,11 +12,6 @@ interface FileExplorerProps {
 
 const navItems = [
   { href: "/", label: "home", match: (p: string) => p === "/" },
-  {
-    href: "/posts",
-    label: "posts",
-    match: (p: string) => p.startsWith("/posts"),
-  },
 ];
 
 export default function FileExplorer({ children }: FileExplorerProps) {

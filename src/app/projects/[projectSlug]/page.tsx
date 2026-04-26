@@ -105,15 +105,15 @@ export default async function ProjectPage({ params }: ProjectParams) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Back — series landings live in writing now that /projects is gone */}
+      {/* Back — there's only one place to go back to: home */}
       <Link
-        href="/posts"
+        href="/"
         className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-10 md:mb-16"
       >
         <span className="text-primary/60 group-hover:text-primary transition-colors">
           ←
         </span>
-        all writing
+        home
       </Link>
 
       {/* Project Header — deck-label + display title */}
