@@ -126,9 +126,9 @@ export default async function ProjectPage({ params }: ProjectParams) {
         </h1>
 
         {project.summary && (
-          <div className="mb-6 max-w-2xl">
+          <div className="mb-8 max-w-2xl border-l-2 border-primary/30 pl-5 sm:pl-6 py-1">
             <span className="deck-label">tl;dr</span>
-            <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+            <p className="text-base sm:text-lg text-foreground/80 leading-relaxed">
               {project.summary}
             </p>
           </div>

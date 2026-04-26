@@ -113,7 +113,7 @@ export default function PostsList({ items }: PostsListProps) {
                             </span>
                           </div>
                           {item.project.summary && (
-                            <p className="mt-2 text-sm text-foreground/60 leading-relaxed line-clamp-2 max-w-2xl">
+                            <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
                               {item.project.summary}
                             </p>
                           )}
@@ -149,7 +149,7 @@ export default function PostsList({ items }: PostsListProps) {
                           </span>
                         </div>
                         {post.description && (
-                          <p className="mt-2 text-sm text-foreground/60 leading-relaxed line-clamp-2 max-w-2xl">
+                          <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
                             {post.description}
                           </p>
                         )}

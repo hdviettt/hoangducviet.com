@@ -221,7 +221,7 @@ export default async function Home() {
                         </span>
                       </div>
                       {item.project.summary && (
-                        <p className="mt-1.5 text-sm text-foreground/60 leading-relaxed line-clamp-2 max-w-2xl">
+                        <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
                           {item.project.summary}
                         </p>
                       )}
@@ -251,7 +251,7 @@ export default async function Home() {
                       </span>
                     </div>
                     {item.post.description && (
-                      <p className="mt-1.5 text-sm text-foreground/60 leading-relaxed line-clamp-2 max-w-2xl">
+                      <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
                         {item.post.description}
                       </p>
                     )}
