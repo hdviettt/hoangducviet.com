@@ -116,41 +116,44 @@ export default async function Home() {
   ];
 
   return (
-    <div className="pt-16 sm:pt-24 md:pt-32 pb-24 md:pb-32">
+    <div className="pt-12 sm:pt-16 md:pt-20 pb-24 md:pb-32">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero — picture and name in the spotlight, bio as supporting copy */}
-      <section className="mb-24 sm:mb-32 md:mb-40">
-        <div className="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-8 md:gap-10">
+      {/* Hero — quiet "this is who's writing" intro. Deliberately not a deck-
+          display; that treatment is reserved for individual-page heroes
+          (article titles, /posts archive, /projects archive) where there's a
+          single subject worth shouting about. */}
+      <section className="mb-16 md:mb-20">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-6 md:gap-7">
           {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              width={256}
-              height={256}
-              className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover shrink-0 rounded-full"
+              width={160}
+              height={160}
+              className="w-16 h-16 sm:w-20 sm:h-20 object-cover shrink-0 rounded-full"
               priority
             />
           )}
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 max-w-2xl">
             {mainProfile?.name && (
-              <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl mb-5 md:mb-7">
+              <h1 className="text-xl sm:text-2xl font-semibold tracking-tight mb-3">
                 {mainProfile.name}
               </h1>
             )}
 
             {mainProfile?.description && (
               <div
-                className="text-base md:text-lg text-foreground/75 leading-relaxed max-w-2xl [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-3 [&_p:last-child]:mb-0"
+                className="text-base text-foreground/80 leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-2 [&_p:last-child]:mb-0"
                 dangerouslySetInnerHTML={{ __html: mainProfile.description }}
               />
             )}
 
-            <div className="mt-7 md:mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
               {[
                 { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
                 { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
@@ -165,13 +168,13 @@ export default async function Home() {
                   className="text-muted-foreground hover:text-primary transition-colors"
                   aria-label={label}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-[18px] h-[18px]" />
                 </a>
               ))}
               <span className="w-px h-4 bg-border" />
               <a
                 href="mailto:viethd2704@gmail.com"
-                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 <span>viethd2704@gmail.com</span>
@@ -184,7 +187,7 @@ export default async function Home() {
       {/* Recent writing — multi-post projects collapse to a single series row
           so a chronological list isn't dominated by one project's parts. */}
       {recentItems.length > 0 && (
-        <section className="mb-24 sm:mb-32 md:mb-40">
+        <section className="mb-16 sm:mb-20 md:mb-24">
           <Link
             href="/posts"
             className="inline-block deck-label hover:text-primary transition-colors"

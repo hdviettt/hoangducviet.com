@@ -11,6 +11,7 @@ interface FileExplorerProps {
 }
 
 const navItems = [
+  { href: "/", label: "home", match: (p: string) => p === "/" },
   {
     href: "/posts",
     label: "posts",
@@ -73,15 +74,8 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           scrolled ? "border-b border-border/60" : "border-b border-transparent"
         }`}
       >
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 flex items-center justify-between h-14 md:h-16">
-          <Link
-            href="/"
-            className="text-xs sm:text-sm md:text-base font-semibold tracking-tight text-foreground hover:text-primary transition-colors"
-          >
-            Hoang Duc Viet
-          </Link>
-
-          <nav className="flex items-center gap-5 sm:gap-6 md:gap-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 flex items-center justify-end h-14 md:h-16">
+          <nav className="flex items-center gap-5 sm:gap-6 md:gap-7">
             {navItems.map((item) => {
               const active = item.match(pathname);
               return (
