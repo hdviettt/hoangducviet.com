@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ConfirmModalProps {
   open: boolean;
@@ -24,6 +25,11 @@ export default function ConfirmModal({
   onCancel,
 }: ConfirmModalProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (open) confirmRef.current?.focus();
@@ -38,9 +44,9 @@ export default function ConfirmModal({
     return () => document.removeEventListener("keydown", handler);
   }, [open, onCancel]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-in fade-in-0 duration-150">
       <div className="bg-background border border-border p-6 w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-150">
         {title && <h3 className="text-sm font-medium mb-2">{title}</h3>}
@@ -67,6 +73,7 @@ export default function ConfirmModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
