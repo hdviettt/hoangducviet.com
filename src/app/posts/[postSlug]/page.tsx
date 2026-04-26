@@ -203,6 +203,17 @@ export default async function PostPage({ params }: PostParams) {
               </div>
             </header>
 
+            {/* TL;DR — faded indigo deck-label + lead paragraph, sits at the
+                top of the article so readers can decide whether to commit. */}
+            {data.description && (
+              <div className="mb-10 md:mb-14 max-w-2xl">
+                <span className="deck-label">tl;dr</span>
+                <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+                  {data.description}
+                </p>
+              </div>
+            )}
+
             {/* Article Content */}
             {data.content ? (
               <div className="article-content">

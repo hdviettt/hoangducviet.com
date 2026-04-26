@@ -163,7 +163,11 @@ export type FeedItem =
   | { kind: "post"; post: Post }
   | {
       kind: "series";
-      project: { slug: string; title: string };
+      project: {
+        slug: string;
+        title: string;
+        summary: string | null;
+      };
       parts: { slug: string; title: string; date_created: string }[];
       firstDate: string;
       lastDate: string;
@@ -178,6 +182,7 @@ export async function getFeedItems(options?: {
       post: posts,
       projectSlug: projects.slug,
       projectTitle: projects.title,
+      projectSummary: projects.summary,
     })
     .from(posts)
     .leftJoin(projectsPosts, eq(projectsPosts.postSlug, posts.slug))
@@ -213,7 +218,11 @@ export async function getFeedItems(options?: {
       if (!series) {
         series = {
           kind: "series",
-          project: { slug: r.projectSlug, title: r.projectTitle },
+          project: {
+            slug: r.projectSlug,
+            title: r.projectTitle,
+            summary: r.projectSummary,
+          },
           parts: [],
           firstDate: dateIso,
           lastDate: dateIso,

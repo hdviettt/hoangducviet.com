@@ -126,9 +126,12 @@ export default async function ProjectPage({ params }: ProjectParams) {
         </h1>
 
         {project.summary && (
-          <p className="text-lg md:text-xl text-foreground/80 leading-relaxed max-w-2xl mb-6">
-            {project.summary}
-          </p>
+          <div className="mb-6 max-w-2xl">
+            <span className="deck-label">tl;dr</span>
+            <p className="text-lg md:text-xl text-foreground/80 leading-relaxed">
+              {project.summary}
+            </p>
+          </div>
         )}
 
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">

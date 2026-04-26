@@ -205,19 +205,26 @@ export default async function Home() {
                   <li key={`series-${item.project.slug}`}>
                     <Link
                       href={`/projects/${item.project.slug}`}
-                      className="flex items-baseline gap-6 py-3.5 md:py-4 group"
+                      className="block py-3.5 md:py-4 group"
                     >
-                      <span className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
-                        <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                          {item.project.title}
+                      <div className="flex items-baseline gap-6">
+                        <span className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
+                          <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                            {item.project.title}
+                          </span>
+                          <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
+                            {item.parts.length} parts
+                          </span>
                         </span>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
-                          {item.parts.length} parts
+                        <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                          {range}
                         </span>
-                      </span>
-                      <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                        {range}
-                      </span>
+                      </div>
+                      {item.project.summary && (
+                        <p className="mt-1.5 text-sm text-foreground/60 leading-relaxed line-clamp-2 max-w-2xl">
+                          {item.project.summary}
+                        </p>
+                      )}
                     </Link>
                   </li>
                 );
@@ -233,14 +240,21 @@ export default async function Home() {
                 <li key={item.post.slug}>
                   <Link
                     href={`/posts/${item.post.slug}`}
-                    className="flex items-baseline gap-6 py-3.5 md:py-4 group"
+                    className="block py-3.5 md:py-4 group"
                   >
-                    <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                      {item.post.title}
-                    </span>
-                    <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                      {date}
-                    </span>
+                    <div className="flex items-baseline gap-6">
+                      <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                        {item.post.title}
+                      </span>
+                      <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                        {date}
+                      </span>
+                    </div>
+                    {item.post.description && (
+                      <p className="mt-1.5 text-sm text-foreground/60 leading-relaxed line-clamp-2 max-w-2xl">
+                        {item.post.description}
+                      </p>
+                    )}
                   </Link>
                 </li>
               );
