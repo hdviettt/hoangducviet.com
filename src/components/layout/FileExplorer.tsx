@@ -17,11 +17,6 @@ const navItems = [
     label: "posts",
     match: (p: string) => p.startsWith("/posts"),
   },
-  {
-    href: "/projects",
-    label: "projects",
-    match: (p: string) => p.startsWith("/projects"),
-  },
 ];
 
 export default function FileExplorer({ children }: FileExplorerProps) {
