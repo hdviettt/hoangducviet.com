@@ -64,8 +64,10 @@ export default function SeriesBlock({
   lastDate,
 }: SeriesBlockProps) {
   return (
-    <article className="border-l-2 border-primary/30 pl-5 sm:pl-6 py-3 md:py-4">
-      {/* Meta row — kind, count, date range */}
+    <article className="py-5 md:py-6">
+      {/* Meta row — kind, count, date range. The "SERIES · N PARTS" badge
+          carries the visual signal that this is a series; no left border
+          needed. */}
       <div className="flex items-baseline gap-3 flex-wrap mb-3">
         <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
           Series · {parts.length} parts
