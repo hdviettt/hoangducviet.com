@@ -1,5 +1,4 @@
-// Push human-friendly TL;DRs (non-technical audience) to posts and projects.
-// Run with --commit to apply; default is dry-run.
+// Push TL;DRs that lead with the insight, not the storytelling.
 const { Pool } = require("pg");
 
 const DRY_RUN = !process.argv.includes("--commit");
@@ -10,46 +9,46 @@ const pool = new Pool({
 
 const POST_TLDRS = {
   "building-a-mini-search-engine-1-web-crawling-in-search-engines":
-    "If you've ever wondered how Google actually finds web pages in the first place — without already having a search engine to find them — this is the answer. The whole crawling process is a chicken-and-egg problem: you need URLs to find URLs. I walk through how it really works, why backlinks matter for getting your site discovered, and how I started my own mini search engine from just two seed URLs.",
+    "Google finds new pages by following links from pages it already knows — which is why backlinks are the difference between findable and invisible. The crawl is a chicken-and-egg problem, solved by starting from a small list of seed URLs and propagating outward. I started my mini search engine from two seeds: Wikipedia and OneFootball.",
 
   "building-a-mini-search-engine-2-designing-the-web-crawler":
-    "How my web crawler actually works, in plain terms: it asks each website for permission (robots.txt), pretends to be a regular browser so it doesn't get blocked, and waits politely between requests so it doesn't crash the server. Useful if you've heard 'Google is crawling my site' and wondered what that actually means — and why some of your pages never get found.",
+    "A web crawler is a polite robot: it asks permission via robots.txt, identifies itself as a browser, and waits between requests so it doesn't get blocked. I walk through the architecture of mine — the parts that fetch, parse, and orchestrate the crawl — and why some pages on a site might never get found.",
 
   "building-a-mini-search-engine-3-inverted-index":
-    "When SEO advice says 'make sure your pages are indexed,' here's what that actually means. After crawling, search engines build a giant lookup table — a sort of upside-down index — that lets them find matching pages in milliseconds instead of reading every page from scratch every search. If your page isn't in that table, it's invisible, no matter how good the content is.",
+    "'Make sure your pages are indexed' means your pages are in a giant word-to-pages lookup table that powers every search. If your page isn't in that table, it's invisible — no matter how good the content. How that table is actually built, and the line between findable and unfindable.",
 
   "building-a-mini-search-engine-4-ranking-with-bm25":
-    "BM25 is the math underneath Google's earliest answer to 'which page is most relevant to this query?' Understanding it explains why long-tail keywords are easier to rank for, why mentioning a keyword 100 times stops helping past a point, and why a focused 2,000-word post can outrank a 10,000-word one — the basics of on-page SEO, derived from first principles instead of folklore.",
+    "BM25 is the original math behind 'which page is most relevant?' It's why long-tail keywords are easier to rank for, why mentioning a keyword 100 times stops helping, and why a focused 2,000-word post can beat a 10,000-word one. On-page SEO basics, derived from first principles instead of folklore.",
 
   "building-a-mini-search-engine-5-ranking-with-pagerank":
-    "PageRank is the algorithm that put Google on the map: the idea that a page is important if other important pages link to it. Implementing it from scratch reveals why link building is core to SEO, why footer link spam doesn't work, why internal linking matters more than people think, and why a flat site architecture beats a deep one — all derived directly from the math.",
+    "PageRank: a page is important if other important pages link to it. The math behind why link building matters for SEO, why footer link spam doesn't work, why internal linking is more powerful than people realize, and why a flat site architecture beats a deep one.",
 
   "building-a-mini-search-engine-6-ai-overviews":
-    "How AI Overviews actually works under the hood, and why it matters for SEO. It's not magic — it's retrieval-augmented generation. But it has one twist that gave SEO teams sleepless nights: the engine doesn't just look up your query, it expands it into several related queries first. Understanding this 'query fan-out' is half the work of optimizing for AI Overviews.",
+    "AI Overviews doesn't just look up your query — it expands it into several related queries first, then synthesizes an answer from all of them. This 'query fan-out' is half the work of optimizing for AI Overviews, and it's the part that gave SEO teams sleepless nights when it launched.",
 
   "building-a-mini-search-engine-7-neural-reranking-with-bert":
-    "Why Google's 2019 BERT update changed search forever, in plain English. Before BERT, the engine treated 'Brazil traveler to USA' the same as 'USA traveler to Brazil' — small words like 'to' didn't matter. After BERT, they did. This is the foundation of why writing for the question-actually-being-asked beats keyword-stuffing, and it's why your content strategy probably needs to change.",
+    "Before Google's 2019 BERT update, 'Brazil traveler to USA' and 'USA traveler to Brazil' meant the same thing to Search. After BERT, they didn't. Small words like 'to' suddenly mattered, and writing for the question actually being asked started beating keyword-stuffing for good.",
 
   "building-a-mini-search-engine-8-ai-mode":
-    "Google's 2025 AI Mode is a stateful chat that lives inside Search — you can ask follow-up questions instead of starting over with new keywords every time. I built my own version on top of my mini search engine to understand the design choices behind it, especially the one I think matters most: why AI Mode stays inside the search results page rather than turning into a separate chatbot tab.",
+    "Google's AI Mode lets you have a conversation with Search instead of restarting with new keywords every time. The most important design choice: it lives inside the search results page, not in a separate chatbot tab. I built my own version on top of my mini search engine to understand why.",
 
   "agentic-keyword-clustering":
-    "I built a tool that takes thousands of keywords and groups them into themes automatically — so SEO operators don't have to manually sort through spreadsheets for hours. The post covers what works, what breaks down (specifically: why throwing the whole list at ChatGPT falls apart past a few hundred keywords), and what the interface looks like for actually using these clusters in a content plan.",
+    "How to group thousands of keywords into themes automatically, so SEO operators don't manually sort spreadsheets for hours. What works (embeddings + UMAP + HDBSCAN), what breaks (throwing the whole list at ChatGPT past a few hundred keywords), and the interface for actually using these clusters in a content plan.",
 
   "liu-xiaopai-and-chinese-vibe-code-rush":
-    "A profile of Liu Xiaopai, a former product manager who's making roughly $1M a year selling indie software — despite never being a 'real developer' and openly admitting his code is bad. The argument: in 2025, the bottleneck for shipping software has shifted from coding skill to problem-finding and speed of execution. What 50,000+ Chinese indie founders are quietly showing the rest of us about the next phase of building.",
+    "The bottleneck for shipping software in 2025 isn't coding skill — it's problem-finding and execution speed. Liu Xiaopai is the proof: a former product manager making ~$1M/year on indie software with Claude Code, while openly admitting his code is bad. What 50,000+ Chinese indie founders are showing the rest of us about the next phase of building.",
 
   "the-chinese-ai-wisdom":
-    "MIT's 2025 report says 95% of enterprise AI pilots fail to ship. Meanwhile in China, ByteDance's Doubao quietly hit 157 million monthly active users — by being woven into apps people already use every day (Douyin, Lark, Feishu), not by being a smarter standalone model. The thesis: the West is building AI products in isolation when it should be building AI INTO products. That's why the gap exists, and how to close it.",
+    "The Chinese AI playbook in one line: don't build a smarter standalone AI, weave AI into apps people already use every day. ByteDance's Doubao reached 157M monthly active users through Douyin, Lark, and Feishu — not by competing on model capability. MIT's 2025 report shows 95% of Western enterprise AI pilots fail to ship. The gap isn't smarter models; it's distribution and integration.",
 };
 
 const PROJECT_SUMMARIES = {
   "building-a-mini-search-engine":
-    "I'm an SEO professional and I got tired of vague advice like 'write quality content' and 'build links'. I wanted to understand exactly how Google decides what ranks — not the principles, the actual math. So I built my own working search engine from scratch, end-to-end. This series is the result: every layer of how search actually works — crawling, indexing, ranking, AI Overviews, AI Mode — explained for non-technical readers, with the SEO implications spelled out at every step.",
+    "A working search engine built from scratch — crawling, indexing, ranking, AI Overviews, AI Mode — to understand how Google's SEO mechanics actually work from first principles. Eight parts. Each layer explained for non-technical readers, with the SEO implications spelled out at every step.",
 };
 
 (async () => {
-  console.log(`${DRY_RUN ? "[DRY RUN]" : "[COMMIT]"} TL;DR push (non-technical voice)\n`);
+  console.log(`${DRY_RUN ? "[DRY RUN]" : "[COMMIT]"} TL;DR push (insight-first)\n`);
 
   for (const [slug, newDesc] of Object.entries(POST_TLDRS)) {
     const cur = await pool.query(
