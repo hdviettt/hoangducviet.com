@@ -116,44 +116,43 @@ export default async function Home() {
   ];
 
   return (
-    <div className="pb-24 md:pb-32">
+    <div className="pb-16 md:pb-20">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero — content sized naturally, no forced viewport-height. Deck
-          vibe via the faded label + bold name; cornering moved to a single
-          @hdviet wordmark in the page footer (rather than inside the hero,
-          which created accidental empty space below content). */}
-      <section className="pt-12 sm:pt-16 md:pt-20 pb-16 md:pb-20">
-        <div className="flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-7 md:gap-8 max-w-3xl">
+      {/* Hero — tight composition. Deck vibe via the faded label + bold
+          name, but sized so the post list lands in the first viewport on
+          short laptops. */}
+      <section className="pt-8 sm:pt-10 md:pt-12 pb-10 md:pb-12">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 max-w-3xl">
           {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              width={192}
-              height={192}
-              className="w-20 h-20 sm:w-24 sm:h-24 object-cover shrink-0 rounded-full animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
+              width={160}
+              height={160}
+              className="w-16 h-16 sm:w-20 sm:h-20 object-cover shrink-0 rounded-full animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
               priority
             />
           )}
           <div className="flex-1 min-w-0">
-            <span className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards">
+            <span className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards" style={{ marginBottom: 8 }}>
               personal blog
             </span>
             {mainProfile?.name && (
-              <h1 className="deck-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-5 md:mb-6 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
+              <h1 className="deck-display text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
                 {mainProfile.name}
               </h1>
             )}
             {mainProfile?.description && (
               <div
-                className="text-base sm:text-lg text-foreground/75 leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-2 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
+                className="text-sm sm:text-base text-foreground/75 leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-1.5 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
                 dangerouslySetInnerHTML={{ __html: mainProfile.description }}
               />
             )}
-            <div className="mt-5 md:mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 fill-mode-backwards">
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 fill-mode-backwards">
               {[
                 { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
                 { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
@@ -187,7 +186,7 @@ export default async function Home() {
       {/* Recent writing — multi-post projects collapse to a single series row
           so a chronological list isn't dominated by one project's parts. */}
       {recentItems.length > 0 && (
-        <section className="mb-16 sm:mb-20 md:mb-24">
+        <section className="mb-12 sm:mb-16">
           <Link
             href="/posts"
             className="inline-block deck-label hover:text-primary transition-colors"
@@ -206,7 +205,7 @@ export default async function Home() {
                   <li key={`series-${item.project.slug}`}>
                     <Link
                       href={`/projects/${item.project.slug}`}
-                      className="flex items-baseline gap-6 py-5 md:py-6 group"
+                      className="flex items-baseline gap-6 py-3.5 md:py-4 group"
                     >
                       <span className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
                         <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
@@ -234,7 +233,7 @@ export default async function Home() {
                 <li key={item.post.slug}>
                   <Link
                     href={`/posts/${item.post.slug}`}
-                    className="flex items-baseline gap-6 py-5 md:py-6 group"
+                    className="flex items-baseline gap-6 py-3.5 md:py-4 group"
                   >
                     <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
                       {item.post.title}
@@ -265,7 +264,7 @@ export default async function Home() {
               <li key={project.slug}>
                 <Link
                   href={`/projects/${project.slug}`}
-                  className="block py-6 md:py-7 group"
+                  className="block py-4 md:py-5 group"
                 >
                   <div className="flex items-baseline gap-6">
                     <h3 className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
