@@ -167,7 +167,7 @@ export default async function Home() {
             )}
             {mainProfile?.description && (
               <div
-                className="text-sm sm:text-base text-foreground/75 leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-1.5 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
+                className="text-sm sm:text-base text-foreground/75 leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
                 dangerouslySetInnerHTML={{ __html: mainProfile.description }}
               />
             )}
