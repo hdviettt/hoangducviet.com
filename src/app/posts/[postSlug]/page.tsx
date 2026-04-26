@@ -131,7 +131,6 @@ export default async function PostPage({ params }: PostParams) {
     }),
     createBreadcrumbSchema([
       { name: "Home", url: baseUrl },
-      { name: "Posts", url: `${baseUrl}/posts` },
       { name: data.title || "", url: postUrl },
     ]),
   ];

@@ -93,7 +93,6 @@ export default async function ProjectPage({ params }: ProjectParams) {
 
   const jsonLd = createBreadcrumbSchema([
     { name: "Home", url: baseUrl },
-    { name: "Projects", url: `${baseUrl}/projects` },
     { name: project.title || "", url: projectUrl },
   ]);
 

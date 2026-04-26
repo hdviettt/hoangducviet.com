@@ -52,27 +52,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "weekly",
         priority: 1,
       },
-      {
-        url: `${BASE_URL}/posts`,
-        lastModified: new Date(),
-        changeFrequency: "weekly",
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/projects`,
-        lastModified: new Date(),
-        changeFrequency: "weekly",
-        priority: 0.8,
-      },
       ...postEntries,
       ...projectEntries,
     ];
   } catch {
     // Return static pages if DB is unavailable (e.g. build-time prerendering)
-    return [
-      { url: BASE_URL, lastModified: new Date(), priority: 1 },
-      { url: `${BASE_URL}/posts`, lastModified: new Date(), priority: 0.8 },
-      { url: `${BASE_URL}/projects`, lastModified: new Date(), priority: 0.8 },
-    ];
+    return [{ url: BASE_URL, lastModified: new Date(), priority: 1 }];
   }
 }

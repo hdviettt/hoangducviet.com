@@ -77,14 +77,22 @@ export default function SeriesBlock({
         </span>
       </div>
 
-      {/* Title — links to the project page (the canonical series landing).
-          The TL;DR lives on the project page; the homepage block is just
-          a structural preview. */}
-      <Link href={`/projects/${project.slug}`} className="group block mb-4 md:mb-5">
+      {/* Title — links to the project page (the canonical series landing) */}
+      <Link href={`/projects/${project.slug}`} className="group block mb-3 md:mb-4">
         <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
           {project.title}
         </h3>
       </Link>
+
+      {/* TL;DR — same treatment as on post and project detail pages */}
+      {project.summary && (
+        <div className="max-w-2xl mb-5 md:mb-6">
+          <span className="deck-label">tl;dr</span>
+          <p className="text-base sm:text-lg text-foreground/80 leading-relaxed">
+            {project.summary}
+          </p>
+        </div>
+      )}
 
       {/* Parts list — each links to its own post page */}
       <ol className="space-y-2">

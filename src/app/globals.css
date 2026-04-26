@@ -470,64 +470,6 @@ mark,
 }
 
 /* ================================
-   TERMINAL UTILITIES
-   ================================ */
-
-/* Terminal prompt prefix */
-.terminal-prompt::before {
-  content: "> ";
-  color: hsl(var(--primary));
-}
-
-/* Terminal cursor blink */
-.terminal-cursor::after {
-  content: "_";
-  animation: blink 1s step-end infinite;
-  color: hsl(var(--primary));
-}
-
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
-/* Terminal section header */
-.terminal-header {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: hsl(var(--muted-foreground));
-  border-bottom: 1px solid hsl(var(--border));
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-}
-
-/* Terminal list item */
-.terminal-list-item {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 14px;
-  padding: 6px 0;
-  border-bottom: 1px dashed hsl(var(--border) / 0.5);
-}
-
-.terminal-list-item:last-child {
-  border-bottom: none;
-}
-
-/* Terminal box */
-.terminal-box {
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--card));
-  padding: 16px;
-}
-
-/* ================================
    RICH EDITOR (Tiptap)
    ================================ */
 

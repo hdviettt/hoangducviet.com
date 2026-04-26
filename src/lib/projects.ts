@@ -22,12 +22,6 @@ export interface Project {
   }>;
 }
 
-export interface ProjectGroup {
-  slug: string;
-  title: string;
-  sortOrder: number;
-}
-
 export async function getProjects(options?: {
   /**
    * When true, exclude projects that are also a writing series (have 2+
@@ -93,13 +87,6 @@ export async function getProjects(options?: {
     date_created: row.dateCreated?.toISOString(),
     date_updated: row.dateUpdated?.toISOString(),
   }));
-}
-
-export async function getProjectGroups(): Promise<Array<ProjectGroup>> {
-  return db
-    .select()
-    .from(projectGroups)
-    .orderBy(asc(projectGroups.sortOrder), asc(projectGroups.title));
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project> {

@@ -68,8 +68,7 @@ export async function GET() {
     }
 
     lines.push("## Indices");
-    lines.push(`- [All posts](${BASE_URL}/posts)`);
-    lines.push(`- [All projects](${BASE_URL}/projects)`);
+    lines.push(`- [Homepage](${BASE_URL}/) — full year-grouped writing list`);
     lines.push(`- [Sitemap](${BASE_URL}/sitemap.xml)`);
     lines.push("");
 
@@ -83,8 +82,6 @@ export async function GET() {
     const fallback = `# Blog
 
 - [Homepage](${BASE_URL}/)
-- [All posts](${BASE_URL}/posts)
-- [All projects](${BASE_URL}/projects)
 - [Sitemap](${BASE_URL}/sitemap.xml)
 `;
     return new Response(fallback, {
