@@ -170,8 +170,12 @@ small,
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   font-feature-settings: "kern" 1, "cv11", "ss01";
   letter-spacing: -0.005em;
+  /* overflow-wrap breaks only when a word truly can't fit (long URLs etc.).
+     Avoid `word-break: break-word` — it shatters normal words mid-character
+     in narrow columns (e.g. table cells on mobile turning "Cluster" into
+     "Clus" / "ter"). */
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
 }
 
 /* Cap text-flow elements at ~65ch for comfortable reading. Figures, code
@@ -361,6 +365,16 @@ small,
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: 0.9375rem;
+}
+
+/* Mobile fallback: when even the natural word-min-widths exceed the
+   viewport, the .table-wrapper scrolls horizontally instead of letting
+   browsers compress cells. The wrapper already has overflow-x: auto. */
+.article-content table th,
+.article-content table td {
+  /* Each cell stays at its natural min-width (longest word). Browsers
+     extend total width past container if needed; wrapper scrolls. */
+  min-width: 6rem;
 }
 
 .article-content th,
