@@ -122,42 +122,39 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero — treated as the cover slide of a deck. Fills the first
-          viewport; readers scroll to find content. Photo cornered top-right,
-          name watermark cornered bottom-left (mirrors SEONGON wordmark on
-          the deck slides). Page-load entrance is staged top-down. */}
-      <section className="relative min-h-[calc(100svh-3.5rem)] md:min-h-[calc(100svh-4rem)] flex flex-col">
-        {/* Photo — top-right corner */}
-        {imageUrl && (
-          <div className="absolute top-6 right-0 sm:top-8 animate-in fade-in slide-in-from-top-2 duration-700 delay-300 fill-mode-backwards">
+      {/* Hero — treated as the cover slide of a deck. Centered content
+          stack: photo → label → name → bio → socials. The only cornered
+          element is the wordmark (mirrors SEONGON on the deck slides).
+          Hero min-height is generous but not full-viewport so empty space
+          stays in service of the composition, not as accidental gaps. */}
+      <section className="relative min-h-[78vh] flex flex-col py-16 sm:py-20">
+        {/* Centered hero content */}
+        <div className="flex-1 flex flex-col justify-center max-w-3xl">
+          {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              width={160}
-              height={160}
-              className="w-16 h-16 sm:w-20 sm:h-20 object-cover shrink-0 rounded-full"
+              width={192}
+              height={192}
+              className="w-20 h-20 sm:w-24 sm:h-24 object-cover shrink-0 rounded-full mb-6 sm:mb-8 animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
               priority
             />
-          </div>
-        )}
-
-        {/* Centered hero content */}
-        <div className="flex-1 flex flex-col justify-center max-w-3xl pt-24 sm:pt-28 pb-24 sm:pb-32">
-          <span className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-backwards">
+          )}
+          <span className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards">
             personal blog
           </span>
           {mainProfile?.name && (
-            <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-100 fill-mode-backwards">
+            <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
               {mainProfile.name}
             </h1>
           )}
           {mainProfile?.description && (
             <div
-              className="text-base sm:text-lg md:text-xl text-foreground/75 leading-relaxed max-w-2xl [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-2.5 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards"
+              className="text-base sm:text-lg md:text-xl text-foreground/75 leading-relaxed max-w-2xl [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-2.5 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
               dangerouslySetInnerHTML={{ __html: mainProfile.description }}
             />
           )}
-          <div className="mt-6 md:mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300 fill-mode-backwards">
+          <div className="mt-6 md:mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 fill-mode-backwards">
             {[
               { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
               { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
@@ -186,15 +183,10 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Watermark — bottom-left corner. Mirrors the SEONGON wordmark on
-            your deck slides. Small, faint indigo, decorative. */}
-        <div className="absolute bottom-6 left-0 text-xs font-semibold uppercase tracking-widest text-primary/40 select-none pointer-events-none animate-in fade-in duration-1000 delay-500 fill-mode-backwards">
+        {/* Watermark — bottom-left corner. The only cornered element on the
+            slide; mirrors the SEONGON wordmark placement on your decks. */}
+        <div className="absolute bottom-4 left-0 text-xs font-semibold uppercase tracking-widest text-primary/40 select-none pointer-events-none animate-in fade-in duration-700 delay-500 fill-mode-backwards">
           @hdviet · 2026
-        </div>
-
-        {/* Scroll affordance — bottom-right, faint, decorative */}
-        <div className="absolute bottom-6 right-0 text-xs text-muted-foreground/50 select-none pointer-events-none animate-in fade-in duration-1000 delay-700 fill-mode-backwards">
-          scroll ↓
         </div>
       </section>
 
