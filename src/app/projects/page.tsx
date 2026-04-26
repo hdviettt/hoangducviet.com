@@ -19,7 +19,7 @@ export default async function ProjectsPage() {
   let projectsList: Project[] = [];
 
   try {
-    projectsList = await getProjects();
+    projectsList = await getProjects({ excludeWritingSeries: true });
   } catch (error) {
     console.error("Error fetching projects:", error);
   }

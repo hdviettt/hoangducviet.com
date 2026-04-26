@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { posts, projectGroups, projects, projectsPosts } from "@/db/schema";
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, notInArray, sql } from "drizzle-orm";
 
 export interface Project {
   slug: string;
@@ -28,7 +28,39 @@ export interface ProjectGroup {
   sortOrder: number;
 }
 
-export async function getProjects(): Promise<Array<Project>> {
+export async function getProjects(options?: {
+  /**
+   * When true, exclude projects that are also a writing series (have 2+
+   * published posts). Those projects surface in the writing list as a
+   * collapsed series row, so listing them again under projects creates
+   * visual redundancy. Default: false (return all published projects).
+   */
+  excludeWritingSeries?: boolean;
+}): Promise<Array<Project>> {
+  // First find which project slugs have 2+ published posts — those are the
+  // "writing series" projects we want to exclude when asked.
+  let writingSeriesSlugs: string[] = [];
+  if (options?.excludeWritingSeries) {
+    const seriesRows = await db
+      .select({
+        projectSlug: projectsPosts.projectSlug,
+        postCount: sql<number>`count(*)::int`,
+      })
+      .from(projectsPosts)
+      .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
+      .where(eq(posts.status, "published"))
+      .groupBy(projectsPosts.projectSlug);
+    writingSeriesSlugs = seriesRows
+      .filter((r) => Number(r.postCount) >= 2)
+      .map((r) => r.projectSlug);
+  }
+
+  const baseWhere = eq(projects.status, "published");
+  const whereClause =
+    writingSeriesSlugs.length > 0
+      ? and(baseWhere, notInArray(projects.slug, writingSeriesSlugs))
+      : baseWhere;
+
   const result = await db
     .select({
       slug: projects.slug,
@@ -45,7 +77,7 @@ export async function getProjects(): Promise<Array<Project>> {
     })
     .from(projects)
     .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
-    .where(eq(projects.status, "published"))
+    .where(whereClause)
     .orderBy(asc(projectGroups.sortOrder), desc(projects.dateCreated));
 
   return result.map((row) => ({

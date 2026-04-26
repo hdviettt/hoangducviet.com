@@ -64,7 +64,7 @@ export default async function Home() {
     const [profileResult, itemsResult, projectsResult] = await Promise.all([
       getProfile(),
       getFeedItems({ limit: 5 }),
-      getProjects(),
+      getProjects({ excludeWritingSeries: true }),
     ]);
     profileData = profileResult;
     recentItems = itemsResult;
