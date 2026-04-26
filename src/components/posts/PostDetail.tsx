@@ -161,15 +161,15 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — editorial lede directly under the byline. Indigo label
-                anchors it; paragraph reads slightly larger than body but not
-                heading-scale, so it doesn't compete with the title. */}
+            {/* TL;DR — bracketed by an indigo hairline above to set it apart
+                from the byline. Bumped label + bumped paragraph make it pop
+                without leaning on cards, left bars, or heading-scale type. */}
             {data.description && (
-              <div className="mb-12 md:mb-16 max-w-2xl">
-                <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-2.5">
+              <div className="mb-12 md:mb-16 max-w-2xl border-t-2 border-primary/40 pt-6 md:pt-7">
+                <span className="block text-xs font-bold uppercase tracking-[0.22em] text-primary mb-3">
                   tl;dr
                 </span>
-                <p className="text-base sm:text-lg text-foreground/90 leading-relaxed">
+                <p className="text-lg text-foreground leading-relaxed">
                   {data.description}
                 </p>
               </div>
