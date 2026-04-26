@@ -104,7 +104,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
       </header>
 
       <main
-        className={`mx-auto px-4 sm:px-6 pb-16 ${isPostPage ? "max-w-5xl" : "max-w-4xl"}`}
+        className={`mx-auto px-4 sm:px-6 pb-16 ${isPostPage ? "max-w-6xl" : "max-w-4xl"}`}
       >
         {children}
       </main>
