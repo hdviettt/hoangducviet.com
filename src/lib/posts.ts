@@ -249,6 +249,18 @@ export async function getFeedItems(options?: {
     return bDate.localeCompare(aDate);
   });
 
+  // Sort each series's parts ASC (oldest first) so part 01 = the first
+  // entry in the series and part N = the latest. The query above is DESC
+  // for items-list ordering, but parts themselves should read in series
+  // order regardless of how recently each was published.
+  for (const item of items) {
+    if (item.kind === "series") {
+      item.parts.sort((a, b) =>
+        a.date_created.localeCompare(b.date_created),
+      );
+    }
+  }
+
   return options?.limit ? items.slice(0, options.limit) : items;
 }
 

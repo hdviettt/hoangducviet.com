@@ -65,7 +65,7 @@ export default async function Home() {
     const [profileResult, itemsResult, projectsResult] = await Promise.all([
       getProfile(),
       getFeedItems({ limit: 5 }),
-      getProjects(),
+      getProjects({ excludeWritingSeries: true }),
     ]);
     profileData = profileResult;
     recentItems = itemsResult;
@@ -188,11 +188,10 @@ export default async function Home() {
           so a chronological list isn't dominated by one project's parts. */}
       {recentItems.length > 0 && (
         <section className="mb-12 sm:mb-16">
-          <Link
-            href="/posts"
-            className="inline-block deck-label hover:text-primary transition-colors"
-          >
-            <h2 className="deck-label !mb-0">recent writing</h2>
+          <Link href="/posts" className="group block mb-6 md:mb-8">
+            <h2 className="text-sm md:text-[15px] font-semibold uppercase tracking-widest text-foreground/55 group-hover:text-foreground transition-colors pb-3 border-b border-border/50">
+              recent writing
+            </h2>
           </Link>
 
           <ul className="mt-2 divide-y divide-border/50 [&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
@@ -220,7 +219,7 @@ export default async function Home() {
                 <li key={item.post.slug}>
                   <Link
                     href={`/posts/${item.post.slug}`}
-                    className="block py-3.5 md:py-4 group"
+                    className="block py-5 md:py-6 group"
                   >
                     <div className="flex items-baseline gap-6">
                       <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
@@ -246,11 +245,10 @@ export default async function Home() {
       {/* Projects — same naked-list treatment, no card boxes */}
       {projectsList.length > 0 && (
         <section>
-          <Link
-            href="/projects"
-            className="inline-block deck-label hover:text-primary transition-colors"
-          >
-            <h2 className="deck-label !mb-0">projects</h2>
+          <Link href="/projects" className="group block mb-6 md:mb-8">
+            <h2 className="text-sm md:text-[15px] font-semibold uppercase tracking-widest text-foreground/55 group-hover:text-foreground transition-colors pb-3 border-b border-border/50">
+              projects
+            </h2>
           </Link>
 
           <ul className="mt-2 divide-y divide-border/50">
@@ -258,7 +256,7 @@ export default async function Home() {
               <li key={project.slug}>
                 <Link
                   href={`/projects/${project.slug}`}
-                  className="block py-4 md:py-5 group"
+                  className="block py-5 md:py-6 group"
                 >
                   <div className="flex items-baseline gap-6">
                     <h3 className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">

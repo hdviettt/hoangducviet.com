@@ -394,14 +394,18 @@ small,
    DECK UTILITIES — for the SEONGON-deck-inspired layout
    ================================ */
 
-/* Faded indigo label that sits above a display heading.
-   Used on homepage, /posts, project page, and post detail. */
+/* Small caption-style label that sits above a display heading.
+   Used on homepage, /posts, project page, and post detail. Was previously
+   tinted in the brand indigo; reduced to muted foreground because the
+   indigo accent was becoming wallpaper at the rate it appeared on the
+   page. Indigo is now reserved for series indicators, link hovers, and
+   the active nav state. */
 .deck-label {
   display: block;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0;
-  color: hsl(var(--primary) / 0.55);
+  color: hsl(var(--foreground) / 0.5);
   margin-bottom: 14px;
 }
 

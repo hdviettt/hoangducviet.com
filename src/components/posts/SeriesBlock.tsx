@@ -75,25 +75,20 @@ export default function SeriesBlock({
         </span>
       </div>
 
-      {/* Title — links to the project page (the canonical series landing) */}
-      <Link href={`/projects/${project.slug}`} className="group block mb-2">
+      {/* Title — links to the project page (the canonical series landing).
+          The TL;DR lives on the project page; the homepage block is just
+          a structural preview. */}
+      <Link href={`/projects/${project.slug}`} className="group block mb-4 md:mb-5">
         <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
           {project.title}
         </h3>
       </Link>
 
-      {/* Summary — series-level TL;DR */}
-      {project.summary && (
-        <p className="text-sm text-foreground/60 leading-relaxed max-w-2xl mb-4 md:mb-5">
-          {project.summary}
-        </p>
-      )}
-
       {/* Parts list — each links to its own post page */}
       <ol className="space-y-2">
         {parts.map((part, i) => (
           <li key={part.slug} className="flex items-baseline gap-3">
-            <span className="text-xs tabular-nums font-medium text-primary/40 w-6 shrink-0">
+            <span className="text-xs tabular-nums font-medium text-muted-foreground/50 w-6 shrink-0">
               {String(i + 1).padStart(2, "0")}
             </span>
             <Link
