@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -27,16 +27,6 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "vietnamese"],
   variable: "--font-mono",
   display: "swap",
-});
-
-// Source Serif 4 — modern serif paired with Inter for editorial moments
-// (TL;DR ledes, pull-quotes). Italic only at 400 weight is enough.
-const sourceSerif = Source_Serif_4({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-  weight: ["400", "500"],
-  style: ["italic", "normal"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -81,7 +71,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${sourceSerif.variable} overflow-x-hidden`}
+      className={`${inter.variable} ${jetbrainsMono.variable} overflow-x-hidden`}
       suppressHydrationWarning
     >
       <head>

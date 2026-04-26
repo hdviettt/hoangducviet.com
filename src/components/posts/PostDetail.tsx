@@ -161,18 +161,27 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — editorial lede in serif italic. Source Serif 4
-                provides typographic contrast against the Inter body, so
-                the lede pops without chrome (no card, no bar, no rule). */}
+            {/* TL;DR — clean Inter lede. Three-dot separator below
+                acts as a section break before the article body. */}
             {data.description && (
-              <div className="mb-12 md:mb-16 max-w-2xl">
-                <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-3">
-                  tl;dr
-                </span>
-                <p className="font-serif italic text-lg sm:text-xl text-foreground leading-relaxed">
-                  {data.description}
-                </p>
-              </div>
+              <>
+                <div className="max-w-2xl">
+                  <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-primary mb-3">
+                    tl;dr
+                  </span>
+                  <p className="text-base sm:text-lg text-foreground/90 leading-relaxed">
+                    {data.description}
+                  </p>
+                </div>
+                <div
+                  aria-hidden="true"
+                  className="my-10 md:my-14 flex justify-center gap-2.5 text-muted-foreground/40 text-lg select-none"
+                >
+                  <span>·</span>
+                  <span>·</span>
+                  <span>·</span>
+                </div>
+              </>
             )}
 
             {/* Article Content */}
