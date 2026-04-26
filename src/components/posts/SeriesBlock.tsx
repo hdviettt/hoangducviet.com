@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 interface SeriesBlockProps {
-  project: {
+  series: {
     slug: string;
     title: string;
     summary: string | null;
@@ -58,7 +58,7 @@ function stripPartPrefix(title: string): string {
 }
 
 export default function SeriesBlock({
-  project,
+  series,
   parts,
   firstDate,
   lastDate,
@@ -77,23 +77,26 @@ export default function SeriesBlock({
         </span>
       </div>
 
-      {/* Title — links to the project page (the canonical series landing) */}
-      <Link href={`/projects/${project.slug}`} className="group block mb-3 md:mb-4">
+      {/* Title — links to the series landing page */}
+      <Link
+        href={`/series/${series.slug}`}
+        className="group block mb-3 md:mb-4"
+      >
         <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-          {project.title}
+          {series.title}
         </h3>
       </Link>
 
       {/* Description — same styling as standalone post rows below for
           visual consistency. The "tl;dr" deck-label is reserved for detail
           pages where the reader is committing to read. */}
-      {project.summary && (
+      {series.summary && (
         <p className="mt-2 mb-5 md:mb-6 text-sm text-foreground/60 leading-relaxed max-w-2xl">
-          {project.summary}
+          {series.summary}
         </p>
       )}
 
-      {/* Parts list — each links to its own post page */}
+      {/* Parts list — each links to its nested series-post URL */}
       <ol className="space-y-2">
         {parts.map((part, i) => (
           <li key={part.slug} className="flex items-baseline gap-3">
@@ -101,7 +104,7 @@ export default function SeriesBlock({
               {String(i + 1).padStart(2, "0")}
             </span>
             <Link
-              href={`/posts/${part.slug}`}
+              href={`/series/${series.slug}/${part.slug}`}
               className="text-sm leading-snug text-muted-foreground hover:text-foreground transition-colors"
             >
               {stripPartPrefix(part.title)}

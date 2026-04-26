@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { projects, projectsPosts } from "@/db/schema";
+import { series, seriesPosts } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -13,8 +13,8 @@ export async function GET(_request: Request, { params }: Params) {
     await requireAuth();
     const result = await db
       .select()
-      .from(projects)
-      .where(eq(projects.slug, params.slug))
+      .from(series)
+      .where(eq(series.slug, params.slug))
       .limit(1);
 
     if (!result.length) {
@@ -37,9 +37,9 @@ export async function PATCH(request: Request, { params }: Params) {
     await requireAuth();
     const body = await request.json();
     const result = await db
-      .update(projects)
+      .update(series)
       .set({ status: body.status, dateUpdated: new Date() })
-      .where(eq(projects.slug, params.slug))
+      .where(eq(series.slug, params.slug))
       .returning();
     if (!result.length) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -59,7 +59,7 @@ export async function PUT(request: Request, { params }: Params) {
     const body = await request.json();
 
     const result = await db
-      .update(projects)
+      .update(series)
       .set({
         title: body.title,
         slug: body.slug,
@@ -71,35 +71,34 @@ export async function PUT(request: Request, { params }: Params) {
         groupSlug: body.groupSlug ?? null,
         dateUpdated: new Date(),
       })
-      .where(eq(projects.slug, params.slug))
+      .where(eq(series.slug, params.slug))
       .returning();
 
     if (!result.length) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const project = result[0];
+    const updated = result[0];
 
-    // Update related posts
     await db
-      .delete(projectsPosts)
-      .where(eq(projectsPosts.projectSlug, project.slug));
+      .delete(seriesPosts)
+      .where(eq(seriesPosts.seriesSlug, updated.slug));
 
     if (body.postSlugs?.length) {
-      await db.insert(projectsPosts).values(
+      await db.insert(seriesPosts).values(
         body.postSlugs.map((postSlug: string) => ({
-          projectSlug: project.slug,
+          seriesSlug: updated.slug,
           postSlug,
         })),
       );
     }
 
-    return NextResponse.json(project);
+    return NextResponse.json(updated);
   } catch (error: any) {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.error("Error updating project:", error);
+    console.error("Error updating series:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -111,8 +110,8 @@ export async function DELETE(_request: Request, { params }: Params) {
   try {
     await requireAuth();
     const result = await db
-      .delete(projects)
-      .where(eq(projects.slug, params.slug))
+      .delete(series)
+      .where(eq(series.slug, params.slug))
       .returning();
 
     if (!result.length) {

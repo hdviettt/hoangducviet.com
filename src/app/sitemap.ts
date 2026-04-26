@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { db } from "@/db";
-import { posts, projects } from "@/db/schema";
+import { posts, series, seriesPosts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
@@ -20,27 +20,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .where(eq(posts.status, "published"))
       .orderBy(desc(posts.dateCreated));
 
-    const allProjects = await db
+    const allSeries = await db
       .select({
-        slug: projects.slug,
-        dateUpdated: projects.dateUpdated,
-        dateCreated: projects.dateCreated,
+        slug: series.slug,
+        dateUpdated: series.dateUpdated,
+        dateCreated: series.dateCreated,
       })
-      .from(projects)
-      .where(eq(projects.status, "published"))
-      .orderBy(desc(projects.dateCreated));
+      .from(series)
+      .where(eq(series.status, "published"))
+      .orderBy(desc(series.dateCreated));
 
-    const postEntries = allPosts.map((post) => ({
-      url: `${BASE_URL}/posts/${post.slug}`,
-      lastModified: post.dateUpdated ?? post.dateCreated ?? new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    }));
+    // Map each post slug to its series slug (if any). Series posts canonicalize
+    // at /series/[seriesSlug]/[postSlug]; standalone posts at /posts/[slug].
+    const postSeriesRows = await db
+      .select({
+        postSlug: seriesPosts.postSlug,
+        seriesSlug: seriesPosts.seriesSlug,
+      })
+      .from(seriesPosts);
+    const postToSeries = new Map(
+      postSeriesRows.map((r) => [r.postSlug, r.seriesSlug]),
+    );
 
-    const projectEntries = allProjects.map((project) => ({
-      url: `${BASE_URL}/projects/${project.slug}`,
-      lastModified:
-        project.dateUpdated ?? project.dateCreated ?? new Date(),
+    const postEntries = allPosts.map((post) => {
+      const seriesSlug = postToSeries.get(post.slug);
+      const url = seriesSlug
+        ? `${BASE_URL}/series/${seriesSlug}/${post.slug}`
+        : `${BASE_URL}/posts/${post.slug}`;
+      return {
+        url,
+        lastModified: post.dateUpdated ?? post.dateCreated ?? new Date(),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      };
+    });
+
+    const seriesEntries = allSeries.map((s) => ({
+      url: `${BASE_URL}/series/${s.slug}`,
+      lastModified: s.dateUpdated ?? s.dateCreated ?? new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     }));
@@ -53,10 +70,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 1,
       },
       ...postEntries,
-      ...projectEntries,
+      ...seriesEntries,
     ];
   } catch {
-    // Return static pages if DB is unavailable (e.g. build-time prerendering)
     return [{ url: BASE_URL, lastModified: new Date(), priority: 1 }];
   }
 }

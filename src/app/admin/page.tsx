@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { media, posts, projects } from "@/db/schema";
+import { media, posts, series } from "@/db/schema";
 import { count, desc } from "drizzle-orm";
 import { FileText, FolderKanban, Image } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export default async function AdminDashboard() {
   const [postCount, projectCount, mediaCount, recentPosts] =
     await Promise.all([
       db.select({ value: count() }).from(posts),
-      db.select({ value: count() }).from(projects),
+      db.select({ value: count() }).from(series),
       db.select({ value: count() }).from(media),
       db
         .select({ slug: posts.slug, title: posts.title, status: posts.status, dateCreated: posts.dateCreated })

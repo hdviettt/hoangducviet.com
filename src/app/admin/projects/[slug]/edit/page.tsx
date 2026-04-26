@@ -1,6 +1,6 @@
 import ProjectForm from "@/components/admin/ProjectForm";
 import { db } from "@/db";
-import { posts, projectGroups, projects, projectsPosts } from "@/db/schema";
+import { posts, seriesGroups, series, seriesPosts } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
@@ -10,19 +10,19 @@ interface Params {
 
 export default async function EditProjectPage({ params }: Params) {
   const [projectResult, allPosts, linkedPosts, allGroups] = await Promise.all([
-    db.select().from(projects).where(eq(projects.slug, params.slug)).limit(1),
+    db.select().from(series).where(eq(series.slug, params.slug)).limit(1),
     db
       .select({ slug: posts.slug, title: posts.title })
       .from(posts)
       .where(eq(posts.status, "published")),
     db
-      .select({ postSlug: projectsPosts.postSlug })
-      .from(projectsPosts)
-      .where(eq(projectsPosts.projectSlug, params.slug)),
+      .select({ postSlug: seriesPosts.postSlug })
+      .from(seriesPosts)
+      .where(eq(seriesPosts.seriesSlug, params.slug)),
     db
       .select()
-      .from(projectGroups)
-      .orderBy(asc(projectGroups.sortOrder), asc(projectGroups.title)),
+      .from(seriesGroups)
+      .orderBy(asc(seriesGroups.sortOrder), asc(seriesGroups.title)),
   ]);
 
   if (!projectResult.length) {

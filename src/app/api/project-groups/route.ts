@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { projectGroups } from "@/db/schema";
+import { seriesGroups } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { asc } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -9,8 +9,8 @@ export async function GET() {
     await requireAuth();
     const result = await db
       .select()
-      .from(projectGroups)
-      .orderBy(asc(projectGroups.sortOrder), asc(projectGroups.title));
+      .from(seriesGroups)
+      .orderBy(asc(seriesGroups.sortOrder), asc(seriesGroups.title));
     return NextResponse.json(result);
   } catch (error: any) {
     if (error.message === "Unauthorized") {
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
           .replace(/^-|-$/g, "");
 
     const result = await db
-      .insert(projectGroups)
+      .insert(seriesGroups)
       .values({
         slug,
         title: body.title,

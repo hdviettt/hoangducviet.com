@@ -23,18 +23,19 @@ The dev server reads `DATABASE_URL` from env. To run dev against the production 
 
 ## Public Routing (App Router)
 
-The frontend is intentionally a single-page experience after the recent consolidation:
+The frontend is a single-page experience with nested URLs for series posts:
 
 - `/` — **The blog.** Hero (photo + name + bio + socials) followed by year-grouped writing list. Series with 2+ published posts collapse to a `SeriesBlock` (parts visible inline). Standalone posts render as flat rows.
-- `/posts/[postSlug]` — Individual post page. Article body, TL;DR block, table-of-contents sidebar, prev/next nav, series-aware header when the post belongs to a series.
-- `/projects/[projectSlug]` — Series landing page. Project title, TL;DR, summary, parts list, all-posts-in-series. Reachable from the SeriesBlock title link on `/`.
-- `/admin/*` — CMS admin (auth required). Edits posts, projects, categories, media, settings.
+- `/posts/[postSlug]` — Individual standalone post. If the slug belongs to a series, this route 308-redirects to `/series/[seriesSlug]/[postSlug]`.
+- `/series/[seriesSlug]` — Series landing page. Title, TL;DR, summary, parts list.
+- `/series/[seriesSlug]/[postSlug]` — Series-post canonical URL. Verifies the post actually belongs to the seriesSlug or 404s.
+- `/admin/*` — CMS admin (auth required). Edits posts, series, categories, media, settings. Admin URL paths still say `/admin/projects` for backward compat with the form action URLs; the underlying tables are `series`.
 
 **Deleted on purpose** (will 404):
 - `/posts` — merged into `/`
-- `/projects` — merged into `/`
+- `/projects/*` — replaced by `/series/*`
 
-The `/admin` panel still has full CRUD for projects/categories/etc. so the underlying data model can grow back if needed.
+The `/admin` panel still has full CRUD for series/categories/etc. so the underlying data model can grow back if needed.
 
 ## Other routes
 
@@ -50,12 +51,15 @@ The `/admin` panel still has full CRUD for projects/categories/etc. so the under
 
 ## Database (Drizzle + Postgres)
 
-- `src/db/schema.ts` — table definitions: `posts`, `post_categories`, `posts_categories`, `projects`, `project_groups`, `projects_posts`, `media`, `global`, `profile`, `admin_user`
+- `src/db/schema.ts` — table definitions: `posts`, `post_categories`, `posts_categories`, `series`, `series_groups`, `series_posts`, `media`, `global`, `profile`, `admin_user`
 - `src/db/index.ts` — Drizzle client with `pg` Pool
 - `drizzle.config.ts` — Drizzle Kit config
 - `drizzle/` — generated migration SQL files
+- `scripts/rename-projects-to-series.cjs` — one-shot data migration that
+  renamed the `projects*` tables → `series*` and stripped the
+  "<series>-N-" prefix from series-post slugs so URLs read cleanly.
 
-The "series" concept is **not a separate table**. Any project (`projects`) with 2+ linked posts (via `projects_posts`) is treated as a series at the rendering layer. See `getFeedItems` and `getSeriesContext` in `src/lib/posts.ts`.
+A "series" is a topical container with N posts attached via `series_posts`. A series with 2+ linked posts surfaces on the homepage as a `SeriesBlock`. See `getFeedItems` and `getSeriesContext` in `src/lib/posts.ts`.
 
 ## Data Access (`src/lib/`)
 
@@ -63,10 +67,10 @@ The "series" concept is **not a separate table**. Any project (`projects`) with 
   - `getPosts({ limit?, withCategories? })` — list published posts
   - `getPostBySlug(slug)` — single post; throws when not found
   - `getAdjacentPosts(slug)` — chronological previous/next post (used as fallback when no series)
-  - `getProjectForPost(slug)` — project association if any
-  - `getFeedItems({ limit? })` — **homepage feed**. Returns a `FeedItem[]` union of `{ kind: 'post' }` and `{ kind: 'series' }`. Multi-post projects collapse into a single series item with parts ordered ASC by date.
+  - `getSeriesForPost(slug)` — series association if any
+  - `getFeedItems({ limit? })` — **homepage feed**. Returns a `FeedItem[]` union of `{ kind: 'post' }` and `{ kind: 'series' }`. Multi-post series collapse into a single series item with parts ordered ASC by date.
   - `getSeriesContext(slug)` — for a post inside a series, returns part number, total, prev, next, and full parts list. Powers the series header and parts sidebar on post-detail pages.
-- `projects.ts` — `getProjects({ excludeWritingSeries? })`, `getProjectBySlug(slug)`. Note: `getProjects` is currently used only by `/llms.txt` and `generateStaticParams` of the project detail page; the public-facing `/projects` archive route was removed.
+- `series.ts` — `getSeriesList({ excludeWritingSeries? })`, `getSeriesBySlug(slug)`. Used by `/series/[s]/page.tsx`, `/series/[s]/md/route.ts`, and `/llms.txt`.
 - `global.ts` — `getGlobalMetadata()` (site title + tagline)
 - `profile.ts` — `getProfile()` (name, bio HTML, image)
 - `auth.ts` — env-var auth: `ADMIN_USERNAME` / `ADMIN_PASSWORD` / `SESSION_SECRET`
@@ -84,10 +88,12 @@ layout/
   ThemeProvider.tsx         — light/dark theme context
 
 posts/
+  PostDetail.tsx             — shared server component used by both
+                                /posts/[slug] and /series/[s]/[p]
   SeriesBlock.tsx            — homepage/feed series row: meta header + title + TL;DR + parts list
   SeriesHeader.tsx           — banner above an individual post that belongs to a series
   SeriesParts.tsx            — sidebar list of all parts when reading a series post
-  PostNavigation.tsx         — prev/next nav at the bottom of a post (series-aware)
+  PostNavigation.tsx         — prev/next nav at the bottom of a post (series-aware URLs)
   InlineTableOfContents.tsx  — TOC sidebar generated from heading anchors
 
 content/

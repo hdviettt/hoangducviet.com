@@ -1,5 +1,5 @@
 import TurndownService from "turndown";
-import { getProjectBySlug } from "@/lib/projects";
+import { getSeriesBySlug } from "@/lib/series";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
@@ -32,32 +32,32 @@ function htmlToMarkdown(html: string | undefined): string {
 
 export async function GET(
   _request: Request,
-  { params }: { params: { projectSlug: string } },
+  { params }: { params: { seriesSlug: string } },
 ) {
   try {
-    const project = await getProjectBySlug(params.projectSlug);
+    const seriesItem = await getSeriesBySlug(params.seriesSlug);
 
     const head = frontmatter({
-      title: project.title,
-      summary: project.summary,
-      url: project.url,
-      group: project.group_title,
-      date_created: project.date_created,
-      date_updated: project.date_updated,
-      canonical: `${BASE_URL}/projects/${params.projectSlug}`,
+      title: seriesItem.title,
+      summary: seriesItem.summary,
+      url: seriesItem.url,
+      group: seriesItem.group_title,
+      date_created: seriesItem.date_created,
+      date_updated: seriesItem.date_updated,
+      canonical: `${BASE_URL}/series/${params.seriesSlug}`,
     });
 
-    const body = htmlToMarkdown(project.description);
+    const body = htmlToMarkdown(seriesItem.description);
 
     let related = "";
-    if (project.posts && project.posts.length > 0) {
-      const items = project.posts
+    if (seriesItem.posts && seriesItem.posts.length > 0) {
+      const items = seriesItem.posts
         .map((p) => {
           const desc = p.description ? `: ${p.description}` : "";
-          return `- [${p.title}](${BASE_URL}/posts/${p.slug}.md)${desc}`;
+          return `- [${p.title}](${BASE_URL}/series/${params.seriesSlug}/${p.slug}.md)${desc}`;
         })
         .join("\n");
-      related = `\n\n## Related posts\n\n${items}\n`;
+      related = `\n\n## Parts in this series\n\n${items}\n`;
     }
 
     const output = `${head}\n\n${body}${related}\n`;

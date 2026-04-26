@@ -1,4 +1,4 @@
-import { getProjectBySlug, getProjects } from "@/lib/projects";
+import { getSeriesBySlug, getSeriesList } from "@/lib/series";
 import { getGlobalMetadata } from "@/lib/global";
 import { createBreadcrumbSchema } from "@/lib/jsonld";
 import type { Metadata } from "next";
@@ -9,91 +9,92 @@ export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   try {
-    const allProjects = await getProjects();
-    return allProjects.map((project) => ({ projectSlug: project.slug }));
+    const allSeries = await getSeriesList();
+    return allSeries.map((s) => ({ seriesSlug: s.slug }));
   } catch {
     return [];
   }
 }
 
-interface ProjectParams {
+interface SeriesParams {
   params: {
-    projectSlug: string;
+    seriesSlug: string;
   };
 }
 
 export async function generateMetadata({
   params,
-}: ProjectParams): Promise<Metadata> {
+}: SeriesParams): Promise<Metadata> {
   try {
-    const [project, globalData] = await Promise.all([
-      getProjectBySlug(params.projectSlug),
+    const [seriesItem, globalData] = await Promise.all([
+      getSeriesBySlug(params.seriesSlug),
       getGlobalMetadata(),
     ]);
     const siteTitle =
       globalData && globalData.length > 0 ? globalData[0].title : "Blog";
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
-    const thumbnailUrl = project.thumbnail
-      ? project.thumbnail.startsWith("http") ? project.thumbnail : `${baseUrl}${project.thumbnail}`
+    const thumbnailUrl = seriesItem.thumbnail
+      ? seriesItem.thumbnail.startsWith("http")
+        ? seriesItem.thumbnail
+        : `${baseUrl}${seriesItem.thumbnail}`
       : null;
-    const projectUrl = `${baseUrl}/projects/${params.projectSlug}`;
-    const description = project.summary || "";
+    const seriesUrl = `${baseUrl}/series/${params.seriesSlug}`;
+    const description = seriesItem.summary || "";
 
     return {
-      title: `${project.title} | ${siteTitle}`,
+      title: `${seriesItem.title} | ${siteTitle}`,
       description,
-      alternates: { canonical: `/projects/${params.projectSlug}` },
+      alternates: { canonical: `/series/${params.seriesSlug}` },
       openGraph: {
-        title: project.title,
+        title: seriesItem.title,
         description,
-        url: projectUrl,
+        url: seriesUrl,
         siteName: siteTitle,
         type: "website",
         images: thumbnailUrl
-          ? [{ url: thumbnailUrl, alt: project.title }]
+          ? [{ url: thumbnailUrl, alt: seriesItem.title }]
           : [],
       },
       twitter: {
         card: "summary_large_image",
-        title: project.title,
+        title: seriesItem.title,
         description,
         images: thumbnailUrl ? [thumbnailUrl] : [],
       },
     };
-  } catch (error) {
+  } catch (_error) {
     return {
-      title: "Project",
+      title: "Series",
     };
   }
 }
 
-export default async function ProjectPage({ params }: ProjectParams) {
-  let project: any = null;
+export default async function SeriesPage({ params }: SeriesParams) {
+  let seriesItem: any = null;
   let posts: any[] = [];
 
   try {
-    project = await getProjectBySlug(params.projectSlug);
-    // Already sorted newest first from lib/projects.ts
-    posts = project.posts ?? [];
+    seriesItem = await getSeriesBySlug(params.seriesSlug);
+    posts = seriesItem.posts ?? [];
   } catch (error) {
-    console.error("Error fetching project:", error);
+    console.error("Error fetching series:", error);
   }
 
-  if (!project) {
+  if (!seriesItem) {
     return (
       <div className="p-8">
-        <div className="text-gray-500">Project not found</div>
+        <div className="text-gray-500">Series not found</div>
       </div>
     );
   }
 
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
-  const projectUrl = `${baseUrl}/projects/${params.projectSlug}`;
+  const seriesUrl = `${baseUrl}/series/${params.seriesSlug}`;
 
   const jsonLd = createBreadcrumbSchema([
     { name: "Home", url: baseUrl },
-    { name: project.title || "", url: projectUrl },
+    { name: seriesItem.title || "", url: seriesUrl },
   ]);
 
   const isSeries = posts.length >= 2;
@@ -115,49 +116,49 @@ export default async function ProjectPage({ params }: ProjectParams) {
         home
       </Link>
 
-      {/* Project Header — deck-label + display title */}
+      {/* Series Header — deck-label + display title */}
       <header className="mb-12 sm:mb-16 md:mb-28">
         <span className="deck-label">
-          {isSeries ? `series · ${posts.length} parts` : "project"}
+          {isSeries ? `series · ${posts.length} parts` : "series"}
         </span>
         <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 sm:mb-8 md:mb-10">
-          {project.title}
+          {seriesItem.title}
         </h1>
 
-        {project.summary && (
+        {seriesItem.summary && (
           <div className="mb-8 max-w-2xl">
             <span className="deck-label">tl;dr</span>
             <p className="text-base sm:text-lg text-foreground/80 leading-relaxed">
-              {project.summary}
+              {seriesItem.summary}
             </p>
           </div>
         )}
 
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
           <time
-            dateTime={project.date_created ?? ""}
+            dateTime={seriesItem.date_created ?? ""}
             className="tabular-nums text-muted-foreground/70"
           >
-            {project.date_created &&
-              new Date(project.date_created).toLocaleDateString("en-US", {
+            {seriesItem.date_created &&
+              new Date(seriesItem.date_created).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
               })}
           </time>
 
-          {project.url && (
+          {seriesItem.url && (
             <a
-              href={project.url}
+              href={seriesItem.url}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-primary hover:underline transition-colors"
             >
               {(() => {
                 try {
-                  return new URL(project.url).hostname;
+                  return new URL(seriesItem.url).hostname;
                 } catch {
-                  return project.url;
+                  return seriesItem.url;
                 }
               })()}
               <ExternalLink className="w-3.5 h-3.5" />
@@ -166,19 +167,19 @@ export default async function ProjectPage({ params }: ProjectParams) {
         </div>
       </header>
 
-      {/* Project Description */}
-      {project.description && (
+      {/* Long-form description */}
+      {seriesItem.description && (
         <div
           className="article-content mb-20 max-w-2xl"
-          dangerouslySetInnerHTML={{ __html: project.description }}
+          dangerouslySetInnerHTML={{ __html: seriesItem.description }}
         />
       )}
 
-      {/* Series parts — naked typographic list */}
+      {/* Parts list — naked typographic list */}
       {posts.length > 0 && (
         <section className="mt-12 md:mt-20">
           <h2 className="deck-label">
-            {isSeries ? "all parts" : "posts in this project"}
+            {isSeries ? "all parts" : "posts in this series"}
           </h2>
 
           <ol className="divide-y divide-border/50">
@@ -195,7 +196,7 @@ export default async function ProjectPage({ params }: ProjectParams) {
               return (
                 <li key={post.slug}>
                   <Link
-                    href={`/posts/${post.slug}`}
+                    href={`/series/${params.seriesSlug}/${post.slug}`}
                     className="flex items-baseline gap-5 md:gap-6 py-5 md:py-7 group"
                   >
                     {isSeries && (

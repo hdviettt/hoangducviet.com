@@ -57,15 +57,17 @@ export const postsCategories = pgTable(
   (table) => [primaryKey({ columns: [table.postId, table.categorySlug] })],
 );
 
-// Project groups (e.g. "Personal", "AI", "Machine Learning")
-export const projectGroups = pgTable("project_groups", {
+// Series groups (e.g. "Personal", "AI", "Machine Learning")
+export const seriesGroups = pgTable("series_groups", {
   slug: text("slug").primaryKey(),
   title: text("title").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
-// Projects
-export const projects = pgTable("projects", {
+// Series — topical containers for ongoing writing. A series with 2+ published
+// posts surfaces on the homepage as a SeriesBlock; with 0–1 posts, it's an
+// editorial placeholder.
+export const series = pgTable("series", {
   slug: text("slug").primaryKey(),
   title: text("title").notNull(),
   url: text("url"),
@@ -73,7 +75,7 @@ export const projects = pgTable("projects", {
   description: text("description"), // HTML — WYSIWYG content for detail page
   thumbnail: text("thumbnail"),
   status: text("status").notNull().default("draft"),
-  groupSlug: text("group_slug").references(() => projectGroups.slug, {
+  groupSlug: text("group_slug").references(() => seriesGroups.slug, {
     onDelete: "set null",
   }),
   dateCreated: timestamp("date_created", { withTimezone: true })
@@ -82,18 +84,18 @@ export const projects = pgTable("projects", {
   dateUpdated: timestamp("date_updated", { withTimezone: true }),
 });
 
-// Many-to-many: projects <-> posts
-export const projectsPosts = pgTable(
-  "projects_posts",
+// Many-to-many: series <-> posts
+export const seriesPosts = pgTable(
+  "series_posts",
   {
-    projectSlug: text("project_slug")
+    seriesSlug: text("series_slug")
       .notNull()
-      .references(() => projects.slug, { onDelete: "cascade" }),
+      .references(() => series.slug, { onDelete: "cascade" }),
     postSlug: text("post_slug")
       .notNull()
       .references(() => posts.slug, { onDelete: "cascade" }),
   },
-  (table) => [primaryKey({ columns: [table.projectSlug, table.postSlug] })],
+  (table) => [primaryKey({ columns: [table.seriesSlug, table.postSlug] })],
 );
 
 // Admin user (single user for personal blog)

@@ -1,16 +1,19 @@
 import { db } from "@/db";
-import { projects, projectsPosts } from "@/db/schema";
+import { series, seriesPosts } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
+
+// Admin API for series records (URL kept at /api/projects for admin-form
+// backward compat — the underlying table is `series` after the rename).
 
 export async function GET() {
   try {
     await requireAuth();
     const result = await db
       .select()
-      .from(projects)
-      .orderBy(desc(projects.dateCreated));
+      .from(series)
+      .orderBy(desc(series.dateCreated));
     return NextResponse.json(result);
   } catch (error: any) {
     if (error.message === "Unauthorized") {
@@ -29,7 +32,7 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const result = await db
-      .insert(projects)
+      .insert(series)
       .values({
         slug: body.slug,
         title: body.title,
@@ -42,24 +45,23 @@ export async function POST(request: Request) {
       })
       .returning();
 
-    const project = result[0];
+    const created = result[0];
 
-    // Handle related posts
     if (body.postSlugs?.length) {
-      await db.insert(projectsPosts).values(
+      await db.insert(seriesPosts).values(
         body.postSlugs.map((postSlug: string) => ({
-          projectSlug: project.slug,
+          seriesSlug: created.slug,
           postSlug,
         })),
       );
     }
 
-    return NextResponse.json(project, { status: 201 });
+    return NextResponse.json(created, { status: 201 });
   } catch (error: any) {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.error("Error creating project:", error);
+    console.error("Error creating series:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { posts, projects, projectsPosts } from "@/db/schema";
+import { posts, series, seriesPosts } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { FileText, FolderKanban, AlertTriangle, Link2, Unlink } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ type PageNode = {
 type LinkEdge = {
   sourcePath: string;
   targetPath: string;
-  linkType: "content" | "navigation" | "project-post";
+  linkType: "content" | "navigation" | "series-post";
 };
 
 function extractLinksFromMarkdown(content: string): string[] {
@@ -61,13 +61,13 @@ export default async function InternalLinksPage() {
       .orderBy(asc(posts.dateCreated)),
     db
       .select({
-        slug: projects.slug,
-        title: projects.title,
-        description: projects.description,
+        slug: series.slug,
+        title: series.title,
+        description: series.description,
       })
-      .from(projects)
-      .where(eq(projects.status, "published")),
-    db.select().from(projectsPosts),
+      .from(series)
+      .where(eq(series.status, "published")),
+    db.select().from(seriesPosts),
   ]);
 
   // Build page map
@@ -100,19 +100,18 @@ export default async function InternalLinksPage() {
     if (!project.description) continue;
     const links = extractLinksFromHtml(project.description);
     for (const target of links) {
-      edges.push({ sourcePath: `/projects/${project.slug}`, targetPath: target, linkType: "content" });
+      edges.push({ sourcePath: `/series/${project.slug}`, targetPath: target, linkType: "content" });
     }
   }
 
-  // 2. Project <-> Post relationships (from projectsPosts join table)
-  // These render as links on both sides: post pages show project tag, project pages list posts
+  // 2. Series <-> Post relationships (from seriesPosts join table)
+  // Series posts canonicalize at /series/[seriesSlug]/[postSlug]; the series
+  // landing links to each part, and each part's series header links back.
   for (const rel of allProjectPosts) {
-    const projectPath = `/projects/${rel.projectSlug}`;
-    const postPath = `/posts/${rel.postSlug}`;
-    // Project page links to post
-    edges.push({ sourcePath: projectPath, targetPath: postPath, linkType: "project-post" });
-    // Post page links to project (the #project tag)
-    edges.push({ sourcePath: postPath, targetPath: projectPath, linkType: "project-post" });
+    const seriesPath = `/series/${rel.seriesSlug}`;
+    const postPath = `/series/${rel.seriesSlug}/${rel.postSlug}`;
+    edges.push({ sourcePath: seriesPath, targetPath: postPath, linkType: "series-post" });
+    edges.push({ sourcePath: postPath, targetPath: seriesPath, linkType: "series-post" });
   }
 
   // 3. Adjacent post navigation (prev/next links)

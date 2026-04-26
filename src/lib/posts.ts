@@ -3,8 +3,8 @@ import {
   postCategories,
   posts,
   postsCategories,
-  projects,
-  projectsPosts,
+  series,
+  seriesPosts,
 } from "@/db/schema";
 import { and, asc, desc, eq, gt, lt } from "drizzle-orm";
 
@@ -124,18 +124,18 @@ export async function getAdjacentPosts(currentSlug: string): Promise<{
   };
 }
 
-export async function getProjectForPost(
+export async function getSeriesForPost(
   postSlug: string,
 ): Promise<{ slug: string; title: string } | null> {
   try {
     const result = await db
       .select({
-        slug: projects.slug,
-        title: projects.title,
+        slug: series.slug,
+        title: series.title,
       })
-      .from(projectsPosts)
-      .innerJoin(projects, eq(projectsPosts.projectSlug, projects.slug))
-      .where(eq(projectsPosts.postSlug, postSlug))
+      .from(seriesPosts)
+      .innerJoin(series, eq(seriesPosts.seriesSlug, series.slug))
+      .where(eq(seriesPosts.postSlug, postSlug))
       .limit(1);
 
     return result.length ? result[0] : null;
@@ -145,7 +145,7 @@ export async function getProjectForPost(
 }
 
 export interface SeriesContext {
-  project: { slug: string; title: string };
+  series: { slug: string; title: string };
   total: number;
   partNumber: number;
   parts: Array<{ slug: string; title: string }>;
@@ -153,17 +153,17 @@ export interface SeriesContext {
   next: { slug: string; title: string } | null;
 }
 
-// Feed items collapse multi-post projects into a single series row so a
-// chronological list isn't dominated by one project's parts. A standalone
-// post (not in a project, or in a project with only 1 published post)
-// renders as a `post` item; a project with 2+ published posts renders as
+// Feed items collapse multi-post series into a single series row so a
+// chronological list isn't dominated by one series's parts. A standalone
+// post (not in a series, or in a series with only 1 published post)
+// renders as a `post` item; a series with 2+ published posts renders as
 // a single `series` item with date range and part count. All dates are ISO
 // strings so the type is safe to pass from server to client components.
 export type FeedItem =
   | { kind: "post"; post: Post }
   | {
       kind: "series";
-      project: {
+      series: {
         slug: string;
         title: string;
         summary: string | null;
@@ -176,28 +176,28 @@ export type FeedItem =
 export async function getFeedItems(options?: {
   limit?: number;
 }): Promise<FeedItem[]> {
-  // Pull all published posts with their (optional) project association.
+  // Pull all published posts with their (optional) series association.
   const rows = await db
     .select({
       post: posts,
-      projectSlug: projects.slug,
-      projectTitle: projects.title,
-      projectSummary: projects.summary,
+      seriesSlug: series.slug,
+      seriesTitle: series.title,
+      seriesSummary: series.summary,
     })
     .from(posts)
-    .leftJoin(projectsPosts, eq(projectsPosts.postSlug, posts.slug))
-    .leftJoin(projects, eq(projects.slug, projectsPosts.projectSlug))
+    .leftJoin(seriesPosts, eq(seriesPosts.postSlug, posts.slug))
+    .leftJoin(series, eq(series.slug, seriesPosts.seriesSlug))
     .where(eq(posts.status, "published"))
     .orderBy(desc(posts.dateCreated));
 
-  // Count published posts per project so we know which projects qualify
-  // as a series (2+ posts).
-  const projectPostCount = new Map<string, number>();
+  // Count published posts per series so we know which series qualify
+  // (2+ posts).
+  const seriesPostCount = new Map<string, number>();
   for (const r of rows) {
-    if (r.projectSlug) {
-      projectPostCount.set(
-        r.projectSlug,
-        (projectPostCount.get(r.projectSlug) || 0) + 1,
+    if (r.seriesSlug) {
+      seriesPostCount.set(
+        r.seriesSlug,
+        (seriesPostCount.get(r.seriesSlug) || 0) + 1,
       );
     }
   }
@@ -209,34 +209,34 @@ export async function getFeedItems(options?: {
     const post = mapPost(r.post);
     const dateIso = (r.post.dateCreated as Date).toISOString();
     const isSeriesMember =
-      r.projectSlug != null &&
-      r.projectTitle != null &&
-      (projectPostCount.get(r.projectSlug) || 0) >= 2;
+      r.seriesSlug != null &&
+      r.seriesTitle != null &&
+      (seriesPostCount.get(r.seriesSlug) || 0) >= 2;
 
-    if (isSeriesMember && r.projectSlug && r.projectTitle) {
-      let series = seriesIndex.get(r.projectSlug);
-      if (!series) {
-        series = {
+    if (isSeriesMember && r.seriesSlug && r.seriesTitle) {
+      let entry = seriesIndex.get(r.seriesSlug);
+      if (!entry) {
+        entry = {
           kind: "series",
-          project: {
-            slug: r.projectSlug,
-            title: r.projectTitle,
-            summary: r.projectSummary,
+          series: {
+            slug: r.seriesSlug,
+            title: r.seriesTitle,
+            summary: r.seriesSummary,
           },
           parts: [],
           firstDate: dateIso,
           lastDate: dateIso,
         };
-        seriesIndex.set(r.projectSlug, series);
-        items.push(series);
+        seriesIndex.set(r.seriesSlug, entry);
+        items.push(entry);
       }
-      series.parts.push({
+      entry.parts.push({
         slug: post.slug ?? "",
         title: post.title ?? "",
         date_created: dateIso,
       });
-      if (dateIso < series.firstDate) series.firstDate = dateIso;
-      if (dateIso > series.lastDate) series.lastDate = dateIso;
+      if (dateIso < entry.firstDate) entry.firstDate = dateIso;
+      if (dateIso > entry.lastDate) entry.lastDate = dateIso;
     } else {
       items.push({ kind: "post", post });
     }
@@ -264,30 +264,30 @@ export async function getFeedItems(options?: {
   return options?.limit ? items.slice(0, options.limit) : items;
 }
 
-// If this post belongs to a project with 2+ posts, treat the project as a
-// "series" and return the post's position plus prev/next within the series
-// (oldest first). Returns null if the post isn't part of a series.
+// If this post belongs to a series with 2+ posts, return the post's
+// position plus prev/next within the series (oldest first). Returns null
+// if the post isn't part of a multi-post series.
 export async function getSeriesContext(
   postSlug: string,
 ): Promise<SeriesContext | null> {
   try {
-    const projectRow = await db
-      .select({ slug: projects.slug, title: projects.title })
-      .from(projectsPosts)
-      .innerJoin(projects, eq(projectsPosts.projectSlug, projects.slug))
-      .where(eq(projectsPosts.postSlug, postSlug))
+    const seriesRow = await db
+      .select({ slug: series.slug, title: series.title })
+      .from(seriesPosts)
+      .innerJoin(series, eq(seriesPosts.seriesSlug, series.slug))
+      .where(eq(seriesPosts.postSlug, postSlug))
       .limit(1);
 
-    if (!projectRow.length) return null;
-    const project = projectRow[0];
+    if (!seriesRow.length) return null;
+    const seriesEntry = seriesRow[0];
 
     const allParts = await db
       .select({ slug: posts.slug, title: posts.title })
-      .from(projectsPosts)
-      .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
+      .from(seriesPosts)
+      .innerJoin(posts, eq(seriesPosts.postSlug, posts.slug))
       .where(
         and(
-          eq(projectsPosts.projectSlug, project.slug),
+          eq(seriesPosts.seriesSlug, seriesEntry.slug),
           eq(posts.status, "published"),
         ),
       )
@@ -299,7 +299,7 @@ export async function getSeriesContext(
     if (idx === -1) return null;
 
     return {
-      project,
+      series: seriesEntry,
       total: allParts.length,
       partNumber: idx + 1,
       parts: allParts,

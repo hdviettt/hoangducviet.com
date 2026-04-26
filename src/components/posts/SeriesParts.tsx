@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 interface SeriesPartsProps {
-  project: { slug: string; title: string };
+  series: { slug: string; title: string };
   parts: Array<{ slug: string; title: string }>;
   currentSlug: string;
 }
@@ -9,14 +9,14 @@ interface SeriesPartsProps {
 // Compact "All parts" list rendered inside the post-page sidebar (alongside or
 // below the table of contents). Highlights the current part.
 export default function SeriesParts({
-  project,
+  series,
   parts,
   currentSlug,
 }: SeriesPartsProps) {
   return (
     <nav aria-label="All parts in this series" className="mt-10">
       <Link
-        href={`/projects/${project.slug}`}
+        href={`/series/${series.slug}`}
         className="block text-xs font-semibold uppercase tracking-wider text-primary/70 hover:text-primary transition-colors mb-3"
       >
         All parts
@@ -39,7 +39,7 @@ export default function SeriesParts({
                 </span>
               ) : (
                 <Link
-                  href={`/posts/${part.slug}`}
+                  href={`/series/${series.slug}/${part.slug}`}
                   className="text-[13px] leading-snug text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {stripPartPrefix(part.title)}

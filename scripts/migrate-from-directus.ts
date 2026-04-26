@@ -279,7 +279,7 @@ async function main() {
       const description = rewriteDirectusUrls(project.description || "");
 
       await db
-        .insert(schema.projects)
+        .insert(schema.series)
         .values({
           slug: project.slug,
           title: project.title,
@@ -303,9 +303,9 @@ async function main() {
             typeof rel === "object" ? rel.posts_slug : rel;
           if (postSlug) {
             await db
-              .insert(schema.projectsPosts)
+              .insert(schema.seriesPosts)
               .values({
-                projectSlug: project.slug,
+                seriesSlug: project.slug,
                 postSlug,
               })
               .onConflictDoNothing();

@@ -1,7 +1,9 @@
 import { getGlobalMetadata } from "@/lib/global";
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-import { getProjects } from "@/lib/projects";
+import { getSeriesList } from "@/lib/series";
+import { db } from "@/db";
+import { seriesPosts } from "@/db/schema";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
@@ -18,12 +20,23 @@ function stripHtml(input: string | null | undefined): string {
 
 export async function GET() {
   try {
-    const [globalRows, profileRows, allPosts, allProjects] = await Promise.all([
-      getGlobalMetadata(),
-      getProfile(),
-      getPosts({ limit: 1000 }),
-      getProjects(),
-    ]);
+    const [globalRows, profileRows, allPosts, allSeries, allLinks] =
+      await Promise.all([
+        getGlobalMetadata(),
+        getProfile(),
+        getPosts({ limit: 1000 }),
+        getSeriesList(),
+        db
+          .select({
+            postSlug: seriesPosts.postSlug,
+            seriesSlug: seriesPosts.seriesSlug,
+          })
+          .from(seriesPosts),
+      ]);
+
+    const postToSeries = new Map(
+      allLinks.map((r) => [r.postSlug, r.seriesSlug]),
+    );
 
     const site = globalRows[0] ?? { title: "Blog", tagline: "" };
     const profile = profileRows[0] ?? { name: "", description: "" };
@@ -48,21 +61,21 @@ export async function GET() {
     if (allPosts.length > 0) {
       lines.push("## Posts");
       for (const post of allPosts) {
+        const seriesSlug = postToSeries.get(post.slug || "");
+        const path = seriesSlug
+          ? `/series/${seriesSlug}/${post.slug}`
+          : `/posts/${post.slug}`;
         const desc = post.description ? `: ${post.description}` : "";
-        lines.push(
-          `- [${post.title}](${BASE_URL}/posts/${post.slug}.md)${desc}`,
-        );
+        lines.push(`- [${post.title}](${BASE_URL}${path})${desc}`);
       }
       lines.push("");
     }
 
-    if (allProjects.length > 0) {
-      lines.push("## Projects");
-      for (const project of allProjects) {
-        const desc = project.summary ? `: ${project.summary}` : "";
-        lines.push(
-          `- [${project.title}](${BASE_URL}/projects/${project.slug}.md)${desc}`,
-        );
+    if (allSeries.length > 0) {
+      lines.push("## Series");
+      for (const s of allSeries) {
+        const desc = s.summary ? `: ${s.summary}` : "";
+        lines.push(`- [${s.title}](${BASE_URL}/series/${s.slug})${desc}`);
       }
       lines.push("");
     }

@@ -1,8 +1,14 @@
 import Link from "next/link";
 
+interface NavItem {
+  slug?: string;
+  title?: string;
+  href?: string | null;
+}
+
 interface PostNavigationProps {
-  previous: { slug?: string; title?: string } | null;
-  next: { slug?: string; title?: string } | null;
+  previous: NavItem | null;
+  next: NavItem | null;
   context?: { kind: "series"; title: string };
 }
 
@@ -18,15 +24,19 @@ export default function PostNavigation({
   const nextLabel =
     context?.kind === "series" ? "Next in series →" : "Next →";
 
+  // Fallback to /posts/<slug> if the caller didn't provide an explicit href.
+  const prevHref = previous?.href || (previous?.slug ? `/posts/${previous.slug}` : null);
+  const nextHref = next?.href || (next?.slug ? `/posts/${next.slug}` : null);
+
   return (
     <nav
       className="mt-16 pt-8 border-t"
       style={{ borderColor: "var(--article-border)" }}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {previous ? (
+        {previous && prevHref ? (
           <Link
-            href={`/posts/${previous.slug}`}
+            href={prevHref}
             className="group p-4 rounded-lg border transition-colors"
             style={{ borderColor: "var(--article-border)" }}
           >
@@ -46,9 +56,9 @@ export default function PostNavigation({
         ) : (
           <div className="hidden sm:block" />
         )}
-        {next ? (
+        {next && nextHref ? (
           <Link
-            href={`/posts/${next.slug}`}
+            href={nextHref}
             className="group p-4 rounded-lg border transition-colors sm:text-right"
             style={{ borderColor: "var(--article-border)" }}
           >

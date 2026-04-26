@@ -1,37 +1,23 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import PostDetail from "@/components/posts/PostDetail";
 import { getGlobalMetadata } from "@/lib/global";
-import {
-  getPostBySlug,
-  getPosts,
-  getSeriesForPost,
-} from "@/lib/posts";
+import { getPostBySlug, getSeriesForPost } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
-export async function generateStaticParams() {
-  try {
-    const allPosts = await getPosts();
-    return allPosts.map((post) => ({ postSlug: post.slug! }));
-  } catch {
-    return [];
-  }
-}
-
-interface PostParams {
-  params: { postSlug: string };
+interface SeriesPostParams {
+  params: { seriesSlug: string; postSlug: string };
 }
 
 export async function generateMetadata({
   params,
-}: PostParams): Promise<Metadata> {
+}: SeriesPostParams): Promise<Metadata> {
   try {
-    const [post, globalData, seriesAssoc] = await Promise.all([
+    const [post, globalData] = await Promise.all([
       getPostBySlug(params.postSlug),
       getGlobalMetadata(),
-      getSeriesForPost(params.postSlug),
     ]);
     const siteTitle =
       globalData && globalData.length > 0 ? globalData[0].title : "Blog";
@@ -44,11 +30,7 @@ export async function generateMetadata({
         ? post.thumbnail
         : `${baseUrl}${post.thumbnail}`
       : null;
-    // Series posts have their canonical URL at /series/[s]/[p]; standalone
-    // posts at /posts/[p]. The canonical URL flows into all OG/Twitter meta.
-    const canonicalPath = seriesAssoc
-      ? `/series/${seriesAssoc.slug}/${params.postSlug}`
-      : `/posts/${params.postSlug}`;
+    const canonicalPath = `/series/${params.seriesSlug}/${params.postSlug}`;
     const postUrl = `${baseUrl}${canonicalPath}`;
 
     return {
@@ -77,12 +59,12 @@ export async function generateMetadata({
   }
 }
 
-export default async function PostPage({ params }: PostParams) {
-  // Series posts live at /series/[seriesSlug]/[postSlug] as their canonical
-  // URL. If someone hits /posts/[postSlug] for a series post, redirect.
+export default async function SeriesPostPage({ params }: SeriesPostParams) {
+  // Verify the post actually belongs to the series in the URL. If the slug
+  // exists but in a different series (or none), the URL is wrong → 404.
   const seriesAssoc = await getSeriesForPost(params.postSlug).catch(() => null);
-  if (seriesAssoc) {
-    redirect(`/series/${seriesAssoc.slug}/${params.postSlug}`);
+  if (!seriesAssoc || seriesAssoc.slug !== params.seriesSlug) {
+    notFound();
   }
   return <PostDetail postSlug={params.postSlug} />;
 }

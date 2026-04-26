@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { posts, postsCategories, projectsPosts } from "@/db/schema";
+import { posts, postsCategories, seriesPosts } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -52,10 +52,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Handle project association
-    if (body.projectSlug) {
-      await db.insert(projectsPosts).values({
-        projectSlug: body.projectSlug,
+    // Handle series association. Accept both `seriesSlug` (canonical) and
+    // legacy `projectSlug` from older admin form payloads.
+    const seriesSlug = body.seriesSlug ?? body.projectSlug;
+    if (seriesSlug) {
+      await db.insert(seriesPosts).values({
+        seriesSlug,
         postSlug: post.slug,
       });
     }

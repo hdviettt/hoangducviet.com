@@ -1,5 +1,7 @@
 import { getPosts } from "@/lib/posts";
 import { getGlobalMetadata } from "@/lib/global";
+import { db } from "@/db";
+import { seriesPosts } from "@/db/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -28,13 +30,24 @@ export async function GET() {
   } catch {}
 
   let posts: Awaited<ReturnType<typeof getPosts>> = [];
+  let postToSeries = new Map<string, string>();
   try {
     posts = await getPosts({ limit: 50 });
+    const links = await db
+      .select({
+        postSlug: seriesPosts.postSlug,
+        seriesSlug: seriesPosts.seriesSlug,
+      })
+      .from(seriesPosts);
+    postToSeries = new Map(links.map((r) => [r.postSlug, r.seriesSlug]));
   } catch {}
 
   const items = posts
     .map((post) => {
-      const link = `${baseUrl}/posts/${post.slug}`;
+      const seriesSlug = postToSeries.get(post.slug || "");
+      const link = seriesSlug
+        ? `${baseUrl}/series/${seriesSlug}/${post.slug}`
+        : `${baseUrl}/posts/${post.slug}`;
       const pubDate = post.date_created
         ? new Date(post.date_created).toUTCString()
         : "";

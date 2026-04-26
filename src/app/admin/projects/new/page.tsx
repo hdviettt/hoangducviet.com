@@ -1,6 +1,6 @@
 import ProjectForm from "@/components/admin/ProjectForm";
 import { db } from "@/db";
-import { posts, projectGroups } from "@/db/schema";
+import { posts, seriesGroups } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
@@ -13,8 +13,8 @@ export default async function NewProjectPage() {
       .where(eq(posts.status, "published")),
     db
       .select()
-      .from(projectGroups)
-      .orderBy(asc(projectGroups.sortOrder), asc(projectGroups.title)),
+      .from(seriesGroups)
+      .orderBy(asc(seriesGroups.sortOrder), asc(seriesGroups.title)),
   ]);
 
   return (

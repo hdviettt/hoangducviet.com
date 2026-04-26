@@ -2,7 +2,7 @@ import DeleteButton from "@/components/admin/DeleteButton";
 import StatusToggle from "@/components/admin/StatusToggle";
 import EmptyState, { StatusPill } from "@/components/admin/EmptyState";
 import { db } from "@/db";
-import { projectGroups, projects } from "@/db/schema";
+import { seriesGroups, series } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 
@@ -11,16 +11,16 @@ export const dynamic = "force-dynamic";
 export default async function AdminProjectsPage() {
   const allProjects = await db
     .select({
-      slug: projects.slug,
-      title: projects.title,
-      status: projects.status,
-      dateCreated: projects.dateCreated,
-      groupSlug: projects.groupSlug,
-      groupTitle: projectGroups.title,
+      slug: series.slug,
+      title: series.title,
+      status: series.status,
+      dateCreated: series.dateCreated,
+      groupSlug: series.groupSlug,
+      groupTitle: seriesGroups.title,
     })
-    .from(projects)
-    .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
-    .orderBy(desc(projects.dateCreated));
+    .from(series)
+    .leftJoin(seriesGroups, eq(series.groupSlug, seriesGroups.slug))
+    .orderBy(desc(series.dateCreated));
 
   return (
     <div className="max-w-4xl">

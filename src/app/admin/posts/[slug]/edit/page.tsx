@@ -1,6 +1,6 @@
 import PostForm from "@/components/admin/PostForm";
 import { db } from "@/db";
-import { postCategories, posts, postsCategories, projects, projectsPosts } from "@/db/schema";
+import { postCategories, posts, postsCategories, series, seriesPosts } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
@@ -17,8 +17,8 @@ export default async function EditPostPage({ params }: Params) {
       .from(postsCategories)
       .innerJoin(posts, eq(postsCategories.postId, posts.id))
       .where(eq(posts.slug, params.slug)),
-    db.select({ slug: projects.slug, title: projects.title }).from(projects).orderBy(desc(projects.dateCreated)),
-    db.select({ projectSlug: projectsPosts.projectSlug }).from(projectsPosts).where(eq(projectsPosts.postSlug, params.slug)).limit(1),
+    db.select({ slug: series.slug, title: series.title }).from(series).orderBy(desc(series.dateCreated)),
+    db.select({ projectSlug: seriesPosts.seriesSlug }).from(seriesPosts).where(eq(seriesPosts.postSlug, params.slug)).limit(1),
   ]);
 
   if (!postResult.length) {

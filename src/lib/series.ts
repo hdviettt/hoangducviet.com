@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { posts, projectGroups, projects, projectsPosts } from "@/db/schema";
+import { posts, series, seriesGroups, seriesPosts } from "@/db/schema";
 import { and, asc, desc, eq, notInArray, sql } from "drizzle-orm";
 
-export interface Project {
+export interface Series {
   slug: string;
   title?: string;
   url?: string | null;
@@ -22,57 +22,55 @@ export interface Project {
   }>;
 }
 
-export async function getProjects(options?: {
+export async function getSeriesList(options?: {
   /**
-   * When true, exclude projects that are also a writing series (have 2+
-   * published posts). Those projects surface in the writing list as a
-   * collapsed series row, so listing them again under projects creates
-   * visual redundancy. Default: false (return all published projects).
+   * When true, exclude series that are also a writing series (have 2+
+   * published posts). Useful for surfaces that want to show only "things
+   * built without writing series" — currently unused after the public
+   * /projects route was removed.
    */
   excludeWritingSeries?: boolean;
-}): Promise<Array<Project>> {
-  // First find which project slugs have 2+ published posts — those are the
-  // "writing series" projects we want to exclude when asked.
+}): Promise<Array<Series>> {
   let writingSeriesSlugs: string[] = [];
   if (options?.excludeWritingSeries) {
     const seriesRows = await db
       .select({
-        projectSlug: projectsPosts.projectSlug,
+        seriesSlug: seriesPosts.seriesSlug,
         postCount: sql<number>`count(*)::int`,
       })
-      .from(projectsPosts)
-      .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
+      .from(seriesPosts)
+      .innerJoin(posts, eq(seriesPosts.postSlug, posts.slug))
       .where(eq(posts.status, "published"))
-      .groupBy(projectsPosts.projectSlug);
+      .groupBy(seriesPosts.seriesSlug);
     writingSeriesSlugs = seriesRows
       .filter((r) => Number(r.postCount) >= 2)
-      .map((r) => r.projectSlug);
+      .map((r) => r.seriesSlug);
   }
 
-  const baseWhere = eq(projects.status, "published");
+  const baseWhere = eq(series.status, "published");
   const whereClause =
     writingSeriesSlugs.length > 0
-      ? and(baseWhere, notInArray(projects.slug, writingSeriesSlugs))
+      ? and(baseWhere, notInArray(series.slug, writingSeriesSlugs))
       : baseWhere;
 
   const result = await db
     .select({
-      slug: projects.slug,
-      title: projects.title,
-      url: projects.url,
-      summary: projects.summary,
-      description: projects.description,
-      thumbnail: projects.thumbnail,
-      status: projects.status,
-      groupSlug: projects.groupSlug,
-      groupTitle: projectGroups.title,
-      dateCreated: projects.dateCreated,
-      dateUpdated: projects.dateUpdated,
+      slug: series.slug,
+      title: series.title,
+      url: series.url,
+      summary: series.summary,
+      description: series.description,
+      thumbnail: series.thumbnail,
+      status: series.status,
+      groupSlug: series.groupSlug,
+      groupTitle: seriesGroups.title,
+      dateCreated: series.dateCreated,
+      dateUpdated: series.dateUpdated,
     })
-    .from(projects)
-    .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
+    .from(series)
+    .leftJoin(seriesGroups, eq(series.groupSlug, seriesGroups.slug))
     .where(whereClause)
-    .orderBy(asc(projectGroups.sortOrder), desc(projects.dateCreated));
+    .orderBy(asc(seriesGroups.sortOrder), desc(series.dateCreated));
 
   return result.map((row) => ({
     slug: row.slug,
@@ -89,30 +87,30 @@ export async function getProjects(options?: {
   }));
 }
 
-export async function getProjectBySlug(slug: string): Promise<Project> {
+export async function getSeriesBySlug(slug: string): Promise<Series> {
   if (!slug) throw new Error("Invalid slug");
 
   const result = await db
     .select({
-      slug: projects.slug,
-      title: projects.title,
-      url: projects.url,
-      summary: projects.summary,
-      description: projects.description,
-      thumbnail: projects.thumbnail,
-      status: projects.status,
-      groupSlug: projects.groupSlug,
-      groupTitle: projectGroups.title,
-      dateCreated: projects.dateCreated,
-      dateUpdated: projects.dateUpdated,
+      slug: series.slug,
+      title: series.title,
+      url: series.url,
+      summary: series.summary,
+      description: series.description,
+      thumbnail: series.thumbnail,
+      status: series.status,
+      groupSlug: series.groupSlug,
+      groupTitle: seriesGroups.title,
+      dateCreated: series.dateCreated,
+      dateUpdated: series.dateUpdated,
     })
-    .from(projects)
-    .leftJoin(projectGroups, eq(projects.groupSlug, projectGroups.slug))
-    .where(eq(projects.slug, slug))
+    .from(series)
+    .leftJoin(seriesGroups, eq(series.groupSlug, seriesGroups.slug))
+    .where(eq(series.slug, slug))
     .limit(1);
 
   if (!result || result.length === 0) {
-    throw new Error(`Project with slug "${slug}" not found`);
+    throw new Error(`Series with slug "${slug}" not found`);
   }
 
   // Fetch related posts in series order (oldest first — Part 1 → Part N)
@@ -123,9 +121,9 @@ export async function getProjectBySlug(slug: string): Promise<Project> {
       description: posts.description,
       dateCreated: posts.dateCreated,
     })
-    .from(projectsPosts)
-    .innerJoin(posts, eq(projectsPosts.postSlug, posts.slug))
-    .where(eq(projectsPosts.projectSlug, slug))
+    .from(seriesPosts)
+    .innerJoin(posts, eq(seriesPosts.postSlug, posts.slug))
+    .where(eq(seriesPosts.seriesSlug, slug))
     .orderBy(asc(posts.dateCreated));
 
   const row = result[0];

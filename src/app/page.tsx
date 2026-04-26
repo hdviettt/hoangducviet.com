@@ -217,9 +217,9 @@ export default async function Home() {
                 {items.map((item) => {
                   if (item.kind === "series") {
                     return (
-                      <li key={`series-${item.project.slug}`}>
+                      <li key={`series-${item.series.slug}`}>
                         <SeriesBlock
-                          project={item.project}
+                          series={item.series}
                           parts={item.parts}
                           firstDate={item.firstDate}
                           lastDate={item.lastDate}
