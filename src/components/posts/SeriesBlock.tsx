@@ -84,14 +84,13 @@ export default function SeriesBlock({
         </h3>
       </Link>
 
-      {/* TL;DR — same treatment as on post and project detail pages */}
+      {/* Description — same styling as standalone post rows below for
+          visual consistency. The "tl;dr" deck-label is reserved for detail
+          pages where the reader is committing to read. */}
       {project.summary && (
-        <div className="max-w-2xl mb-5 md:mb-6">
-          <span className="deck-label">tl;dr</span>
-          <p className="text-base sm:text-lg text-foreground/80 leading-relaxed">
-            {project.summary}
-          </p>
-        </div>
+        <p className="mt-2 mb-5 md:mb-6 text-sm text-foreground/60 leading-relaxed max-w-2xl">
+          {project.summary}
+        </p>
       )}
 
       {/* Parts list — each links to its own post page */}
