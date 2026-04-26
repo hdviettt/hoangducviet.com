@@ -12,6 +12,7 @@ interface FileExplorerProps {
 
 const navItems = [
   { href: "/", label: "home", match: (p: string) => p === "/" },
+  { href: "/posts", label: "posts", match: (p: string) => p.startsWith("/posts") },
 ];
 
 export default function FileExplorer({ children }: FileExplorerProps) {
@@ -64,7 +65,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           scrolled ? "border-b border-border/60" : "border-b border-transparent"
         }`}
       >
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 flex items-center justify-end h-14 md:h-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 flex items-center justify-center h-14 md:h-16">
           <nav className="flex items-center gap-5 sm:gap-6 md:gap-7">
             {navItems.map((item) => {
               const active = item.match(pathname);
