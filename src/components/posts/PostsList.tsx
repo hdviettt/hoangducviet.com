@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import type { FeedItem } from "@/lib/posts";
+import SeriesBlock from "./SeriesBlock";
 
 interface PostsListProps {
   items: FeedItem[];
@@ -25,36 +26,6 @@ function itemYear(item: FeedItem): number {
   return iso ? new Date(iso).getFullYear() : 0;
 }
 
-// "Mar 16 – Mar 28" / "Mar 16 – Mar 28, 26" / "Mar 16, 25 – Mar 28, 26"
-function formatDateRange(firstIso: string, lastIso: string): string {
-  const first = new Date(firstIso);
-  const last = new Date(lastIso);
-  const sameDay =
-    first.getFullYear() === last.getFullYear() &&
-    first.getMonth() === last.getMonth() &&
-    first.getDate() === last.getDate();
-  if (sameDay) {
-    return last.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  }
-  const sameYear = first.getFullYear() === last.getFullYear();
-  if (sameYear) {
-    const start = first.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-    const end = last.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-    return `${start} – ${end}`;
-  }
-  const opts: Intl.DateTimeFormatOptions = {
-    month: "short",
-    day: "numeric",
-    year: "2-digit",
-  };
-  return `${first.toLocaleDateString("en-US", opts)} – ${last.toLocaleDateString("en-US", opts)}`;
-}
 
 export default function PostsList({ items }: PostsListProps) {
   const itemsByYear = useMemo<ItemsByYear[]>(() => {
@@ -89,35 +60,17 @@ export default function PostsList({ items }: PostsListProps) {
             <section key={year}>
               <h2 className="deck-label !text-base">{year}</h2>
 
-              <ul className="divide-y divide-border/50">
+              <ul className="divide-y divide-border/50 [&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
                 {yearItems.map((item, idx) => {
                   if (item.kind === "series") {
-                    const range = formatDateRange(item.firstDate, item.lastDate);
                     return (
                       <li key={`series-${item.project.slug}`}>
-                        <Link
-                          href={`/projects/${item.project.slug}`}
-                          className="block py-5 md:py-6 group"
-                        >
-                          <div className="flex items-baseline gap-6">
-                            <span className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
-                              <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                                {item.project.title}
-                              </span>
-                              <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
-                                {item.parts.length} parts
-                              </span>
-                            </span>
-                            <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                              {range}
-                            </span>
-                          </div>
-                          {item.project.summary && (
-                            <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
-                              {item.project.summary}
-                            </p>
-                          )}
-                        </Link>
+                        <SeriesBlock
+                          project={item.project}
+                          parts={item.parts}
+                          firstDate={item.firstDate}
+                          lastDate={item.lastDate}
+                        />
                       </li>
                     );
                   }

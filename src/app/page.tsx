@@ -7,6 +7,7 @@ import { createWebSiteSchema, createPersonSchema } from "@/lib/jsonld";
 import { Facebook, Github, Instagram, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import SeriesBlock from "@/components/posts/SeriesBlock";
 
 export const dynamic = "force-dynamic";
 
@@ -64,7 +65,7 @@ export default async function Home() {
     const [profileResult, itemsResult, projectsResult] = await Promise.all([
       getProfile(),
       getFeedItems({ limit: 5 }),
-      getProjects({ excludeWritingSeries: true }),
+      getProjects(),
     ]);
     profileData = profileResult;
     recentItems = itemsResult;
@@ -194,38 +195,17 @@ export default async function Home() {
             <h2 className="deck-label !mb-0">recent writing</h2>
           </Link>
 
-          <ul className="mt-2 divide-y divide-border/50">
+          <ul className="mt-2 divide-y divide-border/50 [&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
             {recentItems.map((item) => {
               if (item.kind === "series") {
-                const range = formatDateRange(
-                  new Date(item.firstDate),
-                  new Date(item.lastDate),
-                );
                 return (
                   <li key={`series-${item.project.slug}`}>
-                    <Link
-                      href={`/projects/${item.project.slug}`}
-                      className="block py-3.5 md:py-4 group"
-                    >
-                      <div className="flex items-baseline gap-6">
-                        <span className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
-                          <span className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                            {item.project.title}
-                          </span>
-                          <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
-                            {item.parts.length} parts
-                          </span>
-                        </span>
-                        <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                          {range}
-                        </span>
-                      </div>
-                      {item.project.summary && (
-                        <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
-                          {item.project.summary}
-                        </p>
-                      )}
-                    </Link>
+                    <SeriesBlock
+                      project={item.project}
+                      parts={item.parts}
+                      firstDate={item.firstDate}
+                      lastDate={item.lastDate}
+                    />
                   </li>
                 );
               }
@@ -303,44 +283,4 @@ export default async function Home() {
       )}
     </div>
   );
-}
-
-// "Mar 16 – Mar 28, 26" if same year, "Mar 16, 25 – Mar 28, 26" if not.
-// If only one date (single-day series), drop the range.
-function formatDateRange(first: Date, last: Date): string {
-  const sameDay =
-    first.getFullYear() === last.getFullYear() &&
-    first.getMonth() === last.getMonth() &&
-    first.getDate() === last.getDate();
-  if (sameDay) {
-    return last.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "2-digit",
-    });
-  }
-  const sameYear = first.getFullYear() === last.getFullYear();
-  if (sameYear) {
-    const start = first.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-    const end = last.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "2-digit",
-    });
-    return `${start} – ${end}`;
-  }
-  const start = first.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "2-digit",
-  });
-  const end = last.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "2-digit",
-  });
-  return `${start} – ${end}`;
 }
