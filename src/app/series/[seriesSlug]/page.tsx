@@ -182,7 +182,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
             {isSeries ? "all parts" : "posts in this series"}
           </h2>
 
-          <ol className="divide-y divide-border/50">
+          <ol>
             {posts.map((post: any, i: number) => {
               const d = post.date_created ? new Date(post.date_created) : null;
               const date = d

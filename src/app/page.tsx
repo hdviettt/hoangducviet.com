@@ -213,7 +213,7 @@ export default async function Home() {
                 {year}
               </h2>
 
-              <ul className="divide-y divide-border/50 [&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
+              <ul className="[&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
                 {items.map((item) => {
                   if (item.kind === "series") {
                     return (
