@@ -122,71 +122,65 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero — treated as the cover slide of a deck. Centered content
-          stack: photo → label → name → bio → socials. The only cornered
-          element is the wordmark (mirrors SEONGON on the deck slides).
-          Hero min-height is generous but not full-viewport so empty space
-          stays in service of the composition, not as accidental gaps. */}
-      <section className="relative min-h-[78vh] flex flex-col py-16 sm:py-20">
-        {/* Centered hero content */}
-        <div className="flex-1 flex flex-col justify-center max-w-3xl">
+      {/* Hero — content sized naturally, no forced viewport-height. Deck
+          vibe via the faded label + bold name; cornering moved to a single
+          @hdviet wordmark in the page footer (rather than inside the hero,
+          which created accidental empty space below content). */}
+      <section className="pt-12 sm:pt-16 md:pt-20 pb-16 md:pb-20">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-7 md:gap-8 max-w-3xl">
           {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
               width={192}
               height={192}
-              className="w-20 h-20 sm:w-24 sm:h-24 object-cover shrink-0 rounded-full mb-6 sm:mb-8 animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
+              className="w-20 h-20 sm:w-24 sm:h-24 object-cover shrink-0 rounded-full animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
               priority
             />
           )}
-          <span className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards">
-            personal blog
-          </span>
-          {mainProfile?.name && (
-            <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
-              {mainProfile.name}
-            </h1>
-          )}
-          {mainProfile?.description && (
-            <div
-              className="text-base sm:text-lg md:text-xl text-foreground/75 leading-relaxed max-w-2xl [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-2.5 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
-              dangerouslySetInnerHTML={{ __html: mainProfile.description }}
-            />
-          )}
-          <div className="mt-6 md:mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 fill-mode-backwards">
-            {[
-              { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
-              { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
-              { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
-              { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
-            ].map(({ href, icon: Icon, label }) => (
+          <div className="flex-1 min-w-0">
+            <span className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards">
+              personal blog
+            </span>
+            {mainProfile?.name && (
+              <h1 className="deck-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-5 md:mb-6 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
+                {mainProfile.name}
+              </h1>
+            )}
+            {mainProfile?.description && (
+              <div
+                className="text-base sm:text-lg text-foreground/75 leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-2 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
+                dangerouslySetInnerHTML={{ __html: mainProfile.description }}
+              />
+            )}
+            <div className="mt-5 md:mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 fill-mode-backwards">
+              {[
+                { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
+                { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
+                { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
+                { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  aria-label={label}
+                >
+                  <Icon className="w-[18px] h-[18px]" />
+                </a>
+              ))}
+              <span className="w-px h-4 bg-border" />
               <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label={label}
+                href="mailto:viethd2704@gmail.com"
+                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                <Icon className="w-[18px] h-[18px]" />
+                <Mail className="w-4 h-4" />
+                <span>viethd2704@gmail.com</span>
               </a>
-            ))}
-            <span className="w-px h-4 bg-border" />
-            <a
-              href="mailto:viethd2704@gmail.com"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Mail className="w-4 h-4" />
-              <span>viethd2704@gmail.com</span>
-            </a>
+            </div>
           </div>
-        </div>
-
-        {/* Watermark — bottom-left corner. The only cornered element on the
-            slide; mirrors the SEONGON wordmark placement on your decks. */}
-        <div className="absolute bottom-4 left-0 text-xs font-semibold uppercase tracking-widest text-primary/40 select-none pointer-events-none animate-in fade-in duration-700 delay-500 fill-mode-backwards">
-          @hdviet · 2026
         </div>
       </section>
 
@@ -294,6 +288,13 @@ export default async function Home() {
           </ul>
         </section>
       )}
+
+      {/* Page wordmark — mirrors the SEONGON wordmark in the bottom-left of
+          your deck slides. Sits at the foot of the page so it doesn't punch
+          empty space into the hero. */}
+      <div className="mt-20 md:mt-24 text-xs font-semibold uppercase tracking-widest text-primary/40 select-none">
+        @hdviet · 2026
+      </div>
     </div>
   );
 }
