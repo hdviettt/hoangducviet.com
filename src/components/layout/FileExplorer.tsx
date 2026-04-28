@@ -21,7 +21,9 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   const [scrolled, setScrolled] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
 
-  const isPostPage = pathname.startsWith("/posts/") && pathname !== "/posts";
+  const isPostPage =
+    (pathname.startsWith("/posts/") && pathname !== "/posts") ||
+    /^\/series\/[^/]+\/[^/]+\/?$/.test(pathname);
 
   useEffect(() => {
     const onScroll = () => {
