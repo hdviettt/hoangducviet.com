@@ -278,15 +278,21 @@ export default async function Home() {
                         href={`/posts/${item.post.slug}`}
                         className="block py-5 md:py-6 group"
                       >
-                        <div className="flex items-baseline gap-6">
-                          <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                            {item.post.title}
+                        {/* Meta row — date + view count above the title,
+                            mirroring SeriesBlock's compact header. */}
+                        <div className="flex items-center gap-3 flex-wrap mb-3">
+                          <span className="text-xs text-muted-foreground/60 tabular-nums">
+                            {date}
                           </span>
-                          <span className="flex items-center gap-3 text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                            <ViewCount count={views} />
-                            <span>{date}</span>
-                          </span>
+                          {views > 0 && (
+                            <span className="text-xs text-muted-foreground/60">
+                              <ViewCount count={views} />
+                            </span>
+                          )}
                         </div>
+                        <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                          {item.post.title}
+                        </h3>
                         {item.post.description && (
                           <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
                             {item.post.description}
