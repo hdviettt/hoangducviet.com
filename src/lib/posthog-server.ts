@@ -8,13 +8,19 @@ const API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 async function queryViewCount(slug: string): Promise<number> {
   if (!PROJECT_ID || !API_KEY) return 0;
 
+  // PostHog's /query API doesn't accept {name:Type} placeholders here,
+  // so inline the slug. Escape single quotes (ANSI SQL: '' = literal '),
+  // and reject anything outside [a-z0-9-_] as a defense in depth — blog
+  // slugs are kebab-case so this never legitimately rejects real slugs.
+  if (!/^[a-zA-Z0-9_-]+$/.test(slug)) return 0;
+
   const query = `
     SELECT count() AS c
     FROM events
     WHERE event = '$pageview'
       AND (
-        properties.$pathname = concat('/posts/', {slug:String})
-        OR properties.$pathname LIKE concat('/series/%/', {slug:String})
+        properties.$pathname = '/posts/${slug}'
+        OR properties.$pathname LIKE '/series/%/${slug}'
       )
   `;
 
@@ -31,7 +37,6 @@ async function queryViewCount(slug: string): Promise<number> {
           query: {
             kind: "HogQLQuery",
             query,
-            values: { slug },
           },
         }),
         cache: "no-store",
