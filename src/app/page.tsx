@@ -3,6 +3,7 @@ import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
 import { getGlobalMetadata } from "@/lib/global";
 import { createWebSiteSchema, createPersonSchema } from "@/lib/jsonld";
+import { getPostViewCounts } from "@/lib/posthog-server";
 import { Facebook, Github, Instagram, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -106,6 +107,21 @@ export default async function Home() {
 
   const itemsByYear = groupByYear(allItems);
   const mainProfile = profileData[0];
+
+  // Collect every slug rendered on the homepage so we can fetch all view
+  // counts in a single PostHog round-trip (cached 5 min in posthog-server).
+  const allSlugs: string[] = [];
+  for (const item of allItems) {
+    if (item.kind === "post") {
+      if (item.post.slug) allSlugs.push(item.post.slug);
+    } else {
+      for (const part of item.parts) allSlugs.push(part.slug);
+    }
+  }
+  const viewCounts = await getPostViewCounts(allSlugs);
+  const seriesViewTotal = (item: Extract<FeedItem, { kind: "series" }>) =>
+    item.parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
+
   const imageUrl = mainProfile.image || null;
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
@@ -223,6 +239,7 @@ export default async function Home() {
                           parts={item.parts}
                           firstDate={item.firstDate}
                           lastDate={item.lastDate}
+                          viewCount={seriesViewTotal(item)}
                         />
                       </li>
                     );
@@ -233,6 +250,9 @@ export default async function Home() {
                         { month: "short", day: "numeric" },
                       )
                     : "";
+                  const views = item.post.slug
+                    ? (viewCounts[item.post.slug] ?? 0)
+                    : 0;
                   return (
                     <li key={item.post.slug}>
                       <Link
@@ -243,8 +263,17 @@ export default async function Home() {
                           <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
                             {item.post.title}
                           </span>
-                          <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                            {date}
+                          <span className="flex items-baseline gap-2 text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                            <span>{date}</span>
+                            {views > 0 && (
+                              <>
+                                <span className="opacity-50">·</span>
+                                <span>
+                                  {views.toLocaleString()}{" "}
+                                  {views === 1 ? "view" : "views"}
+                                </span>
+                              </>
+                            )}
                           </span>
                         </div>
                         {item.post.description && (

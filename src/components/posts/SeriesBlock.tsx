@@ -11,6 +11,7 @@ interface SeriesBlockProps {
   parts: { slug: string; title: string; date_created: string }[];
   firstDate: string;
   lastDate: string;
+  viewCount?: number;
 }
 
 // "Mar 16 – Mar 28, 26" / "Mar 16, 25 – Mar 28, 26" — same logic as the
@@ -62,6 +63,7 @@ export default function SeriesBlock({
   parts,
   firstDate,
   lastDate,
+  viewCount,
 }: SeriesBlockProps) {
   return (
     <article className="py-5 md:py-6">
@@ -75,6 +77,11 @@ export default function SeriesBlock({
         <span className="text-xs text-muted-foreground/60 tabular-nums">
           {formatDateRange(firstDate, lastDate)}
         </span>
+        {viewCount !== undefined && viewCount > 0 && (
+          <span className="text-xs text-muted-foreground/60 tabular-nums">
+            · {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
+          </span>
+        )}
       </div>
 
       {/* Title — links to the series landing page */}

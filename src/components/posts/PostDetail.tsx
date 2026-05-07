@@ -17,6 +17,7 @@ import {
   getSeriesContext,
   getSeriesForPost,
 } from "@/lib/posts";
+import { getPostViewCount } from "@/lib/posthog-server";
 
 interface PostDetailProps {
   postSlug: string;
@@ -52,7 +53,10 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
   }
 
   const anonId = getAnonId();
-  const likeState = await getLikeState(data.id, anonId);
+  const [likeState, viewCount] = await Promise.all([
+    getLikeState(data.id, anonId),
+    getPostViewCount(postSlug),
+  ]);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
   const postUrl = seriesCtx
@@ -164,7 +168,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                     </span>
                   </>
                 )}
-                <ViewCount slug={postSlug} />
+                <ViewCount count={viewCount} />
               </div>
             </header>
 
