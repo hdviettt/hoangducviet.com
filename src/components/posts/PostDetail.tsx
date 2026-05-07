@@ -11,13 +11,13 @@ import { ViewCount } from "@/components/posts/ViewCount";
 import { getAnonId } from "@/lib/anon";
 import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
 import { getLikeState } from "@/lib/likes";
+import { getPostViewCount } from "@/lib/posthog-server";
 import {
   getAdjacentPosts,
   getPostBySlug,
   getSeriesContext,
   getSeriesForPost,
 } from "@/lib/posts";
-import { getPostViewCount } from "@/lib/posthog-server";
 
 interface PostDetailProps {
   postSlug: string;
@@ -168,7 +168,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                     </span>
                   </>
                 )}
-                <ViewCount count={viewCount} />
+                <ViewCount count={viewCount} rightAligned />
               </div>
             </header>
 

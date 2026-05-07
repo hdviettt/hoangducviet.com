@@ -1,5 +1,6 @@
 "use client";
 
+import { ViewCount } from "@/components/posts/ViewCount";
 import Link from "next/link";
 
 interface SeriesBlockProps {
@@ -70,16 +71,16 @@ export default function SeriesBlock({
       {/* Meta row — kind, count, date range. The "SERIES · N PARTS" badge
           carries the visual signal that this is a series; no left border
           needed. */}
-      <div className="flex items-baseline gap-3 flex-wrap mb-3">
+      <div className="flex items-center gap-3 flex-wrap mb-3">
         <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
           Series · {parts.length} parts
         </span>
         <span className="text-xs text-muted-foreground/60 tabular-nums">
           {formatDateRange(firstDate, lastDate)}
         </span>
-        {viewCount !== undefined && viewCount > 0 && (
-          <span className="text-xs text-muted-foreground/60 tabular-nums">
-            · {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
+        {viewCount !== undefined && (
+          <span className="text-xs text-muted-foreground/60">
+            <ViewCount count={viewCount} />
           </span>
         )}
       </div>

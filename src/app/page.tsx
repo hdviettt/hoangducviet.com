@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import SeriesBlock from "@/components/posts/SeriesBlock";
+import { ViewCount } from "@/components/posts/ViewCount";
+import { getGlobalMetadata } from "@/lib/global";
+import { createPersonSchema, createWebSiteSchema } from "@/lib/jsonld";
+import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-import { getGlobalMetadata } from "@/lib/global";
-import { createWebSiteSchema, createPersonSchema } from "@/lib/jsonld";
-import { getPostViewCounts } from "@/lib/posthog-server";
 import { Facebook, Github, Instagram, Linkedin, Mail } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import SeriesBlock from "@/components/posts/SeriesBlock";
 
 export const dynamic = "force-dynamic";
 
@@ -57,12 +58,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 function itemDate(item: FeedItem): string {
-  return item.kind === "series"
-    ? item.lastDate
-    : item.post.date_created || "";
+  return item.kind === "series" ? item.lastDate : item.post.date_created || "";
 }
 
-function groupByYear(items: FeedItem[]): Array<{ year: number; items: FeedItem[] }> {
+function groupByYear(
+  items: FeedItem[],
+): Array<{ year: number; items: FeedItem[] }> {
   const yearMap = new Map<number, FeedItem[]>();
   const yearOrder: number[] = [];
   for (const item of items) {
@@ -123,8 +124,7 @@ export default async function Home() {
     item.parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   const imageUrl = mainProfile.image || null;
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
   const profileImageUrl = imageUrl
     ? imageUrl.startsWith("http")
       ? imageUrl
@@ -173,7 +173,10 @@ export default async function Home() {
             />
           )}
           <div className="flex-1 min-w-0">
-            <span className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards" style={{ marginBottom: 8 }}>
+            <span
+              className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards"
+              style={{ marginBottom: 8 }}
+            >
               personal blog
             </span>
             {mainProfile?.name && (
@@ -189,10 +192,26 @@ export default async function Home() {
             )}
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 fill-mode-backwards">
               {[
-                { href: "https://github.com/hdviettt", icon: Github, label: "GitHub" },
-                { href: "https://www.facebook.com/hoangducviettt/", icon: Facebook, label: "Facebook" },
-                { href: "https://www.instagram.com/_hdviet/", icon: Instagram, label: "Instagram" },
-                { href: "https://www.linkedin.com/in/hdviet/", icon: Linkedin, label: "LinkedIn" },
+                {
+                  href: "https://github.com/hdviettt",
+                  icon: Github,
+                  label: "GitHub",
+                },
+                {
+                  href: "https://www.facebook.com/hoangducviettt/",
+                  icon: Facebook,
+                  label: "Facebook",
+                },
+                {
+                  href: "https://www.instagram.com/_hdviet/",
+                  icon: Instagram,
+                  label: "Instagram",
+                },
+                {
+                  href: "https://www.linkedin.com/in/hdviet/",
+                  icon: Linkedin,
+                  label: "LinkedIn",
+                },
               ].map(({ href, icon: Icon, label }) => (
                 <a
                   key={label}
@@ -263,17 +282,9 @@ export default async function Home() {
                           <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
                             {item.post.title}
                           </span>
-                          <span className="flex items-baseline gap-2 text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                          <span className="flex items-center gap-3 text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                            <ViewCount count={views} />
                             <span>{date}</span>
-                            {views > 0 && (
-                              <>
-                                <span className="opacity-50">·</span>
-                                <span>
-                                  {views.toLocaleString()}{" "}
-                                  {views === 1 ? "view" : "views"}
-                                </span>
-                              </>
-                            )}
                           </span>
                         </div>
                         {item.post.description && (
