@@ -28,8 +28,11 @@ const LEGACY_SLUG_ALIASES: Record<string, string[]> = {
   "ai-mode": ["building-a-mini-search-engine-8-ai-mode"],
 };
 
-async function fetchAllPathCounts(): Promise<Map<string, number>> {
-  if (!PROJECT_ID || !API_KEY) return new Map();
+// Returns a plain Record (not Map) because unstable_cache JSON-serializes
+// its values — a Map round-trips to {} and loses .get(). Plain objects
+// survive the cache boundary intact.
+async function fetchAllPathCounts(): Promise<Record<string, number>> {
+  if (!PROJECT_ID || !API_KEY) return {};
 
   const query = `
     SELECT properties.$pathname AS path, count() AS c
@@ -56,17 +59,17 @@ async function fetchAllPathCounts(): Promise<Map<string, number>> {
         signal: AbortSignal.timeout(5000),
       },
     );
-    if (!res.ok) return new Map();
+    if (!res.ok) return {};
     const data = (await res.json()) as {
       results?: Array<[string, number]>;
     };
-    const map = new Map<string, number>();
+    const out: Record<string, number> = {};
     for (const [path, count] of data.results ?? []) {
-      map.set(path, count);
+      out[path] = count;
     }
-    return map;
+    return out;
   } catch {
-    return new Map();
+    return {};
   }
 }
 
@@ -76,24 +79,24 @@ const getCachedPathCounts = unstable_cache(
   { revalidate: 300, tags: ["posthog-views"] },
 );
 
-function totalForSlug(counts: Map<string, number>, slug: string): number {
+function totalForSlug(counts: Record<string, number>, slug: string): number {
   if (!/^[a-zA-Z0-9_-]+$/.test(slug)) return 0;
   let total = 0;
   // Current standalone URL.
-  total += counts.get(`/posts/${slug}`) ?? 0;
+  total += counts[`/posts/${slug}`] ?? 0;
   // Current series-post URLs: /series/<any>/<slug>. Only iterate paths that
   // start with /series/ to keep this O(series-paths) not O(all-paths).
-  for (const [path, count] of counts) {
+  for (const path of Object.keys(counts)) {
     if (!path.startsWith("/series/")) continue;
     const parts = path.split("/");
     // parts: ["", "series", "<series-slug>", "<post-slug>"]
-    if (parts.length === 4 && parts[3] === slug) total += count;
+    if (parts.length === 4 && parts[3] === slug) total += counts[path] ?? 0;
   }
   // Pre-rename URLs for posts whose slug changed.
   const legacy = LEGACY_SLUG_ALIASES[slug];
   if (legacy) {
     for (const oldSlug of legacy) {
-      total += counts.get(`/posts/${oldSlug}`) ?? 0;
+      total += counts[`/posts/${oldSlug}`] ?? 0;
     }
   }
   return total;
