@@ -37,11 +37,29 @@ export const posts = pgTable("posts", {
   content: text("content"), // markdown
   thumbnail: text("thumbnail"), // R2 URL or legacy /uploads/ path
   status: text("status").notNull().default("draft"),
+  likeCount: integer("like_count").notNull().default(0),
   dateCreated: timestamp("date_created", { withTimezone: true })
     .notNull()
     .defaultNow(),
   dateUpdated: timestamp("date_updated", { withTimezone: true }),
 });
+
+// Anonymous post likes — one row per (post, anon cookie) pair.
+// Source of truth for whether a given anon_id has liked a post.
+// posts.like_count is a denormalized counter kept in sync transactionally.
+export const postLikes = pgTable(
+  "post_likes",
+  {
+    postId: integer("post_id")
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+    anonId: text("anon_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.postId, table.anonId] })],
+);
 
 // Many-to-many: posts <-> categories
 export const postsCategories = pgTable(

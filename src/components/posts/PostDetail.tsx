@@ -1,18 +1,22 @@
 import Link from "next/link";
 
-import InlineTableOfContents from "@/components/posts/InlineTableOfContents";
 import MarkdownContent from "@/components/content/MarkdownContent";
+import InlineTableOfContents from "@/components/posts/InlineTableOfContents";
+import { LikeButton } from "@/components/posts/LikeButton";
 import PostNavigation from "@/components/posts/PostNavigation";
 import SeriesHeader from "@/components/posts/SeriesHeader";
 import SeriesParts from "@/components/posts/SeriesParts";
+import { ViewCount } from "@/components/posts/ViewCount";
 
+import { getAnonId } from "@/lib/anon";
+import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
+import { getLikeState } from "@/lib/likes";
 import {
   getAdjacentPosts,
   getPostBySlug,
   getSeriesContext,
   getSeriesForPost,
 } from "@/lib/posts";
-import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
 
 interface PostDetailProps {
   postSlug: string;
@@ -47,8 +51,10 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
     );
   }
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const anonId = getAnonId();
+  const likeState = await getLikeState(data.id, anonId);
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
   const postUrl = seriesCtx
     ? `${baseUrl}/series/${seriesCtx.series.slug}/${postSlug}`
     : `${baseUrl}/posts/${postSlug}`;
@@ -158,6 +164,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                     </span>
                   </>
                 )}
+                <ViewCount slug={postSlug} />
               </div>
             </header>
 
@@ -192,6 +199,14 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
             ) : (
               <p className="text-muted-foreground">No content available</p>
             )}
+
+            <div className="my-16 md:my-20">
+              <LikeButton
+                slug={postSlug}
+                initialLiked={likeState.liked}
+                initialCount={likeState.count}
+              />
+            </div>
           </div>
 
           {/* TOC + Series sidebar */}
