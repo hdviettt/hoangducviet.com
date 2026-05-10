@@ -13,25 +13,25 @@
     --border: 225 18% 90%;
     --card: 225 28% 98%;
     --card-foreground: 230 18% 10%;
-    --primary: 234 100% 66%;
+    --primary: 229 100% 66%;
     --primary-foreground: 225 28% 98%;
     --secondary: 225 22% 94%;
     --secondary-foreground: 230 18% 10%;
-    --accent: 234 100% 66%;
+    --accent: 229 100% 66%;
     --accent-foreground: 225 28% 98%;
     --popover: 225 28% 98%;
     --popover-foreground: 230 18% 10%;
     --destructive: 0 75% 55%;
     --destructive-foreground: 225 28% 98%;
     --input: 225 18% 90%;
-    --ring: 234 100% 66%;
+    --ring: 229 100% 66%;
     --radius: 0;
 
     /* Article content — clean modern */
     --article-text: hsl(230 14% 22%);
     --article-heading: hsl(230 22% 8%);
-    --article-link: hsl(234 80% 56%);
-    --article-link-hover: hsl(234 95% 46%);
+    --article-link: hsl(229 80% 56%);
+    --article-link-hover: hsl(229 95% 46%);
     --article-border: hsl(225 18% 88%);
     --article-code-bg: hsl(225 22% 94%);
     --article-blockquote: hsl(230 10% 40%);
@@ -47,24 +47,24 @@
     --border: 230 14% 20%;
     --card: 230 14% 10%;
     --card-foreground: 220 14% 92%;
-    --primary: 234 100% 72%;
+    --primary: 229 100% 72%;
     --primary-foreground: 230 18% 7%;
     --secondary: 230 14% 12%;
     --secondary-foreground: 220 14% 92%;
-    --accent: 234 100% 72%;
+    --accent: 229 100% 72%;
     --accent-foreground: 230 18% 7%;
     --popover: 230 14% 10%;
     --popover-foreground: 220 14% 92%;
     --destructive: 0 70% 60%;
     --destructive-foreground: 220 14% 92%;
     --input: 230 14% 20%;
-    --ring: 234 100% 72%;
+    --ring: 229 100% 72%;
 
     /* Article content — dark modern */
     --article-text: hsl(220 12% 82%);
     --article-heading: hsl(220 18% 96%);
-    --article-link: hsl(234 100% 78%);
-    --article-link-hover: hsl(234 100% 86%);
+    --article-link: hsl(229 100% 78%);
+    --article-link-hover: hsl(229 100% 86%);
     --article-border: hsl(230 14% 22%);
     --article-code-bg: hsl(230 14% 12%);
     --article-blockquote: hsl(225 10% 65%);
