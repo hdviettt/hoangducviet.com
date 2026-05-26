@@ -159,79 +159,74 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero — tight composition. Deck vibe via the faded label + bold
-          name, but sized so the post list lands in the first viewport on
-          short laptops. */}
-      <section className="pt-8 sm:pt-10 md:pt-12 pb-10 md:pb-12">
-        <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 max-w-3xl">
+      {/* Hero — Google "Featured author" pattern: vertical stack, big
+          circular photo, light-weight large name, supporting role line,
+          narrow bio column, socials at the bottom. */}
+      <section className="pt-10 sm:pt-14 md:pt-20 pb-12 md:pb-16">
+        <div className="max-w-[560px]">
           {imageUrl && (
             <Image
               src={imageUrl}
               alt={mainProfile.name || "Profile"}
-              width={160}
-              height={160}
-              className="w-16 h-16 sm:w-20 sm:h-20 object-cover shrink-0 rounded-full animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
+              width={320}
+              height={320}
+              className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 object-cover rounded-full mb-6 md:mb-8 ring-1 ring-md-outline-variant animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
               priority
             />
           )}
-          <div className="flex-1 min-w-0">
-            <span className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-2 block animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards">
-              personal blog
-            </span>
-            {mainProfile?.name && (
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
-                {mainProfile.name}
-              </h1>
-            )}
-            {mainProfile?.description && (
-              <div
-                className="text-sm sm:text-base text-foreground/75 leading-relaxed [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards"
-                dangerouslySetInnerHTML={{ __html: mainProfile.description }}
-              />
-            )}
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-400 fill-mode-backwards">
-              {[
-                {
-                  href: "https://github.com/hdviettt",
-                  icon: Github,
-                  label: "GitHub",
-                },
-                {
-                  href: "https://www.facebook.com/hoangducviettt/",
-                  icon: Facebook,
-                  label: "Facebook",
-                },
-                {
-                  href: "https://www.instagram.com/_hdviet/",
-                  icon: Instagram,
-                  label: "Instagram",
-                },
-                {
-                  href: "https://www.linkedin.com/in/hdviet/",
-                  icon: Linkedin,
-                  label: "LinkedIn",
-                },
-              ].map(({ href, icon: Brand, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label={label}
-                >
-                  <Brand className="w-5 h-5" />
-                </a>
-              ))}
-              <span className="w-px h-4 bg-border" />
+          {mainProfile?.name && (
+            <h1 className="text-4xl sm:text-5xl md:text-[48px] md:leading-[56px] font-normal tracking-tight text-md-on-surface mb-3 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-100 fill-mode-backwards">
+              {mainProfile.name}
+            </h1>
+          )}
+          {mainProfile?.description && (
+            <div
+              className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 [&_p:first-child]:text-lg [&_p:first-child]:leading-7 [&_p:first-child]:text-md-on-surface [&_p:first-child]:mb-6 [&_p:not(:first-child)]:text-[15px] [&_p:not(:first-child)]:leading-6 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards"
+              dangerouslySetInnerHTML={{ __html: mainProfile.description }}
+            />
+          )}
+          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300 fill-mode-backwards">
+            {[
+              {
+                href: "https://github.com/hdviettt",
+                icon: Github,
+                label: "GitHub",
+              },
+              {
+                href: "https://www.facebook.com/hoangducviettt/",
+                icon: Facebook,
+                label: "Facebook",
+              },
+              {
+                href: "https://www.instagram.com/_hdviet/",
+                icon: Instagram,
+                label: "Instagram",
+              },
+              {
+                href: "https://www.linkedin.com/in/hdviet/",
+                icon: Linkedin,
+                label: "LinkedIn",
+              },
+            ].map(({ href, icon: Brand, label }) => (
               <a
-                href="mailto:viethd2704@gmail.com"
-                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
+                aria-label={label}
               >
-                <Icon name="mail" size={18} />
-                <span>viethd2704@gmail.com</span>
+                <Brand className="w-5 h-5" />
               </a>
-            </div>
+            ))}
+            <span className="w-px h-4 bg-md-outline-variant" />
+            <a
+              href="mailto:viethd2704@gmail.com"
+              className="inline-flex items-center gap-1.5 md-body-medium text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
+            >
+              <Icon name="mail" size={18} />
+              <span>viethd2704@gmail.com</span>
+            </a>
           </div>
         </div>
       </section>
