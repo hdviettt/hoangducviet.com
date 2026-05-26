@@ -331,8 +331,8 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
 }
 
 .article-content strong {
-  font-weight: 600;
-  color: var(--article-heading);
+  font-weight: 500;
+  color: var(--article-text);
 }
 
 .article-content pre {

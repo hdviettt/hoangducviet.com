@@ -125,7 +125,19 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
           Home
         </Link>
 
-        <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
+        <div className="lg:grid lg:grid-cols-[200px_1fr] xl:grid-cols-[220px_1fr] lg:gap-16 xl:gap-24 items-start">
+          {/* TOC + Series sidebar — left rail, sticky */}
+          <aside className="hidden lg:block sticky top-24 self-start">
+            {data.content && <InlineTableOfContents content={data.content} />}
+            {seriesCtx && (
+              <SeriesParts
+                series={seriesCtx.series}
+                parts={seriesCtx.parts}
+                currentSlug={postSlug}
+              />
+            )}
+          </aside>
+
           {/* Main Content */}
           <div className="min-w-0">
             {/* Article Header — deck-label + display title pattern */}
@@ -215,18 +227,6 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               />
             </div>
           </div>
-
-          {/* TOC + Series sidebar */}
-          <aside className="hidden lg:block sticky top-24 self-start">
-            {data.content && <InlineTableOfContents content={data.content} />}
-            {seriesCtx && (
-              <SeriesParts
-                series={seriesCtx.series}
-                parts={seriesCtx.parts}
-                currentSlug={postSlug}
-              />
-            )}
-          </aside>
         </div>
 
         <PostNavigation
