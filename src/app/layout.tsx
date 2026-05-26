@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -16,11 +16,14 @@ const PostHogProvider = dynamic(
 );
 import { getGlobalMetadata } from "@/lib/global";
 
-const inter = Inter({
+// DM Sans is the closest open-source match to Google Sans (the font Google
+// uses on blog.google, store.google.com, etc.). Keeps the --font-inter
+// variable name so existing CSS references don't break.
+const sans = DM_Sans({
   subsets: ["latin", "vietnamese"],
   variable: "--font-inter",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -71,7 +74,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} overflow-x-hidden`}
+      className={`${sans.variable} ${jetbrainsMono.variable} overflow-x-hidden`}
       suppressHydrationWarning
     >
       <head>

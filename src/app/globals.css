@@ -103,10 +103,11 @@
     --ring: var(--md-sys-color-primary);
     --radius: var(--md-sys-shape-corner-medium);
 
-    /* Article content — body text slightly muted (Google's trick: not
-       pure black, ~80% of on-surface), headings at full on-surface. */
-    --article-text: hsl(220 7% 18% / 0.92);
-    --article-heading: hsl(220 8% 8%);
+    /* Article content — body text uses Google's body gray (#5f6368)
+       while headings stay near-black, so heading→body contrast reads
+       like blog.google. */
+    --article-text: hsl(213 7% 40%);
+    --article-heading: hsl(220 7% 12%);
     --article-link: hsl(var(--md-sys-color-primary));
     --article-link-hover: hsl(217 89% 41%);
     --article-border: hsl(var(--md-sys-color-outline-variant));
@@ -161,7 +162,7 @@
     --md-sys-elevation-level5: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.40);
 
     /* Article content — dark */
-    --article-text: hsl(220 13% 88% / 0.92);
+    --article-text: hsl(220 9% 72%);
     --article-heading: hsl(220 18% 96%);
     --article-link-hover: hsl(217 95% 88%);
   }

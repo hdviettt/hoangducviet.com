@@ -24,7 +24,7 @@ export default function InlineTableOfContents({
       "$1\n$3",
     );
     const lines = fixed.split("\n");
-    const items: TOCItem[] = [];
+    const all: TOCItem[] = [];
 
     lines.forEach((line) => {
       const match = line.match(/^(#{1,6})\s+(.+)$/);
@@ -37,11 +37,18 @@ export default function InlineTableOfContents({
           .replace(/\s+/g, "-")
           .replace(/-+/g, "-")
           .trim();
-        items.push({ id, text, level });
+        all.push({ id, text, level });
       }
     });
 
-    setHeadings(items);
+    // Show only the top-level headings (the shallowest level present).
+    // Blog.google TOCs surface section anchors, not every nested H3/H4.
+    if (all.length === 0) {
+      setHeadings([]);
+      return;
+    }
+    const minLevel = Math.min(...all.map((h) => h.level));
+    setHeadings(all.filter((h) => h.level === minLevel));
   }, [content]);
 
   useEffect(() => {
@@ -73,8 +80,6 @@ export default function InlineTableOfContents({
 
   if (headings.length === 0) return null;
 
-  const minLevel = Math.min(...headings.map((h) => h.level));
-
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -92,15 +97,13 @@ export default function InlineTableOfContents({
       </div>
       <ul className="relative border-l border-md-outline-variant">
         {headings.map((heading) => {
-          const indent = heading.level - minLevel;
           const isActive = activeId === heading.id;
           return (
             <li key={heading.id}>
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
-                style={{ paddingLeft: `${16 + indent * 14}px` }}
-                className={`block py-2 pr-3 -ml-px border-l-[3px] text-[14px] leading-[20px] transition-colors duration-200 ease-md-standard ${
+                className={`block py-2 pl-4 pr-3 -ml-px border-l-[3px] text-[14px] leading-[20px] transition-colors duration-200 ease-md-standard ${
                   isActive
                     ? "border-primary text-primary font-medium"
                     : "border-transparent text-md-on-surface/70 hover:text-md-on-surface"
