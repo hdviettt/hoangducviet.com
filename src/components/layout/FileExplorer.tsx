@@ -63,8 +63,8 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         </div>
       )}
 
-      {/* M3 top app bar — brand on left, nav + actions on right. 64px,
-          flat at rest, elevation-2 once the user scrolls past the hero. */}
+      {/* Minimal centered M3 top app bar — no brand, pill nav, theme toggle.
+          Flat at rest, elevation + blur once the user scrolls past the hero. */}
       <header
         className={`sticky top-0 z-40 transition-all duration-200 ease-md-standard ${
           scrolled
@@ -72,58 +72,43 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             : "bg-md-background"
         }`}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
-          {/* Brand */}
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 group shrink-0"
-            aria-label="Home"
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-center gap-1">
+          <nav className="flex items-center gap-1">
+            {navItems.map((item) => {
+              const active = item.match(pathname);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`h-10 px-5 rounded-full inline-flex items-center md-label-large transition-colors duration-200 ease-md-standard ${
+                    active
+                      ? "bg-md-secondary-container text-md-on-secondary-container"
+                      : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <span className="mx-2 w-px h-5 bg-md-outline-variant" />
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="w-10 h-10 inline-flex items-center justify-center rounded-full text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
+            aria-label="Toggle theme"
           >
-            <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-md-primary text-md-on-primary md-label-large font-medium">
-              v
-            </span>
-            <span className="hidden sm:inline md-title-medium text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
-              Hoang Duc Viet
-            </span>
-          </Link>
-
-          {/* Right: nav + theme toggle */}
-          <div className="flex items-center gap-1">
-            <nav className="flex items-center gap-1">
-              {navItems.map((item) => {
-                const active = item.match(pathname);
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`h-10 px-4 rounded-full inline-flex items-center md-label-large transition-colors duration-200 ease-md-standard ${
-                      active
-                        ? "bg-md-secondary-container text-md-on-secondary-container"
-                        : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="ml-2 w-10 h-10 inline-flex items-center justify-center rounded-full text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
-              aria-label="Toggle theme"
-            >
-              {!mounted ? (
-                <span className="w-5 h-5 inline-block" />
-              ) : (
-                <Icon
-                  name={theme === "light" ? "dark_mode" : "light_mode"}
-                  size={20}
-                />
-              )}
-            </button>
-          </div>
+            {!mounted ? (
+              <span className="w-5 h-5 inline-block" />
+            ) : (
+              <Icon
+                name={theme === "light" ? "dark_mode" : "light_mode"}
+                size={20}
+              />
+            )}
+          </button>
         </div>
       </header>
 
