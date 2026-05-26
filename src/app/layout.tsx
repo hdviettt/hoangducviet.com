@@ -20,7 +20,7 @@ import { getGlobalMetadata } from "@/lib/global";
 // uses on blog.google, store.google.com, etc.). Keeps the --font-inter
 // variable name so existing CSS references don't break.
 const sans = DM_Sans({
-  subsets: ["latin", "vietnamese"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
   display: "swap",
   weight: ["400", "500", "600", "700"],
