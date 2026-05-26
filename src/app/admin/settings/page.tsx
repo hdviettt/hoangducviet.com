@@ -58,12 +58,12 @@ export default function AdminSettingsPage() {
             <div>
               <label className="block text-xs text-muted-foreground mb-1">title</label>
               <input type="text" value={siteTitle} onChange={(e) => setSiteTitle(e.target.value)}
-                className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" />
+                className="md-field" />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1">tagline</label>
               <input type="text" value={tagline} onChange={(e) => setTagline(e.target.value)}
-                className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" />
+                className="md-field" />
             </div>
           </div>
         </section>
@@ -74,7 +74,7 @@ export default function AdminSettingsPage() {
             <div>
               <label className="block text-xs text-muted-foreground mb-1">name</label>
               <input type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)}
-                className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary" />
+                className="md-field" />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1">description</label>
@@ -87,7 +87,7 @@ export default function AdminSettingsPage() {
         </section>
 
         <button type="submit" disabled={saving}
-          className="bg-primary text-primary-foreground px-6 py-2 text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
+          className="md-btn md-btn-filled">
           {saving ? "saving..." : "save settings"}
         </button>
       </form>

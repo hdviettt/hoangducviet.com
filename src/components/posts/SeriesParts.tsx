@@ -6,8 +6,6 @@ interface SeriesPartsProps {
   currentSlug: string;
 }
 
-// Compact "All parts" list rendered inside the post-page sidebar (alongside or
-// below the table of contents). Highlights the current part.
 export default function SeriesParts({
   series,
   parts,
@@ -17,34 +15,42 @@ export default function SeriesParts({
     <nav aria-label="All parts in this series" className="mt-10">
       <Link
         href={`/series/${series.slug}`}
-        className="block text-xs font-semibold uppercase tracking-wider text-primary/70 hover:text-primary transition-colors mb-3"
+        className="block md-label-large uppercase tracking-widest text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard mb-4"
       >
         All parts
       </Link>
-      <ol className="space-y-2">
+      <ol className="space-y-1">
         {parts.map((part, i) => {
           const isCurrent = part.slug === currentSlug;
-          return (
-            <li key={part.slug} className="flex items-baseline gap-2.5">
-              <span
-                className={`text-xs tabular-nums font-medium shrink-0 ${
-                  isCurrent ? "text-primary" : "text-muted-foreground/60"
-                }`}
+          const num = String(i + 1).padStart(2, "0");
+          if (isCurrent) {
+            return (
+              <li
+                key={part.slug}
+                className="flex items-baseline gap-3 px-3 py-2 rounded-full bg-md-secondary-container text-md-on-secondary-container"
               >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              {isCurrent ? (
-                <span className="text-[13px] leading-snug font-medium text-foreground">
+                <span className="md-label-medium tabular-nums shrink-0">
+                  {num}
+                </span>
+                <span className="md-body-medium font-medium">
                   {stripPartPrefix(part.title)}
                 </span>
-              ) : (
-                <Link
-                  href={`/series/${series.slug}/${part.slug}`}
-                  className="text-[13px] leading-snug text-muted-foreground hover:text-foreground transition-colors"
-                >
+              </li>
+            );
+          }
+          return (
+            <li key={part.slug}>
+              <Link
+                href={`/series/${series.slug}/${part.slug}`}
+                className="flex items-baseline gap-3 px-3 py-2 rounded-full text-md-on-surface-variant hover:bg-md-on-surface/8 transition-colors duration-200 ease-md-standard"
+              >
+                <span className="md-label-medium tabular-nums shrink-0">
+                  {num}
+                </span>
+                <span className="md-body-medium">
                   {stripPartPrefix(part.title)}
-                </Link>
-              )}
+                </span>
+              </Link>
             </li>
           );
         })}
@@ -53,8 +59,6 @@ export default function SeriesParts({
   );
 }
 
-// Title in DB is "Building a Mini Search Engine #N: Topic" — strip everything
-// up to and including the colon so the parts list reads cleanly.
 function stripPartPrefix(title: string): string {
   const m = title.match(/#\d+:\s*(.+)$/);
   return m ? m[1] : title;

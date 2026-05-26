@@ -2,7 +2,7 @@ import { getSeriesBySlug, getSeriesList } from "@/lib/series";
 import { getGlobalMetadata } from "@/lib/global";
 import { createBreadcrumbSchema } from "@/lib/jsonld";
 import type { Metadata } from "next";
-import { ExternalLink } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -108,27 +108,31 @@ export default async function SeriesPage({ params }: SeriesParams) {
       {/* Back — there's only one place to go back to: home */}
       <Link
         href="/"
-        className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-10 md:mb-16"
+        className="group inline-flex items-center gap-2 md-label-large text-md-on-surface-variant hover:text-md-on-surface transition-colors mb-10 md:mb-16"
       >
-        <span className="text-primary/60 group-hover:text-primary transition-colors">
-          ←
-        </span>
+        <Icon
+          name="arrow_back"
+          size={18}
+          className="text-primary/60 group-hover:text-primary transition-colors"
+        />
         home
       </Link>
 
-      {/* Series Header — deck-label + display title */}
-      <header className="mb-12 sm:mb-16 md:mb-28">
-        <span className="deck-label">
+      {/* M3 series header — overline label + display heading + supporting text */}
+      <header className="mb-12 sm:mb-16 md:mb-24">
+        <span className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-3 block">
           {isSeries ? `series · ${posts.length} parts` : "series"}
         </span>
-        <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 sm:mb-8 md:mb-10">
+        <h1 className="text-4xl sm:text-5xl md:text-[57px] md:leading-[64px] font-normal tracking-tight text-md-on-surface mb-6 sm:mb-8">
           {seriesItem.title}
         </h1>
 
         {seriesItem.summary && (
           <div className="mb-8 max-w-2xl">
-            <span className="deck-label">tl;dr</span>
-            <p className="text-base sm:text-lg text-foreground/80 leading-relaxed">
+            <span className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-2 block">
+              tl;dr
+            </span>
+            <p className="md-body-large text-md-on-surface-variant">
               {seriesItem.summary}
             </p>
           </div>
@@ -161,7 +165,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
                   return seriesItem.url;
                 }
               })()}
-              <ExternalLink className="w-3.5 h-3.5" />
+              <Icon name="open_in_new" size={14} />
             </a>
           )}
         </div>
@@ -178,7 +182,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
       {/* Parts list — naked typographic list */}
       {posts.length > 0 && (
         <section className="mt-12 md:mt-20">
-          <h2 className="deck-label">
+          <h2 className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-4 block pb-3 border-b border-md-outline-variant">
             {isSeries ? "all parts" : "posts in this series"}
           </h2>
 
@@ -200,14 +204,14 @@ export default async function SeriesPage({ params }: SeriesParams) {
                     className="flex items-baseline gap-5 md:gap-6 py-5 md:py-7 group"
                   >
                     {isSeries && (
-                      <span className="text-base md:text-lg tabular-nums font-semibold text-primary/40 group-hover:text-primary transition-colors w-10 shrink-0">
+                      <span className="md-title-medium md:md-title-large tabular-nums text-primary/40 group-hover:text-primary transition-colors w-10 shrink-0">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                     )}
-                    <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                    <span className="flex-1 min-w-0 text-xl md:text-2xl font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors">
                       {isSeries ? cleanTitle : post.title}
                     </span>
-                    <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
+                    <span className="md-body-small tabular-nums text-md-on-surface-variant shrink-0">
                       {date}
                     </span>
                   </Link>

@@ -1,4 +1,4 @@
-import { Eye } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 
 interface ViewCountProps {
   count: number;
@@ -17,7 +17,7 @@ export function ViewCount({ count, rightAligned = false }: ViewCountProps) {
       }`}
       aria-label={`${count} ${count === 1 ? "view" : "views"}`}
     >
-      <Eye className="w-3.5 h-3.5 opacity-70" aria-hidden="true" />
+      <Icon name="visibility" size={14} className="opacity-70" />
       {count.toLocaleString()}
     </span>
   );

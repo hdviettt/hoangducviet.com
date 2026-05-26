@@ -113,7 +113,7 @@ export default function InlineTableOfContents({
               key={heading.id}
               href={`#${heading.id}`}
               onClick={(e) => handleClick(e, heading.id)}
-              className={`block text-[13px] py-1.5 transition-colors border-l-2 -ml-0.5 ${
+              className={`block text-sm py-1.5 transition-colors border-l-2 -ml-0.5 ${
                 isActive ? "font-medium" : ""
               }`}
               style={{

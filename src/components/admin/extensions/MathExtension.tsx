@@ -111,7 +111,7 @@ function MathBlockView({ node, updateAttributes, selected }: any) {
             }}
             onBlur={save}
             rows={3}
-            className="w-full bg-input border border-border px-3 py-2 text-sm font-mono focus:outline-none focus:border-primary resize-none"
+            className="md-field font-mono"
             placeholder="\frac{a}{b} = c"
           />
           <p className="text-xs text-muted-foreground mt-1.5">

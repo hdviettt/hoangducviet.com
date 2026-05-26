@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ChevronRight } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 
 function getBreadcrumb(pathname: string): { section: string; page?: string } {
   if (pathname === "/admin") return { section: "dashboard" };
@@ -29,7 +29,7 @@ export default function AdminHeader() {
       </span>
       {page && (
         <>
-          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/40 shrink-0" />
+          <Icon name="chevron_right" size={16} className="text-muted-foreground/40 shrink-0" />
           <span className="text-sm font-medium text-foreground">{page}</span>
         </>
       )}

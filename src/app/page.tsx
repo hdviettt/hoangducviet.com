@@ -5,7 +5,9 @@ import { createPersonSchema, createWebSiteSchema } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-import { Facebook, Github, Instagram, Linkedin, Mail } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
+// Brand marks aren't in Material Symbols — keep lucide for these four only.
+import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -173,14 +175,11 @@ export default async function Home() {
             />
           )}
           <div className="flex-1 min-w-0">
-            <span
-              className="deck-label animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards"
-              style={{ marginBottom: 8 }}
-            >
+            <span className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-2 block animate-in fade-in slide-in-from-bottom-2 duration-500 delay-100 fill-mode-backwards">
               personal blog
             </span>
             {mainProfile?.name && (
-              <h1 className="deck-display text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mb-4 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
                 {mainProfile.name}
               </h1>
             )}
@@ -212,7 +211,7 @@ export default async function Home() {
                   icon: Linkedin,
                   label: "LinkedIn",
                 },
-              ].map(({ href, icon: Icon, label }) => (
+              ].map(({ href, icon: Brand, label }) => (
                 <a
                   key={label}
                   href={href}
@@ -221,7 +220,7 @@ export default async function Home() {
                   className="text-muted-foreground hover:text-primary transition-colors"
                   aria-label={label}
                 >
-                  <Icon className="w-[18px] h-[18px]" />
+                  <Brand className="w-5 h-5" />
                 </a>
               ))}
               <span className="w-px h-4 bg-border" />
@@ -229,7 +228,7 @@ export default async function Home() {
                 href="mailto:viethd2704@gmail.com"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                <Mail className="w-4 h-4" />
+                <Icon name="mail" size={18} />
                 <span>viethd2704@gmail.com</span>
               </a>
             </div>
@@ -244,7 +243,7 @@ export default async function Home() {
         <div className="space-y-12 sm:space-y-16">
           {itemsByYear.map(({ year, items }) => (
             <section key={year}>
-              <h2 className="text-sm md:text-[15px] font-semibold uppercase tracking-widest text-foreground/55 mb-4 md:mb-6 pb-3 border-b border-border/50">
+              <h2 className="md-label-large uppercase tracking-widest text-md-on-surface-variant mb-4 md:mb-6 pb-3 border-b border-md-outline-variant">
                 {year}
               </h2>
 
@@ -290,11 +289,11 @@ export default async function Home() {
                             </span>
                           )}
                         </div>
-                        <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                        <h3 className="text-xl md:text-2xl font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
                           {item.post.title}
                         </h3>
                         {item.post.description && (
-                          <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
+                          <p className="mt-2 text-sm text-md-on-surface-variant leading-relaxed max-w-2xl">
                             {item.post.description}
                           </p>
                         )}

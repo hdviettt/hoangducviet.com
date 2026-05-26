@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { posts, series, seriesPosts } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
-import { FileText, FolderKanban, AlertTriangle, Link2, Unlink } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import LinkTable from "./LinkTable";
 import LinkGraph from "./LinkGraph";
@@ -182,39 +182,27 @@ export default async function InternalLinksPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
         {[
-          {
-            label: "pages",
-            value: pages.size,
-            icon: FileText,
-            color: "text-primary",
-          },
-          {
-            label: "internal links",
-            value: totalLinks,
-            icon: Link2,
-            color: "text-primary",
-          },
+          { label: "pages", value: pages.size, icon: "description", color: "text-primary" },
+          { label: "internal links", value: totalLinks, icon: "link", color: "text-primary" },
           {
             label: "orphan pages",
             value: orphanPages.length,
-            icon: Unlink,
-            color:
-              orphanPages.length > 0
-                ? "text-yellow-500"
-                : "text-green-500",
+            icon: "link_off",
+            color: orphanPages.length > 0 ? "text-md-tertiary" : "text-md-primary",
           },
           {
             label: "broken links",
             value: brokenLinks.length,
-            icon: AlertTriangle,
-            color:
-              brokenLinks.length > 0
-                ? "text-red-500"
-                : "text-green-500",
+            icon: "warning",
+            color: brokenLinks.length > 0 ? "text-md-error" : "text-md-primary",
           },
         ].map((stat) => (
-          <div key={stat.label} className="border border-border p-5 stat-card relative overflow-hidden">
-            <stat.icon className="absolute right-4 bottom-3 w-12 h-12 text-border/60" />
+          <div key={stat.label} className="stat-card p-5 relative overflow-hidden">
+            <Icon
+              name={stat.icon}
+              size={48}
+              className="absolute right-4 bottom-3 text-border/60"
+            />
             <div className="relative">
               <div className={`text-3xl font-medium tabular-nums leading-none ${stat.color}`}>{stat.value}</div>
               <div className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">{stat.label}</div>
@@ -239,17 +227,17 @@ export default async function InternalLinksPage() {
           <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
             orphan pages (no incoming links)
           </h2>
-          <div className="border border-border divide-y divide-border bg-card">
+          <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-md-surface-container-low overflow-hidden">
             {orphanPages.map((page) => (
               <div
                 key={page.path}
                 className="flex items-center gap-3 px-4 py-3 row-hover"
               >
                 <span
-                  className={`text-[10px] uppercase font-medium px-1.5 py-0.5 ${
+                  className={`md-label-small uppercase font-medium px-1.5 py-0.5 ${
                     page.type === "post"
-                      ? "bg-blue-500/10 text-blue-500"
-                      : "bg-purple-500/10 text-purple-500"
+                      ? "bg-md-primary-container text-md-on-primary-container"
+                      : "bg-md-tertiary-container text-md-on-tertiary-container"
                   }`}
                 >
                   {page.type}
@@ -279,7 +267,7 @@ export default async function InternalLinksPage() {
           <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
             broken links
           </h2>
-          <div className="border border-border divide-y divide-border bg-card">
+          <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-md-surface-container-low overflow-hidden">
             {brokenLinks.map((edge) => {
               const source = pages.get(edge.sourcePath);
               return (
@@ -298,7 +286,7 @@ export default async function InternalLinksPage() {
                     {source?.title ?? edge.sourcePath}
                   </Link>
                   <span className="text-muted-foreground text-xs">&rarr;</span>
-                  <span className="text-sm text-red-500">
+                  <span className="text-sm text-md-error">
                     {edge.targetPath}
                   </span>
                 </div>

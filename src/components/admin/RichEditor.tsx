@@ -140,7 +140,7 @@ const slashItems: SlashItem[] = [
   {
     title: "Image",
     description: "Choose from library or upload",
-    icon: "🖼",
+    icon: "ðŸ–¼",
     command: () => {
       // Handled specially via onImagePicker callback in SlashMenu
     },
@@ -594,7 +594,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           active={editor.isActive("strike")}
           title="Strikethrough"
         >
-          S̶
+          SÌ¶
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleCode().run()}
@@ -683,7 +683,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           active={editor.isActive("link")}
           title="Insert link"
         >
-          🔗
+          ðŸ”—
         </ToolbarButton>
         <ToolbarButton
           onClick={openImagePicker}
@@ -712,7 +712,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
               onClick={() => editor.chain().focus().deleteColumn().run()}
               title="Delete column"
             >
-              ×Col
+              Ã—Col
             </ToolbarButton>
             <span className="w-px h-5 bg-border mx-1" />
             <ToolbarButton
@@ -731,7 +731,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
               onClick={() => editor.chain().focus().deleteRow().run()}
               title="Delete row"
             >
-              ×Row
+              Ã—Row
             </ToolbarButton>
             <span className="w-px h-5 bg-border mx-1" />
             <ToolbarButton
@@ -744,7 +744,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
               onClick={() => editor.chain().focus().deleteTable().run()}
               title="Delete table"
             >
-              ×Table
+              Ã—Table
             </ToolbarButton>
           </>
         )}
@@ -780,9 +780,9 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                 value={imagePickerSearch}
                 onChange={(e) => setImagePickerSearch(e.target.value)}
                 placeholder="search..."
-                className="bg-input border border-border px-2 py-1 text-xs focus:outline-none focus:border-primary flex-1"
+                className="md-field-dense flex-1 text-xs"
               />
-              <label className="bg-primary text-primary-foreground px-3 py-1 text-xs hover:opacity-90 cursor-pointer shrink-0">
+              <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
                 {imagePickerUploading ? "uploading..." : "upload new"}
                 <input
                   type="file"
@@ -897,12 +897,12 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                   value={widgetPropsText}
                   onChange={(e) => setWidgetPropsText(e.target.value)}
                   rows={4}
-                  className="w-full bg-input border border-border px-3 py-2 text-sm font-mono focus:outline-none focus:border-primary resize-none"
+                  className="md-field font-mono"
                 />
                 <button
                   type="button"
                   onClick={insertWidget}
-                  className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 transition-opacity"
+                  className="md-btn md-btn-filled md-btn-sm"
                 >
                   insert
                 </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
@@ -62,23 +62,26 @@ export default function FileExplorer({ children }: FileExplorerProps) {
 
       {/* Sticky minimal header. Border-bottom fades in once the user scrolls
           past the hero so it doesn't compete with the page-opening composition. */}
+      {/* M3 top app bar — 64px, surface tonal level 0 (flat) / level 2 once
+          the user scrolls past the hero so the bar doesn't compete with the
+          page-opening composition. */}
       <header
-        className={`sticky top-0 z-40 bg-background/85 backdrop-blur-sm transition-colors duration-200 ${
-          scrolled ? "border-b border-border/60" : "border-b border-transparent"
+        className={`sticky top-0 z-40 bg-background/85 backdrop-blur-sm transition-shadow duration-200 ease-md-standard ${
+          scrolled ? "md-elevation-2 border-b border-outline-variant" : ""
         }`}
       >
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 flex items-center justify-center h-14 md:h-16">
-          <nav className="flex items-center gap-5 sm:gap-6 md:gap-7">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-20 h-16 flex items-center justify-center">
+          <nav className="flex items-center gap-6 md:gap-8">
             {navItems.map((item) => {
               const active = item.match(pathname);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`nav-link text-sm transition-colors ${
+                  className={`nav-link md-label-large transition-colors duration-200 ease-md-standard ${
                     active
-                      ? "text-primary font-semibold"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "text-primary"
+                      : "text-md-on-surface-variant hover:text-md-on-surface"
                   }`}
                 >
                   {item.label}
@@ -86,20 +89,22 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               );
             })}
 
-            <div className="w-px h-4 bg-border" />
+            <span className="w-px h-5 bg-md-outline-variant" />
 
             <button
               type="button"
               onClick={toggleTheme}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="md-btn md-btn-text md-btn-sm md-btn-pill"
+              style={{ padding: 0, width: 40, height: 40 }}
               aria-label="Toggle theme"
             >
               {!mounted ? (
-                <div className="w-4 h-4" />
-              ) : theme === "light" ? (
-                <Moon className="w-4 h-4" />
+                <span className="w-5 h-5 inline-block" />
               ) : (
-                <Sun className="w-4 h-4" />
+                <Icon
+                  name={theme === "light" ? "dark_mode" : "light_mode"}
+                  size={20}
+                />
               )}
             </button>
           </nav>
@@ -107,7 +112,9 @@ export default function FileExplorer({ children }: FileExplorerProps) {
       </header>
 
       <main
-        className={`mx-auto px-4 sm:px-6 pb-16 ${isPostPage ? "max-w-6xl" : "max-w-4xl"}`}
+        className={`mx-auto px-4 sm:px-6 lg:px-20 pb-16 ${
+          isPostPage ? "max-w-6xl" : "max-w-4xl"
+        }`}
       >
         {children}
       </main>

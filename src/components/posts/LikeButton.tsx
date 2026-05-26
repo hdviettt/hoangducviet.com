@@ -1,6 +1,6 @@
 "use client";
 
-import { ThumbsUp } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 import { useState } from "react";
 
 interface LikeButtonProps {
@@ -63,10 +63,7 @@ export function LikeButton({
           liked ? "ring-4 ring-primary/10" : ""
         } ${isPending ? "opacity-70" : ""}`}
       >
-        <ThumbsUp
-          className="w-5 h-5 transition-transform duration-200"
-          fill={liked ? "currentColor" : "none"}
-        />
+        <Icon name="thumb_up" size={20} filled={liked} />
       </button>
       <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground/70">
         <span className="block w-12 border-t border-muted-foreground/20" />

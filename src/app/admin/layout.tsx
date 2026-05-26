@@ -13,7 +13,7 @@ export default function AdminLayout({
 }) {
   return (
     <ToastProvider>
-      <div className="flex h-screen bg-background font-mono text-[15px]">
+      <div className="flex h-screen bg-md-background font-sans text-md-on-background">
         <AdminSidebar />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <AdminHeader />

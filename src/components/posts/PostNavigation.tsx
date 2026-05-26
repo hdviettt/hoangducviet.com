@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 
 interface NavItem {
@@ -20,36 +21,26 @@ export default function PostNavigation({
   if (!previous && !next) return null;
 
   const prevLabel =
-    context?.kind === "series" ? "← Previous in series" : "← Previous";
+    context?.kind === "series" ? "Previous in series" : "Previous";
   const nextLabel =
-    context?.kind === "series" ? "Next in series →" : "Next →";
+    context?.kind === "series" ? "Next in series" : "Next";
 
-  // Fallback to /posts/<slug> if the caller didn't provide an explicit href.
   const prevHref = previous?.href || (previous?.slug ? `/posts/${previous.slug}` : null);
   const nextHref = next?.href || (next?.slug ? `/posts/${next.slug}` : null);
 
   return (
-    <nav
-      className="mt-16 pt-8 border-t"
-      style={{ borderColor: "var(--article-border)" }}
-    >
+    <nav className="mt-16 pt-8 border-t border-md-outline-variant">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {previous && prevHref ? (
           <Link
             href={prevHref}
-            className="group p-4 rounded-lg border transition-colors"
-            style={{ borderColor: "var(--article-border)" }}
+            className="group p-5 rounded-xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container transition-colors duration-200 ease-md-standard"
           >
-            <span
-              className="text-xs block mb-1"
-              style={{ color: "var(--article-text)" }}
-            >
+            <span className="md-label-medium text-md-on-surface-variant flex items-center gap-1 mb-1.5">
+              <Icon name="arrow_back" size={16} />
               {prevLabel}
             </span>
-            <span
-              className="text-sm transition-colors line-clamp-2"
-              style={{ color: "var(--article-heading)" }}
-            >
+            <span className="md-title-medium text-md-on-surface line-clamp-2">
               {previous.title}
             </span>
           </Link>
@@ -59,19 +50,13 @@ export default function PostNavigation({
         {next && nextHref ? (
           <Link
             href={nextHref}
-            className="group p-4 rounded-lg border transition-colors sm:text-right"
-            style={{ borderColor: "var(--article-border)" }}
+            className="group p-5 rounded-xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container transition-colors duration-200 ease-md-standard sm:text-right"
           >
-            <span
-              className="text-xs block mb-1"
-              style={{ color: "var(--article-text)" }}
-            >
+            <span className="md-label-medium text-md-on-surface-variant flex items-center justify-end gap-1 mb-1.5">
               {nextLabel}
+              <Icon name="arrow_forward" size={16} />
             </span>
-            <span
-              className="text-sm transition-colors line-clamp-2"
-              style={{ color: "var(--article-heading)" }}
-            >
+            <span className="md-title-medium text-md-on-surface line-clamp-2">
               {next.title}
             </span>
           </Link>

@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { media, posts, series } from "@/db/schema";
 import { count, desc } from "drizzle-orm";
-import { FileText, FolderKanban, Image } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import StatusToggle from "@/components/admin/StatusToggle";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
@@ -23,9 +23,9 @@ export default async function AdminDashboard() {
     ]);
 
   const stats = [
-    { label: "posts", count: postCount[0].value, href: "/admin/posts", icon: FileText },
-    { label: "projects", count: projectCount[0].value, href: "/admin/projects", icon: FolderKanban },
-    { label: "media", count: mediaCount[0].value, href: "/admin/media", icon: Image },
+    { label: "posts", count: postCount[0].value, href: "/admin/posts", icon: "description" },
+    { label: "projects", count: projectCount[0].value, href: "/admin/projects", icon: "folder" },
+    { label: "media", count: mediaCount[0].value, href: "/admin/media", icon: "image" },
   ];
 
   return (
@@ -42,12 +42,16 @@ export default async function AdminDashboard() {
           <Link
             key={stat.label}
             href={stat.href}
-            className="group border border-border p-5 stat-card btn-press relative overflow-hidden"
+            className="group stat-card p-5 btn-press relative overflow-hidden"
           >
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
               <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary/5 to-transparent animate-[scanLine_2s_ease-in-out_infinite]" />
             </div>
-            <stat.icon className="absolute right-4 bottom-3 w-12 h-12 text-border/60 group-hover:text-primary/15 transition-colors" />
+            <Icon
+              name={stat.icon}
+              size={48}
+              className="absolute right-4 bottom-3 text-border/60 group-hover:text-primary/15 transition-colors"
+            />
             <div className="relative">
               <div className="text-3xl font-medium text-primary tabular-nums leading-none">{stat.count}</div>
               <div className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">{stat.label}</div>
@@ -62,11 +66,11 @@ export default async function AdminDashboard() {
           view all →
         </Link>
       </div>
-      <div className="border border-border mb-8 bg-card">
-        <div className="flex items-center gap-3 px-3 py-2 border-b border-border bg-muted/30 border-l-2 border-l-transparent">
+      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low mb-8 overflow-hidden">
+        <div className="flex items-center gap-3 px-4 py-2.5 border-b border-md-outline-variant bg-md-surface-container">
           <div className="w-9 shrink-0" />
-          <div className="text-[10px] text-muted-foreground uppercase tracking-widest flex-1 font-semibold">title</div>
-          <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">status</div>
+          <div className="md-label-small text-muted-foreground uppercase tracking-widest flex-1 font-semibold">title</div>
+          <div className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold">status</div>
         </div>
         {recentPosts.length === 0 ? (
           <EmptyState

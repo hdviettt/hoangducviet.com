@@ -5,7 +5,8 @@ import { useState } from "react";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
 import { useToast } from "@/components/admin/Toast";
-import { PanelRightOpen, PanelRightClose } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
+import { Button } from "@/components/ui/Button";
 
 interface PostFormProps {
   initialData?: {
@@ -85,24 +86,20 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
             className="flex-1 bg-transparent text-xl font-medium focus:outline-none placeholder:text-muted-foreground/40"
             required
           />
-          <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
+          <div className="flex items-center gap-1 md-label-small text-muted-foreground font-mono uppercase tracking-widest">
             <span className={`w-1.5 h-1.5 rounded-full ${status === "published" ? "bg-green-500" : "bg-yellow-500"}`} />
             {status}
           </div>
-          <button
-            type="submit"
-            disabled={saving}
-            className="bg-primary text-primary-foreground px-5 py-1.5 text-sm hover:opacity-90 transition-opacity disabled:opacity-50 shrink-0"
-          >
+          <Button type="submit" disabled={saving} size="sm" className="shrink-0">
             {saving ? "saving..." : isEdit ? "update" : "publish"}
-          </button>
+          </Button>
           <button
             type="button"
             onClick={() => setDrawerOpen(!drawerOpen)}
             title={drawerOpen ? "Hide sidebar" : "Show sidebar"}
             className="p-1.5 text-muted-foreground hover:text-foreground transition-colors shrink-0"
           >
-            {drawerOpen ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+            <Icon name={drawerOpen ? "right_panel_close" : "right_panel_open"} size={18} />
           </button>
         </div>
 
@@ -118,16 +115,16 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
           <div className="p-5 space-y-6">
             {/* Publish */}
             <section>
-              <h3 className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+              <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
                 publish
               </h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs text-muted-foreground mb-1">status</label>
+                  <label className="md-field-label">status</label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                    className="md-field"
                   >
                     <option value="draft">draft</option>
                     <option value="published">published</option>
@@ -138,37 +135,37 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
 
             {/* Metadata */}
             <section>
-              <h3 className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+              <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
                 metadata
               </h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs text-muted-foreground mb-1">slug</label>
+                  <label className="md-field-label">slug</label>
                   <input
                     type="text"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
-                    className="w-full bg-input border border-border px-3 py-2 text-sm font-mono focus:outline-none focus:border-primary"
+                    className="md-field font-mono"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-muted-foreground mb-1">description</label>
+                  <label className="md-field-label">description</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={3}
                     placeholder="short excerpt for SEO"
-                    className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary resize-none"
+                    className="md-field"
                   />
                 </div>
                 {allProjects.length > 0 && (
                   <div>
-                    <label className="block text-xs text-muted-foreground mb-1">project</label>
+                    <label className="md-field-label">project</label>
                     <select
                       value={projectSlug}
                       onChange={(e) => setProjectSlug(e.target.value)}
-                      className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                      className="md-field"
                     >
                       <option value="">none</option>
                       {allProjects.map((p) => (
@@ -182,7 +179,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
 
             {/* Thumbnail */}
             <section>
-              <h3 className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+              <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
                 thumbnail
               </h3>
               <MediaPicker value={thumbnail} onChange={setThumbnail} />
@@ -191,24 +188,29 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
             {/* Categories */}
             {allCategories.length > 0 && (
               <section>
-                <h3 className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+                <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
                   categories
                 </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {allCategories.map((cat) => (
-                    <button
-                      key={cat.slug}
-                      type="button"
-                      onClick={() => toggleCategory(cat.slug)}
-                      className={`px-2 py-1 text-xs border transition-colors ${
-                        categories.includes(cat.slug)
-                          ? "border-primary text-primary bg-primary/10"
-                          : "border-border text-muted-foreground hover:border-foreground"
-                      }`}
-                    >
-                      {cat.title}
-                    </button>
-                  ))}
+                {/* M3 filter chips */}
+                <div className="flex flex-wrap gap-2">
+                  {allCategories.map((cat) => {
+                    const selected = categories.includes(cat.slug);
+                    return (
+                      <button
+                        key={cat.slug}
+                        type="button"
+                        onClick={() => toggleCategory(cat.slug)}
+                        className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border md-label-medium transition-all duration-200 ease-md-standard ${
+                          selected
+                            ? "bg-md-secondary-container text-md-on-secondary-container border-md-secondary-container"
+                            : "bg-transparent text-md-on-surface-variant border-md-outline hover:bg-md-on-surface/8"
+                        }`}
+                      >
+                        {selected && <Icon name="check" size={16} />}
+                        {cat.title}
+                      </button>
+                    );
+                  })}
                 </div>
               </section>
             )}

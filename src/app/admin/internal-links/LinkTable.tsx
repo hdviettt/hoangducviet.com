@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { ArrowUpDown } from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 
 type Row = {
   type: "post" | "project";
@@ -48,9 +48,9 @@ export default function LinkTable({ data }: { data: Row[] }) {
   ];
 
   return (
-    <div className="border border-border divide-y divide-border">
+    <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant overflow-hidden bg-md-surface-container-low">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-2 bg-muted/30">
+      <div className="flex items-center gap-3 px-4 py-2.5 bg-md-surface-container">
         {columns.map((col) => (
           <button
             key={col.key}
@@ -59,9 +59,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             className={`flex items-center gap-1 text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors ${col.className}`}
           >
             {col.label}
-            {sortKey === col.key && (
-              <ArrowUpDown className="w-3 h-3" />
-            )}
+            {sortKey === col.key && <Icon name="swap_vert" size={14} />}
           </button>
         ))}
       </div>
@@ -77,10 +75,10 @@ export default function LinkTable({ data }: { data: Row[] }) {
             className="flex items-center gap-3 px-4 py-3 row-hover w-full text-left"
           >
             <span
-              className={`text-[10px] uppercase font-medium px-1.5 py-0.5 w-20 text-center ${
+              className={`md-label-small uppercase font-medium px-1.5 py-0.5 w-20 text-center ${
                 row.type === "post"
-                  ? "bg-blue-500/10 text-blue-500"
-                  : "bg-purple-500/10 text-purple-500"
+                  ? "bg-md-primary-container text-md-on-primary-container"
+                  : "bg-md-tertiary-container text-md-on-tertiary-container"
               }`}
             >
               {row.type}
@@ -89,7 +87,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             <span
               className={`text-sm w-24 text-right ${
                 row.incomingCount === 0
-                  ? "text-yellow-500"
+                  ? "text-md-tertiary"
                   : "text-muted-foreground"
               }`}
             >

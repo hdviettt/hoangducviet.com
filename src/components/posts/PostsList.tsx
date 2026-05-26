@@ -56,7 +56,7 @@ export default function PostsList({ items }: PostsListProps) {
         <div className="space-y-12 sm:space-y-16">
           {itemsByYear.map(({ year, items: yearItems }) => (
             <section key={year}>
-              <h2 className="text-sm md:text-[15px] font-semibold uppercase tracking-widest text-foreground/55 mb-4 md:mb-6 pb-3 border-b border-border/50">
+              <h2 className="text-sm md:text-base font-semibold uppercase tracking-widest text-foreground/55 mb-4 md:mb-6 pb-3 border-b border-border/50">
                 {year}
               </h2>
 

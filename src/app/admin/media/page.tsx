@@ -205,7 +205,7 @@ export default function AdminMediaPage() {
       <div className="sticky top-[-32px] z-10 bg-background pb-3 -mx-8 px-8 -mt-8 pt-8">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-medium">media</h1>
-          <label className="bg-primary text-primary-foreground px-4 py-1.5 text-sm hover:opacity-90 cursor-pointer btn-press">
+          <label className="md-btn md-btn-filled md-btn-sm cursor-pointer">
             {uploading ? <span className="animate-pulse">uploading...</span> : "upload"}
             <input
               type="file"
@@ -223,7 +223,7 @@ export default function AdminMediaPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="search media..."
-            className="bg-input border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary w-60"
+            className="md-field-dense w-60"
           />
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <span>sort:</span>
@@ -339,7 +339,7 @@ export default function AdminMediaPage() {
                   </p>
                 )}
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-[10px] text-muted-foreground">
+                  <span className="md-label-small text-muted-foreground">
                     {formatSize(item.size)}
                   </span>
                   <div className="flex gap-2">

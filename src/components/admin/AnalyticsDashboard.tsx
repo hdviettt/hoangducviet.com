@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Eye,
-  Users,
-  FileText,
-  Globe,
-  HardDrive,
-  Zap,
-} from "lucide-react";
+import { Icon } from "@/components/ui/Icon";
 
 type Range = "7d" | "30d" | "90d";
 
@@ -82,7 +75,7 @@ function Sparkline({
         {sparkline}
       </div>
       {firstDate && lastDate && (
-        <div className="flex justify-between text-[10px] text-muted-foreground mt-1.5">
+        <div className="flex justify-between md-label-small text-muted-foreground mt-1.5">
           <span>{firstDate}</span>
           <span>{lastDate}</span>
         </div>
@@ -94,20 +87,20 @@ function Sparkline({
 function StatCard({
   label,
   value,
-  icon: Icon,
+  icon,
 }: {
   label: string;
   value: string;
-  icon: React.ElementType;
+  icon: string;
 }) {
   return (
-    <div className="border border-border p-4 stat-card relative overflow-hidden">
+    <div className="stat-card p-4 relative overflow-hidden">
       <div className="flex items-center justify-between">
         <div>
           <div className="text-2xl font-medium text-primary">{value}</div>
           <div className="text-xs text-muted-foreground mt-1">{label}</div>
         </div>
-        <Icon className="w-5 h-5 text-muted-foreground/30" />
+        <Icon name={icon} size={20} className="text-muted-foreground/30" />
       </div>
     </div>
   );
@@ -161,16 +154,17 @@ export default function AnalyticsDashboard() {
         <h2 className="text-xs text-muted-foreground uppercase tracking-wider">
           analytics
         </h2>
-        <div className="flex gap-1">
+        {/* M3 segmented button */}
+        <div className="inline-flex rounded-full border border-md-outline overflow-hidden">
           {(["7d", "30d", "90d"] as Range[]).map((r) => (
             <button
               key={r}
               type="button"
               onClick={() => setRange(r)}
-              className={`px-2.5 py-1 text-xs transition-colors btn-press ${
+              className={`px-4 h-9 md-label-medium transition-colors duration-200 ease-md-standard ${
                 range === r
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-md-secondary-container text-md-on-secondary-container"
+                  : "text-md-on-surface hover:bg-md-on-surface/8"
               }`}
             >
               {r}
@@ -203,17 +197,17 @@ export default function AnalyticsDashboard() {
               <StatCard
                 label="pageviews"
                 value={formatNumber(posthog.pageviews || 0)}
-                icon={Eye}
+                icon="visibility"
               />
               <StatCard
                 label="unique visitors"
                 value={formatNumber(posthog.uniqueVisitors || 0)}
-                icon={Users}
+                icon="group"
               />
               <StatCard
                 label="pages tracked"
                 value={String(posthog.topPages?.length || 0)}
-                icon={FileText}
+                icon="description"
               />
             </div>
 
@@ -224,8 +218,8 @@ export default function AnalyticsDashboard() {
             />
 
             {posthog.topPages && posthog.topPages.length > 0 && (
-              <div className="border border-border divide-y divide-border mb-4">
-                <div className="px-3 py-1.5 text-xs text-muted-foreground bg-card">
+              <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-md-surface-container-low mb-4 overflow-hidden">
+                <div className="px-4 py-2 md-label-medium text-md-on-surface-variant uppercase tracking-wider bg-md-surface-container">
                   top pages
                 </div>
                 {posthog.topPages.map((page, i) => (
@@ -274,22 +268,22 @@ export default function AnalyticsDashboard() {
               <StatCard
                 label="requests"
                 value={formatNumber(cloudflare.totalRequests || 0)}
-                icon={Globe}
+                icon="public"
               />
               <StatCard
                 label="visitors"
                 value={formatNumber(cloudflare.uniqueVisitors || 0)}
-                icon={Users}
+                icon="group"
               />
               <StatCard
                 label="bandwidth"
                 value={formatBytes(cloudflare.bandwidth || 0)}
-                icon={HardDrive}
+                icon="hard_drive"
               />
               <StatCard
                 label="cache rate"
                 value={`${cacheRate}%`}
-                icon={Zap}
+                icon="bolt"
               />
             </div>
 

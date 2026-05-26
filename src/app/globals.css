@@ -2,72 +2,165 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ================================
+   MATERIAL DESIGN 3 — DESIGN TOKENS
+   Reference: m3.material.io
+   Primary: Google Blue #1A73E8 (override --md-sys-color-primary
+   if you want a different brand color — everything else is derived).
+   ================================ */
+
 @layer base {
   :root {
-    /* Light theme — cool off-white, electric indigo accent */
-    --background: 225 28% 98%;
-    --foreground: 230 18% 10%;
-    --foreground-muted: 230 12% 28%;
-    --muted: 225 22% 94%;
-    --muted-foreground: 230 10% 46%;
-    --border: 225 18% 90%;
-    --card: 225 28% 98%;
-    --card-foreground: 230 18% 10%;
-    --primary: 229 100% 66%;
-    --primary-foreground: 225 28% 98%;
-    --secondary: 225 22% 94%;
-    --secondary-foreground: 230 18% 10%;
-    --accent: 229 100% 66%;
-    --accent-foreground: 225 28% 98%;
-    --popover: 225 28% 98%;
-    --popover-foreground: 230 18% 10%;
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 225 28% 98%;
-    --input: 225 18% 90%;
-    --ring: 229 100% 66%;
-    --radius: 0;
+    /* ----- M3 color roles (light) ----- */
+    --md-sys-color-primary: 217 89% 51%;          /* #1A73E8 Google Blue */
+    --md-sys-color-on-primary: 0 0% 100%;
+    --md-sys-color-primary-container: 217 100% 92%;
+    --md-sys-color-on-primary-container: 217 100% 18%;
 
-    /* Article content — clean modern */
-    --article-text: hsl(230 14% 22%);
-    --article-heading: hsl(230 22% 8%);
-    --article-link: hsl(229 80% 56%);
-    --article-link-hover: hsl(229 95% 46%);
-    --article-border: hsl(225 18% 88%);
-    --article-code-bg: hsl(225 22% 94%);
-    --article-blockquote: hsl(230 10% 40%);
+    --md-sys-color-secondary: 222 16% 35%;
+    --md-sys-color-on-secondary: 0 0% 100%;
+    --md-sys-color-secondary-container: 220 35% 92%;
+    --md-sys-color-on-secondary-container: 222 25% 20%;
+
+    --md-sys-color-tertiary: 280 35% 45%;
+    --md-sys-color-on-tertiary: 0 0% 100%;
+
+    --md-sys-color-error: 4 76% 49%;
+    --md-sys-color-on-error: 0 0% 100%;
+
+    --md-sys-color-background: 0 0% 100%;
+    --md-sys-color-on-background: 220 7% 12%;     /* #1F1F1F */
+
+    --md-sys-color-surface: 0 0% 100%;
+    --md-sys-color-on-surface: 220 7% 12%;
+    --md-sys-color-surface-variant: 210 17% 98%;  /* #F8F9FA */
+    --md-sys-color-on-surface-variant: 220 6% 36%;
+
+    --md-sys-color-surface-container-lowest: 0 0% 100%;
+    --md-sys-color-surface-container-low: 210 17% 98%;
+    --md-sys-color-surface-container: 220 14% 96%;
+    --md-sys-color-surface-container-high: 220 13% 93%;
+    --md-sys-color-surface-container-highest: 220 13% 91%;
+
+    --md-sys-color-outline: 220 9% 86%;            /* #DADCE0 */
+    --md-sys-color-outline-variant: 220 13% 93%;
+
+    --md-sys-color-inverse-surface: 220 7% 18%;
+    --md-sys-color-inverse-on-surface: 220 14% 96%;
+    --md-sys-color-inverse-primary: 217 95% 78%;
+
+    /* ----- M3 shape (corner radius) ----- */
+    --md-sys-shape-corner-none: 0;
+    --md-sys-shape-corner-extra-small: 4px;
+    --md-sys-shape-corner-small: 8px;
+    --md-sys-shape-corner-medium: 12px;
+    --md-sys-shape-corner-large: 16px;
+    --md-sys-shape-corner-extra-large: 28px;
+    --md-sys-shape-corner-full: 9999px;
+
+    /* ----- M3 elevation (light) ----- */
+    --md-sys-elevation-level0: none;
+    --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --md-sys-elevation-level2: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --md-sys-elevation-level3: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    --md-sys-elevation-level4: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
+    --md-sys-elevation-level5: 0 20px 25px -5px rgba(0, 0, 0, 0.10), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+
+    /* ----- M3 motion (easing + duration) ----- */
+    --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+    --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+    --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+    --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+    --md-sys-motion-duration-short1: 50ms;
+    --md-sys-motion-duration-short2: 100ms;
+    --md-sys-motion-duration-short3: 150ms;
+    --md-sys-motion-duration-short4: 200ms;
+    --md-sys-motion-duration-medium1: 250ms;
+    --md-sys-motion-duration-medium2: 300ms;
+    --md-sys-motion-duration-long1: 450ms;
+    --md-sys-motion-duration-long2: 500ms;
+
+    /* ----- Shadcn aliases (so existing utilities keep working) ----- */
+    --background: var(--md-sys-color-background);
+    --foreground: var(--md-sys-color-on-background);
+    --foreground-muted: var(--md-sys-color-on-surface-variant);
+    --muted: var(--md-sys-color-surface-variant);
+    --muted-foreground: var(--md-sys-color-on-surface-variant);
+    --border: var(--md-sys-color-outline);
+    --card: var(--md-sys-color-surface);
+    --card-foreground: var(--md-sys-color-on-surface);
+    --primary: var(--md-sys-color-primary);
+    --primary-foreground: var(--md-sys-color-on-primary);
+    --secondary: var(--md-sys-color-secondary-container);
+    --secondary-foreground: var(--md-sys-color-on-secondary-container);
+    --accent: var(--md-sys-color-primary);
+    --accent-foreground: var(--md-sys-color-on-primary);
+    --popover: var(--md-sys-color-surface);
+    --popover-foreground: var(--md-sys-color-on-surface);
+    --destructive: var(--md-sys-color-error);
+    --destructive-foreground: var(--md-sys-color-on-error);
+    --input: var(--md-sys-color-outline);
+    --ring: var(--md-sys-color-primary);
+    --radius: var(--md-sys-shape-corner-medium);
+
+    /* Article content — derived from M3 surface tones */
+    --article-text: hsl(var(--md-sys-color-on-surface));
+    --article-heading: hsl(var(--md-sys-color-on-background));
+    --article-link: hsl(var(--md-sys-color-primary));
+    --article-link-hover: hsl(217 89% 41%);
+    --article-border: hsl(var(--md-sys-color-outline));
+    --article-code-bg: hsl(var(--md-sys-color-surface-variant));
+    --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
   }
 
   .dark {
-    /* Dark theme — deep cool, brighter indigo for contrast */
-    --background: 230 18% 7%;
-    --foreground: 220 14% 92%;
-    --foreground-muted: 220 12% 80%;
-    --muted: 230 14% 12%;
-    --muted-foreground: 225 10% 58%;
-    --border: 230 14% 20%;
-    --card: 230 14% 10%;
-    --card-foreground: 220 14% 92%;
-    --primary: 229 100% 72%;
-    --primary-foreground: 230 18% 7%;
-    --secondary: 230 14% 12%;
-    --secondary-foreground: 220 14% 92%;
-    --accent: 229 100% 72%;
-    --accent-foreground: 230 18% 7%;
-    --popover: 230 14% 10%;
-    --popover-foreground: 220 14% 92%;
-    --destructive: 0 70% 60%;
-    --destructive-foreground: 220 14% 92%;
-    --input: 230 14% 20%;
-    --ring: 229 100% 72%;
+    /* ----- M3 color roles (dark) ----- */
+    --md-sys-color-primary: 217 95% 78%;          /* lighter blue for dark surface */
+    --md-sys-color-on-primary: 217 100% 14%;
+    --md-sys-color-primary-container: 217 70% 30%;
+    --md-sys-color-on-primary-container: 217 100% 92%;
 
-    /* Article content — dark modern */
-    --article-text: hsl(220 12% 82%);
-    --article-heading: hsl(220 18% 96%);
-    --article-link: hsl(229 100% 78%);
-    --article-link-hover: hsl(229 100% 86%);
-    --article-border: hsl(230 14% 22%);
-    --article-code-bg: hsl(230 14% 12%);
-    --article-blockquote: hsl(225 10% 65%);
+    --md-sys-color-secondary: 220 18% 78%;
+    --md-sys-color-on-secondary: 222 25% 18%;
+    --md-sys-color-secondary-container: 222 18% 28%;
+    --md-sys-color-on-secondary-container: 220 35% 92%;
+
+    --md-sys-color-tertiary: 280 45% 78%;
+    --md-sys-color-on-tertiary: 280 50% 18%;
+
+    --md-sys-color-error: 4 100% 80%;
+    --md-sys-color-on-error: 4 100% 16%;
+
+    --md-sys-color-background: 220 9% 8%;          /* #131314 — Gemini-style deep neutral */
+    --md-sys-color-on-background: 220 13% 91%;
+
+    --md-sys-color-surface: 220 9% 8%;
+    --md-sys-color-on-surface: 220 13% 91%;
+    --md-sys-color-surface-variant: 220 8% 16%;
+    --md-sys-color-on-surface-variant: 220 8% 72%;
+
+    --md-sys-color-surface-container-lowest: 220 9% 5%;
+    --md-sys-color-surface-container-low: 220 9% 10%;
+    --md-sys-color-surface-container: 220 8% 13%;
+    --md-sys-color-surface-container-high: 220 8% 16%;
+    --md-sys-color-surface-container-highest: 220 8% 20%;
+
+    --md-sys-color-outline: 220 8% 38%;
+    --md-sys-color-outline-variant: 220 8% 22%;
+
+    --md-sys-color-inverse-surface: 220 13% 91%;
+    --md-sys-color-inverse-on-surface: 220 9% 12%;
+    --md-sys-color-inverse-primary: 217 89% 51%;
+
+    /* ----- M3 elevation (dark) — subtler shadows ----- */
+    --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+    --md-sys-elevation-level2: 0 1px 3px 0 rgba(0, 0, 0, 0.32), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+    --md-sys-elevation-level3: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -2px rgba(0, 0, 0, 0.30);
+    --md-sys-elevation-level4: 0 10px 15px -3px rgba(0, 0, 0, 0.40), 0 4px 6px -4px rgba(0, 0, 0, 0.35);
+    --md-sys-elevation-level5: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.40);
+
+    /* Article content — dark */
+    --article-link-hover: hsl(217 95% 88%);
   }
 }
 
@@ -78,89 +171,89 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    font-family: var(--font-inter), "Google Sans", system-ui, -apple-system, sans-serif;
     font-feature-settings: "cv11", "ss01", "ss03";
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Selection — soft indigo overlay */
+  /* Selection — M3 primary at 22% opacity */
   ::selection {
-    background: hsl(var(--primary) / 0.22);
-    color: hsl(var(--foreground));
-  }
-
-  /* Links hover (except nav links) */
-  a:not(.nav-link):hover {
-    color: hsl(var(--primary));
+    background: hsl(var(--md-sys-color-primary) / 0.22);
+    color: hsl(var(--md-sys-color-on-surface));
   }
 }
 
 /* ================================
-   TYPOGRAPHY — Modern sans, deck-confident
+   TYPOGRAPHY — Material 3 type scale
+   All bound to a 4dp grid for line-height.
    ================================ */
 
-/* Base body text */
 body {
   font-size: 16px;
-  line-height: 1.6;
-  letter-spacing: -0.005em;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  font-weight: 400;
 }
 
-/* Headings — heavier weights for the deck-confident feel */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: hsl(var(--foreground));
-}
+/* M3 utility classes — explicit type roles */
+.md-display-large    { font-size: 57px; line-height: 64px; letter-spacing: -0.25px; font-weight: 400; }
+.md-display-medium   { font-size: 45px; line-height: 52px; letter-spacing: 0;       font-weight: 400; }
+.md-display-small    { font-size: 36px; line-height: 44px; letter-spacing: 0;       font-weight: 400; }
+.md-headline-large   { font-size: 32px; line-height: 40px; letter-spacing: 0;       font-weight: 400; }
+.md-headline-medium  { font-size: 28px; line-height: 36px; letter-spacing: 0;       font-weight: 400; }
+.md-headline-small   { font-size: 24px; line-height: 32px; letter-spacing: 0;       font-weight: 400; }
+.md-title-large      { font-size: 22px; line-height: 28px; letter-spacing: 0;       font-weight: 500; }
+.md-title-medium     { font-size: 16px; line-height: 24px; letter-spacing: 0.15px;  font-weight: 500; }
+.md-title-small      { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;   font-weight: 500; }
+.md-body-large       { font-size: 16px; line-height: 24px; letter-spacing: 0.5px;   font-weight: 400; }
+.md-body-medium      { font-size: 14px; line-height: 20px; letter-spacing: 0.25px;  font-weight: 400; }
+.md-body-small       { font-size: 12px; line-height: 16px; letter-spacing: 0.4px;   font-weight: 400; }
+.md-label-large      { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;   font-weight: 500; }
+.md-label-medium     { font-size: 12px; line-height: 16px; letter-spacing: 0.5px;   font-weight: 500; }
+.md-label-small      { font-size: 11px; line-height: 16px; letter-spacing: 0.5px;   font-weight: 500; }
 
-h1 {
-  font-size: 32px;
-  letter-spacing: -0.025em;
+/* Base heading defaults map to M3 headline scale */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
+  color: hsl(var(--md-sys-color-on-surface));
+  font-weight: 400;
 }
-h2 {
-  font-size: 24px;
-}
-h3 {
-  font-size: 19px;
-  font-weight: 600;
-}
-h4 {
-  font-size: 16px;
-  font-weight: 600;
-}
-h5 {
-  font-size: 15px;
-  font-weight: 600;
-}
-h6 {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Paragraph */
-p {
-  color: hsl(var(--foreground));
-}
-
-/* Small/muted text */
-small,
-.text-sm {
-  font-size: 13px;
-}
-
-.text-xs {
-  font-size: 12px;
-}
+h1 { font-size: 32px; line-height: 40px; letter-spacing: 0;      font-weight: 500; }
+h2 { font-size: 28px; line-height: 36px; letter-spacing: 0;      font-weight: 500; }
+h3 { font-size: 24px; line-height: 32px; letter-spacing: 0;      font-weight: 500; }
+h4 { font-size: 22px; line-height: 28px; letter-spacing: 0;      font-weight: 500; }
+h5 { font-size: 16px; line-height: 24px; letter-spacing: 0.15px; font-weight: 500; }
+h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 500; }
 
 /* ================================
-   ARTICLE CONTENT - Google Blog style
+   MATERIAL SYMBOLS — icon helper class
+   The font itself is loaded from layout.tsx.
+   ================================ */
+.material-symbols-rounded {
+  font-family: "Material Symbols Rounded" !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+.material-symbols-rounded.filled { font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24; }
+
+/* ================================
+   ARTICLE CONTENT
    ================================ */
 
 .article-content {
@@ -169,18 +262,10 @@ small,
   color: var(--article-text);
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   font-feature-settings: "kern" 1, "cv11", "ss01";
-  letter-spacing: -0.005em;
-  /* overflow-wrap breaks only when a word truly can't fit (long URLs etc.).
-     Avoid `word-break: break-word` — it shatters normal words mid-character
-     in narrow columns (e.g. table cells on mobile turning "Cluster" into
-     "Clus" / "ter"). */
   overflow-wrap: break-word;
   word-break: normal;
 }
 
-/* Cap text-flow elements at ~65ch for comfortable reading. Figures, code
-   blocks, and tables stay full-width so wide diagrams and code samples can
-   breathe — common editorial pattern. */
 .article-content > p,
 .article-content > ul,
 .article-content > ol,
@@ -202,54 +287,17 @@ small,
 .article-content h5,
 .article-content h6 {
   scroll-margin-top: 80px;
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   color: var(--article-heading);
-  letter-spacing: -0.025em;
-  font-weight: 700;
+  font-weight: 500;
 }
 
-.article-content .heading-anchor:hover {
-  text-decoration: none;
-}
-
-.article-content h1 {
-  font-size: 2.25rem;
-  font-weight: 800;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  line-height: 1.1;
-}
-
-.article-content h2 {
-  font-size: 1.625rem;
-  font-weight: 700;
-  margin-top: 2.5rem;
-  margin-bottom: 0.75rem;
-  line-height: 1.2;
-}
-
-.article-content h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.25;
-}
-
-.article-content h4 {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.article-content h5,
-.article-content h6 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
+.article-content h1 { font-size: 2rem;     line-height: 2.5rem;   margin-top: 2.5rem; margin-bottom: 1rem; }
+.article-content h2 { font-size: 1.75rem;  line-height: 2.25rem;  margin-top: 2.5rem; margin-bottom: 0.75rem; }
+.article-content h3 { font-size: 1.5rem;   line-height: 2rem;     margin-top: 2rem;   margin-bottom: 0.5rem; }
+.article-content h4 { font-size: 1.375rem; line-height: 1.75rem;  margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.article-content h5 { font-size: 1rem;     line-height: 1.5rem;   margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.article-content h6 { font-size: 0.875rem; line-height: 1.25rem;  margin-top: 1.5rem; margin-bottom: 0.5rem; }
 
 .article-content p {
   margin-bottom: 1.25rem;
@@ -262,27 +310,15 @@ small,
   padding-left: 1.75rem;
 }
 
-.article-content ul {
-  list-style-type: disc;
-}
-
-.article-content ul li::marker {
-  color: var(--article-text);
-}
-.article-content ol {
-  list-style-type: decimal;
-}
-
-.article-content li {
-  margin-bottom: 0.5rem;
-  color: var(--article-text);
-}
+.article-content ul { list-style-type: disc; }
+.article-content ul li::marker { color: var(--article-text); }
+.article-content ol { list-style-type: decimal; }
+.article-content li { margin-bottom: 0.5rem; color: var(--article-text); }
 
 .article-content a {
   color: var(--article-link);
   text-decoration: none;
 }
-
 .article-content a:hover {
   color: var(--article-link-hover);
   text-decoration: underline;
@@ -298,18 +334,15 @@ small,
   padding: 1rem 1.25rem;
   overflow-x: auto;
   margin: 1.5rem 0;
-  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
-    "DejaVu Sans Mono", monospace;
+  font-family: var(--font-mono), ui-monospace, "Roboto Mono", monospace;
   font-size: 0.875rem;
   line-height: 1.6;
   border: 1px solid var(--article-border);
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-corner-medium);
   white-space: pre;
   tab-size: 4;
   letter-spacing: 0;
   font-variant-ligatures: none;
-  font-feature-settings: normal;
-  text-rendering: geometricPrecision;
 }
 
 .article-content pre code {
@@ -319,8 +352,6 @@ small,
   background: none;
   padding: 0;
   white-space: pre;
-  letter-spacing: 0;
-  font-variant-ligatures: none;
 }
 
 .article-content :not(pre) > code {
@@ -329,7 +360,7 @@ small,
   font-size: 0.875em;
   font-family: var(--font-mono), ui-monospace, monospace;
   color: var(--article-heading);
-  border-radius: 4px;
+  border-radius: var(--md-sys-shape-corner-extra-small);
 }
 
 .article-content blockquote {
@@ -344,7 +375,7 @@ small,
   max-width: 100%;
   height: auto;
   margin: 1.5rem 0;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-corner-medium);
 }
 
 .article-content hr {
@@ -353,11 +384,12 @@ small,
   margin: 2.5rem 0;
 }
 
-/* Table wrapper for mobile scroll */
 .article-content .table-wrapper {
   overflow-x: auto;
   margin: 1.5rem 0;
   -webkit-overflow-scrolling: touch;
+  border-radius: var(--md-sys-shape-corner-medium);
+  border: 1px solid var(--article-border);
 }
 
 .article-content table {
@@ -367,15 +399,8 @@ small,
   font-size: 0.9375rem;
 }
 
-/* Mobile fallback: when even the natural word-min-widths exceed the
-   viewport, the .table-wrapper scrolls horizontally instead of letting
-   browsers compress cells. The wrapper already has overflow-x: auto. */
 .article-content table th,
-.article-content table td {
-  /* Each cell stays at its natural min-width (longest word). Browsers
-     extend total width past container if needed; wrapper scrolls. */
-  min-width: 6rem;
-}
+.article-content table td { min-width: 6rem; }
 
 .article-content th,
 .article-content td {
@@ -386,278 +411,382 @@ small,
 
 .article-content th {
   background: var(--article-code-bg);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.875rem;
 }
 
 /* ================================
-   DECK UTILITIES — for the SEONGON-deck-inspired layout
+   DECK UTILITIES — kept for backward compat,
+   re-tuned toward M3 (no extrabold, no neg tracking).
    ================================ */
 
-/* Small caption-style label that sits above a display heading.
-   Used on homepage, /posts, project page, and post detail. Was previously
-   tinted in the brand indigo; reduced to muted foreground because the
-   indigo accent was becoming wallpaper at the rate it appeared on the
-   page. Indigo is now reserved for series indicators, link hovers, and
-   the active nav state. */
 .deck-label {
   display: block;
   font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  margin-bottom: 8px;
+}
+
+/* deck-display is now an alias for headline-large weight 500 */
+.deck-display {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: 0;
-  color: hsl(var(--foreground) / 0.5);
-  margin-bottom: 14px;
+  line-height: 1.15;
+  color: hsl(var(--md-sys-color-on-background));
 }
 
-/* Massive display heading — use sparingly for hero/page-title slots. */
-.deck-display {
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1;
-  color: hsl(var(--foreground));
-}
-
-/* Inline keyword highlight inside body prose — image 4 style.
-   `mark` is the natural HTML element; we just restyle it. */
-mark,
-.deck-mark {
+mark, .deck-mark {
   background: transparent;
-  color: hsl(var(--primary));
+  color: hsl(var(--md-sys-color-primary));
   font-weight: 500;
 }
-
 .article-content mark,
 .article-content .deck-mark {
   color: hsl(var(--article-link));
 }
 
 /* ================================
+   M3 ELEVATION UTILITIES
+   ================================ */
+.md-elevation-0 { box-shadow: var(--md-sys-elevation-level0); }
+.md-elevation-1 { box-shadow: var(--md-sys-elevation-level1); }
+.md-elevation-2 { box-shadow: var(--md-sys-elevation-level2); }
+.md-elevation-3 { box-shadow: var(--md-sys-elevation-level3); }
+.md-elevation-4 { box-shadow: var(--md-sys-elevation-level4); }
+.md-elevation-5 { box-shadow: var(--md-sys-elevation-level5); }
+
+/* ================================
+   M3 BUTTON — filled / tonal / outlined / text
+   Height 40px, label-large text, 8px radius (or full pill).
+   State layer overlay via ::before pseudo (M3 spec).
+   ================================ */
+.md-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 24px;
+  border-radius: var(--md-sys-shape-corner-small);
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  text-decoration: none;
+  white-space: nowrap;
+  isolation: isolate;
+}
+.md-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  z-index: -1;
+  pointer-events: none;
+}
+.md-btn:hover::before  { opacity: 0.08; }
+.md-btn:focus-visible::before { opacity: 0.12; }
+.md-btn:active::before { opacity: 0.12; }
+.md-btn:disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+.md-btn .material-symbols-rounded { font-size: 18px; }
+
+.md-btn-filled {
+  background: hsl(var(--md-sys-color-primary));
+  color: hsl(var(--md-sys-color-on-primary));
+}
+.md-btn-filled:hover { box-shadow: var(--md-sys-elevation-level1); }
+
+.md-btn-tonal {
+  background: hsl(var(--md-sys-color-secondary-container));
+  color: hsl(var(--md-sys-color-on-secondary-container));
+}
+.md-btn-tonal:hover { box-shadow: var(--md-sys-elevation-level1); }
+
+.md-btn-outlined {
+  background: transparent;
+  color: hsl(var(--md-sys-color-primary));
+  border: 1px solid hsl(var(--md-sys-color-outline));
+  padding: 0 23px;
+}
+.md-btn-outlined:hover { border-color: hsl(var(--md-sys-color-primary)); }
+
+.md-btn-text {
+  background: transparent;
+  color: hsl(var(--md-sys-color-primary));
+  padding: 0 12px;
+}
+
+.md-btn-sm { height: 32px; padding: 0 16px; }
+.md-btn-lg { height: 56px; padding: 0 32px; font-size: 16px; }
+.md-btn-pill { border-radius: var(--md-sys-shape-corner-full); }
+
+/* ================================
+   M3 CARD — surface, 12px radius, 24px padding,
+   elevation 1 default, 2 on hover (elevated variant).
+   ================================ */
+.md-card {
+  background: hsl(var(--md-sys-color-surface-container-low));
+  color: hsl(var(--md-sys-color-on-surface));
+  border-radius: var(--md-sys-shape-corner-medium);
+  padding: 24px;
+  transition:
+    box-shadow var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+.md-card-elevated { box-shadow: var(--md-sys-elevation-level1); }
+.md-card-elevated:hover { box-shadow: var(--md-sys-elevation-level2); }
+.md-card-outlined { border: 1px solid hsl(var(--md-sys-color-outline-variant)); background: hsl(var(--md-sys-color-surface)); }
+.md-card-filled { background: hsl(var(--md-sys-color-surface-container-high)); }
+
+/* ================================
+   M3 FIELD — utility class for plain inputs/selects/textareas.
+   Outlined style, 56px height, 4px radius, focus ring in primary.
+   Applies to the element directly (no wrapper needed).
+   ================================ */
+.md-field {
+  width: 100%;
+  background: transparent;
+  color: hsl(var(--md-sys-color-on-surface));
+  border: 1px solid hsl(var(--md-sys-color-outline));
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  padding: 0 16px;
+  height: 56px;
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  transition: border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  outline: none;
+}
+.md-field:hover { border-color: hsl(var(--md-sys-color-on-surface)); }
+.md-field:focus {
+  border-color: hsl(var(--md-sys-color-primary));
+  border-width: 2px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.md-field::placeholder { color: hsl(var(--md-sys-color-on-surface-variant)); }
+textarea.md-field {
+  height: auto;
+  padding: 16px;
+  resize: vertical;
+  min-height: 96px;
+}
+select.md-field {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, hsl(var(--md-sys-color-on-surface-variant)) 50%), linear-gradient(135deg, hsl(var(--md-sys-color-on-surface-variant)) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 40px;
+}
+
+.md-field-label {
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  margin-bottom: 6px;
+}
+
+/* Dense variant for inline filters and chip-adjacent inputs */
+.md-field-dense {
+  width: auto;
+  background: transparent;
+  color: hsl(var(--md-sys-color-on-surface));
+  border: 1px solid hsl(var(--md-sys-color-outline-variant));
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  padding: 0 12px;
+  height: 40px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  outline: none;
+  transition: border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+.md-field-dense:hover { border-color: hsl(var(--md-sys-color-on-surface)); }
+.md-field-dense:focus { border-color: hsl(var(--md-sys-color-primary)); }
+
+.md-input-outlined {
+  position: relative;
+  display: block;
+  height: 56px;
+  border: 1px solid hsl(var(--md-sys-color-outline));
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  background: transparent;
+  transition: border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+.md-input-outlined:focus-within { border-color: hsl(var(--md-sys-color-primary)); border-width: 2px; }
+.md-input-outlined input,
+.md-input-outlined textarea {
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: hsl(var(--md-sys-color-on-surface));
+  font: inherit;
+}
+
+/* ================================
    UTILITIES
    ================================ */
 
-/* Page transitions */
 .page-transition {
-  animation: slideUp 0.25s ease-out;
+  animation: slideUp 250ms var(--md-sys-motion-easing-emphasized-decelerate);
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Scrollbar - Terminal style */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+/* Scrollbar — restrained M3-style */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: hsl(var(--md-sys-color-outline) / 0.5);
+  border-radius: var(--md-sys-shape-corner-full);
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.6);
-}
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--md-sys-color-outline)); }
 
 /* ================================
    RICH EDITOR (Tiptap)
    ================================ */
 
-/* Inherit article styles in the editor */
 .prose-editor {
-  font-family: var(--font-inter, Inter), system-ui, sans-serif;
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.75;
-  color: hsl(var(--foreground));
+  color: hsl(var(--md-sys-color-on-surface));
 }
 
-.prose-editor h1,
-.prose-editor h2,
-.prose-editor h3,
-.prose-editor h4 {
-  font-weight: 600;
-  color: hsl(var(--primary));
+.prose-editor h1, .prose-editor h2, .prose-editor h3, .prose-editor h4 {
+  font-weight: 500;
+  color: hsl(var(--md-sys-color-on-surface));
   margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
 
 .prose-editor h1 { font-size: 1.75em; }
-.prose-editor h2 { font-size: 1.375em; border-bottom: 1px solid hsl(var(--border)); padding-bottom: 0.3em; }
+.prose-editor h2 { font-size: 1.375em; border-bottom: 1px solid hsl(var(--md-sys-color-outline-variant)); padding-bottom: 0.3em; }
 .prose-editor h3 { font-size: 1.125em; }
 
-.prose-editor p {
-  margin-bottom: 0.75em;
-}
-
-.prose-editor ul,
-.prose-editor ol {
-  padding-left: 1.5em;
-  margin-bottom: 1em;
-}
-
+.prose-editor p { margin-bottom: 0.75em; }
+.prose-editor ul, .prose-editor ol { padding-left: 1.5em; margin-bottom: 1em; }
 .prose-editor li { margin-bottom: 0.25em; }
 .prose-editor ul { list-style-type: disc; }
 .prose-editor ol { list-style-type: decimal; }
-
-.prose-editor a {
-  color: hsl(var(--primary));
-  text-decoration: underline;
-}
-
+.prose-editor a { color: hsl(var(--md-sys-color-primary)); text-decoration: underline; }
 .prose-editor strong { font-weight: 700; }
-
 .prose-editor blockquote {
-  border-left: 3px solid hsl(var(--primary));
+  border-left: 3px solid hsl(var(--md-sys-color-primary));
   padding-left: 1em;
   margin: 1em 0;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--md-sys-color-on-surface-variant));
   font-style: italic;
 }
-
 .prose-editor pre {
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: hsl(var(--md-sys-color-surface-variant));
+  border: 1px solid hsl(var(--md-sys-color-outline-variant));
   padding: 1em;
   overflow-x: auto;
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-mono), "Roboto Mono", monospace;
   font-size: 0.875em;
   margin: 1em 0;
+  border-radius: var(--md-sys-shape-corner-small);
 }
-
 .prose-editor :not(pre) > code {
-  background: hsl(var(--muted));
-  color: hsl(var(--primary));
+  background: hsl(var(--md-sys-color-surface-variant));
+  color: hsl(var(--md-sys-color-primary));
   padding: 0.15em 0.4em;
   font-family: var(--font-mono), monospace;
   font-size: 0.875em;
+  border-radius: var(--md-sys-shape-corner-extra-small);
 }
+.prose-editor hr { border: none; border-top: 1px dashed hsl(var(--md-sys-color-outline-variant)); margin: 2em 0; }
+.prose-editor img { max-width: 100%; height: auto; border: 1px solid hsl(var(--md-sys-color-outline-variant)); margin: 1em 0; border-radius: var(--md-sys-shape-corner-small); }
 
-.prose-editor hr {
-  border: none;
-  border-top: 1px dashed hsl(var(--border));
-  margin: 2em 0;
-}
-
-.prose-editor img {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid hsl(var(--border));
-  margin: 1em 0;
-}
-
-/* Placeholder */
 .prose-editor p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--md-sys-color-on-surface-variant));
   pointer-events: none;
   height: 0;
 }
 
-/* Selected node highlight */
-.prose-editor .ProseMirror-selectednode {
-  outline: 2px solid hsl(var(--primary));
-}
+.prose-editor .ProseMirror-selectednode { outline: 2px solid hsl(var(--md-sys-color-primary)); }
 
-/* Table styles */
-.prose-editor table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1em 0;
-  overflow: hidden;
-}
-
-.prose-editor th,
-.prose-editor td {
-  border: 1px solid hsl(var(--border));
+.prose-editor table { border-collapse: collapse; width: 100%; margin: 1em 0; overflow: hidden; }
+.prose-editor th, .prose-editor td {
+  border: 1px solid hsl(var(--md-sys-color-outline-variant));
   padding: 0.5em 0.75em;
   min-width: 80px;
   vertical-align: top;
   position: relative;
   text-align: left;
 }
-
-.prose-editor th {
-  background: hsl(var(--muted));
-  font-weight: 600;
-  font-size: 0.875em;
-}
-
-.prose-editor td > p,
-.prose-editor th > p {
-  margin: 0;
-}
-
-.prose-editor .selectedCell {
-  background: hsl(var(--primary) / 0.08);
-}
-
+.prose-editor th { background: hsl(var(--md-sys-color-surface-variant)); font-weight: 500; font-size: 0.875em; }
+.prose-editor td > p, .prose-editor th > p { margin: 0; }
+.prose-editor .selectedCell { background: hsl(var(--md-sys-color-primary) / 0.08); }
 .prose-editor .column-resize-handle {
-  position: absolute;
-  right: -2px;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: hsl(var(--primary));
-  cursor: col-resize;
-  z-index: 10;
+  position: absolute; right: -2px; top: 0; bottom: 0; width: 4px;
+  background: hsl(var(--md-sys-color-primary)); cursor: col-resize; z-index: 10;
 }
-
-.prose-editor .tableWrapper {
-  overflow-x: auto;
-  margin: 1em 0;
-}
-
-/* Remove all shadows */
-* {
-  box-shadow: none !important;
-  text-shadow: none !important;
-}
-
-/* Streak effects */
-@keyframes streak-flash {
-  0% { opacity: 0; transform: scale(1.5); }
-  50% { opacity: 1; }
-  100% { opacity: 0.8; transform: scale(1); }
-}
-.animate-streak-flash {
-  animation: streak-flash 0.3s ease-out both;
-}
+.prose-editor .tableWrapper { overflow-x: auto; margin: 1em 0; }
 
 /* ================================
-   ADMIN UI — ANIMATIONS & UTILITIES
+   ADMIN UI ANIMATIONS
    ================================ */
+
+@keyframes streak-flash {
+  0%   { opacity: 0; transform: scale(1.5); }
+  50%  { opacity: 1; }
+  100% { opacity: 0.8; transform: scale(1); }
+}
+.animate-streak-flash { animation: streak-flash 300ms var(--md-sys-motion-easing-emphasized-decelerate) both; }
 
 @keyframes toastProgress {
   from { transform: scaleX(1); }
-  to { transform: scaleX(0); }
+  to   { transform: scaleX(0); }
 }
 
 @keyframes checkDraw {
   from { stroke-dashoffset: 24; }
-  to { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 0; }
 }
 
 @keyframes scanLine {
-  0% { transform: translateX(-100%); }
+  0%   { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 
-/* Staggered list entrance */
-.stagger-list > * {
-  opacity: 0;
-  animation: slideUp 0.3s ease-out forwards;
-}
+.stagger-list > * { opacity: 0; animation: slideUp 300ms var(--md-sys-motion-easing-emphasized-decelerate) forwards; }
 .stagger-list > *:nth-child(1) { animation-delay: 0ms; }
 .stagger-list > *:nth-child(2) { animation-delay: 40ms; }
 .stagger-list > *:nth-child(3) { animation-delay: 80ms; }
@@ -670,47 +799,30 @@ mark,
 .stagger-list > *:nth-child(10) { animation-delay: 360ms; }
 .stagger-list > *:nth-child(n+11) { animation-delay: 400ms; }
 
-/* Row hover with left accent */
 .row-hover {
-  transition: background-color 0.15s ease, border-left-color 0.15s ease;
+  transition: background-color 150ms var(--md-sys-motion-easing-standard), border-left-color 150ms var(--md-sys-motion-easing-standard);
   border-left: 2px solid transparent;
 }
 .row-hover:hover {
-  background: hsl(var(--muted) / 0.4);
-  border-left-color: hsl(var(--primary) / 0.5);
+  background: hsl(var(--md-sys-color-primary) / 0.04);
+  border-left-color: hsl(var(--md-sys-color-primary) / 0.5);
 }
 
-/* Stat card outline glow (bypasses box-shadow:none) */
 .stat-card {
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-  background: hsl(var(--card));
-  transition: outline-color 0.2s ease;
+  background: hsl(var(--md-sys-color-surface-container-low));
+  border: 1px solid hsl(var(--md-sys-color-outline-variant));
+  border-radius: var(--md-sys-shape-corner-medium);
+  transition: box-shadow 200ms var(--md-sys-motion-easing-standard), border-color 200ms var(--md-sys-motion-easing-standard);
 }
 .stat-card:hover {
-  outline-color: hsl(var(--primary) / 0.3);
+  box-shadow: var(--md-sys-elevation-level1);
+  border-color: hsl(var(--md-sys-color-outline));
 }
 
-/* Toast countdown bar */
-.toast-progress {
-  transform-origin: left;
-  animation: toastProgress 3s linear forwards;
-}
+.toast-progress { transform-origin: left; animation: toastProgress 3s linear forwards; }
 
-/* Button press feedback */
-.btn-press {
-  transition: transform 0.1s ease;
-}
-.btn-press:active {
-  transform: scale(0.95);
-}
+.btn-press { transition: transform 100ms var(--md-sys-motion-easing-standard); }
+.btn-press:active { transform: scale(0.97); }
 
-/* Media thumbnail hover */
-.media-thumb-hover {
-  transition: transform 0.2s ease, filter 0.2s ease;
-}
-.media-thumb-hover:hover {
-  transform: scale(1.04);
-  filter: brightness(1.1);
-}
-
+.media-thumb-hover { transition: transform 200ms var(--md-sys-motion-easing-standard), filter 200ms var(--md-sys-motion-easing-standard); }
+.media-thumb-hover:hover { transform: scale(1.04); filter: brightness(1.05); }

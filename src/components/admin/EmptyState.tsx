@@ -1,20 +1,29 @@
+import { Icon } from "@/components/ui/Icon";
+
 interface EmptyStateProps {
   title: string;
   hint?: React.ReactNode;
   action?: React.ReactNode;
+  icon?: string;
 }
 
-export default function EmptyState({ title, hint, action }: EmptyStateProps) {
+export default function EmptyState({
+  title,
+  hint,
+  action,
+  icon = "inbox",
+}: EmptyStateProps) {
   return (
-    <div className="py-14 px-6 text-center font-mono">
-      <pre className="text-muted-foreground/40 text-[11px] leading-tight mb-5 select-none inline-block text-left">
-{`┌─────────────────────────┐
-│                         │
-│     ${title.slice(0, 17).padEnd(17)}   │
-│                         │
-└─────────────────────────┘`}
-      </pre>
-      {hint && <div className="text-xs text-muted-foreground">{hint}</div>}
+    <div className="py-12 px-6 text-center">
+      <Icon
+        name={icon}
+        size={48}
+        className="text-md-on-surface-variant/40 mb-4 inline-block"
+      />
+      <p className="md-title-medium text-md-on-surface mb-2">{title}</p>
+      {hint && (
+        <div className="md-body-small text-md-on-surface-variant">{hint}</div>
+      )}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -22,16 +31,20 @@ export default function EmptyState({ title, hint, action }: EmptyStateProps) {
 
 export function StatusPill({ status }: { status: string }) {
   const isPublished = status === "published";
-  const label = status.toUpperCase();
   return (
     <span
-      className={`font-mono text-[10px] tracking-wider px-1.5 py-0.5 border ${
+      className={`inline-flex items-center gap-1.5 md-label-small px-2 py-0.5 rounded-full ${
         isPublished
-          ? "text-green-500 border-green-500/30 bg-green-500/5"
-          : "text-yellow-500 border-yellow-500/30 bg-yellow-500/5"
+          ? "bg-md-primary-container text-md-on-primary-container"
+          : "bg-md-secondary-container text-md-on-secondary-container"
       }`}
     >
-      [{label}]
+      <span
+        className={`w-1.5 h-1.5 rounded-full ${
+          isPublished ? "bg-md-primary" : "bg-md-on-surface-variant"
+        }`}
+      />
+      {status}
     </span>
   );
 }

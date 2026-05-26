@@ -72,48 +72,42 @@ export default function SeriesBlock({
           carries the visual signal that this is a series; no left border
           needed. */}
       <div className="flex items-center gap-3 flex-wrap mb-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
+        <span className="md-label-medium uppercase tracking-widest text-md-primary">
           Series · {parts.length} parts
         </span>
-        <span className="text-xs text-muted-foreground/60 tabular-nums">
+        <span className="md-label-small text-md-on-surface-variant tabular-nums">
           {formatDateRange(firstDate, lastDate)}
         </span>
         {viewCount !== undefined && (
-          <span className="text-xs text-muted-foreground/60">
+          <span className="md-label-small text-md-on-surface-variant">
             <ViewCount count={viewCount} />
           </span>
         )}
       </div>
 
       {/* Title — links to the series landing page */}
-      <Link
-        href={`/series/${series.slug}`}
-        className="group block mb-3 md:mb-4"
-      >
-        <h3 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+      <Link href={`/series/${series.slug}`} className="group block mb-3 md:mb-4">
+        <h3 className="text-xl md:text-2xl font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
           {series.title}
         </h3>
       </Link>
 
-      {/* Description — same styling as standalone post rows below for
-          visual consistency. The "tl;dr" deck-label is reserved for detail
-          pages where the reader is committing to read. */}
       {series.summary && (
-        <p className="mt-2 mb-5 md:mb-6 text-sm text-foreground/60 leading-relaxed max-w-2xl">
+        <p className="mt-2 mb-5 md:mb-6 md-body-medium text-md-on-surface-variant max-w-2xl">
           {series.summary}
         </p>
       )}
 
-      {/* Parts list — each links to its nested series-post URL */}
+      {/* Parts list */}
       <ol className="space-y-2">
         {parts.map((part, i) => (
           <li key={part.slug} className="flex items-baseline gap-3">
-            <span className="text-xs tabular-nums font-medium text-muted-foreground/50 w-6 shrink-0">
+            <span className="md-label-small tabular-nums text-md-on-surface-variant/70 w-6 shrink-0">
               {String(i + 1).padStart(2, "0")}
             </span>
             <Link
               href={`/series/${series.slug}/${part.slug}`}
-              className="text-sm leading-snug text-muted-foreground hover:text-foreground transition-colors"
+              className="md-body-medium text-md-on-surface-variant hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
             >
               {stripPartPrefix(part.title)}
             </Link>

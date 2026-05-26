@@ -151,7 +151,7 @@ export default function ProjectForm({
             type="text"
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+            className="md-field"
             required
           />
         </div>
@@ -163,7 +163,7 @@ export default function ProjectForm({
             type="text"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+            className="md-field"
             required
           />
         </div>
@@ -178,7 +178,7 @@ export default function ProjectForm({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://..."
-          className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+          className="md-field"
         />
       </div>
 
@@ -191,7 +191,7 @@ export default function ProjectForm({
           onChange={(e) => setSummary(e.target.value)}
           rows={3}
           placeholder="Short description for the project card..."
-          className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary resize-none"
+          className="md-field"
         />
       </div>
 
@@ -213,7 +213,7 @@ export default function ProjectForm({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+            className="md-field"
           >
             <option value="draft">draft</option>
             <option value="published">published</option>
@@ -229,7 +229,7 @@ export default function ProjectForm({
           <select
             value={groupSlug}
             onChange={(e) => setGroupSlug(e.target.value)}
-            className="flex-1 bg-input border border-border px-3 py-2 text-sm focus:outline-none focus:border-primary"
+            className="md-field flex-1"
           >
             <option value="">No group</option>
             {groups.map((g) => (
@@ -245,7 +245,7 @@ export default function ProjectForm({
             value={newGroupTitle}
             onChange={(e) => setNewGroupTitle(e.target.value)}
             placeholder="New group name..."
-            className="flex-1 bg-input border border-border px-3 py-1.5 text-sm focus:outline-none focus:border-primary"
+            className="md-field-dense flex-1"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -292,7 +292,7 @@ export default function ProjectForm({
         <button
           type="submit"
           disabled={saving}
-          className="bg-primary text-primary-foreground px-6 py-2 text-sm uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="md-btn md-btn-filled"
         >
           {saving ? "saving..." : isEdit ? "update project" : "create project"}
         </button>

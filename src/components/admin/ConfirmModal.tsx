@@ -47,15 +47,15 @@ export default function ConfirmModal({
   if (!open || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-in fade-in-0 duration-150">
-      <div className="bg-background border border-border p-6 w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-150">
-        {title && <h3 className="text-sm font-medium mb-2">{title}</h3>}
-        <p className="text-sm text-muted-foreground mb-5">{message}</p>
-        <div className="flex justify-end gap-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 animate-in fade-in-0 duration-150">
+      <div className="bg-md-surface-container-high rounded-[28px] shadow-md-3 p-6 w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-150">
+        {title && <h3 className="md-headline-small mb-3">{title}</h3>}
+        <p className="md-body-medium text-md-on-surface-variant mb-6">{message}</p>
+        <div className="flex justify-end gap-2">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors btn-press"
+            className="md-btn md-btn-text"
           >
             {cancelLabel}
           </button>
@@ -63,11 +63,8 @@ export default function ConfirmModal({
             ref={confirmRef}
             type="button"
             onClick={onConfirm}
-            className={`px-4 py-1.5 text-sm transition-opacity hover:opacity-90 btn-press ${
-              destructive
-                ? "bg-destructive text-destructive-foreground"
-                : "bg-primary text-primary-foreground"
-            }`}
+            className={`md-btn ${destructive ? "md-btn-filled" : "md-btn-filled"}`}
+            style={destructive ? { background: "hsl(var(--md-sys-color-error))", color: "hsl(var(--md-sys-color-on-error))" } : undefined}
           >
             {confirmLabel}
           </button>
