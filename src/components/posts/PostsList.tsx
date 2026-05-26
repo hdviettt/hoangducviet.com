@@ -1,5 +1,6 @@
 "use client";
 
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { FeedItem } from "@/lib/posts";
@@ -45,33 +46,36 @@ export default function PostsList({ items }: PostsListProps) {
 
   return (
     <div className="pt-12 sm:pt-16 md:pt-20 pb-16 md:pb-20">
-      <span className="deck-label">archive</span>
-      <h1 className="deck-display text-4xl sm:text-5xl md:text-6xl mb-12 sm:mb-16 md:mb-20">
-        writing.
+      <span className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-3 block">
+        archive
+      </span>
+      <h1 className="text-4xl sm:text-5xl md:text-[57px] md:leading-[64px] font-normal tracking-tight text-md-on-surface mb-12 sm:mb-16 md:mb-20">
+        writing
       </h1>
 
       {itemsByYear.length === 0 ? (
-        <p className="text-muted-foreground text-sm">No articles found.</p>
+        <p className="md-body-medium text-md-on-surface-variant">
+          No articles found.
+        </p>
       ) : (
-        <div className="space-y-12 sm:space-y-16">
+        <div className="space-y-14 md:space-y-20">
           {itemsByYear.map(({ year, items: yearItems }) => (
             <section key={year}>
-              <h2 className="text-sm md:text-base font-semibold uppercase tracking-widest text-foreground/55 mb-4 md:mb-6 pb-3 border-b border-border/50">
+              <h2 className="text-2xl md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface mb-6 md:mb-8">
                 {year}
               </h2>
 
-              <ul className="[&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
+              <div className="grid gap-4 md:gap-5 md:grid-cols-2">
                 {yearItems.map((item) => {
                   if (item.kind === "series") {
                     return (
-                      <li key={`series-${item.series.slug}`}>
-                        <SeriesBlock
-                          series={item.series}
-                          parts={item.parts}
-                          firstDate={item.firstDate}
-                          lastDate={item.lastDate}
-                        />
-                      </li>
+                      <SeriesBlock
+                        key={`series-${item.series.slug}`}
+                        series={item.series}
+                        parts={item.parts}
+                        firstDate={item.firstDate}
+                        lastDate={item.lastDate}
+                      />
                     );
                   }
                   const post = item.post;
@@ -79,32 +83,38 @@ export default function PostsList({ items }: PostsListProps) {
                     ? new Date(post.date_created).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
+                        year: "numeric",
                       })
                     : "";
                   return (
-                    <li key={post.slug}>
-                      <Link
-                        href={`/posts/${post.slug}`}
-                        className="block py-5 md:py-6 group"
-                      >
-                        <div className="flex items-baseline gap-6">
-                          <span className="flex-1 min-w-0 text-xl md:text-2xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                            {post.title}
-                          </span>
-                          <span className="text-xs md:text-sm tabular-nums text-muted-foreground/60 shrink-0">
-                            {date}
-                          </span>
-                        </div>
-                        {post.description && (
-                          <p className="mt-2 text-sm text-foreground/60 leading-relaxed max-w-2xl">
-                            {post.description}
-                          </p>
-                        )}
-                      </Link>
-                    </li>
+                    <Link
+                      key={post.slug}
+                      href={`/posts/${post.slug}`}
+                      className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
+                    >
+                      <span className="md-label-small tabular-nums text-md-on-surface-variant mb-3">
+                        {date}
+                      </span>
+                      <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
+                        {post.title}
+                      </h3>
+                      {post.description && (
+                        <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
+                          {post.description}
+                        </p>
+                      )}
+                      <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
+                        Read post
+                        <Icon
+                          name="arrow_forward"
+                          size={16}
+                          className="transition-transform duration-200 group-hover:translate-x-0.5"
+                        />
+                      </span>
+                    </Link>
                   );
                 })}
-              </ul>
+              </div>
             </section>
           ))}
         </div>

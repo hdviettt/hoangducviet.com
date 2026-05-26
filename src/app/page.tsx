@@ -236,72 +236,77 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Writing — single chronological list, year-grouped. Series collapse
-          to a SeriesBlock with parts visible inline; standalone posts render
-          as flat rows. */}
+      {/* Writing — M3 card grid, year-grouped. Each post/series renders as
+          an outlined card with hover elevation (blog.google pattern). 2-col
+          on desktop, single column on mobile. */}
       {itemsByYear.length > 0 && (
-        <div className="space-y-12 sm:space-y-16">
+        <div className="space-y-14 md:space-y-20">
           {itemsByYear.map(({ year, items }) => (
             <section key={year}>
-              <h2 className="md-label-large uppercase tracking-widest text-md-on-surface-variant mb-4 md:mb-6 pb-3 border-b border-md-outline-variant">
+              <h2 className="text-2xl md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface mb-6 md:mb-8">
                 {year}
               </h2>
 
-              <ul className="[&>li]:py-1 first:[&>li]:pt-0 last:[&>li]:pb-0">
+              <div className="grid gap-4 md:gap-5 md:grid-cols-2">
                 {items.map((item) => {
                   if (item.kind === "series") {
                     return (
-                      <li key={`series-${item.series.slug}`}>
-                        <SeriesBlock
-                          series={item.series}
-                          parts={item.parts}
-                          firstDate={item.firstDate}
-                          lastDate={item.lastDate}
-                          viewCount={seriesViewTotal(item)}
-                        />
-                      </li>
+                      <SeriesBlock
+                        key={`series-${item.series.slug}`}
+                        series={item.series}
+                        parts={item.parts}
+                        firstDate={item.firstDate}
+                        lastDate={item.lastDate}
+                        viewCount={seriesViewTotal(item)}
+                      />
                     );
                   }
                   const date = item.post.date_created
                     ? new Date(item.post.date_created).toLocaleDateString(
                         "en-US",
-                        { month: "short", day: "numeric" },
+                        { month: "short", day: "numeric", year: "numeric" },
                       )
                     : "";
                   const views = item.post.slug
                     ? (viewCounts[item.post.slug] ?? 0)
                     : 0;
                   return (
-                    <li key={item.post.slug}>
-                      <Link
-                        href={`/posts/${item.post.slug}`}
-                        className="block py-5 md:py-6 group"
-                      >
-                        {/* Meta row — date + view count above the title,
-                            mirroring SeriesBlock's compact header. */}
-                        <div className="flex items-center gap-3 flex-wrap mb-3">
-                          <span className="text-xs text-muted-foreground/60 tabular-nums">
-                            {date}
+                    <Link
+                      key={item.post.slug}
+                      href={`/posts/${item.post.slug}`}
+                      className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
+                    >
+                      {/* Meta row */}
+                      <div className="flex items-center gap-3 flex-wrap mb-3">
+                        <span className="md-label-small tabular-nums text-md-on-surface-variant">
+                          {date}
+                        </span>
+                        {views > 0 && (
+                          <span className="md-label-small text-md-on-surface-variant">
+                            <ViewCount count={views} />
                           </span>
-                          {views > 0 && (
-                            <span className="text-xs text-muted-foreground/60">
-                              <ViewCount count={views} />
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
-                          {item.post.title}
-                        </h3>
-                        {item.post.description && (
-                          <p className="mt-2 text-sm text-md-on-surface-variant leading-relaxed max-w-2xl">
-                            {item.post.description}
-                          </p>
                         )}
-                      </Link>
-                    </li>
+                      </div>
+                      <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
+                        {item.post.title}
+                      </h3>
+                      {item.post.description && (
+                        <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
+                          {item.post.description}
+                        </p>
+                      )}
+                      <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
+                        Read post
+                        <Icon
+                          name="arrow_forward"
+                          size={16}
+                          className="transition-transform duration-200 group-hover:translate-x-0.5"
+                        />
+                      </span>
+                    </Link>
                   );
                 })}
-              </ul>
+              </div>
             </section>
           ))}
         </div>
