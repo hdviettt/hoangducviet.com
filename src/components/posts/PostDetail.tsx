@@ -146,7 +146,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                 </Link>
               )}
               <h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-[57px] lg:leading-[64px] font-normal tracking-tight mb-6 md:mb-8"
+                className="text-3xl sm:text-[36px] sm:leading-[44px] md:text-[44px] md:leading-[52px] font-normal tracking-tight mb-6 md:mb-8"
                 style={{ color: "var(--article-heading)" }}
               >
                 {data.title}

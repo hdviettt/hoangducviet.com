@@ -86,11 +86,11 @@ export default function InlineTableOfContents({
   };
 
   return (
-    <nav aria-label="On this page" className="md-toc">
-      <div className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-3 px-4">
-        On this page
+    <nav aria-label="On this page">
+      <div className="text-[15px] font-medium text-md-on-surface mb-5">
+        In this story
       </div>
-      <ul className="space-y-0.5">
+      <ul className="relative border-l border-md-outline-variant">
         {headings.map((heading) => {
           const indent = heading.level - minLevel;
           const isActive = activeId === heading.id;
@@ -100,13 +100,13 @@ export default function InlineTableOfContents({
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
                 style={{ paddingLeft: `${16 + indent * 14}px` }}
-                className={`flex items-center min-h-9 pr-3 py-1 rounded-full md-body-small transition-colors duration-200 ease-md-standard ${
+                className={`block py-2 pr-3 -ml-px border-l-[3px] text-[14px] leading-[20px] transition-colors duration-200 ease-md-standard ${
                   isActive
-                    ? "bg-md-secondary-container text-md-on-secondary-container font-medium"
-                    : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
+                    ? "border-primary text-primary font-medium"
+                    : "border-transparent text-md-on-surface/70 hover:text-md-on-surface"
                 }`}
               >
-                <span className="line-clamp-2 leading-snug">{heading.text}</span>
+                {heading.text}
               </a>
             </li>
           );

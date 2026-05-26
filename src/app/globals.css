@@ -103,12 +103,13 @@
     --ring: var(--md-sys-color-primary);
     --radius: var(--md-sys-shape-corner-medium);
 
-    /* Article content — derived from M3 surface tones */
-    --article-text: hsl(var(--md-sys-color-on-surface));
-    --article-heading: hsl(var(--md-sys-color-on-background));
+    /* Article content — body text slightly muted (Google's trick: not
+       pure black, ~80% of on-surface), headings at full on-surface. */
+    --article-text: hsl(220 7% 18% / 0.92);
+    --article-heading: hsl(220 8% 8%);
     --article-link: hsl(var(--md-sys-color-primary));
     --article-link-hover: hsl(217 89% 41%);
-    --article-border: hsl(var(--md-sys-color-outline));
+    --article-border: hsl(var(--md-sys-color-outline-variant));
     --article-code-bg: hsl(var(--md-sys-color-surface-variant));
     --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
   }
@@ -160,6 +161,8 @@
     --md-sys-elevation-level5: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.40);
 
     /* Article content — dark */
+    --article-text: hsl(220 13% 88% / 0.92);
+    --article-heading: hsl(220 18% 96%);
     --article-link-hover: hsl(217 95% 88%);
   }
 }
@@ -257,11 +260,12 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
    ================================ */
 
 .article-content {
-  font-size: 1.0625rem;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 28px;
   color: var(--article-text);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter), "Google Sans", system-ui, -apple-system, sans-serif;
   font-feature-settings: "kern" 1, "cv11", "ss01";
+  letter-spacing: 0;
   overflow-wrap: break-word;
   word-break: normal;
 }
@@ -289,20 +293,22 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
   scroll-margin-top: 80px;
   font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   color: var(--article-heading);
-  font-weight: 500;
+  font-weight: 400;
+  letter-spacing: -0.005em;
 }
 
-.article-content h1 { font-size: 2rem;     line-height: 2.5rem;   margin-top: 2.5rem; margin-bottom: 1rem; }
-.article-content h2 { font-size: 1.75rem;  line-height: 2.25rem;  margin-top: 2.5rem; margin-bottom: 0.75rem; }
-.article-content h3 { font-size: 1.5rem;   line-height: 2rem;     margin-top: 2rem;   margin-bottom: 0.5rem; }
-.article-content h4 { font-size: 1.375rem; line-height: 1.75rem;  margin-top: 1.5rem; margin-bottom: 0.5rem; }
-.article-content h5 { font-size: 1rem;     line-height: 1.5rem;   margin-top: 1.5rem; margin-bottom: 0.5rem; }
-.article-content h6 { font-size: 0.875rem; line-height: 1.25rem;  margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.article-content h1 { font-size: 36px; line-height: 44px; margin-top: 3rem;   margin-bottom: 1.25rem; }
+.article-content h2 { font-size: 28px; line-height: 36px; margin-top: 3rem;   margin-bottom: 1rem; }
+.article-content h3 { font-size: 22px; line-height: 28px; margin-top: 2.25rem; margin-bottom: 0.75rem; font-weight: 500; }
+.article-content h4 { font-size: 18px; line-height: 24px; margin-top: 1.75rem; margin-bottom: 0.5rem; font-weight: 500; }
+.article-content h5 { font-size: 16px; line-height: 24px; margin-top: 1.5rem;  margin-bottom: 0.5rem; font-weight: 500; }
+.article-content h6 { font-size: 14px; line-height: 20px; margin-top: 1.5rem;  margin-bottom: 0.5rem; font-weight: 500; }
 
 .article-content p {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   color: var(--article-text);
 }
+
 
 .article-content ul,
 .article-content ol {
