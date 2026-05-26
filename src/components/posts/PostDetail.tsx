@@ -122,7 +122,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
             size={18}
             className="text-primary/60 group-hover:text-primary transition-colors"
           />
-          home
+          Home
         </Link>
 
         <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
@@ -175,27 +175,27 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — clean Inter lede. Three-dot separator below
-                acts as a section break before the article body. */}
+            {/* TL;DR — M3 tonal callout card (primary-container tint) */}
             {data.description && (
-              <>
-                <div className="max-w-2xl">
-                  <span className="block md-label-medium uppercase tracking-widest text-primary mb-3">
-                    tl;dr
+              <aside
+                aria-label="Summary"
+                className="mb-12 md:mb-16 max-w-2xl rounded-2xl bg-md-primary-container/40 border border-md-primary-container p-6 md:p-7"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <Icon
+                    name="bolt"
+                    size={18}
+                    filled
+                    className="text-primary"
+                  />
+                  <span className="md-label-medium uppercase tracking-widest text-md-on-primary-container">
+                    TL;DR
                   </span>
-                  <p className="md-body-large text-md-on-surface">
-                    {data.description}
-                  </p>
                 </div>
-                <div
-                  aria-hidden="true"
-                  className="my-10 md:my-14 flex justify-center gap-2.5 text-muted-foreground/40 text-lg select-none"
-                >
-                  <span>·</span>
-                  <span>·</span>
-                  <span>·</span>
-                </div>
-              </>
+                <p className="md-body-large text-md-on-surface">
+                  {data.description}
+                </p>
+              </aside>
             )}
 
             {/* Article Content */}

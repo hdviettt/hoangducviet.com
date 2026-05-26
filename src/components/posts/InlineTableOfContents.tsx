@@ -18,9 +18,7 @@ export default function InlineTableOfContents({
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
-  // Extract headings from markdown content
   useEffect(() => {
-    // Fix malformed markdown where image and heading are concatenated
     const fixed = content.replace(
       /(\!\[[^\]]*\]\([^)]*\))(\s*)(#{1,6}\s)/g,
       "$1\n$3",
@@ -39,7 +37,6 @@ export default function InlineTableOfContents({
           .replace(/\s+/g, "-")
           .replace(/-+/g, "-")
           .trim();
-
         items.push({ id, text, level });
       }
     });
@@ -47,7 +44,6 @@ export default function InlineTableOfContents({
     setHeadings(items);
   }, [content]);
 
-  // Handle scroll to highlight active heading
   useEffect(() => {
     if (headings.length === 0) return;
 
@@ -58,25 +54,19 @@ export default function InlineTableOfContents({
 
       if (headingElements.length === 0) return;
 
-      // Find which heading is currently in view
       let currentId = headings[0]?.id || "";
-
       for (const el of headingElements) {
         const rect = el.getBoundingClientRect();
-        // If the heading is above the middle of the viewport, it's the active one
         if (rect.top <= 100) {
           currentId = el.id;
         } else {
           break;
         }
       }
-
       setActiveId(currentId);
     };
 
-    // Initial check
     setTimeout(handleScroll, 100);
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [headings]);
@@ -96,41 +86,32 @@ export default function InlineTableOfContents({
   };
 
   return (
-    <div>
-      <div
-        className="text-xs font-medium mb-4 uppercase tracking-wider"
-        style={{ color: "var(--article-text)" }}
-      >
+    <nav aria-label="On this page" className="md-toc">
+      <div className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-3 px-4">
         On this page
       </div>
-      <nav className="space-y-0.5 border-l-2" style={{ borderColor: "var(--article-border)" }}>
+      <ul className="space-y-0.5">
         {headings.map((heading) => {
           const indent = heading.level - minLevel;
           const isActive = activeId === heading.id;
-
           return (
-            <a
-              key={heading.id}
-              href={`#${heading.id}`}
-              onClick={(e) => handleClick(e, heading.id)}
-              className={`block text-sm py-1.5 transition-colors border-l-2 -ml-0.5 ${
-                isActive ? "font-medium" : ""
-              }`}
-              style={{
-                paddingLeft: `${14 + indent * 14}px`,
-                color: isActive
-                  ? "var(--article-heading)"
-                  : "var(--article-text)",
-                borderColor: isActive
-                  ? "var(--article-link)"
-                  : "transparent",
-              }}
-            >
-              {heading.text}
-            </a>
+            <li key={heading.id}>
+              <a
+                href={`#${heading.id}`}
+                onClick={(e) => handleClick(e, heading.id)}
+                style={{ paddingLeft: `${16 + indent * 14}px` }}
+                className={`flex items-center min-h-9 pr-3 py-1 rounded-full md-body-small transition-colors duration-200 ease-md-standard ${
+                  isActive
+                    ? "bg-md-secondary-container text-md-on-secondary-container font-medium"
+                    : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
+                }`}
+              >
+                <span className="line-clamp-2 leading-snug">{heading.text}</span>
+              </a>
+            </li>
           );
         })}
-      </nav>
-    </div>
+      </ul>
+    </nav>
   );
 }

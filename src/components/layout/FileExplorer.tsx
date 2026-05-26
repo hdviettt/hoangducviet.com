@@ -11,8 +11,12 @@ interface FileExplorerProps {
 }
 
 const navItems = [
-  { href: "/", label: "home", match: (p: string) => p === "/" },
-  { href: "/posts", label: "posts", match: (p: string) => p.startsWith("/posts") },
+  { href: "/", label: "Home", match: (p: string) => p === "/" },
+  {
+    href: "/posts",
+    label: "Posts",
+    match: (p: string) => p.startsWith("/posts"),
+  },
 ];
 
 export default function FileExplorer({ children }: FileExplorerProps) {
@@ -45,13 +49,12 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   }, [isPostPage]);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Reading progress — thin indigo bar pinned to the very top of the
-          viewport. Visible only on post pages, sits above the navbar. */}
+    <div className="min-h-screen bg-md-background">
+      {/* Reading progress bar — pinned to the very top on post pages */}
       {isPostPage && (
         <div
           aria-hidden="true"
-          className="fixed top-0 left-0 right-0 h-[2px] z-50 pointer-events-none"
+          className="fixed top-0 left-0 right-0 h-[3px] z-50 pointer-events-none"
         >
           <div
             className="h-full bg-primary transition-[width] duration-150 ease-out"
@@ -60,42 +63,55 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         </div>
       )}
 
-      {/* Sticky minimal header. Border-bottom fades in once the user scrolls
-          past the hero so it doesn't compete with the page-opening composition. */}
-      {/* M3 top app bar — 64px, surface tonal level 0 (flat) / level 2 once
-          the user scrolls past the hero so the bar doesn't compete with the
-          page-opening composition. */}
+      {/* M3 top app bar — brand on left, nav + actions on right. 64px,
+          flat at rest, elevation-2 once the user scrolls past the hero. */}
       <header
-        className={`sticky top-0 z-40 bg-background/85 backdrop-blur-sm transition-shadow duration-200 ease-md-standard ${
-          scrolled ? "md-elevation-2 border-b border-outline-variant" : ""
+        className={`sticky top-0 z-40 transition-all duration-200 ease-md-standard ${
+          scrolled
+            ? "bg-md-surface/85 backdrop-blur-md shadow-md-1 border-b border-md-outline-variant"
+            : "bg-md-background"
         }`}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-20 h-16 flex items-center justify-center">
-          <nav className="flex items-center gap-6 md:gap-8">
-            {navItems.map((item) => {
-              const active = item.match(pathname);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`nav-link md-label-large transition-colors duration-200 ease-md-standard ${
-                    active
-                      ? "text-primary"
-                      : "text-md-on-surface-variant hover:text-md-on-surface"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-between gap-4">
+          {/* Brand */}
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 group shrink-0"
+            aria-label="Home"
+          >
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-md-primary text-md-on-primary md-label-large font-medium">
+              v
+            </span>
+            <span className="hidden sm:inline md-title-medium text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+              Hoang Duc Viet
+            </span>
+          </Link>
 
-            <span className="w-px h-5 bg-md-outline-variant" />
+          {/* Right: nav + theme toggle */}
+          <div className="flex items-center gap-1">
+            <nav className="flex items-center gap-1">
+              {navItems.map((item) => {
+                const active = item.match(pathname);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`h-10 px-4 rounded-full inline-flex items-center md-label-large transition-colors duration-200 ease-md-standard ${
+                      active
+                        ? "bg-md-secondary-container text-md-on-secondary-container"
+                        : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
 
             <button
               type="button"
               onClick={toggleTheme}
-              className="md-btn md-btn-text md-btn-sm md-btn-pill"
-              style={{ padding: 0, width: 40, height: 40 }}
+              className="ml-2 w-10 h-10 inline-flex items-center justify-center rounded-full text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
               aria-label="Toggle theme"
             >
               {!mounted ? (
@@ -107,12 +123,12 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 />
               )}
             </button>
-          </nav>
+          </div>
         </div>
       </header>
 
       <main
-        className={`mx-auto px-4 sm:px-6 lg:px-20 pb-16 ${
+        className={`mx-auto px-4 sm:px-6 lg:px-10 pb-16 ${
           isPostPage ? "max-w-6xl" : "max-w-4xl"
         }`}
       >
