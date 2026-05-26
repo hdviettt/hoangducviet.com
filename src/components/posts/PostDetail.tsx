@@ -125,7 +125,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
           Home
         </Link>
 
-        <div className="lg:grid lg:grid-cols-[200px_1fr] xl:grid-cols-[220px_1fr] lg:gap-16 xl:gap-24 items-start">
+        <div className="lg:grid lg:grid-cols-[200px_minmax(0,720px)] xl:grid-cols-[220px_minmax(0,720px)] lg:gap-16 xl:gap-24 items-start">
           {/* TOC + Series sidebar — left rail, sticky */}
           <aside className="hidden lg:block sticky top-24 self-start">
             {data.content && <InlineTableOfContents content={data.content} />}
