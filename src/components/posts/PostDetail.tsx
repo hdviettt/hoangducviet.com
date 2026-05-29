@@ -131,16 +131,6 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
 
           {/* Main Content */}
           <div className="min-w-0">
-            {thumbnailUrl && (
-              // Natural size, capped — never upscaled, so low-res thumbnails
-              // stay crisp and don't dominate the page.
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={thumbnailUrl}
-                alt={data.title || ""}
-                className="w-auto max-w-full max-h-[300px] rounded-xl mb-8 md:mb-10 border border-md-outline-variant"
-              />
-            )}
             {/* Article Header — deck-label + display title pattern */}
             <header className="mb-8 sm:mb-10 md:mb-12">
               {seriesCtx && (
@@ -184,7 +174,12 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                     </span>
                   </>
                 )}
-                <ViewCount count={viewCount} rightAligned />
+                {viewCount > 0 && (
+                  <>
+                    <span className="opacity-50">·</span>
+                    <ViewCount count={viewCount} />
+                  </>
+                )}
               </div>
             </header>
 

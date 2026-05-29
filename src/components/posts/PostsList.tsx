@@ -91,22 +91,13 @@ export default function PostsList({ items, viewCounts }: PostsListProps) {
                       })
                     : "";
                   const views = post.slug ? (viewCounts[post.slug] ?? 0) : 0;
-                  const thumb = post.thumbnail || null;
                   return (
                     <Link
                       key={post.slug}
                       href={`/posts/${post.slug}`}
-                      className="group flex flex-col rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard overflow-hidden"
+                      className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
                     >
-                      {thumb && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={thumb}
-                          alt={post.title || ""}
-                          className="w-full aspect-[16/9] object-cover"
-                        />
-                      )}
-                      <div className="flex flex-col flex-1 p-6">
+                      <div className="flex flex-col flex-1">
                         <div className="flex items-center gap-3 flex-wrap mb-3">
                           <span className="md-label-small tabular-nums text-md-on-surface-variant">
                             {date}

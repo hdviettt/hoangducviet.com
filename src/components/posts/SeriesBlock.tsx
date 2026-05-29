@@ -123,28 +123,14 @@ export default function SeriesBlock({
               href={`/posts/${part.slug}`}
               className="group/card flex items-center gap-3 rounded-xl border border-md-outline-variant bg-md-surface p-2.5 hover:bg-md-surface-container-low hover:shadow-md-1 transition-all duration-200 ease-md-standard"
             >
-              {part.thumbnail ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={part.thumbnail}
-                  alt=""
-                  className="w-16 h-12 rounded-lg object-cover shrink-0"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-lg bg-md-primary-container/50 flex items-center justify-center shrink-0">
-                  <span className="md-label-large tabular-nums text-md-on-primary-container/50">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-              )}
-              <div className="min-w-0 flex-1">
-                <span className="block md-label-small tabular-nums text-md-on-surface-variant/70">
-                  Part {String(i + 1).padStart(2, "0")}
+              <div className="w-11 h-11 rounded-lg bg-md-primary-container/40 flex items-center justify-center shrink-0">
+                <span className="md-label-large tabular-nums text-md-on-primary-container/70">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <h4 className="md-body-medium font-medium text-md-on-surface line-clamp-1 group-hover/card:text-primary transition-colors duration-200">
-                  {stripPartPrefix(part.title)}
-                </h4>
               </div>
+              <h4 className="min-w-0 flex-1 md-body-medium font-medium text-md-on-surface line-clamp-2 group-hover/card:text-primary transition-colors duration-200">
+                {stripPartPrefix(part.title)}
+              </h4>
               <Icon
                 name="arrow_forward"
                 size={16}
