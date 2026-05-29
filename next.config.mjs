@@ -53,24 +53,33 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/ingest/static/:path*',
-        destination: 'https://us-assets.i.posthog.com/static/:path*',
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
       },
       {
-        source: '/ingest/:path*',
-        destination: 'https://us.i.posthog.com/:path*',
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
       },
       // A2A agent discovery: serve the Agent Card from the canonical
       // well-known path. App Router doesn't reliably route leading-dot
       // folders, so the handler lives at /api/agent-card.
       {
-        source: '/.well-known/agent-card.json',
-        destination: '/api/agent-card',
+        source: "/.well-known/agent-card.json",
+        destination: "/api/agent-card",
       },
       // Legacy alias used by older A2A clients.
       {
-        source: '/.well-known/agent.json',
-        destination: '/api/agent-card',
+        source: "/.well-known/agent.json",
+        destination: "/api/agent-card",
+      },
+      // Agent Skills Discovery index + per-skill SKILL.md.
+      {
+        source: "/.well-known/agent-skills/index.json",
+        destination: "/api/agent-skills",
+      },
+      {
+        source: "/.well-known/agent-skills/:name/SKILL.md",
+        destination: "/api/agent-skills/:name",
       },
     ];
   },
