@@ -183,19 +183,13 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — M3 tonal callout card (primary-container tint) */}
+            {/* TL;DR — editorial lead: lowercase label + hairline rule, no box */}
             {data.description && (
-              <aside
-                aria-label="Summary"
-                className="mb-12 md:mb-16 max-w-2xl rounded-2xl bg-md-primary-container/40 border border-md-primary-container p-6 md:p-7"
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <Icon name="bolt" size={18} filled className="text-primary" />
-                  <span className="md-label-medium uppercase tracking-widest text-md-on-primary-container">
-                    TL;DR
-                  </span>
-                </div>
-                <p className="md-body-large text-md-on-surface">
+              <aside aria-label="Summary" className="mb-12 md:mb-16 max-w-2xl">
+                <span className="block md-label-medium tracking-widest text-primary mb-3">
+                  tl;dr
+                </span>
+                <p className="text-lg md:text-xl md:leading-8 text-md-on-surface border-t border-md-outline-variant pt-5">
                   {data.description}
                 </p>
               </aside>
