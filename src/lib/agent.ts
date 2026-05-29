@@ -64,7 +64,10 @@ export async function buildAgentCard(): Promise<Record<string, unknown>> {
     // keep defaults
   }
 
-  const agentName = ownerName ? `${ownerName} — ${siteTitle}` : siteTitle;
+  const agentName =
+    ownerName && ownerName.toLowerCase() !== siteTitle.toLowerCase()
+      ? `${ownerName} — ${siteTitle}`
+      : ownerName || siteTitle;
   const description =
     tagline ||
     about ||
