@@ -682,6 +682,24 @@ select.md-field {
 }
 ::-webkit-scrollbar-thumb:hover { background: hsl(var(--md-sys-color-outline)); }
 
+/* TOC sidebar — scrollbar hidden until the sidebar is hovered (thin + subtle) */
+.toc-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.toc-scroll:hover {
+  scrollbar-color: hsl(var(--md-sys-color-outline) / 0.4) transparent;
+}
+.toc-scroll::-webkit-scrollbar { width: 6px; }
+.toc-scroll::-webkit-scrollbar-track { background: transparent; }
+.toc-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: var(--md-sys-shape-corner-full);
+}
+.toc-scroll:hover::-webkit-scrollbar-thumb {
+  background: hsl(var(--md-sys-color-outline) / 0.4);
+}
+
 /* ================================
    RICH EDITOR (Tiptap)
    ================================ */

@@ -118,7 +118,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
 
         <div className="lg:grid lg:grid-cols-[200px_minmax(0,720px)] xl:grid-cols-[220px_minmax(0,720px)] lg:gap-16 xl:gap-24 items-start">
           {/* TOC + Series sidebar — left rail, sticky */}
-          <aside className="hidden lg:block sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain pr-2 [scrollbar-width:thin]">
+          <aside className="toc-scroll hidden lg:block sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain pr-1">
             {data.content && <InlineTableOfContents content={data.content} />}
             {seriesCtx && (
               <SeriesParts
