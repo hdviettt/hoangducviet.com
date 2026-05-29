@@ -89,7 +89,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">
-        <GoogleAnalytics gaId="G-HKSHVM8Z9G" />
+        <GoogleAnalytics gaId="G-GGK8FWGCPX" />
         <ThemeProvider>
           <PostHogProvider>
             <ClientFileExplorer>{children}</ClientFileExplorer>
