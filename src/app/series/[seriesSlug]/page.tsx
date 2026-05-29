@@ -138,9 +138,9 @@ export default async function SeriesPage({ params }: SeriesParams) {
         </h1>
 
         {seriesItem.summary && (
-          <div className="mb-8 max-w-2xl rounded-r-xl border-l-[3px] border-primary bg-md-primary-container/20 py-4 pl-5 pr-5">
-            <span className="block md-label-medium tracking-widest text-primary mb-1.5">
-              tl;dr
+          <div className="mb-8 max-w-2xl">
+            <span className="block font-mono text-xs tracking-wider text-primary mb-2.5">
+              // tl;dr
             </span>
             <p className="text-[17px] leading-relaxed text-md-on-surface">
               {seriesItem.summary}

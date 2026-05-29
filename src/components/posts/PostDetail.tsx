@@ -183,14 +183,11 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — left-accent callout: distinct but no box/icon */}
+            {/* TL;DR — monospace label, no box (engineer tell) */}
             {data.description && (
-              <aside
-                aria-label="Summary"
-                className="mb-10 md:mb-14 max-w-2xl rounded-r-xl border-l-[3px] border-primary bg-md-primary-container/20 py-4 pl-5 pr-5"
-              >
-                <span className="block md-label-medium tracking-widest text-primary mb-1.5">
-                  tl;dr
+              <aside aria-label="Summary" className="mb-10 md:mb-14 max-w-2xl">
+                <span className="block font-mono text-xs tracking-wider text-primary mb-2.5">
+                  // tl;dr
                 </span>
                 <p className="text-[17px] leading-relaxed text-md-on-surface">
                   {data.description}
