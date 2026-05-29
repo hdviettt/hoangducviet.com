@@ -1,11 +1,11 @@
 import SeriesBlock from "@/components/posts/SeriesBlock";
 import { ViewCount } from "@/components/posts/ViewCount";
+import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
 import { createPersonSchema, createWebSiteSchema } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-import { Icon } from "@/components/ui/Icon";
 // Brand marks aren't in Material Symbols — keep lucide for these four only.
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import type { Metadata } from "next";
@@ -126,7 +126,8 @@ export default async function Home() {
     item.parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   const imageUrl = mainProfile.image || null;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const profileImageUrl = imageUrl
     ? imageUrl.startsWith("http")
       ? imageUrl
@@ -265,39 +266,50 @@ export default async function Home() {
                   const views = item.post.slug
                     ? (viewCounts[item.post.slug] ?? 0)
                     : 0;
+                  const thumb = item.post.thumbnail || null;
                   return (
                     <Link
                       key={item.post.slug}
                       href={`/posts/${item.post.slug}`}
-                      className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
+                      className="group flex flex-col rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard overflow-hidden"
                     >
-                      {/* Meta row */}
-                      <div className="flex items-center gap-3 flex-wrap mb-3">
-                        <span className="md-label-small tabular-nums text-md-on-surface-variant">
-                          {date}
-                        </span>
-                        {views > 0 && (
-                          <span className="md-label-small text-md-on-surface-variant">
-                            <ViewCount count={views} />
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
-                        {item.post.title}
-                      </h3>
-                      {item.post.description && (
-                        <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
-                          {item.post.description}
-                        </p>
-                      )}
-                      <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
-                        Read post
-                        <Icon
-                          name="arrow_forward"
-                          size={16}
-                          className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      {thumb && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={thumb}
+                          alt={item.post.title || ""}
+                          className="w-full aspect-[16/9] object-cover"
                         />
-                      </span>
+                      )}
+                      <div className="flex flex-col flex-1 p-6">
+                        {/* Meta row */}
+                        <div className="flex items-center gap-3 flex-wrap mb-3">
+                          <span className="md-label-small tabular-nums text-md-on-surface-variant">
+                            {date}
+                          </span>
+                          {views > 0 && (
+                            <span className="md-label-small text-md-on-surface-variant">
+                              <ViewCount count={views} />
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
+                          {item.post.title}
+                        </h3>
+                        {item.post.description && (
+                          <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
+                            {item.post.description}
+                          </p>
+                        )}
+                        <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
+                          Read post
+                          <Icon
+                            name="arrow_forward"
+                            size={16}
+                            className="transition-transform duration-200 group-hover:translate-x-0.5"
+                          />
+                        </span>
+                      </div>
                     </Link>
                   );
                 })}

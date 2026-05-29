@@ -10,7 +10,12 @@ interface SeriesBlockProps {
     title: string;
     summary: string | null;
   };
-  parts: { slug: string; title: string; date_created: string }[];
+  parts: {
+    slug: string;
+    title: string;
+    date_created: string;
+    thumbnail: string | null;
+  }[];
   firstDate: string;
   lastDate: string;
   viewCount?: number;
@@ -56,6 +61,9 @@ function stripPartPrefix(title: string): string {
   return m ? m[1] : title;
 }
 
+// Google "collection" card: collection meta on the left, a row of article
+// preview cards on the right. Preview cards show a thumbnail when the post has
+// one, otherwise a uniform numbered tile so the row stays smooth.
 export default function SeriesBlock({
   series,
   parts,
@@ -63,66 +71,89 @@ export default function SeriesBlock({
   lastDate,
   viewCount,
 }: SeriesBlockProps) {
+  const preview = parts.slice(0, 3);
+  const remaining = parts.length - preview.length;
+
   return (
-    <article className="md:col-span-2 group flex flex-col p-6 md:p-8 rounded-2xl border border-md-outline-variant bg-md-primary-container/30 hover:bg-md-primary-container/50 hover:shadow-md-1 transition-all duration-200 ease-md-standard">
-      {/* Meta header — M3 chip + date range */}
-      <div className="flex items-center gap-3 flex-wrap mb-4">
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full md-label-small bg-md-primary text-md-on-primary">
-          <Icon name="auto_stories" size={14} />
-          Series · {parts.length} parts
-        </span>
-        <span className="md-label-small text-md-on-surface-variant tabular-nums">
-          {formatDateRange(firstDate, lastDate)}
-        </span>
-        {viewCount !== undefined && viewCount > 0 && (
-          <span className="md-label-small text-md-on-surface-variant">
-            <ViewCount count={viewCount} />
+    <article className="md:col-span-2 rounded-2xl border border-md-outline-variant bg-md-primary-container/30 p-6 md:p-8 transition-all duration-200 ease-md-standard hover:bg-md-primary-container/50 hover:shadow-md-1">
+      <div className="grid gap-6 md:gap-10 md:grid-cols-[minmax(0,300px)_1fr] md:items-stretch">
+        {/* Left — collection meta */}
+        <div className="flex flex-col">
+          <span className="inline-flex w-fit items-center gap-1.5 px-2.5 py-0.5 rounded-full md-label-small bg-md-primary text-md-on-primary mb-4">
+            <Icon name="auto_stories" size={14} />
+            Series · {parts.length} parts
           </span>
-        )}
-      </div>
 
-      {/* Title */}
-      <Link
-        href={`/series/${series.slug}`}
-        className="block mb-3 md:mb-4 hover:text-primary transition-colors duration-200 ease-md-standard"
-      >
-        <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-md-on-surface">
-          {series.title}
-        </h3>
-      </Link>
+          <Link
+            href={`/series/${series.slug}`}
+            className="block mb-3 hover:text-primary transition-colors duration-200 ease-md-standard"
+          >
+            <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-md-on-surface">
+              {series.title}
+            </h3>
+          </Link>
 
-      {series.summary && (
-        <p className="mb-5 md:mb-6 md-body-medium text-md-on-surface-variant max-w-2xl">
-          {series.summary}
-        </p>
-      )}
+          {series.summary && (
+            <p className="mb-5 md-body-medium text-md-on-surface-variant">
+              {series.summary}
+            </p>
+          )}
 
-      {/* Parts list */}
-      <ol className="space-y-1 mb-2">
-        {parts.map((part, i) => (
-          <li key={part.slug}>
+          <div className="flex items-center gap-3 flex-wrap mb-6 md-label-small tabular-nums text-md-on-surface-variant">
+            <span>{formatDateRange(firstDate, lastDate)}</span>
+            {viewCount !== undefined && viewCount > 0 && (
+              <ViewCount count={viewCount} />
+            )}
+          </div>
+
+          <Link
+            href={`/series/${series.slug}`}
+            className="mt-auto self-start inline-flex items-center gap-1 md-label-medium text-primary hover:underline transition-colors duration-200"
+          >
+            View series
+            <Icon name="arrow_forward" size={16} />
+          </Link>
+        </div>
+
+        {/* Right — part preview cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+          {preview.map((part, i) => (
             <Link
+              key={part.slug}
               href={`/posts/${part.slug}`}
-              className="flex items-baseline gap-3 px-3 py-2 -mx-3 rounded-lg hover:bg-md-on-surface/8 transition-colors duration-200 ease-md-standard"
+              className="group/card flex flex-col rounded-xl border border-md-outline-variant bg-md-surface overflow-hidden hover:shadow-md-1 transition-all duration-200 ease-md-standard"
             >
-              <span className="md-label-small tabular-nums text-md-on-surface-variant/70 w-6 shrink-0">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="md-body-medium text-md-on-surface-variant">
-                {stripPartPrefix(part.title)}
-              </span>
+              {part.thumbnail ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={part.thumbnail}
+                  alt={stripPartPrefix(part.title)}
+                  className="w-full aspect-[16/10] object-cover"
+                />
+              ) : (
+                <div className="w-full aspect-[16/10] bg-md-primary-container/50 flex items-center justify-center">
+                  <span className="md-headline-small tabular-nums text-md-on-primary-container/40">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+              )}
+              <div className="flex flex-col flex-1 p-3">
+                <span className="md-label-small tabular-nums text-md-on-surface-variant/70">
+                  Part {String(i + 1).padStart(2, "0")}
+                </span>
+                <h4 className="mt-1 md-body-medium font-medium text-md-on-surface line-clamp-2 group-hover/card:text-primary transition-colors duration-200">
+                  {stripPartPrefix(part.title)}
+                </h4>
+                {i === preview.length - 1 && remaining > 0 && (
+                  <span className="mt-2 md-label-small text-primary">
+                    +{remaining} more
+                  </span>
+                )}
+              </div>
             </Link>
-          </li>
-        ))}
-      </ol>
-
-      <Link
-        href={`/series/${series.slug}`}
-        className="mt-4 self-start inline-flex items-center gap-1 md-label-medium text-primary hover:underline transition-colors duration-200"
-      >
-        View series
-        <Icon name="arrow_forward" size={16} />
-      </Link>
+          ))}
+        </div>
+      </div>
     </article>
   );
 }

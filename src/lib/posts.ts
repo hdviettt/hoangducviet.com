@@ -168,7 +168,12 @@ export type FeedItem =
         title: string;
         summary: string | null;
       };
-      parts: { slug: string; title: string; date_created: string }[];
+      parts: {
+        slug: string;
+        title: string;
+        date_created: string;
+        thumbnail: string | null;
+      }[];
       firstDate: string;
       lastDate: string;
     };
@@ -234,6 +239,7 @@ export async function getFeedItems(options?: {
         slug: post.slug ?? "",
         title: post.title ?? "",
         date_created: dateIso,
+        thumbnail: post.thumbnail ?? null,
       });
       if (dateIso < entry.firstDate) entry.firstDate = dateIso;
       if (dateIso > entry.lastDate) entry.lastDate = dateIso;
@@ -255,9 +261,7 @@ export async function getFeedItems(options?: {
   // order regardless of how recently each was published.
   for (const item of items) {
     if (item.kind === "series") {
-      item.parts.sort((a, b) =>
-        a.date_created.localeCompare(b.date_created),
-      );
+      item.parts.sort((a, b) => a.date_created.localeCompare(b.date_created));
     }
   }
 
