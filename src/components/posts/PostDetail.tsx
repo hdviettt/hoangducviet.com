@@ -183,13 +183,13 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — editorial lead: lowercase label + hairline rule, no box */}
+            {/* TL;DR — editorial lead: lowercase label tab + restrained lead */}
             {data.description && (
-              <aside aria-label="Summary" className="mb-12 md:mb-16 max-w-2xl">
-                <span className="block md-label-medium tracking-widest text-primary mb-3">
+              <aside aria-label="Summary" className="mb-10 md:mb-14 max-w-2xl">
+                <span className="inline-block md-label-medium tracking-widest text-primary border-b-2 border-primary/30 pb-1 mb-4">
                   tl;dr
                 </span>
-                <p className="text-lg md:text-xl md:leading-8 text-md-on-surface border-t border-md-outline-variant pt-5">
+                <p className="text-[17px] leading-relaxed text-md-on-surface">
                   {data.description}
                 </p>
               </aside>

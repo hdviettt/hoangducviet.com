@@ -139,10 +139,10 @@ export default async function SeriesPage({ params }: SeriesParams) {
 
         {seriesItem.summary && (
           <div className="mb-8 max-w-2xl">
-            <span className="block md-label-medium tracking-widest text-primary mb-3">
+            <span className="inline-block md-label-medium tracking-widest text-primary border-b-2 border-primary/30 pb-1 mb-4">
               tl;dr
             </span>
-            <p className="text-lg md:text-xl md:leading-8 text-md-on-surface border-t border-md-outline-variant pt-5">
+            <p className="text-[17px] leading-relaxed text-md-on-surface">
               {seriesItem.summary}
             </p>
           </div>
