@@ -61,9 +61,9 @@ function stripPartPrefix(title: string): string {
   return m ? m[1] : title;
 }
 
-// Google "collection" card: collection meta on the left, a row of article
-// preview cards on the right. Preview cards show a thumbnail when the post has
-// one, otherwise a uniform numbered tile so the row stays smooth.
+// Google "collection" card: collection meta on the left, a compact list of
+// part rows on the right. Each row shows a small thumbnail when the post has
+// one, otherwise a numbered chip — so text-only series stay tidy, not cramped.
 export default function SeriesBlock({
   series,
   parts,
@@ -71,12 +71,12 @@ export default function SeriesBlock({
   lastDate,
   viewCount,
 }: SeriesBlockProps) {
-  const preview = parts.slice(0, 3);
+  const preview = parts.slice(0, 5);
   const remaining = parts.length - preview.length;
 
   return (
     <article className="md:col-span-2 rounded-2xl border border-md-outline-variant bg-md-primary-container/30 p-6 md:p-8 transition-all duration-200 ease-md-standard hover:bg-md-primary-container/50 hover:shadow-md-1">
-      <div className="grid gap-6 md:gap-10 md:grid-cols-[minmax(0,300px)_1fr] md:items-stretch">
+      <div className="grid gap-6 md:gap-10 md:grid-cols-[minmax(0,300px)_1fr] md:items-start">
         {/* Left — collection meta */}
         <div className="flex flex-col">
           <span className="inline-flex w-fit items-center gap-1.5 px-2.5 py-0.5 rounded-full md-label-small bg-md-primary text-md-on-primary mb-4">
@@ -94,7 +94,7 @@ export default function SeriesBlock({
           </Link>
 
           {series.summary && (
-            <p className="mb-5 md-body-medium text-md-on-surface-variant">
+            <p className="mb-5 md-body-medium text-md-on-surface-variant line-clamp-5">
               {series.summary}
             </p>
           )}
@@ -115,43 +115,52 @@ export default function SeriesBlock({
           </Link>
         </div>
 
-        {/* Right — part preview cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        {/* Right — compact part rows */}
+        <div className="flex flex-col gap-2.5">
           {preview.map((part, i) => (
             <Link
               key={part.slug}
               href={`/posts/${part.slug}`}
-              className="group/card flex flex-col rounded-xl border border-md-outline-variant bg-md-surface overflow-hidden hover:shadow-md-1 transition-all duration-200 ease-md-standard"
+              className="group/card flex items-center gap-3 rounded-xl border border-md-outline-variant bg-md-surface p-2.5 hover:bg-md-surface-container-low hover:shadow-md-1 transition-all duration-200 ease-md-standard"
             >
               {part.thumbnail ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={part.thumbnail}
-                  alt={stripPartPrefix(part.title)}
-                  className="w-full aspect-[16/10] object-cover"
+                  alt=""
+                  className="w-16 h-12 rounded-lg object-cover shrink-0"
                 />
               ) : (
-                <div className="w-full aspect-[16/10] bg-md-primary-container/50 flex items-center justify-center">
-                  <span className="md-headline-small tabular-nums text-md-on-primary-container/40">
+                <div className="w-12 h-12 rounded-lg bg-md-primary-container/50 flex items-center justify-center shrink-0">
+                  <span className="md-label-large tabular-nums text-md-on-primary-container/50">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
               )}
-              <div className="flex flex-col flex-1 p-3">
-                <span className="md-label-small tabular-nums text-md-on-surface-variant/70">
+              <div className="min-w-0 flex-1">
+                <span className="block md-label-small tabular-nums text-md-on-surface-variant/70">
                   Part {String(i + 1).padStart(2, "0")}
                 </span>
-                <h4 className="mt-1 md-body-medium font-medium text-md-on-surface line-clamp-2 group-hover/card:text-primary transition-colors duration-200">
+                <h4 className="md-body-medium font-medium text-md-on-surface line-clamp-1 group-hover/card:text-primary transition-colors duration-200">
                   {stripPartPrefix(part.title)}
                 </h4>
-                {i === preview.length - 1 && remaining > 0 && (
-                  <span className="mt-2 md-label-small text-primary">
-                    +{remaining} more
-                  </span>
-                )}
               </div>
+              <Icon
+                name="arrow_forward"
+                size={16}
+                className="shrink-0 text-md-on-surface-variant/40 group-hover/card:text-primary transition-colors duration-200"
+              />
             </Link>
           ))}
+
+          {remaining > 0 && (
+            <Link
+              href={`/series/${series.slug}`}
+              className="self-start mt-1 md-label-small text-primary hover:underline"
+            >
+              +{remaining} more part{remaining > 1 ? "s" : ""}
+            </Link>
+          )}
         </div>
       </div>
     </article>
