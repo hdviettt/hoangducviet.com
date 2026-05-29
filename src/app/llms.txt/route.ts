@@ -1,5 +1,3 @@
-import { db } from "@/db";
-import { seriesPosts } from "@/db/schema";
 import { getGlobalMetadata } from "@/lib/global";
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
@@ -19,23 +17,12 @@ function stripHtml(input: string | null | undefined): string {
 
 export async function GET() {
   try {
-    const [globalRows, profileRows, allPosts, allSeries, allLinks] =
-      await Promise.all([
-        getGlobalMetadata(),
-        getProfile(),
-        getPosts({ limit: 1000 }),
-        getSeriesList(),
-        db
-          .select({
-            postSlug: seriesPosts.postSlug,
-            seriesSlug: seriesPosts.seriesSlug,
-          })
-          .from(seriesPosts),
-      ]);
-
-    const postToSeries = new Map(
-      allLinks.map((r) => [r.postSlug, r.seriesSlug]),
-    );
+    const [globalRows, profileRows, allPosts, allSeries] = await Promise.all([
+      getGlobalMetadata(),
+      getProfile(),
+      getPosts({ limit: 1000 }),
+      getSeriesList(),
+    ]);
 
     const site = globalRows[0] ?? { title: "Blog", tagline: "" };
     const profile = profileRows[0] ?? { name: "", description: "" };
@@ -60,12 +47,8 @@ export async function GET() {
     if (allPosts.length > 0) {
       lines.push("## Posts");
       for (const post of allPosts) {
-        const seriesSlug = postToSeries.get(post.slug || "");
-        const path = seriesSlug
-          ? `/series/${seriesSlug}/${post.slug}`
-          : `/posts/${post.slug}`;
         const desc = post.description ? `: ${post.description}` : "";
-        lines.push(`- [${post.title}](${BASE_URL}${path})${desc}`);
+        lines.push(`- [${post.title}](${BASE_URL}/posts/${post.slug})${desc}`);
       }
       lines.push("");
     }

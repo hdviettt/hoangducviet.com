@@ -1,7 +1,7 @@
 "use client";
 
-import { Icon } from "@/components/ui/Icon";
 import { ViewCount } from "@/components/posts/ViewCount";
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 
 interface SeriesBlockProps {
@@ -102,7 +102,7 @@ export default function SeriesBlock({
         {parts.map((part, i) => (
           <li key={part.slug}>
             <Link
-              href={`/series/${series.slug}/${part.slug}`}
+              href={`/posts/${part.slug}`}
               className="flex items-baseline gap-3 px-3 py-2 -mx-3 rounded-lg hover:bg-md-on-surface/8 transition-colors duration-200 ease-md-standard"
             >
               <span className="md-label-small tabular-nums text-md-on-surface-variant/70 w-6 shrink-0">

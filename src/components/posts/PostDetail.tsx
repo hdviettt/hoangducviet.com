@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { Icon } from "@/components/ui/Icon";
 import MarkdownContent from "@/components/content/MarkdownContent";
 import InlineTableOfContents from "@/components/posts/InlineTableOfContents";
 import { LikeButton } from "@/components/posts/LikeButton";
@@ -8,6 +7,7 @@ import PostNavigation from "@/components/posts/PostNavigation";
 import SeriesHeader from "@/components/posts/SeriesHeader";
 import SeriesParts from "@/components/posts/SeriesParts";
 import { ViewCount } from "@/components/posts/ViewCount";
+import { Icon } from "@/components/ui/Icon";
 
 import { getAnonId } from "@/lib/anon";
 import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
@@ -59,10 +59,9 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
     getPostViewCount(postSlug),
   ]);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
-  const postUrl = seriesCtx
-    ? `${baseUrl}/series/${seriesCtx.series.slug}/${postSlug}`
-    : `${baseUrl}/posts/${postSlug}`;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+  const postUrl = `${baseUrl}/posts/${postSlug}`;
   const thumbnailUrl = data.thumbnail
     ? data.thumbnail.startsWith("http")
       ? data.thumbnail
@@ -94,16 +93,8 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
     : undefined;
   const navPrev = seriesCtx ? seriesCtx.previous : adjacentPosts.previous;
   const navNext = seriesCtx ? seriesCtx.next : adjacentPosts.next;
-  const prevHref = navPrev
-    ? seriesCtx
-      ? `/series/${seriesCtx.series.slug}/${navPrev.slug}`
-      : `/posts/${navPrev.slug}`
-    : null;
-  const nextHref = navNext
-    ? seriesCtx
-      ? `/series/${seriesCtx.series.slug}/${navNext.slug}`
-      : `/posts/${navNext.slug}`
-    : null;
+  const prevHref = navPrev ? `/posts/${navPrev.slug}` : null;
+  const nextHref = navNext ? `/posts/${navNext.slug}` : null;
 
   return (
     <>
@@ -124,6 +115,15 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
           />
           Home
         </Link>
+
+        {thumbnailUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={thumbnailUrl}
+            alt={data.title || ""}
+            className="w-full max-h-[440px] object-cover rounded-2xl mb-10 md:mb-14 ring-1 ring-md-outline-variant"
+          />
+        )}
 
         <div className="lg:grid lg:grid-cols-[200px_minmax(0,720px)] xl:grid-cols-[220px_minmax(0,720px)] lg:gap-16 xl:gap-24 items-start">
           {/* TOC + Series sidebar — left rail, sticky */}
@@ -194,12 +194,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                 className="mb-12 md:mb-16 max-w-2xl rounded-2xl bg-md-primary-container/40 border border-md-primary-container p-6 md:p-7"
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <Icon
-                    name="bolt"
-                    size={18}
-                    filled
-                    className="text-primary"
-                  />
+                  <Icon name="bolt" size={18} filled className="text-primary" />
                   <span className="md-label-medium uppercase tracking-widest text-md-on-primary-container">
                     TL;DR
                   </span>

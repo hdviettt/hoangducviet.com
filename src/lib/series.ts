@@ -19,6 +19,7 @@ export interface Series {
     title: string;
     description: string | null;
     date_created: string | null;
+    thumbnail: string | null;
   }>;
 }
 
@@ -120,6 +121,7 @@ export async function getSeriesBySlug(slug: string): Promise<Series> {
       title: posts.title,
       description: posts.description,
       dateCreated: posts.dateCreated,
+      thumbnail: posts.thumbnail,
     })
     .from(seriesPosts)
     .innerJoin(posts, eq(seriesPosts.postSlug, posts.slug))
@@ -144,6 +146,7 @@ export async function getSeriesBySlug(slug: string): Promise<Series> {
       title: p.title,
       description: p.description ?? null,
       date_created: p.dateCreated?.toISOString() ?? null,
+      thumbnail: p.thumbnail ?? null,
     })),
   };
 }

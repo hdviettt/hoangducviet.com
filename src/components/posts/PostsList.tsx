@@ -1,13 +1,15 @@
 "use client";
 
 import { Icon } from "@/components/ui/Icon";
+import type { FeedItem } from "@/lib/posts";
 import Link from "next/link";
 import { useMemo } from "react";
-import type { FeedItem } from "@/lib/posts";
 import SeriesBlock from "./SeriesBlock";
+import { ViewCount } from "./ViewCount";
 
 interface PostsListProps {
   items: FeedItem[];
+  viewCounts: Record<string, number>;
 }
 
 interface ItemsByYear {
@@ -16,9 +18,7 @@ interface ItemsByYear {
 }
 
 function itemDate(item: FeedItem): string {
-  return item.kind === "series"
-    ? item.lastDate
-    : item.post.date_created || "";
+  return item.kind === "series" ? item.lastDate : item.post.date_created || "";
 }
 
 function itemYear(item: FeedItem): number {
@@ -26,7 +26,7 @@ function itemYear(item: FeedItem): number {
   return iso ? new Date(iso).getFullYear() : 0;
 }
 
-export default function PostsList({ items }: PostsListProps) {
+export default function PostsList({ items, viewCounts }: PostsListProps) {
   const itemsByYear = useMemo<ItemsByYear[]>(() => {
     const sorted = [...items].sort((a, b) =>
       itemDate(b).localeCompare(itemDate(a)),
@@ -75,6 +75,10 @@ export default function PostsList({ items }: PostsListProps) {
                         parts={item.parts}
                         firstDate={item.firstDate}
                         lastDate={item.lastDate}
+                        viewCount={item.parts.reduce(
+                          (sum, p) => sum + (viewCounts[p.slug] ?? 0),
+                          0,
+                        )}
                       />
                     );
                   }
@@ -86,15 +90,23 @@ export default function PostsList({ items }: PostsListProps) {
                         year: "numeric",
                       })
                     : "";
+                  const views = post.slug ? (viewCounts[post.slug] ?? 0) : 0;
                   return (
                     <Link
                       key={post.slug}
                       href={`/posts/${post.slug}`}
                       className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
                     >
-                      <span className="md-label-small tabular-nums text-md-on-surface-variant mb-3">
-                        {date}
-                      </span>
+                      <div className="flex items-center gap-3 flex-wrap mb-3">
+                        <span className="md-label-small tabular-nums text-md-on-surface-variant">
+                          {date}
+                        </span>
+                        {views > 0 && (
+                          <span className="md-label-small text-md-on-surface-variant">
+                            <ViewCount count={views} />
+                          </span>
+                        )}
+                      </div>
                       <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
                         {post.title}
                       </h3>

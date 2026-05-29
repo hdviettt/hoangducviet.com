@@ -22,11 +22,8 @@ function markdownTarget(pathname: string): string | null {
   let m = pathname.match(/^\/(posts|projects)\/([^/]+)\/?$/);
   if (m) return `/${m[1]}/${m[2]}/md`;
 
-  // Series post → the post's markdown (the /posts md route resolves series).
-  m = pathname.match(/^\/series\/([^/]+)\/([^/]+)\/?$/);
-  if (m) return `/posts/${m[2]}/md`;
-
-  // Series landing → the series markdown.
+  // Series landing → the series markdown. (Series posts live at /posts/[slug];
+  // legacy /series/[s]/[p] URLs 308-redirect there.)
   m = pathname.match(/^\/series\/([^/]+)\/?$/);
   if (m) return `/series/${m[1]}/md`;
 
@@ -75,6 +72,16 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
     return ensureAnonCookie(request, NextResponse.next());
+  }
+
+  // Legacy nested series-post URLs (/series/[s]/[p]) now live at /posts/[p].
+  // 308-redirect them to preserve SEO. Exclude /series/[s]/md (series markdown).
+  const legacyPost = pathname.match(/^\/series\/[^/]+\/([^/]+)\/?$/);
+  if (legacyPost && legacyPost[1] !== "md") {
+    return NextResponse.redirect(
+      new URL(`/posts/${legacyPost[1]}`, request.url),
+      308,
+    );
   }
 
   // Markdown for Agents: serve the markdown rendition of the same URL when

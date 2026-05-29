@@ -1,8 +1,10 @@
-import { getSeriesBySlug, getSeriesList } from "@/lib/series";
+import { ViewCount } from "@/components/posts/ViewCount";
+import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
 import { createBreadcrumbSchema } from "@/lib/jsonld";
+import { getPostViewCounts } from "@/lib/posthog-server";
+import { getSeriesBySlug, getSeriesList } from "@/lib/series";
 import type { Metadata } from "next";
-import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -32,7 +34,8 @@ export async function generateMetadata({
     ]);
     const siteTitle =
       globalData && globalData.length > 0 ? globalData[0].title : "Blog";
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
     const thumbnailUrl = seriesItem.thumbnail
       ? seriesItem.thumbnail.startsWith("http")
         ? seriesItem.thumbnail
@@ -91,6 +94,11 @@ export default async function SeriesPage({ params }: SeriesParams) {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const seriesUrl = `${baseUrl}/series/${params.seriesSlug}`;
+
+  // One cached PostHog round-trip for every post in the series.
+  const viewCounts = await getPostViewCounts(
+    posts.map((p: any) => p.slug).filter(Boolean),
+  );
 
   const jsonLd = createBreadcrumbSchema([
     { name: "Home", url: baseUrl },
@@ -186,39 +194,77 @@ export default async function SeriesPage({ params }: SeriesParams) {
             {isSeries ? "all parts" : "posts in this series"}
           </h2>
 
-          <ol>
+          <div className="grid gap-4 md:gap-5 md:grid-cols-2">
             {posts.map((post: any, i: number) => {
               const d = post.date_created ? new Date(post.date_created) : null;
               const date = d
                 ? d.toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
+                    year: "numeric",
                   })
                 : "";
-              const cleanTitle = (post.title || "").replace(/^.*?#\d+:\s*/, "");
+              const cleanTitle = isSeries
+                ? (post.title || "").replace(/^.*?#\d+:\s*/, "")
+                : post.title;
+              const views = post.slug ? (viewCounts[post.slug] ?? 0) : 0;
+              const thumb = post.thumbnail
+                ? post.thumbnail.startsWith("http")
+                  ? post.thumbnail
+                  : `${baseUrl}${post.thumbnail}`
+                : null;
 
               return (
-                <li key={post.slug}>
-                  <Link
-                    href={`/series/${params.seriesSlug}/${post.slug}`}
-                    className="flex items-baseline gap-5 md:gap-6 py-5 md:py-7 group"
-                  >
-                    {isSeries && (
-                      <span className="md-title-medium md:md-title-large tabular-nums text-primary/40 group-hover:text-primary transition-colors w-10 shrink-0">
-                        {String(i + 1).padStart(2, "0")}
+                <Link
+                  key={post.slug}
+                  href={`/posts/${post.slug}`}
+                  className="group flex flex-col rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard overflow-hidden"
+                >
+                  {thumb && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={thumb}
+                      alt={cleanTitle || ""}
+                      className="w-full aspect-[16/9] object-cover"
+                    />
+                  )}
+                  <div className="flex flex-col p-6">
+                    <div className="flex items-center gap-3 flex-wrap mb-3">
+                      {isSeries && (
+                        <span className="md-label-small tabular-nums text-primary/60">
+                          Part {String(i + 1).padStart(2, "0")}
+                        </span>
+                      )}
+                      <span className="md-label-small tabular-nums text-md-on-surface-variant">
+                        {date}
                       </span>
+                      {views > 0 && (
+                        <span className="md-label-small text-md-on-surface-variant">
+                          <ViewCount count={views} />
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
+                      {cleanTitle}
+                    </h3>
+                    {post.description && (
+                      <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
+                        {post.description}
+                      </p>
                     )}
-                    <span className="flex-1 min-w-0 text-xl md:text-2xl font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors">
-                      {isSeries ? cleanTitle : post.title}
+                    <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
+                      Read post
+                      <Icon
+                        name="arrow_forward"
+                        size={16}
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
                     </span>
-                    <span className="md-body-small tabular-nums text-md-on-surface-variant shrink-0">
-                      {date}
-                    </span>
-                  </Link>
-                </li>
+                  </div>
+                </Link>
               );
             })}
-          </ol>
+          </div>
         </section>
       )}
     </div>

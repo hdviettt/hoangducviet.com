@@ -41,7 +41,7 @@ export default function SeriesParts({
           return (
             <li key={part.slug}>
               <Link
-                href={`/series/${series.slug}/${part.slug}`}
+                href={`/posts/${part.slug}`}
                 className="flex items-baseline gap-3 px-3 py-2 rounded-full text-md-on-surface-variant hover:bg-md-on-surface/8 transition-colors duration-200 ease-md-standard"
               >
                 <span className="md-label-medium tabular-nums shrink-0">

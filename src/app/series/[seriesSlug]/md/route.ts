@@ -55,7 +55,7 @@ export async function GET(
       const items = seriesItem.posts
         .map((p) => {
           const desc = p.description ? `: ${p.description}` : "";
-          return `- [${p.title}](${BASE_URL}/series/${params.seriesSlug}/${p.slug}.md)${desc}`;
+          return `- [${p.title}](${BASE_URL}/posts/${p.slug})${desc}`;
         })
         .join("\n");
       related = `\n\n## Parts in this series\n\n${items}\n`;
