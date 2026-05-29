@@ -183,18 +183,6 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
               </div>
             </header>
 
-            {/* TL;DR — monospace label, no box (engineer tell) */}
-            {data.description && (
-              <aside aria-label="Summary" className="mb-10 md:mb-14 max-w-2xl">
-                <span className="block font-mono text-xs tracking-wider text-primary mb-2.5">
-                  // tl;dr
-                </span>
-                <p className="text-[17px] leading-relaxed text-md-on-surface">
-                  {data.description}
-                </p>
-              </aside>
-            )}
-
             {/* Article Content */}
             {data.content ? (
               <div className="article-content">

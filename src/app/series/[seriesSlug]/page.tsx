@@ -137,16 +137,6 @@ export default async function SeriesPage({ params }: SeriesParams) {
           {seriesItem.title}
         </h1>
 
-        {seriesItem.summary && (
-          <div className="mb-8 max-w-2xl">
-            <span className="block font-mono text-xs tracking-wider text-primary mb-2.5">
-              // tl;dr
-            </span>
-            <p className="text-[17px] leading-relaxed text-md-on-surface">
-              {seriesItem.summary}
-            </p>
-          </div>
-        )}
 
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
           <time
