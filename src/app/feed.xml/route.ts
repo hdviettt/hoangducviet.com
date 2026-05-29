@@ -16,7 +16,7 @@ function escapeXml(str: string): string {
 
 export async function GET() {
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
 
   let siteTitle = "Blog";
   let siteDescription = "";

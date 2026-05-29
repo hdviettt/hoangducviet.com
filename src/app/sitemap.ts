@@ -6,7 +6,7 @@ import { desc, eq } from "drizzle-orm";
 export const dynamic = "force-dynamic";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {

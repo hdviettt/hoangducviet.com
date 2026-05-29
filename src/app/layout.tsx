@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ? global[0].tagline
       : "Hoang Duc Viet's personal blog";
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   return {
     metadataBase: new URL(baseUrl),
     title: siteTitle,

@@ -59,7 +59,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
     getPostViewCount(postSlug),
   ]);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const postUrl = seriesCtx
     ? `${baseUrl}/series/${seriesCtx.series.slug}/${postSlug}`
     : `${baseUrl}/posts/${postSlug}`;

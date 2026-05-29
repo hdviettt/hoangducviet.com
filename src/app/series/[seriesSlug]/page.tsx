@@ -32,7 +32,7 @@ export async function generateMetadata({
     ]);
     const siteTitle =
       globalData && globalData.length > 0 ? globalData[0].title : "Blog";
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
     const thumbnailUrl = seriesItem.thumbnail
       ? seriesItem.thumbnail.startsWith("http")
         ? seriesItem.thumbnail
@@ -89,7 +89,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
   }
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const seriesUrl = `${baseUrl}/series/${params.seriesSlug}`;
 
   const jsonLd = createBreadcrumbSchema([

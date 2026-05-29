@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
         : "Hoang Duc Viet's personal blog";
     const profileImage = profileData?.[0]?.image || null;
     const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+      process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
     const imageUrl = profileImage
       ? profileImage.startsWith("http")
         ? profileImage
@@ -126,7 +126,7 @@ export default async function Home() {
     item.parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   const imageUrl = mainProfile.image || null;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const profileImageUrl = imageUrl
     ? imageUrl.startsWith("http")
       ? imageUrl

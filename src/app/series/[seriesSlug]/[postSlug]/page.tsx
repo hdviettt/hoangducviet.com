@@ -24,7 +24,7 @@ export async function generateMetadata({
     const siteDescription =
       globalData && globalData.length > 0 ? globalData[0].tagline : "";
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
     const thumbnailUrl = post.thumbnail
       ? post.thumbnail.startsWith("http")
         ? post.thumbnail

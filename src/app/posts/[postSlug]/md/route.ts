@@ -1,7 +1,7 @@
 import { getPostBySlug, getSeriesForPost } from "@/lib/posts";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
 
 export const dynamic = "force-dynamic";
 
