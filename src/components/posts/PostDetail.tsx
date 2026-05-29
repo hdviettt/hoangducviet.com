@@ -116,15 +116,6 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
           Home
         </Link>
 
-        {thumbnailUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={thumbnailUrl}
-            alt={data.title || ""}
-            className="w-full max-h-[440px] object-cover rounded-2xl mb-10 md:mb-14 ring-1 ring-md-outline-variant"
-          />
-        )}
-
         <div className="lg:grid lg:grid-cols-[200px_minmax(0,720px)] xl:grid-cols-[220px_minmax(0,720px)] lg:gap-16 xl:gap-24 items-start">
           {/* TOC + Series sidebar — left rail, sticky */}
           <aside className="hidden lg:block sticky top-24 self-start">
@@ -140,6 +131,16 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
 
           {/* Main Content */}
           <div className="min-w-0">
+            {thumbnailUrl && (
+              // Natural size, capped — never upscaled, so low-res thumbnails
+              // stay crisp and don't dominate the page.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={thumbnailUrl}
+                alt={data.title || ""}
+                className="w-auto max-w-full max-h-[300px] rounded-xl mb-8 md:mb-10 border border-md-outline-variant"
+              />
+            )}
             {/* Article Header — deck-label + display title pattern */}
             <header className="mb-8 sm:mb-10 md:mb-12">
               {seriesCtx && (
