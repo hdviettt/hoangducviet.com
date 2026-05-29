@@ -48,7 +48,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
   if (!data) {
     return (
       <div className="min-h-full flex items-center justify-center">
-        <p className="text-muted-foreground">Post not found</p>
+        <p className="text-muted-foreground">This post doesn't exist.</p>
       </div>
     );
   }
@@ -207,7 +207,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
                 <MarkdownContent content={data.content} />
               </div>
             ) : (
-              <p className="text-muted-foreground">No content available</p>
+              <p className="text-muted-foreground">No content here yet.</p>
             )}
 
             <div className="my-16 md:my-20">

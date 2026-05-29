@@ -86,7 +86,9 @@ export default async function SeriesPage({ params }: SeriesParams) {
   if (!seriesItem) {
     return (
       <div className="p-8">
-        <div className="text-gray-500">Series not found</div>
+        <div className="text-md-on-surface-variant">
+          This series doesn't exist.
+        </div>
       </div>
     );
   }

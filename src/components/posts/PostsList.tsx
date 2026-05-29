@@ -55,7 +55,7 @@ export default function PostsList({ items, viewCounts }: PostsListProps) {
 
       {itemsByYear.length === 0 ? (
         <p className="md-body-medium text-md-on-surface-variant">
-          No articles found.
+          Nothing published yet.
         </p>
       ) : (
         <div className="space-y-14 md:space-y-20">

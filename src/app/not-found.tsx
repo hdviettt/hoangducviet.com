@@ -20,11 +20,14 @@ export default function NotFound() {
       </svg>
 
       <h1 className="text-4xl font-semibold mb-2">404</h1>
-      <p className="text-muted-foreground mb-8">Page not found</p>
+      <p className="text-lg text-foreground mb-2">This page isn't here.</p>
+      <p className="text-sm text-muted-foreground mb-8 max-w-xs text-center">
+        Either the URL is wrong, or I moved it. Both are on me.
+      </p>
 
       <Link
         href="/"
-        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        className="text-sm text-primary hover:underline transition-colors"
       >
         Back home
       </Link>

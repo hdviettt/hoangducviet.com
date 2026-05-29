@@ -95,7 +95,9 @@ export default async function Home() {
     console.error("Error fetching data:", error);
     return (
       <div className="py-12">
-        <p className="text-muted-foreground text-sm">Unable to load content.</p>
+        <p className="text-muted-foreground text-sm">
+          Couldn't load this. Try a refresh.
+        </p>
       </div>
     );
   }
@@ -103,7 +105,7 @@ export default async function Home() {
   if (profileData.length === 0) {
     return (
       <div className="py-12">
-        <p className="text-muted-foreground text-sm">No content available.</p>
+        <p className="text-muted-foreground text-sm">Nothing here yet.</p>
       </div>
     );
   }
