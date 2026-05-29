@@ -1,7 +1,6 @@
 import { getPostBySlug, getSeriesForPost } from "@/lib/posts";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +47,7 @@ export async function GET(
       headers: {
         "Content-Type": "text/markdown; charset=utf-8",
         "Cache-Control": "public, max-age=3600",
+        "x-markdown-tokens": String(Math.ceil(body.length / 4)),
       },
     });
   } catch {

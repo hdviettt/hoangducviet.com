@@ -1,8 +1,7 @@
-import TurndownService from "turndown";
 import { getSeriesBySlug } from "@/lib/series";
+import TurndownService from "turndown";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +9,9 @@ function escapeYaml(value: string): string {
   return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function frontmatter(fields: Record<string, string | undefined | null>): string {
+function frontmatter(
+  fields: Record<string, string | undefined | null>,
+): string {
   const lines: Array<string> = ["---"];
   for (const [key, value] of Object.entries(fields)) {
     if (!value) continue;
@@ -66,6 +67,7 @@ export async function GET(
       headers: {
         "Content-Type": "text/markdown; charset=utf-8",
         "Cache-Control": "public, max-age=3600",
+        "x-markdown-tokens": String(Math.ceil(output.length / 4)),
       },
     });
   } catch {

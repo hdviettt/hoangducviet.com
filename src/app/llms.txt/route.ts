@@ -1,12 +1,11 @@
+import { db } from "@/db";
+import { seriesPosts } from "@/db/schema";
 import { getGlobalMetadata } from "@/lib/global";
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
 import { getSeriesList } from "@/lib/series";
-import { db } from "@/db";
-import { seriesPosts } from "@/db/schema";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
 
 export const dynamic = "force-dynamic";
 
@@ -85,10 +84,12 @@ export async function GET() {
     lines.push(`- [Sitemap](${BASE_URL}/sitemap.xml)`);
     lines.push("");
 
-    return new Response(lines.join("\n"), {
+    const body = lines.join("\n");
+    return new Response(body, {
       headers: {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "text/markdown; charset=utf-8",
         "Cache-Control": "public, max-age=3600",
+        "x-markdown-tokens": String(Math.ceil(body.length / 4)),
       },
     });
   } catch {
@@ -99,8 +100,9 @@ export async function GET() {
 `;
     return new Response(fallback, {
       headers: {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "text/markdown; charset=utf-8",
         "Cache-Control": "public, max-age=60",
+        "x-markdown-tokens": String(Math.ceil(fallback.length / 4)),
       },
     });
   }

@@ -11,6 +11,28 @@ function wantsMarkdown(request: NextRequest): boolean {
   return accept.toLowerCase().includes("text/markdown");
 }
 
+// Map a public content URL to the route that renders its markdown. Returns
+// null for paths with no markdown representation (or that are already
+// markdown). This is what powers `Accept: text/markdown` content negotiation:
+// agents get markdown at the canonical URL, browsers keep HTML.
+function markdownTarget(pathname: string): string | null {
+  if (pathname.endsWith("/md") || pathname.endsWith(".md")) return null;
+  if (pathname === "/") return "/llms.txt";
+
+  let m = pathname.match(/^\/(posts|projects)\/([^/]+)\/?$/);
+  if (m) return `/${m[1]}/${m[2]}/md`;
+
+  // Series post → the post's markdown (the /posts md route resolves series).
+  m = pathname.match(/^\/series\/([^/]+)\/([^/]+)\/?$/);
+  if (m) return `/posts/${m[2]}/md`;
+
+  // Series landing → the series markdown.
+  m = pathname.match(/^\/series\/([^/]+)\/?$/);
+  if (m) return `/series/${m[1]}/md`;
+
+  return null;
+}
+
 function absoluteUrl(request: NextRequest, path: string): string {
   const base = process.env.NEXT_PUBLIC_BASE_URL ?? request.nextUrl.origin;
   return `${base}${path}`;
@@ -55,31 +77,39 @@ export function middleware(request: NextRequest) {
     return ensureAnonCookie(request, NextResponse.next());
   }
 
+  // Markdown for Agents: serve the markdown rendition of the same URL when
+  // the client asks for `text/markdown`. HTML stays the default for browsers.
+  const mdTarget = markdownTarget(pathname);
+  if (mdTarget && wantsMarkdown(request)) {
+    const url = request.nextUrl.clone();
+    url.pathname = mdTarget;
+    const rewrite = NextResponse.rewrite(url);
+    rewrite.headers.set("Vary", "Accept");
+    return ensureAnonCookie(request, rewrite);
+  }
+
   const contentMatch = pathname.match(CONTENT_NEGOTIATED);
   if (contentMatch) {
     const [, collection, slug] = contentMatch;
-
-    if (wantsMarkdown(request)) {
-      const url = request.nextUrl.clone();
-      url.pathname = `/${collection}/${slug}/md`;
-      return ensureAnonCookie(request, NextResponse.rewrite(url));
-    }
-
     const response = NextResponse.next();
     const canonical = absoluteUrl(request, `/${collection}/${slug}`);
     const markdown = absoluteUrl(request, `/${collection}/${slug}/md`);
-    const links = [
-      `<${canonical}>; rel="canonical"`,
-      `<${markdown}>; rel="alternate"; type="text/markdown"`,
-      ...siteLinks(request),
-    ];
-    response.headers.set("Link", links.join(", "));
+    response.headers.set(
+      "Link",
+      [
+        `<${canonical}>; rel="canonical"`,
+        `<${markdown}>; rel="alternate"; type="text/markdown"`,
+        ...siteLinks(request),
+      ].join(", "),
+    );
+    response.headers.set("Vary", "Accept");
     return ensureAnonCookie(request, response);
   }
 
   if (SITE_LINK_PATHS.has(pathname)) {
     const response = NextResponse.next();
     response.headers.set("Link", siteLinks(request).join(", "));
+    response.headers.set("Vary", "Accept");
     return ensureAnonCookie(request, response);
   }
 
@@ -92,8 +122,8 @@ export const config = {
     "/posts",
     "/projects",
     "/admin/:path*",
-    "/posts/:slug",
-    "/projects/:slug",
+    "/posts/:path*",
+    "/projects/:path*",
     "/series/:path*",
     "/api/posts/:path*",
   ],
