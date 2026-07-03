@@ -11,7 +11,6 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [siteTitle, setSiteTitle] = useState("");
   const [tagline, setTagline] = useState("");
-  const [featuredSeriesSlug, setFeaturedSeriesSlug] = useState("");
   const [profileName, setProfileName] = useState("");
   const [profileDescription, setProfileDescription] = useState("");
   const [profileImage, setProfileImage] = useState("");
@@ -23,7 +22,7 @@ export default function AdminSettingsPage() {
       const res = await fetch("/api/settings");
       if (res.ok) {
         const data = await res.json();
-        if (data.global) { setSiteTitle(data.global.title || ""); setTagline(data.global.tagline || ""); setFeaturedSeriesSlug(data.global.featuredSeriesSlug || ""); }
+        if (data.global) { setSiteTitle(data.global.title || ""); setTagline(data.global.tagline || ""); }
         if (data.profile) { setProfileName(data.profile.name || ""); setProfileDescription(data.profile.description || ""); setProfileImage(data.profile.image || ""); setProfileHeadline(data.profile.headline || ""); setProfileAboutHtml(data.profile.aboutHtml || ""); }
       }
       setLoading(false);
@@ -39,7 +38,7 @@ export default function AdminSettingsPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          global: { title: siteTitle, tagline, featuredSeriesSlug },
+          global: { title: siteTitle, tagline },
           profile: { name: profileName, description: profileDescription, image: profileImage, headline: profileHeadline, aboutHtml: profileAboutHtml },
         }),
       });
@@ -67,11 +66,6 @@ export default function AdminSettingsPage() {
               <label className="block text-xs text-muted-foreground mb-1">tagline</label>
               <input type="text" value={tagline} onChange={(e) => setTagline(e.target.value)}
                 className="md-field" />
-            </div>
-            <div>
-              <label className="block text-xs text-muted-foreground mb-1">featured series slug (Start here)</label>
-              <input type="text" value={featuredSeriesSlug} onChange={(e) => setFeaturedSeriesSlug(e.target.value)}
-                className="md-field" placeholder="building-a-mini-search-engine" />
             </div>
           </div>
         </section>

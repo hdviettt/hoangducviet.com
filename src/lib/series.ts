@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { global, posts, series, seriesGroups, seriesPosts } from "@/db/schema";
+import { posts, series, seriesGroups, seriesPosts } from "@/db/schema";
 import { and, asc, desc, eq, notInArray, sql } from "drizzle-orm";
 
 export interface Series {
@@ -149,22 +149,4 @@ export async function getSeriesBySlug(slug: string): Promise<Series> {
       thumbnail: p.thumbnail ?? null,
     })),
   };
-}
-
-// Resolve the "Start here" flagship series from global settings. Returns null
-// when unset, unpublished, or missing — so the homepage banner only renders for
-// a real, published series.
-export async function getFeaturedSeries(): Promise<Series | null> {
-  try {
-    const rows = await db
-      .select({ slug: global.featuredSeriesSlug })
-      .from(global)
-      .limit(1);
-    const slug = rows[0]?.slug;
-    if (!slug) return null;
-    const s = await getSeriesBySlug(slug);
-    return s.status === "published" ? s : null;
-  } catch {
-    return null;
-  }
 }
