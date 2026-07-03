@@ -1,3 +1,73 @@
+import {
+  IDENTITY,
+  ORG_ID,
+  PERSON_ID,
+  PROFILEPAGE_ID,
+  SAME_AS,
+  SITE_ORIGIN,
+  WEBSITE_ID,
+} from "./identity";
+
+// The homepage entity graph — one connected @graph that declares this site as
+// the canonical home of the Person entity. WebSite → ProfilePage → Person →
+// Organization are cross-linked by @id so crawlers read them as one identity,
+// not four loose nodes. This is the piece that makes hoangducviet.com the
+// entity home rather than just another page that mentions the name.
+export function createEntityGraph(params?: {
+  description?: string;
+  image?: string;
+  dateModified?: string;
+}) {
+  const description = params?.description || IDENTITY.description;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": WEBSITE_ID,
+        url: SITE_ORIGIN,
+        name: IDENTITY.name,
+        description,
+        inLanguage: "en",
+        publisher: { "@id": PERSON_ID },
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": PROFILEPAGE_ID,
+        url: SITE_ORIGIN,
+        name: IDENTITY.name,
+        isPartOf: { "@id": WEBSITE_ID },
+        about: { "@id": PERSON_ID },
+        mainEntity: { "@id": PERSON_ID },
+        inLanguage: "en",
+        ...(params?.dateModified && { dateModified: params.dateModified }),
+      },
+      {
+        "@type": "Person",
+        "@id": PERSON_ID,
+        name: IDENTITY.name,
+        alternateName: IDENTITY.alternateName,
+        givenName: IDENTITY.givenName,
+        familyName: IDENTITY.familyName,
+        url: SITE_ORIGIN,
+        ...(params?.image && { image: params.image }),
+        email: IDENTITY.email,
+        jobTitle: IDENTITY.jobTitle,
+        description,
+        worksFor: { "@id": ORG_ID },
+        knowsAbout: [...IDENTITY.knowsAbout],
+        sameAs: SAME_AS,
+      },
+      {
+        "@type": "Organization",
+        "@id": ORG_ID,
+        name: IDENTITY.employer.name,
+        url: IDENTITY.employer.url,
+      },
+    ],
+  };
+}
+
 export function createWebSiteSchema(params: {
   name: string;
   description: string;
@@ -49,11 +119,16 @@ export function createBlogPostingSchema(params: {
     datePublished: params.datePublished,
     ...(params.dateModified && { dateModified: params.dateModified }),
     ...(params.image && { image: params.image }),
+    // Reference the same #person node the homepage defines (not a fresh inline
+    // author) so every post corroborates one entity across the whole site.
     author: {
       "@type": "Person",
+      "@id": PERSON_ID,
       name: params.authorName,
       url: params.authorUrl,
+      sameAs: SAME_AS,
     },
+    isPartOf: { "@id": WEBSITE_ID },
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": params.url,

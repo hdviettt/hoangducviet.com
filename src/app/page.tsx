@@ -2,7 +2,8 @@ import SeriesBlock from "@/components/posts/SeriesBlock";
 import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
-import { createPersonSchema, createWebSiteSchema } from "@/lib/jsonld";
+import { IDENTITY, SOCIAL_PROFILES } from "@/lib/identity";
+import { createEntityGraph } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
@@ -13,6 +14,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+// lucide brand marks keyed by the identity.ts social labels. Keeping this in the
+// UI layer means identity.ts stays free of any component imports.
+const SOCIAL_ICONS = {
+  GitHub: Github,
+  Facebook,
+  Instagram,
+  LinkedIn: Linkedin,
+} as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -44,7 +54,12 @@ export async function generateMetadata(): Promise<Metadata> {
         description: siteTagline || "",
         url: baseUrl,
         siteName: siteTitle,
-        type: "website",
+        // This page IS the person's home, so it advertises as a profile rather
+        // than a generic website — reinforces the ProfilePage/Person graph.
+        type: "profile",
+        firstName: IDENTITY.givenName,
+        lastName: IDENTITY.familyName,
+        username: IDENTITY.username,
         images: imageUrl ? [{ url: imageUrl, alt: siteTitle || "" }] : [],
       },
       twitter: {
@@ -136,24 +151,7 @@ export default async function Home() {
       : `${baseUrl}${imageUrl}`
     : undefined;
 
-  const jsonLd = [
-    createWebSiteSchema({
-      name: mainProfile.name || "Hoang Duc Viet",
-      description: "Personal blog",
-      url: baseUrl,
-    }),
-    createPersonSchema({
-      name: mainProfile.name || "Hoang Duc Viet",
-      url: baseUrl,
-      image: profileImageUrl,
-      sameAs: [
-        "https://github.com/hdviettt",
-        "https://www.facebook.com/hoangducviettt/",
-        "https://www.instagram.com/_hdviet/",
-        "https://www.linkedin.com/in/hdviet/",
-      ],
-    }),
-  ];
+  const jsonLd = createEntityGraph({ image: profileImageUrl });
 
   return (
     <div className="pb-16 md:pb-20">
@@ -189,39 +187,23 @@ export default async function Home() {
             />
           )}
           <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300 fill-mode-backwards">
-            {[
-              {
-                href: "https://github.com/hdviettt",
-                icon: Github,
-                label: "GitHub",
-              },
-              {
-                href: "https://www.facebook.com/hoangducviettt/",
-                icon: Facebook,
-                label: "Facebook",
-              },
-              {
-                href: "https://www.instagram.com/_hdviet/",
-                icon: Instagram,
-                label: "Instagram",
-              },
-              {
-                href: "https://www.linkedin.com/in/hdviet/",
-                icon: Linkedin,
-                label: "LinkedIn",
-              },
-            ].map(({ href, icon: Brand, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
-                aria-label={label}
-              >
-                <Brand className="w-5 h-5" />
-              </a>
-            ))}
+            {SOCIAL_PROFILES.map(({ href, label }) => {
+              // href/label come from identity.ts so the visible links and the
+              // JSON-LD sameAs stay in lockstep; only the icon lives in the UI.
+              const Brand = SOCIAL_ICONS[label];
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
+                  aria-label={label}
+                >
+                  <Brand className="w-5 h-5" />
+                </a>
+              );
+            })}
             <span className="w-px h-4 bg-md-outline-variant" />
             <a
               href="mailto:viethd2704@gmail.com"
