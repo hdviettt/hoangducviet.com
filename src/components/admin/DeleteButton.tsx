@@ -7,7 +7,7 @@ import ConfirmModal from "@/components/admin/ConfirmModal";
 interface DeleteButtonProps {
   slug: string;
   name: string;
-  apiPath: "posts" | "projects";
+  apiPath: "posts" | "projects" | "work";
 }
 
 export default function DeleteButton({ slug, name, apiPath }: DeleteButtonProps) {

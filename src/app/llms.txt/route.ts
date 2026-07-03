@@ -1,6 +1,7 @@
 import { getGlobalMetadata } from "@/lib/global";
 import { getPosts } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
+import { getProjects } from "@/lib/projects";
 import { getSeriesList } from "@/lib/series";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
@@ -17,12 +18,14 @@ function stripHtml(input: string | null | undefined): string {
 
 export async function GET() {
   try {
-    const [globalRows, profileRows, allPosts, allSeries] = await Promise.all([
-      getGlobalMetadata(),
-      getProfile(),
-      getPosts({ limit: 1000 }),
-      getSeriesList(),
-    ]);
+    const [globalRows, profileRows, allPosts, allSeries, allProjects] =
+      await Promise.all([
+        getGlobalMetadata(),
+        getProfile(),
+        getPosts({ limit: 1000 }),
+        getSeriesList(),
+        getProjects({ onlyPublished: true }),
+      ]);
 
     const site = globalRows[0] ?? { title: "Blog", tagline: "" };
     const profile = profileRows[0] ?? { name: "", description: "" };
@@ -55,6 +58,15 @@ export async function GET() {
       for (const s of allSeries) {
         const desc = s.summary ? `: ${s.summary}` : "";
         lines.push(`- [${s.title}](${BASE_URL}/series/${s.slug})${desc}`);
+      }
+      lines.push("");
+    }
+
+    if (allProjects.length > 0) {
+      lines.push("## Projects");
+      for (const p of allProjects) {
+        const desc = p.tagline ? `: ${p.tagline}` : "";
+        lines.push(`- [${p.title}](${BASE_URL}/projects/${p.slug})${desc}`);
       }
       lines.push("");
     }

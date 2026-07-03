@@ -18,6 +18,11 @@ const navItems = [
     match: (p: string) => p.startsWith("/posts"),
   },
   {
+    href: "/projects",
+    label: "Projects",
+    match: (p: string) => p.startsWith("/projects"),
+  },
+  {
     href: "/about",
     label: "About",
     match: (p: string) => p.startsWith("/about"),

@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { posts, series } from "@/db/schema";
+import { posts, projects, series } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import type { MetadataRoute } from "next";
 
@@ -45,6 +45,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
+    const allProjects = await db
+      .select({
+        slug: projects.slug,
+        dateUpdated: projects.dateUpdated,
+        dateCreated: projects.dateCreated,
+      })
+      .from(projects)
+      .where(eq(projects.status, "published"))
+      .orderBy(desc(projects.dateCreated));
+
+    const projectEntries = allProjects.map((p) => ({
+      url: `${BASE_URL}/projects/${p.slug}`,
+      lastModified: p.dateUpdated ?? p.dateCreated ?? new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
+
     return [
       {
         url: BASE_URL,
@@ -58,8 +75,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "yearly",
         priority: 0.8,
       },
+      {
+        url: `${BASE_URL}/projects`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.7,
+      },
       ...postEntries,
       ...seriesEntries,
+      ...projectEntries,
     ];
   } catch {
     return [{ url: BASE_URL, lastModified: new Date(), priority: 1 }];

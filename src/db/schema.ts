@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -126,6 +127,42 @@ export const adminUser = pgTable("admin_user", {
   username: text("username").notNull().default("admin"),
   passwordHash: text("password_hash").notNull(),
 });
+
+// Projects — things I built (tools, apps, experiments). A first-class content
+// type separate from writing series: carries repo/demo links, tech tags, and a
+// build status the series model can't cleanly hold.
+export const projects = pgTable("projects", {
+  slug: text("slug").primaryKey(),
+  title: text("title").notNull(),
+  tagline: text("tagline"), // one-liner for cards
+  content: text("content"), // HTML — long-form writeup on the detail page
+  thumbnail: text("thumbnail"),
+  repoUrl: text("repo_url"),
+  liveUrl: text("live_url"),
+  techTags: text("tech_tags").array(), // e.g. ["Python", "Next.js"]
+  status: text("status").notNull().default("draft"), // draft | published
+  buildStatus: text("build_status").notNull().default("live"), // live | wip | archived
+  featured: boolean("featured").notNull().default(false),
+  sortOrder: integer("sort_order").notNull().default(0),
+  dateCreated: timestamp("date_created", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  dateUpdated: timestamp("date_updated", { withTimezone: true }),
+});
+
+// Many-to-many: projects <-> posts (a project links to its explainer writing)
+export const projectPosts = pgTable(
+  "project_posts",
+  {
+    projectSlug: text("project_slug")
+      .notNull()
+      .references(() => projects.slug, { onDelete: "cascade" }),
+    postSlug: text("post_slug")
+      .notNull()
+      .references(() => posts.slug, { onDelete: "cascade" }),
+  },
+  (table) => [primaryKey({ columns: [table.projectSlug, table.postSlug] })],
+);
 
 // Media uploads tracking
 export const media = pgTable("media", {

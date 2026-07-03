@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 interface StatusToggleProps {
   slug: string;
   status: string;
-  apiPath: "posts" | "projects";
+  apiPath: "posts" | "projects" | "work";
 }
 
 export default function StatusToggle({ slug, status, apiPath }: StatusToggleProps) {
