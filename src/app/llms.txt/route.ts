@@ -37,11 +37,8 @@ export async function GET() {
 
     lines.push("## About");
     const about = stripHtml(profile.description);
-    if (about) {
-      lines.push(`- [Homepage](${BASE_URL}/) — ${about}`);
-    } else {
-      lines.push(`- [Homepage](${BASE_URL}/)`);
-    }
+    lines.push(`- [About](${BASE_URL}/about)${about ? ` — ${about}` : ""}`);
+    lines.push(`- [Homepage](${BASE_URL}/)`);
     lines.push("");
 
     if (allPosts.length > 0) {

@@ -49,6 +49,8 @@ export async function PUT(request: Request) {
           name: body.profile.name,
           description: body.profile.description,
           image: body.profile.image,
+          headline: body.profile.headline,
+          aboutHtml: body.profile.aboutHtml,
         })
         .where(eq(profile.id, 1));
     }

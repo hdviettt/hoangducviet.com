@@ -18,8 +18,10 @@ export const global = pgTable("global", {
 export const profile = pgTable("profile", {
   id: integer("id").primaryKey().default(1),
   name: text("name"),
-  description: text("description"), // HTML
+  description: text("description"), // HTML — homepage hero bio
   image: text("image"), // R2 URL or legacy /uploads/ path
+  headline: text("headline"), // About page — short H1 line
+  aboutHtml: text("about_html"), // About page — long-form bio (HTML)
 });
 
 // Post categories

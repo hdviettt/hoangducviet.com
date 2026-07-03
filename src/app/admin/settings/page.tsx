@@ -14,6 +14,8 @@ export default function AdminSettingsPage() {
   const [profileName, setProfileName] = useState("");
   const [profileDescription, setProfileDescription] = useState("");
   const [profileImage, setProfileImage] = useState("");
+  const [profileHeadline, setProfileHeadline] = useState("");
+  const [profileAboutHtml, setProfileAboutHtml] = useState("");
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -21,7 +23,7 @@ export default function AdminSettingsPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.global) { setSiteTitle(data.global.title || ""); setTagline(data.global.tagline || ""); }
-        if (data.profile) { setProfileName(data.profile.name || ""); setProfileDescription(data.profile.description || ""); setProfileImage(data.profile.image || ""); }
+        if (data.profile) { setProfileName(data.profile.name || ""); setProfileDescription(data.profile.description || ""); setProfileImage(data.profile.image || ""); setProfileHeadline(data.profile.headline || ""); setProfileAboutHtml(data.profile.aboutHtml || ""); }
       }
       setLoading(false);
     };
@@ -37,7 +39,7 @@ export default function AdminSettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           global: { title: siteTitle, tagline },
-          profile: { name: profileName, description: profileDescription, image: profileImage },
+          profile: { name: profileName, description: profileDescription, image: profileImage, headline: profileHeadline, aboutHtml: profileAboutHtml },
         }),
       });
       toast(res.ok ? "Settings saved" : "Failed to save", res.ok ? "success" : "error");
@@ -82,6 +84,21 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <MediaPicker value={profileImage} onChange={setProfileImage} label="profile image" />
+            </div>
+          </div>
+        </section>
+
+        <section className="border border-border p-5">
+          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-4 pb-2 border-b border-border">about page</h2>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">headline</label>
+              <input type="text" value={profileHeadline} onChange={(e) => setProfileHeadline(e.target.value)}
+                className="md-field" placeholder="I reverse-engineer how search and AI decide what to rank." />
+            </div>
+            <div>
+              <label className="block text-xs text-muted-foreground mb-1">body</label>
+              <RichEditor content={profileAboutHtml} onChange={setProfileAboutHtml} outputFormat="html" />
             </div>
           </div>
         </section>

@@ -68,6 +68,24 @@ export function createEntityGraph(params?: {
   };
 }
 
+// The /about page. A distinct AboutPage that resolves to the SAME #person node
+// as the homepage — it corroborates the entity home rather than competing with
+// it, and gives AI a clean declarative bio surface to lift.
+export function createAboutPageSchema(params?: { description?: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${SITE_ORIGIN}/about#aboutpage`,
+    url: `${SITE_ORIGIN}/about`,
+    name: `About — ${IDENTITY.name}`,
+    description: params?.description || IDENTITY.description,
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": PERSON_ID },
+    mainEntity: { "@id": PERSON_ID },
+    inLanguage: "en",
+  };
+}
+
 export function createWebSiteSchema(params: {
   name: string;
   description: string;
