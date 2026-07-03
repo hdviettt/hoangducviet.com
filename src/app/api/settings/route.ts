@@ -38,6 +38,7 @@ export async function PUT(request: Request) {
         .set({
           title: body.global.title,
           tagline: body.global.tagline,
+          featuredSeriesSlug: body.global.featuredSeriesSlug,
         })
         .where(eq(global.id, 1));
     }

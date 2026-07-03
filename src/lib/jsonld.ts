@@ -154,6 +154,38 @@ export function createBlogPostingSchema(params: {
   };
 }
 
+// A multi-part writing series as a structured learning resource. hasPart lists
+// each post in order and author threads back to #person, so the series reads to
+// crawlers as one authored curriculum — strong for rich results and entity.
+export function createSeriesSchema(params: {
+  title: string;
+  url: string;
+  description?: string;
+  image?: string;
+  parts: Array<{ title: string; url: string; datePublished?: string }>;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CreativeWorkSeries",
+    "@id": `${params.url}#series`,
+    name: params.title,
+    url: params.url,
+    ...(params.description && { description: params.description }),
+    ...(params.image && { image: params.image }),
+    author: { "@id": PERSON_ID },
+    isPartOf: { "@id": WEBSITE_ID },
+    numberOfItems: params.parts.length,
+    hasPart: params.parts.map((p, i) => ({
+      "@type": "BlogPosting",
+      position: i + 1,
+      name: p.title,
+      url: p.url,
+      ...(p.datePublished && { datePublished: p.datePublished }),
+      author: { "@id": PERSON_ID },
+    })),
+  };
+}
+
 export function createBreadcrumbSchema(
   items: Array<{ name: string; url: string }>,
 ) {

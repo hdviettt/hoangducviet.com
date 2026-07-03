@@ -1,7 +1,7 @@
 import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
-import { createBreadcrumbSchema } from "@/lib/jsonld";
+import { createBreadcrumbSchema, createSeriesSchema } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { getSeriesBySlug, getSeriesList } from "@/lib/series";
 import type { Metadata } from "next";
@@ -22,6 +22,11 @@ interface SeriesParams {
   params: {
     seriesSlug: string;
   };
+}
+
+// Strip a "… #4: " part prefix so the clean topic reads on its own.
+function stripPartPrefix(title: string): string {
+  return (title || "").replace(/^.*?#\d+:\s*/, "");
 }
 
 export async function generateMetadata({
@@ -102,12 +107,41 @@ export default async function SeriesPage({ params }: SeriesParams) {
     posts.map((p: any) => p.slug).filter(Boolean),
   );
 
-  const jsonLd = createBreadcrumbSchema([
-    { name: "Home", url: baseUrl },
-    { name: seriesItem.title || "", url: seriesUrl },
-  ]);
-
   const isSeries = posts.length >= 2;
+  const firstPost = posts[0];
+  const seriesDate = seriesItem.date_created
+    ? new Date(seriesItem.date_created).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+
+  const jsonLd: object[] = [
+    createBreadcrumbSchema([
+      { name: "Home", url: baseUrl },
+      { name: seriesItem.title || "", url: seriesUrl },
+    ]),
+  ];
+  if (posts.length > 0) {
+    jsonLd.push(
+      createSeriesSchema({
+        title: seriesItem.title || "",
+        url: seriesUrl,
+        description: seriesItem.summary || undefined,
+        image: seriesItem.thumbnail
+          ? seriesItem.thumbnail.startsWith("http")
+            ? seriesItem.thumbnail
+            : `${baseUrl}${seriesItem.thumbnail}`
+          : undefined,
+        parts: posts.map((p: any) => ({
+          title: (isSeries ? stripPartPrefix(p.title) : p.title) || "",
+          url: `${baseUrl}/posts/${p.slug}`,
+          datePublished: p.date_created || undefined,
+        })),
+      }),
+    );
+  }
 
   return (
     <div className="pt-12 sm:pt-16 md:pt-24 pb-24 md:pb-32">
@@ -128,29 +162,30 @@ export default async function SeriesPage({ params }: SeriesParams) {
         home
       </Link>
 
-      {/* M3 series header — overline label + display heading + supporting text */}
-      <header className="mb-12 sm:mb-16 md:mb-24">
-        <span className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-3 block">
+      {/* Flagship hero — overline, display heading, lede summary, primary CTA */}
+      <header className="mb-12 sm:mb-16 md:mb-20 max-w-3xl">
+        <span className="md-label-medium uppercase tracking-widest text-primary mb-3 block">
           {isSeries ? `series · ${posts.length} parts` : "series"}
         </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[57px] md:leading-[64px] font-normal tracking-tight text-md-on-surface mb-6 sm:mb-8">
+        <h1 className="text-4xl sm:text-5xl md:text-[56px] md:leading-[64px] font-normal tracking-tight text-md-on-surface">
           {seriesItem.title}
         </h1>
 
+        {seriesItem.summary && (
+          <p className="mt-6 text-lg md:text-xl leading-relaxed text-md-on-surface-variant max-w-2xl">
+            {seriesItem.summary}
+          </p>
+        )}
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-          <time
-            dateTime={seriesItem.date_created ?? ""}
-            className="tabular-nums text-muted-foreground/70"
-          >
-            {seriesItem.date_created &&
-              new Date(seriesItem.date_created).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-          </time>
-
+        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          {seriesDate && (
+            <time
+              dateTime={seriesItem.date_created ?? ""}
+              className="tabular-nums text-md-on-surface-variant/70"
+            >
+              {seriesDate}
+            </time>
+          )}
           {seriesItem.url && (
             <a
               href={seriesItem.url}
@@ -169,24 +204,34 @@ export default async function SeriesPage({ params }: SeriesParams) {
             </a>
           )}
         </div>
+
+        {firstPost && (
+          <Link
+            href={`/posts/${firstPost.slug}`}
+            className="mt-8 inline-flex items-center gap-2 h-12 px-6 rounded-full bg-md-primary text-md-on-primary md-label-large hover:shadow-md-1 hover:brightness-105 transition-all duration-200 ease-md-standard"
+          >
+            {isSeries ? "Start reading — Part 1" : "Start reading"}
+            <Icon name="arrow_forward" size={18} />
+          </Link>
+        )}
       </header>
 
       {/* Long-form description */}
       {seriesItem.description && (
         <div
-          className="article-content mb-20 max-w-2xl"
+          className="article-content mb-16 md:mb-20 max-w-2xl"
           dangerouslySetInnerHTML={{ __html: seriesItem.description }}
         />
       )}
 
-      {/* Parts list — naked typographic list */}
+      {/* Parts — a numbered syllabus that reads as one curriculum */}
       {posts.length > 0 && (
-        <section className="mt-12 md:mt-20">
-          <h2 className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-4 block pb-3 border-b border-md-outline-variant">
-            {isSeries ? "all parts" : "posts in this series"}
+        <section className="max-w-2xl">
+          <h2 className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-2 block pb-3 border-b border-md-outline-variant">
+            {isSeries ? "the series" : "posts in this series"}
           </h2>
 
-          <div className="grid gap-4 md:gap-5 md:grid-cols-2">
+          <ol className="flex flex-col">
             {posts.map((post: any, i: number) => {
               const d = post.date_created ? new Date(post.date_created) : null;
               const date = d
@@ -197,53 +242,38 @@ export default async function SeriesPage({ params }: SeriesParams) {
                   })
                 : "";
               const cleanTitle = isSeries
-                ? (post.title || "").replace(/^.*?#\d+:\s*/, "")
+                ? stripPartPrefix(post.title)
                 : post.title;
               const views = post.slug ? (viewCounts[post.slug] ?? 0) : 0;
 
               return (
-                <Link
-                  key={post.slug}
-                  href={`/posts/${post.slug}`}
-                  className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
-                >
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-3 flex-wrap mb-3">
-                      {isSeries && (
-                        <span className="md-label-small tabular-nums text-primary/60">
-                          Part {String(i + 1).padStart(2, "0")}
-                        </span>
-                      )}
-                      <span className="md-label-small tabular-nums text-md-on-surface-variant">
-                        {date}
-                      </span>
-                      {views > 0 && (
-                        <span className="md-label-small text-md-on-surface-variant">
-                          <ViewCount count={views} />
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
-                      {cleanTitle}
-                    </h3>
-                    {post.description && (
-                      <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
-                        {post.description}
-                      </p>
-                    )}
-                    <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
-                      Read post
-                      <Icon
-                        name="arrow_forward"
-                        size={16}
-                        className="transition-transform duration-200 group-hover:translate-x-0.5"
-                      />
+                <li key={post.slug}>
+                  <Link
+                    href={`/posts/${post.slug}`}
+                    className="group grid grid-cols-[2rem_1fr] gap-4 md:gap-6 -mx-3 px-3 py-5 rounded-xl border-b border-md-outline-variant hover:bg-md-surface-container-low transition-colors duration-200 ease-md-standard"
+                  >
+                    <span className="md-title-medium tabular-nums text-primary/50 group-hover:text-primary transition-colors duration-200 pt-0.5">
+                      {isSeries ? String(i + 1).padStart(2, "0") : "→"}
                     </span>
-                  </div>
-                </Link>
+                    <div className="min-w-0">
+                      <h3 className="md-title-large font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
+                        {cleanTitle}
+                      </h3>
+                      {post.description && (
+                        <p className="mt-1.5 md-body-medium text-md-on-surface-variant line-clamp-2">
+                          {post.description}
+                        </p>
+                      )}
+                      <div className="mt-2.5 flex items-center gap-3 flex-wrap md-label-small tabular-nums text-md-on-surface-variant/70">
+                        {date && <span>{date}</span>}
+                        {views > 0 && <ViewCount count={views} />}
+                      </div>
+                    </div>
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </section>
       )}
     </div>

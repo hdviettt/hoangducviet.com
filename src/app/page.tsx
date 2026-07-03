@@ -7,6 +7,7 @@ import { createEntityGraph } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
+import { getFeaturedSeries } from "@/lib/series";
 // Brand marks aren't in Material Symbols — keep lucide for these four only.
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import type { Metadata } from "next";
@@ -98,14 +99,17 @@ function groupByYear(
 export default async function Home() {
   let profileData: any[] = [];
   let allItems: FeedItem[] = [];
+  let featured: Awaited<ReturnType<typeof getFeaturedSeries>> = null;
 
   try {
-    const [profileResult, itemsResult] = await Promise.all([
+    const [profileResult, itemsResult, featuredResult] = await Promise.all([
       getProfile(),
       getFeedItems(),
+      getFeaturedSeries(),
     ]);
     profileData = profileResult;
     allItems = itemsResult;
+    featured = featuredResult;
   } catch (error) {
     console.error("Error fetching data:", error);
     return (
@@ -215,6 +219,40 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Start here — flagship series, chosen in Settings. Only renders when a
+          published series is set, so it silently no-ops otherwise. */}
+      {featured && (
+        <section className="mb-14 md:mb-20">
+          <Link
+            href={`/series/${featured.slug}`}
+            className="group block rounded-2xl border border-md-primary/30 bg-md-primary-container/30 p-6 md:p-8 hover:bg-md-primary-container/50 hover:shadow-md-1 transition-all duration-200 ease-md-standard"
+          >
+            <span className="inline-flex items-center gap-1.5 md-label-small uppercase tracking-widest text-primary mb-3">
+              <Icon name="auto_stories" size={14} />
+              Start here
+            </span>
+            <h2 className="text-2xl md:text-3xl font-medium tracking-tight text-md-on-surface mb-2 group-hover:text-primary transition-colors duration-200">
+              {featured.title}
+            </h2>
+            {featured.summary && (
+              <p className="md-body-medium text-md-on-surface-variant max-w-2xl mb-4 line-clamp-3">
+                {featured.summary}
+              </p>
+            )}
+            <span className="inline-flex items-center gap-1 md-label-medium text-primary">
+              {featured.posts?.length
+                ? `Read the ${featured.posts.length}-part series`
+                : "Read the series"}
+              <Icon
+                name="arrow_forward"
+                size={16}
+                className="transition-transform duration-200 group-hover:translate-x-0.5"
+              />
+            </span>
+          </Link>
+        </section>
+      )}
 
       {/* Writing — M3 card grid, year-grouped. Each post/series renders as
           an outlined card with hover elevation (blog.google pattern). 2-col

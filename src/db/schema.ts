@@ -12,6 +12,8 @@ export const global = pgTable("global", {
   id: integer("id").primaryKey().default(1),
   title: text("title").notNull().default(""),
   tagline: text("tagline").notNull().default(""),
+  // Slug of the flagship series surfaced as "Start here" on the homepage.
+  featuredSeriesSlug: text("featured_series_slug"),
 });
 
 // Profile / author data (single row, replaces Directus "hdviet" collection)
