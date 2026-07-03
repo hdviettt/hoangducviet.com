@@ -46,16 +46,20 @@ export const SOCIAL_PROFILES = [
 ] as const;
 
 // The high-authority SEONGON expert profile — already indexed and cited in AI
-// Overviews. Listing it in sameAs (and, reciprocally, linking back from that
-// page to this site) is what lets that authority reconcile with this domain as
-// the canonical entity home.
+// Overviews. Listing it in sameAs lets that authority reconcile with this
+// domain as the canonical entity home.
 export const SEONGON_EXPERT_URL =
   "https://seongon.com/chuyen-gia/hoang-duc-viet";
 
-// sameAs = every URL that provably denotes this same person. Socials + the
-// authoritative SEONGON expert profile. Add a Wikidata item URL here once it
-// exists (do not add a placeholder — a dead URL is a negative signal).
+// Wikidata item (Q140412844). Its `official website` (P856) points back to this
+// site, so listing it here closes a fully bidirectional site <-> Knowledge-Graph
+// loop — the strongest reconciliation pair we control end to end.
+export const WIKIDATA_URL = "https://www.wikidata.org/wiki/Q140412844";
+
+// sameAs = every URL that provably denotes this same person: socials + the
+// SEONGON expert profile + the Wikidata item.
 export const SAME_AS: string[] = [
   ...SOCIAL_PROFILES.map((p) => p.href),
   SEONGON_EXPERT_URL,
+  WIKIDATA_URL,
 ];
