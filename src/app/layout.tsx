@@ -3,17 +3,9 @@ import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-import dynamic from "next/dynamic";
 import ClientFileExplorer from "@/components/layout/ClientFileExplorer";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-
-const PostHogProvider = dynamic(
-  () =>
-    import("@/components/providers/PostHogProvider").then(
-      (mod) => mod.PostHogProvider,
-    ),
-  { ssr: false },
-);
+import { PostHogProvider } from "@/components/providers/PostHogProvider";
 import { getGlobalMetadata } from "@/lib/global";
 
 // DM Sans is the closest open-source match to Google Sans (the font Google
