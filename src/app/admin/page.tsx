@@ -6,6 +6,7 @@ import Link from "next/link";
 import StatusToggle from "@/components/admin/StatusToggle";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
 import EmptyState, { StatusPill } from "@/components/admin/EmptyState";
+import PageHeader from "@/components/admin/PageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -30,59 +31,65 @@ export default async function AdminDashboard() {
 
   return (
     <div className="max-w-4xl">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-medium">dashboard</h1>
-        <span className="text-xs text-muted-foreground">
-          {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
-        </span>
-      </div>
+      <PageHeader
+        title="dashboard"
+        action={
+          <span className="md-body-small text-md-on-surface-variant">
+            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+          </span>
+        }
+      />
 
       <div className="grid grid-cols-3 gap-3 mb-8 stagger-list">
         {stats.map((stat) => (
           <Link
             key={stat.label}
             href={stat.href}
-            className="group stat-card p-5 btn-press relative overflow-hidden"
+            className="group relative overflow-hidden rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 transition-shadow hover:shadow-md-1"
           >
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-primary/5 to-transparent animate-[scanLine_2s_ease-in-out_infinite]" />
-            </div>
             <Icon
               name={stat.icon}
-              size={48}
-              className="absolute right-4 bottom-3 text-border/60 group-hover:text-primary/15 transition-colors"
+              size={40}
+              className="absolute right-4 bottom-3 text-md-outline-variant group-hover:text-md-primary/25 transition-colors"
             />
             <div className="relative">
-              <div className="text-3xl font-medium text-primary tabular-nums leading-none">{stat.count}</div>
-              <div className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">{stat.label}</div>
+              <div className="text-[32px] leading-none font-medium text-md-primary tabular-nums">
+                {stat.count}
+              </div>
+              <div className="md-label-medium text-md-on-surface-variant mt-2 uppercase tracking-wider">
+                {stat.label}
+              </div>
             </div>
           </Link>
         ))}
       </div>
 
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-border">
-        <h2 className="text-xs text-muted-foreground uppercase tracking-wider">recent posts</h2>
-        <Link href="/admin/posts" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-md-outline-variant">
+        <h2 className="md-label-medium text-md-on-surface-variant uppercase tracking-wider">recent posts</h2>
+        <Link
+          href="/admin/posts"
+          className="md-label-medium text-md-on-surface-variant hover:text-md-primary transition-colors"
+        >
           view all →
         </Link>
       </div>
       <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low mb-8 overflow-hidden">
         <div className="flex items-center gap-3 px-4 py-2.5 border-b border-md-outline-variant bg-md-surface-container">
           <div className="w-9 shrink-0" />
-          <div className="md-label-small text-muted-foreground uppercase tracking-widest flex-1 font-semibold">title</div>
-          <div className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold">status</div>
+          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest flex-1">title</div>
+          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest">status</div>
         </div>
         {recentPosts.length === 0 ? (
           <EmptyState
             title="no posts yet"
             hint={
-              <Link href="/admin/posts/new" className="text-primary hover:underline">
+              <Link href="/admin/posts/new" className="text-md-primary hover:underline">
                 + new post
               </Link>
             }
           />
         ) : (
-          <div className="divide-y divide-border stagger-list">
+          <div className="divide-y divide-md-outline-variant stagger-list">
             {recentPosts.map((post) => (
               <div
                 key={post.slug}
@@ -91,7 +98,7 @@ export default async function AdminDashboard() {
                 <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
                 <Link
                   href={`/admin/posts/${post.slug}/edit`}
-                  className="text-sm flex-1 truncate hover:text-primary transition-colors"
+                  className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
                 >
                   {post.title}
                 </Link>

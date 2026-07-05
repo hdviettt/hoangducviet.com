@@ -260,7 +260,7 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
       {currentTier && (
         <div className="absolute top-2 right-3 z-20 pointer-events-none flex items-baseline gap-1.5">
           <span
-            className="font-mono font-semibold text-primary tabular-nums leading-none"
+            className="font-semibold text-md-primary tabular-nums leading-none"
             style={{ fontSize: `${Math.min(0.85 + streak * 0.003, 1.3)}rem` }}
           >
             {streak}x
@@ -268,7 +268,7 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
           {tierLabel && (
             <span
               key={tierLabel}
-              className={`text-xs font-medium text-primary opacity-80 ${tierChanged ? "animate-streak-flash" : ""}`}
+              className={`text-xs font-medium text-md-primary opacity-80 ${tierChanged ? "animate-streak-flash" : ""}`}
             >
               {tierLabel}
             </span>

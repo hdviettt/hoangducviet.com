@@ -69,23 +69,23 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
   return (
     <div>
       {label && (
-        <label className="block text-xs text-muted-foreground mb-1">{label}</label>
+        <label className="md-field-label">{label}</label>
       )}
       <div className="flex items-center gap-2">
         {value ? (
-          <div className="relative w-20 h-14 border border-border bg-muted overflow-hidden shrink-0">
+          <div className="relative w-20 h-14 border border-md-outline-variant bg-md-surface-container rounded-lg overflow-hidden shrink-0">
             <img src={value} alt="" className="w-full h-full object-cover" />
           </div>
         ) : (
-          <div className="w-20 h-14 border border-dashed border-border flex items-center justify-center shrink-0">
-            <span className="text-xs text-muted-foreground">none</span>
+          <div className="w-20 h-14 border border-dashed border-md-outline-variant rounded-lg flex items-center justify-center shrink-0">
+            <span className="md-body-small text-md-on-surface-variant">none</span>
           </div>
         )}
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="px-3 py-1.5 text-xs border border-border hover:border-primary hover:text-primary transition-colors"
+            className="md-btn md-btn-outlined md-btn-sm"
           >
             choose
           </button>
@@ -93,7 +93,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
             <button
               type="button"
               onClick={() => onChange("")}
-              className="px-3 py-1.5 text-xs text-muted-foreground hover:text-destructive transition-colors"
+              className="md-btn md-btn-text md-btn-sm"
             >
               remove
             </button>
@@ -103,16 +103,16 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
 
       {/* Modal */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-background border border-border w-full max-w-3xl max-h-[80vh] flex flex-col">
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
-              <span className="text-sm font-medium shrink-0">media library</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-md-surface-container-high rounded-2xl shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
+              <span className="md-title-small shrink-0">media library</span>
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="search..."
-                className="md-field-dense flex-1 text-xs"
+                className="md-field-dense flex-1"
               />
               <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
                 {uploading ? "uploading..." : "upload new"}
@@ -127,16 +127,16 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
               <button
                 type="button"
                 onClick={() => { setOpen(false); setSearch(""); }}
-                className="text-muted-foreground hover:text-foreground text-lg leading-none shrink-0"
+                className="text-md-on-surface-variant hover:text-md-on-surface md-title-medium leading-none shrink-0"
               >
                 x
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {loading ? (
-                <div className="text-sm text-muted-foreground text-center py-10">loading...</div>
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">loading...</div>
               ) : images.length === 0 ? (
-                <div className="text-sm text-muted-foreground text-center py-10">
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
                   no images yet. upload one above.
                 </div>
               ) : (
@@ -148,10 +148,10 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
                         key={item.id}
                         type="button"
                         onClick={() => { onChange(item.url); setOpen(false); }}
-                        className={`aspect-square border overflow-hidden transition-all ${
+                        className={`aspect-square border rounded-xl overflow-hidden transition-all ${
                           isSelected
-                            ? "border-primary ring-2 ring-primary"
-                            : "border-border hover:border-primary"
+                            ? "border-md-primary ring-2 ring-md-primary"
+                            : "border-md-outline-variant hover:border-md-primary"
                         }`}
                       >
                         <img

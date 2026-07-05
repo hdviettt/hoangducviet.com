@@ -69,13 +69,13 @@ function Sparkline({
   const lastDate = dates?.[dates.length - 1];
 
   return (
-    <div className="mb-4 p-3 border border-border bg-card">
-      <div className="text-xs text-muted-foreground mb-1.5">{label}</div>
-      <div className="text-primary text-lg tracking-[0.15em] font-mono overflow-hidden">
+    <div className="mb-4 p-3 rounded-xl border border-md-outline-variant bg-md-surface-container-low">
+      <div className="md-body-small text-md-on-surface-variant mb-1.5">{label}</div>
+      <div className="text-md-primary text-lg tracking-[0.15em] font-mono overflow-hidden">
         {sparkline}
       </div>
       {firstDate && lastDate && (
-        <div className="flex justify-between md-label-small text-muted-foreground mt-1.5">
+        <div className="flex justify-between md-label-small text-md-on-surface-variant mt-1.5">
           <span>{firstDate}</span>
           <span>{lastDate}</span>
         </div>
@@ -94,13 +94,13 @@ function StatCard({
   icon: string;
 }) {
   return (
-    <div className="stat-card p-4 relative overflow-hidden">
+    <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4 relative overflow-hidden">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-2xl font-medium text-primary">{value}</div>
-          <div className="text-xs text-muted-foreground mt-1">{label}</div>
+          <div className="text-2xl font-medium text-md-primary tabular-nums">{value}</div>
+          <div className="md-body-small text-md-on-surface-variant mt-1">{label}</div>
         </div>
-        <Icon name={icon} size={20} className="text-muted-foreground/30" />
+        <Icon name={icon} size={20} className="text-md-outline-variant" />
       </div>
     </div>
   );
@@ -113,9 +113,9 @@ function SkeletonCards({ count = 3 }: { count?: number }) {
       style={{ gridTemplateColumns: `repeat(${count}, 1fr)` }}
     >
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="border border-border p-4">
-          <div className="h-8 bg-muted animate-pulse w-16 mb-2" />
-          <div className="h-3 bg-muted animate-pulse w-20" />
+        <div key={i} className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4">
+          <div className="h-8 bg-md-surface-container animate-pulse w-16 mb-2 rounded" />
+          <div className="h-3 bg-md-surface-container animate-pulse w-20 rounded" />
         </div>
       ))}
     </div>
@@ -150,8 +150,8 @@ export default function AnalyticsDashboard() {
 
   return (
     <section className="mt-8">
-      <div className="flex items-center justify-between mb-4 pb-2 border-b border-border">
-        <h2 className="text-xs text-muted-foreground uppercase tracking-wider">
+      <div className="flex items-center justify-between mb-4 pb-2 border-b border-md-outline-variant">
+        <h2 className="md-label-medium text-md-on-surface-variant uppercase tracking-wider">
           analytics
         </h2>
         {/* M3 segmented button */}
@@ -174,22 +174,22 @@ export default function AnalyticsDashboard() {
       </div>
 
       {error && (
-        <div className="border border-destructive/30 bg-destructive/5 p-3 mb-4 text-sm text-destructive">
+        <div className="rounded-xl border border-md-error/40 bg-md-error/10 p-3 mb-4 md-body-medium text-md-error">
           {error}
         </div>
       )}
 
       {/* PostHog Section */}
       <div className="mb-6">
-        <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+        <div className="md-body-small text-md-on-surface-variant mb-3 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-md-primary" />
           posthog · site analytics
         </div>
 
         {loading ? (
           <>
             <SkeletonCards count={3} />
-            <div className="h-16 bg-muted animate-pulse mb-4 border border-border" />
+            <div className="h-16 bg-md-surface-container animate-pulse mb-4 rounded-xl border border-md-outline-variant" />
           </>
         ) : posthog?.configured && posthog.daily ? (
           <div className="stagger-list">
@@ -227,13 +227,13 @@ export default function AnalyticsDashboard() {
                     key={page.path}
                     className="flex items-center gap-3 py-1.5 px-3 row-hover"
                   >
-                    <span className="text-xs text-muted-foreground w-5 text-right">
+                    <span className="md-body-small text-md-on-surface-variant w-5 text-right tabular-nums">
                       {i + 1}
                     </span>
-                    <span className="text-sm flex-1 truncate">
+                    <span className="md-body-medium flex-1 truncate">
                       {page.path}
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="md-body-small text-md-on-surface-variant tabular-nums">
                       {formatNumber(page.views)}
                     </span>
                   </div>
@@ -242,7 +242,7 @@ export default function AnalyticsDashboard() {
             )}
           </div>
         ) : (
-          <div className="border border-dashed border-border p-4 mb-4 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-md-outline-variant p-4 mb-4 md-body-medium text-md-on-surface-variant">
             PostHog not configured. Set{" "}
             <code className="text-xs">POSTHOG_PERSONAL_API_KEY</code> and{" "}
             <code className="text-xs">POSTHOG_PROJECT_ID</code> to enable.
@@ -252,15 +252,15 @@ export default function AnalyticsDashboard() {
 
       {/* Cloudflare Section */}
       <div>
-        <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+        <div className="md-body-small text-md-on-surface-variant mb-3 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-md-tertiary" />
           cloudflare · edge analytics
         </div>
 
         {loading ? (
           <>
             <SkeletonCards count={4} />
-            <div className="h-16 bg-muted animate-pulse mb-4 border border-border" />
+            <div className="h-16 bg-md-surface-container animate-pulse mb-4 rounded-xl border border-md-outline-variant" />
           </>
         ) : cloudflare?.configured && cloudflare.daily ? (
           <div className="stagger-list">
@@ -294,7 +294,7 @@ export default function AnalyticsDashboard() {
             />
           </div>
         ) : (
-          <div className="border border-dashed border-border p-4 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-md-outline-variant p-4 md-body-medium text-md-on-surface-variant">
             Cloudflare not configured. Set{" "}
             <code className="text-xs">CLOUDFLARE_API_TOKEN</code> and{" "}
             <code className="text-xs">CLOUDFLARE_ZONE_ID</code> to enable.

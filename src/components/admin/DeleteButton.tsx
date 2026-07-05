@@ -25,7 +25,7 @@ export default function DeleteButton({ slug, name, apiPath }: DeleteButtonProps)
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+        className="md-label-medium text-md-on-surface-variant hover:text-md-error transition-colors"
       >
         delete
       </button>

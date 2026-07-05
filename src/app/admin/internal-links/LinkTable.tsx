@@ -56,7 +56,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             key={col.key}
             type="button"
             onClick={() => toggleSort(col.key)}
-            className={`flex items-center gap-1 text-xs text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors ${col.className}`}
+            className={`flex items-center gap-1 md-label-small text-md-on-surface-variant uppercase tracking-widest hover:text-md-on-surface transition-colors ${col.className}`}
           >
             {col.label}
             {sortKey === col.key && <Icon name="swap_vert" size={14} />}
@@ -75,7 +75,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             className="flex items-center gap-3 px-4 py-3 row-hover w-full text-left"
           >
             <span
-              className={`md-label-small uppercase font-medium px-1.5 py-0.5 w-20 text-center ${
+              className={`md-label-small uppercase font-medium rounded px-1.5 py-0.5 w-20 text-center ${
                 row.type === "post"
                   ? "bg-md-primary-container text-md-on-primary-container"
                   : "bg-md-tertiary-container text-md-on-tertiary-container"
@@ -83,55 +83,55 @@ export default function LinkTable({ data }: { data: Row[] }) {
             >
               {row.type}
             </span>
-            <span className="text-sm flex-1 min-w-0 truncate">{row.title}</span>
+            <span className="md-body-medium flex-1 min-w-0 truncate">{row.title}</span>
             <span
-              className={`text-sm w-24 text-right ${
+              className={`md-body-medium w-24 text-right ${
                 row.incomingCount === 0
                   ? "text-md-tertiary"
-                  : "text-muted-foreground"
+                  : "text-md-on-surface-variant"
               }`}
             >
               {row.incomingCount}
             </span>
-            <span className="text-sm text-muted-foreground w-24 text-right">
+            <span className="md-body-medium text-md-on-surface-variant w-24 text-right">
               {row.outgoingCount}
             </span>
           </button>
 
           {/* Expanded detail */}
           {expanded === row.path && (
-            <div className="px-4 pb-3 pt-0 bg-muted/10 border-t border-border/50">
+            <div className="px-4 pb-3 pt-0 bg-md-surface-container/40 border-t border-md-outline-variant">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-3">
                 <div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
+                  <div className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-2">
                     incoming ({row.incomingCount})
                   </div>
                   {row.incomingSources.length > 0 ? (
                     <ul className="space-y-1">
                       {row.incomingSources.map((src) => (
-                        <li key={src} className="text-xs text-muted-foreground">
+                        <li key={src} className="md-body-small text-md-on-surface-variant">
                           {src}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs text-yellow-500">no incoming links</p>
+                    <p className="md-body-small text-md-tertiary">no incoming links</p>
                   )}
                 </div>
                 <div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
+                  <div className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-2">
                     outgoing ({row.outgoingCount})
                   </div>
                   {row.outgoingTargets.length > 0 ? (
                     <ul className="space-y-1">
                       {row.outgoingTargets.map((tgt) => (
-                        <li key={tgt} className="text-xs text-muted-foreground">
+                        <li key={tgt} className="md-body-small text-md-on-surface-variant">
                           {tgt}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="md-body-small text-md-on-surface-variant">
                       no outgoing links
                     </p>
                   )}
@@ -143,7 +143,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
                     ? `/admin/posts/${row.slug}/edit`
                     : `/admin/projects/${row.slug}/edit`
                 }
-                className="text-xs text-primary hover:underline"
+                className="md-body-small text-md-primary hover:underline"
               >
                 edit {row.type}
               </Link>
@@ -153,7 +153,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
       ))}
 
       {sorted.length === 0 && (
-        <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+        <div className="px-4 py-8 text-center md-body-medium text-md-on-surface-variant">
           no published pages found.
         </div>
       )}

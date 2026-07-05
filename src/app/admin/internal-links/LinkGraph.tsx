@@ -30,14 +30,6 @@ type Props = {
 
 const NODE_RADIUS = 6;
 const HIT_RADIUS = 14;
-const COLORS = {
-  post: "#3b82f6",
-  project: "#a855f7",
-  edge: "rgba(255,255,255,0.08)",
-  edgeHover: "rgba(255,255,255,0.25)",
-  label: "#a1a1aa",
-  orphan: "#eab308",
-};
 
 export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -172,6 +164,20 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
     const hovId = hoveredRef.current;
 
+    // Resolve M3 color tokens to concrete colors — the canvas 2D context
+    // can't read CSS custom properties, so pull them off the root element.
+    const rootStyle = getComputedStyle(document.documentElement);
+    const token = (name: string) =>
+      `hsl(${rootStyle.getPropertyValue(name).trim()})`;
+    const COLORS = {
+      post: token("--md-sys-color-primary"),
+      project: token("--md-sys-color-tertiary"),
+      edge: token("--md-sys-color-outline"),
+      edgeHover: token("--md-sys-color-on-surface-variant"),
+      label: token("--md-sys-color-on-surface-variant"),
+      orphan: token("--md-sys-color-error"),
+    };
+
     // Edges
     for (const edge of edges) {
       const s = nodeMap.get(edge.source);
@@ -221,7 +227,7 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
       ctx.globalAlpha = 1;
 
       if (isHov) {
-        ctx.font = "12px var(--font-mono), monospace";
+        ctx.font = "12px system-ui, sans-serif";
         ctx.fillStyle = COLORS.label;
         ctx.textAlign = "center";
         ctx.fillText(node.label, node.x, node.y - radius - 6);
@@ -323,27 +329,27 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full border border-border relative">
+    <div ref={containerRef} className="w-full rounded-xl border border-md-outline-variant relative overflow-hidden">
       {/* Legend */}
-      <div className="absolute top-3 left-3 flex gap-4 md-label-small text-muted-foreground z-10">
+      <div className="absolute top-3 left-3 flex gap-4 md-label-small text-md-on-surface-variant z-10">
         <span className="flex items-center gap-1.5">
           <span
             className="w-2.5 h-2.5 rounded-full"
-            style={{ background: COLORS.post }}
+            style={{ background: "hsl(var(--md-sys-color-primary))" }}
           />
           post
         </span>
         <span className="flex items-center gap-1.5">
           <span
             className="w-2.5 h-2.5 rounded-full"
-            style={{ background: COLORS.project }}
+            style={{ background: "hsl(var(--md-sys-color-tertiary))" }}
           />
           project
         </span>
         <span className="flex items-center gap-1.5">
           <span
             className="w-2.5 h-2.5 rounded-full"
-            style={{ background: COLORS.orphan }}
+            style={{ background: "hsl(var(--md-sys-color-error))" }}
           />
           orphan
         </span>

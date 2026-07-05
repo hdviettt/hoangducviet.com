@@ -77,17 +77,17 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
       {/* Editor pane */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <div className="shrink-0 bg-background border-b border-border px-8 py-3 flex items-center gap-3">
+        <div className="shrink-0 bg-md-background border-b border-md-outline-variant px-8 py-3 flex items-center gap-3">
           <input
             type="text"
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="post title..."
-            className="flex-1 bg-transparent text-xl font-medium focus:outline-none placeholder:text-muted-foreground/40"
+            className="flex-1 bg-transparent md-title-large focus:outline-none placeholder:text-md-on-surface-variant/40"
             required
           />
-          <div className="flex items-center gap-1 md-label-small text-muted-foreground font-mono uppercase tracking-widest">
-            <span className={`w-1.5 h-1.5 rounded-full ${status === "published" ? "bg-green-500" : "bg-yellow-500"}`} />
+          <div className="flex items-center gap-1 md-label-small text-md-on-surface-variant uppercase tracking-widest">
+            <span className={`w-1.5 h-1.5 rounded-full ${status === "published" ? "bg-md-primary" : "bg-md-on-surface-variant"}`} />
             {status}
           </div>
           <Button type="submit" disabled={saving} size="sm" className="shrink-0">
@@ -97,7 +97,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
             type="button"
             onClick={() => setDrawerOpen(!drawerOpen)}
             title={drawerOpen ? "Hide sidebar" : "Show sidebar"}
-            className="p-1.5 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            className="p-1.5 rounded-lg text-md-on-surface-variant hover:text-md-on-surface transition-colors shrink-0"
           >
             <Icon name={drawerOpen ? "right_panel_close" : "right_panel_open"} size={18} />
           </button>
@@ -111,11 +111,11 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
 
       {/* Right metadata drawer */}
       {drawerOpen && (
-        <aside className="w-80 shrink-0 border-l border-border bg-card overflow-y-auto">
+        <aside className="w-80 shrink-0 border-l border-md-outline-variant bg-md-surface-container-low overflow-y-auto">
           <div className="p-5 space-y-6">
             {/* Publish */}
             <section>
-              <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+              <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
                 publish
               </h3>
               <div className="space-y-3">
@@ -135,7 +135,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
 
             {/* Metadata */}
             <section>
-              <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+              <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
                 metadata
               </h3>
               <div className="space-y-3">
@@ -145,7 +145,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
                     type="text"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
-                    className="md-field font-mono"
+                    className="md-field"
                     required
                   />
                 </div>
@@ -179,7 +179,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
 
             {/* Thumbnail */}
             <section>
-              <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+              <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
                 thumbnail
               </h3>
               <MediaPicker value={thumbnail} onChange={setThumbnail} />
@@ -188,7 +188,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
             {/* Categories */}
             {allCategories.length > 0 && (
               <section>
-                <h3 className="md-label-small text-muted-foreground uppercase tracking-widest font-semibold mb-3 pb-2 border-b border-border">
+                <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
                   categories
                 </h3>
                 {/* M3 filter chips */}

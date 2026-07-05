@@ -60,6 +60,8 @@ const config: Config = {
         "md-on-secondary-container": "hsl(var(--md-sys-color-on-secondary-container))",
         "md-tertiary": "hsl(var(--md-sys-color-tertiary))",
         "md-on-tertiary": "hsl(var(--md-sys-color-on-tertiary))",
+        "md-tertiary-container": "hsl(var(--md-sys-color-tertiary-container))",
+        "md-on-tertiary-container": "hsl(var(--md-sys-color-on-tertiary-container))",
         "md-error": "hsl(var(--md-sys-color-error))",
         "md-on-error": "hsl(var(--md-sys-color-on-error))",
         "md-background": "hsl(var(--md-sys-color-background))",

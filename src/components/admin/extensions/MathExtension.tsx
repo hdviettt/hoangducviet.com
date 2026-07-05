@@ -43,7 +43,7 @@ function MathInlineView({ node, updateAttributes, selected }: any) {
             }
           }}
           onBlur={save}
-          className="bg-muted border border-primary px-1.5 py-0.5 text-sm font-mono rounded-sm inline-block"
+          className="bg-md-surface-container border border-md-primary px-1.5 py-0.5 md-body-medium font-mono rounded-sm inline-block"
           style={{ width: `${Math.max(4, latex.length + 2)}ch` }}
           placeholder="E=mc^2"
         />
@@ -63,7 +63,7 @@ function MathInlineView({ node, updateAttributes, selected }: any) {
   return (
     <NodeViewWrapper
       as="span"
-      className={`inline cursor-pointer ${selected ? "ring-1 ring-primary ring-offset-1 rounded-sm" : ""}`}
+      className={`inline cursor-pointer ${selected ? "ring-1 ring-md-primary ring-offset-1 rounded-sm" : ""}`}
       onClick={() => setEditing(true)}
       contentEditable={false}
     >
@@ -94,7 +94,7 @@ function MathBlockView({ node, updateAttributes, selected }: any) {
   if (editing) {
     return (
       <NodeViewWrapper className="my-4">
-        <div className="border border-primary bg-muted/50 p-3">
+        <div className="rounded-lg border border-md-primary bg-md-surface-container p-3">
           <textarea
             ref={textareaRef}
             value={latex}
@@ -114,7 +114,7 @@ function MathBlockView({ node, updateAttributes, selected }: any) {
             className="md-field font-mono"
             placeholder="\frac{a}{b} = c"
           />
-          <p className="text-xs text-muted-foreground mt-1.5">
+          <p className="md-body-small text-md-on-surface-variant mt-1.5">
             Enter to save · Shift+Enter for newline · Escape to cancel
           </p>
         </div>
@@ -134,7 +134,7 @@ function MathBlockView({ node, updateAttributes, selected }: any) {
 
   return (
     <NodeViewWrapper
-      className={`my-4 cursor-pointer text-center ${selected ? "ring-1 ring-primary ring-offset-2 rounded-sm" : ""}`}
+      className={`my-4 cursor-pointer text-center ${selected ? "ring-1 ring-md-primary ring-offset-2 rounded-sm" : ""}`}
       onClick={() => setEditing(true)}
       contentEditable={false}
     >

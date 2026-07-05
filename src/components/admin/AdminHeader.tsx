@@ -23,14 +23,14 @@ export default function AdminHeader() {
   const { section, page } = getBreadcrumb(pathname);
 
   return (
-    <header className="h-11 shrink-0 border-b border-border bg-card flex items-center px-8 gap-2">
-      <span className={`text-sm ${page ? "text-muted-foreground" : "font-medium text-foreground"}`}>
+    <header className="h-11 shrink-0 border-b border-md-outline-variant bg-md-surface-container-low flex items-center px-8 gap-2">
+      <span className={`md-label-large ${page ? "text-md-on-surface-variant" : "text-md-on-surface"}`}>
         {section}
       </span>
       {page && (
         <>
-          <Icon name="chevron_right" size={16} className="text-muted-foreground/40 shrink-0" />
-          <span className="text-sm font-medium text-foreground">{page}</span>
+          <Icon name="chevron_right" size={16} className="text-md-on-surface-variant/50 shrink-0" />
+          <span className="md-label-large text-md-on-surface">{page}</span>
         </>
       )}
     </header>

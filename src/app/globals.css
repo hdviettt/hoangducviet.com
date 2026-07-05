@@ -24,6 +24,8 @@
 
     --md-sys-color-tertiary: 280 35% 45%;
     --md-sys-color-on-tertiary: 0 0% 100%;
+    --md-sys-color-tertiary-container: 280 45% 92%;
+    --md-sys-color-on-tertiary-container: 280 40% 22%;
 
     --md-sys-color-error: 4 76% 49%;
     --md-sys-color-on-error: 0 0% 100%;
@@ -129,6 +131,8 @@
 
     --md-sys-color-tertiary: 280 45% 78%;
     --md-sys-color-on-tertiary: 280 50% 18%;
+    --md-sys-color-tertiary-container: 280 30% 30%;
+    --md-sys-color-on-tertiary-container: 280 45% 92%;
 
     --md-sys-color-error: 4 100% 80%;
     --md-sys-color-on-error: 4 100% 16%;

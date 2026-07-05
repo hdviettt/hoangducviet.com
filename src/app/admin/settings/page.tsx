@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
 import { useToast } from "@/components/admin/Toast";
+import PageHeader from "@/components/admin/PageHeader";
 
 export default function AdminSettingsPage() {
   const { toast } = useToast();
@@ -47,39 +48,39 @@ export default function AdminSettingsPage() {
     finally { setSaving(false); }
   };
 
-  if (loading) return <div className="text-sm text-muted-foreground">loading...</div>;
+  if (loading) return <div className="md-body-medium text-md-on-surface-variant">loading...</div>;
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-xl font-medium mb-6">settings</h1>
+      <PageHeader title="settings" />
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <section className="border border-border p-5">
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-4 pb-2 border-b border-border">site</h2>
+        <section className="rounded-xl border border-md-outline-variant p-5">
+          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-4 pb-2 border-b border-md-outline-variant">site</h2>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">title</label>
+              <label className="md-field-label">title</label>
               <input type="text" value={siteTitle} onChange={(e) => setSiteTitle(e.target.value)}
                 className="md-field" />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">tagline</label>
+              <label className="md-field-label">tagline</label>
               <input type="text" value={tagline} onChange={(e) => setTagline(e.target.value)}
                 className="md-field" />
             </div>
           </div>
         </section>
 
-        <section className="border border-border p-5">
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-4 pb-2 border-b border-border">profile</h2>
+        <section className="rounded-xl border border-md-outline-variant p-5">
+          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-4 pb-2 border-b border-md-outline-variant">profile</h2>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">name</label>
+              <label className="md-field-label">name</label>
               <input type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)}
                 className="md-field" />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">description</label>
+              <label className="md-field-label">description</label>
               <RichEditor content={profileDescription} onChange={setProfileDescription} outputFormat="html" />
             </div>
             <div>
@@ -88,16 +89,16 @@ export default function AdminSettingsPage() {
           </div>
         </section>
 
-        <section className="border border-border p-5">
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-4 pb-2 border-b border-border">about page</h2>
+        <section className="rounded-xl border border-md-outline-variant p-5">
+          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-4 pb-2 border-b border-md-outline-variant">about page</h2>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">headline</label>
+              <label className="md-field-label">headline</label>
               <input type="text" value={profileHeadline} onChange={(e) => setProfileHeadline(e.target.value)}
                 className="md-field" placeholder="I reverse-engineer how search and AI decide what to rank." />
             </div>
             <div>
-              <label className="block text-xs text-muted-foreground mb-1">body</label>
+              <label className="md-field-label">body</label>
               <RichEditor content={profileAboutHtml} onChange={setProfileAboutHtml} outputFormat="html" />
             </div>
           </div>

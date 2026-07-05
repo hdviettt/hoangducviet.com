@@ -241,15 +241,15 @@ function SlashMenu({
   };
 
   return (
-    <div className="absolute z-50 bg-card border border-border shadow-lg w-64 max-h-72 overflow-y-auto">
-      <div className="p-2 border-b border-border">
+    <div className="absolute z-50 rounded-xl bg-md-surface-container-high border border-md-outline-variant shadow-md-3 w-64 max-h-72 overflow-y-auto">
+      <div className="p-2 border-b border-md-outline-variant">
         <input
           ref={inputRef}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Filter..."
-          className="w-full bg-transparent text-sm focus:outline-none"
+          className="w-full bg-transparent md-body-medium focus:outline-none"
         />
       </div>
       {filtered.map((item, i) => (
@@ -257,25 +257,25 @@ function SlashMenu({
           key={item.title}
           type="button"
           onClick={() => execute(item)}
-          className={`w-full text-left px-3 py-2 flex items-center gap-3 text-sm transition-colors ${
+          className={`w-full text-left px-3 py-2 flex items-center gap-3 md-body-medium transition-colors ${
             i === selected
-              ? "bg-primary/10 text-primary"
-              : "hover:bg-muted text-foreground"
+              ? "bg-md-primary/10 text-md-primary"
+              : "hover:bg-md-on-surface/8 text-md-on-surface"
           }`}
         >
-          <span className="w-6 text-center font-mono text-xs text-muted-foreground">
+          <span className="w-6 text-center md-body-small text-md-on-surface-variant">
             {item.icon}
           </span>
           <div>
             <div className="font-medium">{item.title}</div>
-            <div className="text-xs text-muted-foreground">
+            <div className="md-body-small text-md-on-surface-variant">
               {item.description}
             </div>
           </div>
         </button>
       ))}
       {filtered.length === 0 && (
-        <div className="px-3 py-4 text-sm text-muted-foreground text-center">
+        <div className="px-3 py-4 md-body-medium text-md-on-surface-variant text-center">
           No results
         </div>
       )}
@@ -301,10 +301,10 @@ function ToolbarButton({
       type="button"
       onClick={onClick}
       title={title}
-      className={`px-2 py-1 text-xs font-mono transition-colors ${
+      className={`px-2 py-1 md-label-medium rounded-lg transition-colors ${
         active
-          ? "text-primary bg-primary/10"
-          : "text-muted-foreground hover:text-foreground"
+          ? "bg-md-secondary-container text-md-on-secondary-container"
+          : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
       }`}
     >
       {children}
@@ -572,9 +572,9 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   if (!editor) return null;
 
   return (
-    <div ref={editorRef} className="border border-border bg-background relative flex flex-col h-full">
+    <div ref={editorRef} className="rounded-xl border border-md-outline-variant bg-md-surface relative flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex items-center gap-0.5 px-2 py-1 border-b border-border bg-card overflow-x-auto sticky top-0 z-10 shrink-0">
+      <div className="flex items-center gap-0.5 px-2 py-1 border-b border-md-outline-variant bg-md-surface-container-low overflow-x-auto sticky top-0 z-10 shrink-0">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive("bold")}
@@ -604,7 +604,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           {"</>"}
         </ToolbarButton>
 
-        <span className="w-px h-5 bg-border mx-1" />
+        <span className="w-px h-5 bg-md-outline-variant mx-1" />
 
         <ToolbarButton
           onClick={() =>
@@ -634,7 +634,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           H3
         </ToolbarButton>
 
-        <span className="w-px h-5 bg-border mx-1" />
+        <span className="w-px h-5 bg-md-outline-variant mx-1" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -665,7 +665,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           {"{ }"}
         </ToolbarButton>
 
-        <span className="w-px h-5 bg-border mx-1" />
+        <span className="w-px h-5 bg-md-outline-variant mx-1" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
@@ -695,7 +695,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         {/* Table controls — visible when cursor is inside a table */}
         {editor.isActive("table") && (
           <>
-            <span className="w-px h-5 bg-border mx-1" />
+            <span className="w-px h-5 bg-md-outline-variant mx-1" />
             <ToolbarButton
               onClick={() => editor.chain().focus().addColumnBefore().run()}
               title="Insert column before"
@@ -712,9 +712,9 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
               onClick={() => editor.chain().focus().deleteColumn().run()}
               title="Delete column"
             >
-              Ã—Col
+              ×Col
             </ToolbarButton>
-            <span className="w-px h-5 bg-border mx-1" />
+            <span className="w-px h-5 bg-md-outline-variant mx-1" />
             <ToolbarButton
               onClick={() => editor.chain().focus().addRowBefore().run()}
               title="Insert row above"
@@ -731,9 +731,9 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
               onClick={() => editor.chain().focus().deleteRow().run()}
               title="Delete row"
             >
-              Ã—Row
+              ×Row
             </ToolbarButton>
-            <span className="w-px h-5 bg-border mx-1" />
+            <span className="w-px h-5 bg-md-outline-variant mx-1" />
             <ToolbarButton
               onClick={() => editor.chain().focus().toggleHeaderRow().run()}
               title="Toggle header row"
@@ -744,7 +744,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
               onClick={() => editor.chain().focus().deleteTable().run()}
               title="Delete table"
             >
-              Ã—Table
+              ×Table
             </ToolbarButton>
           </>
         )}
@@ -772,15 +772,15 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       {/* Image Picker Modal */}
       {showImagePicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-background border border-border w-full max-w-3xl max-h-[80vh] flex flex-col">
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
-              <span className="text-sm font-medium shrink-0">insert image</span>
+          <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
+              <span className="md-title-small shrink-0">insert image</span>
               <input
                 type="text"
                 value={imagePickerSearch}
                 onChange={(e) => setImagePickerSearch(e.target.value)}
                 placeholder="search..."
-                className="md-field-dense flex-1 text-xs"
+                className="md-field-dense flex-1"
               />
               <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
                 {imagePickerUploading ? "uploading..." : "upload new"}
@@ -795,14 +795,14 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
               <button
                 type="button"
                 onClick={() => setShowImagePicker(false)}
-                className="text-muted-foreground hover:text-foreground text-lg leading-none shrink-0"
+                className="text-md-on-surface-variant hover:text-md-on-surface text-lg leading-none shrink-0"
               >
                 x
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {imagePickerLoading ? (
-                <div className="text-sm text-muted-foreground text-center py-10">loading...</div>
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">loading...</div>
               ) : (() => {
                 const images = imagePickerItems.filter((i) => {
                   if (!i.mimeType?.startsWith("image/")) return false;
@@ -813,7 +813,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                   return true;
                 });
                 return images.length === 0 ? (
-                  <div className="text-sm text-muted-foreground text-center py-10">
+                  <div className="md-body-medium text-md-on-surface-variant text-center py-10">
                     no images found. upload one above.
                   </div>
                 ) : (
@@ -823,7 +823,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                         key={item.id}
                         type="button"
                         onClick={() => selectImageFromPicker(item.url)}
-                        className="aspect-square border border-border overflow-hidden hover:border-primary transition-colors"
+                        className="aspect-square rounded-lg border border-md-outline-variant overflow-hidden hover:border-md-primary transition-colors"
                       >
                         <img
                           src={item.url}
@@ -843,13 +843,13 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       {/* Widget Picker Modal */}
       {showWidgetPicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-background border border-border w-full max-w-lg max-h-[80vh] flex flex-col">
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
-              <span className="text-sm font-medium flex-1">insert widget</span>
+          <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-lg max-h-[80vh] flex flex-col">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
+              <span className="md-title-small flex-1">insert widget</span>
               <button
                 type="button"
                 onClick={() => setShowWidgetPicker(false)}
-                className="text-muted-foreground hover:text-foreground text-lg leading-none"
+                className="text-md-on-surface-variant hover:text-md-on-surface text-lg leading-none"
               >
                 x
               </button>
@@ -865,32 +865,32 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                       JSON.stringify(widget.defaultProps, null, 2),
                     );
                   }}
-                  className={`w-full text-left px-4 py-3 border transition-colors ${
+                  className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                     selectedWidget === key
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-foreground/30"
+                      ? "border-md-primary bg-md-primary/8"
+                      : "border-md-outline-variant hover:border-md-outline"
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-mono text-muted-foreground">
+                    <span className="md-body-medium text-md-on-surface-variant">
                       {widget.icon}
                     </span>
-                    <span className="font-medium text-sm">{widget.name}</span>
+                    <span className="md-title-small">{widget.name}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="md-body-small text-md-on-surface-variant mt-1">
                     {widget.description}
                   </p>
                 </button>
               ))}
               {Object.keys(widgetRegistry).length === 0 && (
-                <div className="text-sm text-muted-foreground text-center py-10">
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
                   no widgets registered.
                 </div>
               )}
             </div>
             {selectedWidget && (
-              <div className="border-t border-border p-4 space-y-3 shrink-0">
-                <label className="block text-xs text-muted-foreground">
+              <div className="border-t border-md-outline-variant p-4 space-y-3 shrink-0">
+                <label className="md-field-label">
                   props (JSON)
                 </label>
                 <textarea

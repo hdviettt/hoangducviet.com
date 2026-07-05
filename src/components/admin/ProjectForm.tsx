@@ -144,7 +144,7 @@ export default function ProjectForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+          <label className="md-field-label">
             title
           </label>
           <input
@@ -156,7 +156,7 @@ export default function ProjectForm({
           />
         </div>
         <div>
-          <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+          <label className="md-field-label">
             slug
           </label>
           <input
@@ -170,7 +170,7 @@ export default function ProjectForm({
       </div>
 
       <div>
-        <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+        <label className="md-field-label">
           project url
         </label>
         <input
@@ -183,8 +183,8 @@ export default function ProjectForm({
       </div>
 
       <div>
-        <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          summary <span className="normal-case">(shown on cards)</span>
+        <label className="md-field-label">
+          summary <span>(shown on cards)</span>
         </label>
         <textarea
           value={summary}
@@ -196,8 +196,8 @@ export default function ProjectForm({
       </div>
 
       <div>
-        <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
-          content <span className="normal-case">(shown on project page)</span>
+        <label className="md-field-label">
+          content <span>(shown on project page)</span>
         </label>
         <RichEditor content={description} onChange={setDescription} outputFormat="html" />
       </div>
@@ -207,7 +207,7 @@ export default function ProjectForm({
           <MediaPicker value={thumbnail} onChange={setThumbnail} label="thumbnail" />
         </div>
         <div>
-          <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+          <label className="md-field-label">
             status
           </label>
           <select
@@ -222,7 +222,7 @@ export default function ProjectForm({
       </div>
 
       <div>
-        <label className="block text-xs text-muted-foreground mb-1 uppercase tracking-wider">
+        <label className="md-field-label">
           group
         </label>
         <div className="flex gap-2">
@@ -257,7 +257,7 @@ export default function ProjectForm({
             type="button"
             onClick={handleCreateGroup}
             disabled={creatingGroup || !newGroupTitle.trim()}
-            className="px-3 py-1.5 text-xs border border-border text-muted-foreground hover:border-foreground hover:text-foreground transition-colors disabled:opacity-50"
+            className="md-btn md-btn-tonal shrink-0"
           >
             {creatingGroup ? "..." : "+ add"}
           </button>
@@ -266,19 +266,19 @@ export default function ProjectForm({
 
       {allPosts.length > 0 && (
         <div>
-          <label className="block text-xs text-muted-foreground mb-2 uppercase tracking-wider">
+          <label className="md-field-label">
             related posts
           </label>
-          <div className="border border-border bg-card max-h-48 overflow-y-auto divide-y divide-border">
+          <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low max-h-48 overflow-y-auto divide-y divide-md-outline-variant">
             {allPosts.map((post) => (
               <button
                 key={post.slug}
                 type="button"
                 onClick={() => togglePost(post.slug)}
-                className={`w-full text-left px-3 py-2 text-sm transition-colors ${
+                className={`w-full text-left px-3 py-2 md-body-medium transition-colors ${
                   postSlugs.includes(post.slug)
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    ? "text-md-primary bg-md-primary/10"
+                    : "text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-surface-container"
                 }`}
               >
                 {post.title}
@@ -299,7 +299,7 @@ export default function ProjectForm({
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-2 text-sm text-muted-foreground border border-border hover:border-foreground transition-colors"
+          className="md-btn md-btn-outlined"
         >
           Cancel
         </button>

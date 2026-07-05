@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/admin/ConfirmModal";
+import PageHeader from "@/components/admin/PageHeader";
 
 interface MediaItem {
   id: number;
@@ -196,26 +197,29 @@ export default function AdminMediaPage() {
 
   if (loading)
     return (
-      <div className="text-sm text-muted-foreground">loading...</div>
+      <div className="md-body-medium text-md-on-surface-variant">loading...</div>
     );
 
   return (
     <div>
       {/* Sticky header + toolbar */}
-      <div className="sticky top-[-32px] z-10 bg-background pb-3 -mx-8 px-8 -mt-8 pt-8">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-medium">media</h1>
-          <label className="md-btn md-btn-filled md-btn-sm cursor-pointer">
-            {uploading ? <span className="animate-pulse">uploading...</span> : "upload"}
-            <input
-              type="file"
-              multiple
-              onChange={handleUpload}
-              className="hidden"
-              disabled={uploading}
-            />
-          </label>
-        </div>
+      <div className="sticky top-[-32px] z-10 bg-md-background pb-3 -mx-8 px-8 -mt-8 pt-8">
+        <PageHeader
+          title="media"
+          count={filtered.length}
+          action={
+            <label className="md-btn md-btn-filled md-btn-sm cursor-pointer">
+              {uploading ? <span className="animate-pulse">uploading...</span> : "upload"}
+              <input
+                type="file"
+                multiple
+                onChange={handleUpload}
+                className="hidden"
+                disabled={uploading}
+              />
+            </label>
+          }
+        />
 
         <div className="flex items-center gap-3 flex-wrap">
           <input
@@ -225,7 +229,7 @@ export default function AdminMediaPage() {
             placeholder="search media..."
             className="md-field-dense w-60"
           />
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1 md-body-small text-md-on-surface-variant">
             <span>sort:</span>
             {(["date", "name", "size"] as SortKey[]).map((key) => (
               <button
@@ -234,8 +238,8 @@ export default function AdminMediaPage() {
                 onClick={() => toggleSort(key)}
                 className={`px-2 py-1 transition-colors ${
                   sortKey === key
-                    ? "text-primary"
-                    : "hover:text-foreground"
+                    ? "text-md-primary"
+                    : "hover:text-md-on-surface"
                 }`}
               >
                 {sortLabel(key)}
@@ -247,7 +251,7 @@ export default function AdminMediaPage() {
             <button
               type="button"
               onClick={selectAll}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              className="md-body-small text-md-on-surface-variant hover:text-md-on-surface transition-colors"
             >
               {selected.size === filtered.length ? "deselect all" : "select all"}
             </button>
@@ -256,14 +260,14 @@ export default function AdminMediaPage() {
             <button
               type="button"
               onClick={handleBatchDelete}
-              className="text-xs text-destructive hover:underline"
+              className="md-body-small text-md-error hover:underline"
             >
               delete {selected.size} selected
             </button>
           )}
         </div>
 
-        <div className="text-xs text-muted-foreground mt-3">
+        <div className="md-body-small text-md-on-surface-variant mt-3">
           {filtered.length} item{filtered.length !== 1 ? "s" : ""}
           {search && ` matching "${search}"`}
           {selected.size > 0 && ` · ${selected.size} selected`}
@@ -279,14 +283,14 @@ export default function AdminMediaPage() {
           return (
             <div
               key={item.id}
-              className={`bg-card border overflow-hidden transition-colors ${
-                isSelected ? "border-primary ring-1 ring-primary" : "border-border"
+              className={`bg-md-surface-container-low border rounded-xl overflow-hidden transition-colors ${
+                isSelected ? "border-md-primary ring-1 ring-md-primary" : "border-md-outline-variant"
               }`}
             >
               {/* Thumbnail + select checkbox */}
               {item.mimeType?.startsWith("image/") && (
                 <div
-                  className="aspect-video bg-muted relative overflow-hidden cursor-pointer"
+                  className="aspect-video bg-md-surface-container relative overflow-hidden cursor-pointer"
                   onClick={() => toggleSelect(item.id)}
                 >
                   <img
@@ -295,10 +299,10 @@ export default function AdminMediaPage() {
                     className="w-full h-full object-cover media-thumb-hover"
                   />
                   <div
-                    className={`absolute top-1.5 left-1.5 w-5 h-5 border flex items-center justify-center text-xs transition-colors ${
+                    className={`absolute top-1.5 left-1.5 w-5 h-5 border rounded flex items-center justify-center md-body-small transition-colors ${
                       isSelected
-                        ? "bg-primary border-primary text-primary-foreground"
-                        : "bg-background/80 border-border"
+                        ? "bg-md-primary border-md-primary text-md-on-primary"
+                        : "bg-md-background/80 border-md-outline-variant"
                     }`}
                   >
                     {isSelected && "✓"}
@@ -318,20 +322,20 @@ export default function AdminMediaPage() {
                         if (e.key === "Enter") saveEdit();
                         if (e.key === "Escape") cancelEdit();
                       }}
-                      className="flex-1 bg-input border border-primary px-1.5 py-0.5 text-xs focus:outline-none min-w-0"
+                      className="md-field-dense flex-1 min-w-0"
                       autoFocus
                     />
                     <button
                       type="button"
                       onClick={saveEdit}
-                      className="text-xs text-primary hover:underline shrink-0"
+                      className="md-body-small text-md-primary hover:underline shrink-0"
                     >
                       ok
                     </button>
                   </div>
                 ) : (
                   <p
-                    className="text-xs truncate cursor-pointer hover:text-primary transition-colors"
+                    className="md-body-small truncate cursor-pointer hover:text-md-primary transition-colors"
                     onClick={() => startEdit(item)}
                     title="Click to rename"
                   >
@@ -339,21 +343,21 @@ export default function AdminMediaPage() {
                   </p>
                 )}
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="md-label-small text-muted-foreground">
+                  <span className="md-label-small text-md-on-surface-variant">
                     {formatSize(item.size)}
                   </span>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => copyPath(item.url)}
-                      className="text-xs text-primary hover:underline"
+                      className="md-body-small text-md-primary hover:underline"
                     >
                       copy
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id, item.originalName)}
-                      className="text-xs text-destructive hover:underline"
+                      className="md-body-small text-md-error hover:underline"
                     >
                       delete
                     </button>
@@ -364,7 +368,7 @@ export default function AdminMediaPage() {
           );
         })}
         {filtered.length === 0 && (
-          <div className="col-span-full text-center py-10 text-sm text-muted-foreground">
+          <div className="col-span-full text-center py-10 md-body-medium text-md-on-surface-variant">
             {search ? `no results for "${search}"` : "no media yet."}
           </div>
         )}

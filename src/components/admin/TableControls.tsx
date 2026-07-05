@@ -176,7 +176,7 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
           onClick={() => {
             editor.chain().focus().addColumnAfter().run();
           }}
-          className="fixed z-[9999] w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+          className="fixed z-[9999] w-6 h-6 rounded-full border border-md-outline-variant bg-md-surface flex items-center justify-center text-md-on-surface-variant hover:bg-md-primary hover:text-md-on-primary hover:border-md-primary transition-colors"
           style={{ top: addColBtn.top, left: addColBtn.left }}
           title="Add column"
         >
@@ -194,7 +194,7 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
           onClick={() => {
             editor.chain().focus().addRowAfter().run();
           }}
-          className="fixed z-[9999] w-6 h-6 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+          className="fixed z-[9999] w-6 h-6 rounded-full border border-md-outline-variant bg-md-surface flex items-center justify-center text-md-on-surface-variant hover:bg-md-primary hover:text-md-on-primary hover:border-md-primary transition-colors"
           style={{ top: addRowBtn.top, left: addRowBtn.left }}
           title="Add row"
         >
@@ -206,21 +206,21 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
       {ctx.open && (
         <div
           ref={ctxRef}
-          className="fixed z-[9999] bg-card border border-border py-1 min-w-[180px] shadow-lg"
+          className="fixed z-[9999] bg-md-surface-container-high border border-md-outline-variant rounded-xl py-1.5 min-w-[184px] shadow-md-3"
           style={{ top: ctx.pos.top, left: ctx.pos.left }}
         >
           {contextMenuItems.map((item, i) =>
             "type" in item && item.type === "separator" ? (
-              <div key={i} className="border-t border-border my-1" />
+              <div key={i} className="border-t border-md-outline-variant my-1" />
             ) : (
               <button
                 key={i}
                 type="button"
                 onClick={ctxAction(item.action!)}
-                className={`w-full text-left px-3 py-1.5 text-xs transition-colors ${
+                className={`w-full text-left px-3.5 py-1.5 md-body-medium transition-colors ${
                   "destructive" in item && item.destructive
-                    ? "text-destructive hover:bg-destructive/10"
-                    : "text-foreground hover:bg-muted"
+                    ? "text-md-error hover:bg-md-error/10"
+                    : "text-md-on-surface hover:bg-md-on-surface/8"
                 }`}
               >
                 {item.label}

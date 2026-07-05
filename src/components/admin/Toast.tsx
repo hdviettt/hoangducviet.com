@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState } from "react";
+import { Icon } from "@/components/ui/Icon";
 
 type ToastType = "success" | "error";
 
@@ -41,37 +42,34 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`relative overflow-hidden px-4 py-2.5 text-sm border animate-in slide-in-from-right fade-in-0 duration-200 ${
-              t.type === "error"
-                ? "bg-destructive/10 border-destructive text-destructive"
-                : "bg-primary/10 border-primary text-primary"
-            }`}
+            className="relative overflow-hidden flex items-center gap-2.5 pl-3.5 pr-5 py-3 rounded-xl shadow-md-3 bg-md-surface-container-high text-md-on-surface md-body-medium animate-in slide-in-from-right fade-in-0 duration-200"
           >
-            <div className="flex items-center gap-2">
-              {t.type === "success" && (
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path
-                    d="M5 13l4 4L19 7"
-                    strokeDasharray="24"
-                    className="animate-[checkDraw_0.3s_0.2s_ease-out_forwards]"
-                    style={{ strokeDashoffset: 24 }}
-                  />
-                </svg>
-              )}
-              <span>{t.message}</span>
-            </div>
+            {t.type === "success" ? (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="shrink-0 text-md-primary"
+              >
+                <path
+                  d="M5 13l4 4L19 7"
+                  strokeDasharray="24"
+                  className="animate-[checkDraw_0.3s_0.2s_ease-out_forwards]"
+                  style={{ strokeDashoffset: 24 }}
+                />
+              </svg>
+            ) : (
+              <Icon name="error" size={18} className="shrink-0 text-md-error" />
+            )}
+            <span>{t.message}</span>
             <div
               className={`absolute bottom-0 left-0 right-0 h-0.5 toast-progress ${
-                t.type === "error" ? "bg-destructive/40" : "bg-primary/40"
+                t.type === "error" ? "bg-md-error/50" : "bg-md-primary/50"
               }`}
             />
           </div>

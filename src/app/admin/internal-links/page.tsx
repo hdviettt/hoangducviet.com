@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import LinkTable from "./LinkTable";
 import LinkGraph from "./LinkGraph";
+import PageHeader from "@/components/admin/PageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -177,13 +178,13 @@ export default async function InternalLinksPage() {
 
   return (
     <div className="max-w-5xl">
-      <h1 className="text-xl font-medium mb-6">internal links</h1>
+      <PageHeader title="internal links" count={pages.size} />
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
         {[
-          { label: "pages", value: pages.size, icon: "description", color: "text-primary" },
-          { label: "internal links", value: totalLinks, icon: "link", color: "text-primary" },
+          { label: "pages", value: pages.size, icon: "description", color: "text-md-primary" },
+          { label: "internal links", value: totalLinks, icon: "link", color: "text-md-primary" },
           {
             label: "orphan pages",
             value: orphanPages.length,
@@ -197,15 +198,15 @@ export default async function InternalLinksPage() {
             color: brokenLinks.length > 0 ? "text-md-error" : "text-md-primary",
           },
         ].map((stat) => (
-          <div key={stat.label} className="stat-card p-5 relative overflow-hidden">
+          <div key={stat.label} className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 relative overflow-hidden">
             <Icon
               name={stat.icon}
               size={48}
-              className="absolute right-4 bottom-3 text-border/60"
+              className="absolute right-4 bottom-3 text-md-outline-variant"
             />
             <div className="relative">
               <div className={`text-3xl font-medium tabular-nums leading-none ${stat.color}`}>{stat.value}</div>
-              <div className="text-xs text-muted-foreground mt-2 uppercase tracking-wider">{stat.label}</div>
+              <div className="md-label-medium text-md-on-surface-variant mt-2 uppercase tracking-wider">{stat.label}</div>
             </div>
           </div>
         ))}
@@ -214,7 +215,7 @@ export default async function InternalLinksPage() {
       {/* Link graph */}
       {graphNodes.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
+          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
             link graph
           </h2>
           <LinkGraph nodes={graphNodes} edges={graphEdges} />
@@ -224,7 +225,7 @@ export default async function InternalLinksPage() {
       {/* Orphan pages */}
       {orphanPages.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
+          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
             orphan pages (no incoming links)
           </h2>
           <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-md-surface-container-low overflow-hidden">
@@ -234,7 +235,7 @@ export default async function InternalLinksPage() {
                 className="flex items-center gap-3 px-4 py-3 row-hover"
               >
                 <span
-                  className={`md-label-small uppercase font-medium px-1.5 py-0.5 ${
+                  className={`md-label-small uppercase font-medium rounded px-1.5 py-0.5 ${
                     page.type === "post"
                       ? "bg-md-primary-container text-md-on-primary-container"
                       : "bg-md-tertiary-container text-md-on-tertiary-container"
@@ -248,11 +249,11 @@ export default async function InternalLinksPage() {
                       ? `/admin/posts/${page.slug}/edit`
                       : `/admin/projects/${page.slug}/edit`
                   }
-                  className="text-sm flex-1 truncate hover:text-primary transition-colors"
+                  className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
                 >
                   {page.title}
                 </Link>
-                <span className="text-xs text-muted-foreground">
+                <span className="md-body-small text-md-on-surface-variant">
                   {page.path}
                 </span>
               </div>
@@ -264,7 +265,7 @@ export default async function InternalLinksPage() {
       {/* Broken links */}
       {brokenLinks.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
+          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
             broken links
           </h2>
           <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-md-surface-container-low overflow-hidden">
@@ -281,12 +282,12 @@ export default async function InternalLinksPage() {
                         ? `/admin/posts/${source.slug}/edit`
                         : `/admin/projects/${source?.slug}/edit`
                     }
-                    className="text-sm hover:text-primary transition-colors truncate"
+                    className="md-body-medium hover:text-md-primary transition-colors truncate"
                   >
                     {source?.title ?? edge.sourcePath}
                   </Link>
-                  <span className="text-muted-foreground text-xs">&rarr;</span>
-                  <span className="text-sm text-md-error">
+                  <span className="text-md-on-surface-variant md-body-small">&rarr;</span>
+                  <span className="md-body-medium text-md-error">
                     {edge.targetPath}
                   </span>
                 </div>
@@ -298,7 +299,7 @@ export default async function InternalLinksPage() {
 
       {/* All pages table */}
       <section>
-        <h2 className="text-xs text-muted-foreground uppercase tracking-wider mb-3 pb-2 border-b border-border">
+        <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
           all pages
         </h2>
         <LinkTable data={tableData} />

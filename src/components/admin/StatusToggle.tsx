@@ -42,14 +42,14 @@ export default function StatusToggle({ slug, status, apiPath }: StatusToggleProp
       disabled={loading}
       title={isPublished ? "Unpublish (set to draft)" : "Publish"}
       className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors shrink-0 disabled:opacity-50 ${
-        isPublished ? "bg-green-500/20" : "bg-muted"
+        isPublished ? "bg-md-primary" : "bg-md-surface-container-highest"
       }`}
     >
       <span
-        className={`inline-block h-3.5 w-3.5 rounded-full transition-all duration-200 ${
+        className={`inline-block h-3.5 w-3.5 rounded-full transition-transform duration-200 ${
           isPublished
-            ? "translate-x-[18px] bg-green-500"
-            : "translate-x-[3px] bg-yellow-500"
+            ? "translate-x-[18px] bg-md-on-primary"
+            : "translate-x-[3px] bg-md-on-surface-variant"
         }`}
       />
     </button>
