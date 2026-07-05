@@ -2,27 +2,16 @@ import SeriesBlock from "@/components/posts/SeriesBlock";
 import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
-import { IDENTITY, SOCIAL_PROFILES } from "@/lib/identity";
+import { IDENTITY } from "@/lib/identity";
 import { createEntityGraph } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-// Brand marks aren't in Material Symbols — keep lucide for these four only.
-import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
+import ProfileHero from "@/components/layout/ProfileHero";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
-
-// lucide brand marks keyed by the identity.ts social labels. Keeping this in the
-// UI layer means identity.ts stays free of any component imports.
-const SOCIAL_ICONS = {
-  GitHub: Github,
-  Facebook,
-  Instagram,
-  LinkedIn: Linkedin,
-} as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -160,61 +149,11 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero — Google "Featured author" pattern: vertical stack, big
-          circular photo, light-weight large name, supporting role line,
-          narrow bio column, socials at the bottom. */}
-      <section className="pt-10 sm:pt-14 md:pt-20 pb-12 md:pb-16">
-        <div className="max-w-[560px]">
-          {imageUrl && (
-            <Image
-              src={imageUrl}
-              alt={mainProfile.name || "Profile"}
-              width={320}
-              height={320}
-              className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 object-cover rounded-full mb-6 md:mb-8 ring-1 ring-md-outline-variant animate-in fade-in zoom-in-95 duration-500 fill-mode-backwards"
-              priority
-            />
-          )}
-          {mainProfile?.name && (
-            <h1 className="text-4xl sm:text-5xl md:text-[48px] md:leading-[56px] font-normal tracking-tight text-md-on-surface mb-3 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-100 fill-mode-backwards">
-              {mainProfile.name}
-            </h1>
-          )}
-          {mainProfile?.description && (
-            <div
-              className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 [&_p:first-child]:text-lg [&_p:first-child]:leading-7 [&_p:first-child]:text-md-on-surface [&_p:first-child]:mb-6 [&_p:not(:first-child)]:text-[15px] [&_p:not(:first-child)]:leading-6 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards"
-              dangerouslySetInnerHTML={{ __html: mainProfile.description }}
-            />
-          )}
-          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-300 fill-mode-backwards">
-            {SOCIAL_PROFILES.map(({ href, label }) => {
-              // href/label come from identity.ts so the visible links and the
-              // JSON-LD sameAs stay in lockstep; only the icon lives in the UI.
-              const Brand = SOCIAL_ICONS[label];
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
-                  aria-label={label}
-                >
-                  <Brand className="w-5 h-5" />
-                </a>
-              );
-            })}
-            <span className="w-px h-4 bg-md-outline-variant" />
-            <a
-              href="mailto:viethd2704@gmail.com"
-              className="inline-flex items-center gap-1.5 md-body-medium text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
-            >
-              <Icon name="mail" size={18} />
-              <span>viethd2704@gmail.com</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <ProfileHero
+        name={mainProfile.name}
+        description={mainProfile.description}
+        imageUrl={imageUrl}
+      />
 
       {/* Writing — M3 card grid, year-grouped. Each post/series renders as
           an outlined card with hover elevation (blog.google pattern). 2-col

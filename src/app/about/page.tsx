@@ -1,20 +1,10 @@
-import { Icon } from "@/components/ui/Icon";
-import { IDENTITY, SOCIAL_PROFILES } from "@/lib/identity";
+import ProfileHero from "@/components/layout/ProfileHero";
+import { IDENTITY } from "@/lib/identity";
 import { createAboutPageSchema } from "@/lib/jsonld";
 import { getProfile } from "@/lib/profile";
-// Brand marks aren't in Material Symbols — keep lucide for these four only.
-import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
-
-// lucide brand marks keyed by the identity.ts social labels (UI layer only).
-const SOCIAL_ICONS = {
-  GitHub: Github,
-  Facebook,
-  Instagram,
-  LinkedIn: Linkedin,
-} as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl =
@@ -42,18 +32,19 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Sensible defaults so /about is never blank before the profile fields are
-// filled in from /admin. Both are overridden the moment you set a headline /
-// about body in Settings — no deploy needed.
-const FALLBACK_HEADLINE =
-  "I reverse-engineer how search and AI decide what to rank.";
-const FALLBACK_BODY = `<p>I'm ${IDENTITY.name} — ${IDENTITY.jobTitle} at ${IDENTITY.employer.name}. I rebuild search and ranking systems from scratch to understand them, then deploy that understanding for the businesses I work with.</p>`;
+// The expanded story below the hero. Broad on purpose — not anchored to one
+// project. Overridden the moment an About body is set in /admin → Settings.
+const FALLBACK_ABOUT = `<p>I'm an AI Leader at SEONGON — Vietnam's largest SEO agency — where I help SME leaders actually ship AI, not just demo it. I'm 21, based in Vietnam, and most of what I do comes down to one habit: I understand systems by rebuilding them from scratch.</p>
+<p>Search engines, ranking algorithms, AI pipelines — I take them apart and build them again, because you can't win at a system you refuse to understand. That's where my edge comes from, and where most of my writing begins.</p>
+<p>These days my work sits between two things: <strong>agentic SEO</strong> — how content earns its place now that search is turning generative — and <strong>building the AI systems businesses run on</strong>. I write about how search and AI actually work under the hood, the strategy of shipping AI inside a company, what China's playbook teaches the rest of us, and the occasional honest post-mortem when something breaks.</p>
+<p>If you're trying to make AI real inside your business — or you just like taking things apart to see how they work — we'll probably get along.</p>`;
 
 export default async function AboutPage() {
   let profile: {
-    headline?: string | null;
-    aboutHtml?: string | null;
+    name?: string | null;
     description?: string | null;
+    image?: string | null;
+    aboutHtml?: string | null;
   } | null = null;
   try {
     const rows = await getProfile();
@@ -62,11 +53,7 @@ export default async function AboutPage() {
     profile = null;
   }
 
-  const headline = profile?.headline?.trim() || FALLBACK_HEADLINE;
-  const bodyHtml =
-    profile?.aboutHtml?.trim() ||
-    profile?.description?.trim() ||
-    FALLBACK_BODY;
+  const bodyHtml = profile?.aboutHtml?.trim() || FALLBACK_ABOUT;
   const jsonLd = createAboutPageSchema();
 
   return (
@@ -76,44 +63,21 @@ export default async function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="pt-10 sm:pt-14 md:pt-20 max-w-[660px]">
-        <p className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-4">
-          About
-        </p>
-        <h1 className="text-3xl sm:text-4xl md:text-[44px] md:leading-[52px] font-normal tracking-tight text-md-on-surface mb-8 md:mb-10">
-          {headline}
-        </h1>
+      {/* Same identity block as the homepage — the About page reads as a
+          seamless expansion of the homepage intro. */}
+      <ProfileHero
+        name={profile?.name}
+        description={profile?.description}
+        imageUrl={profile?.image ?? null}
+      />
 
-        <div
-          className="article-content [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
-        />
-
-        {/* Socials + email — same set as the homepage hero, from identity.ts */}
-        <div className="mt-12 pt-8 border-t border-md-outline-variant flex flex-wrap items-center gap-x-5 gap-y-3">
-          {SOCIAL_PROFILES.map(({ href, label }) => {
-            const Brand = SOCIAL_ICONS[label];
-            return (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
-                aria-label={label}
-              >
-                <Brand className="w-5 h-5" />
-              </a>
-            );
-          })}
-          <span className="w-px h-4 bg-md-outline-variant" />
-          <a
-            href={`mailto:${IDENTITY.email}`}
-            className="inline-flex items-center gap-1.5 md-body-medium text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
-          >
-            <Icon name="mail" size={18} />
-            <span>{IDENTITY.email}</span>
-          </a>
+      {/* Expanded story — flows below the hero with a soft reveal. */}
+      <section className="max-w-[640px] animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards">
+        <div className="border-t border-md-outline-variant pt-10 md:pt-12">
+          <div
+            className="article-content [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
+            dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          />
         </div>
       </section>
     </div>
