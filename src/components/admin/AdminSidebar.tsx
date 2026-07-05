@@ -13,7 +13,6 @@ const navSections = [
       { href: "/admin", label: "dashboard", icon: "dashboard", exact: true },
       { href: "/admin/posts", label: "posts", icon: "description" },
       { href: "/admin/projects", label: "series", icon: "folder" },
-      { href: "/admin/work", label: "projects", icon: "deployed_code" },
       { href: "/admin/categories", label: "categories", icon: "label" },
     ],
   },

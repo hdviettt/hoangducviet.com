@@ -186,36 +186,6 @@ export function createSeriesSchema(params: {
   };
 }
 
-// A built project/tool as a SoftwareApplication (+ SoftwareSourceCode when it
-// has a public repo), authored by #person. Turns each project into a citable
-// "builds software" entity signal that reinforces the person entity.
-export function createProjectSchema(params: {
-  name: string;
-  url: string;
-  description?: string;
-  image?: string;
-  repoUrl?: string | null;
-  liveUrl?: string | null;
-  techTags?: string[] | null;
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": params.repoUrl
-      ? ["SoftwareApplication", "SoftwareSourceCode"]
-      : "SoftwareApplication",
-    name: params.name,
-    url: params.liveUrl || params.url,
-    mainEntityOfPage: params.url,
-    ...(params.description && { description: params.description }),
-    ...(params.image && { image: params.image }),
-    ...(params.repoUrl && { codeRepository: params.repoUrl }),
-    ...(params.techTags?.length && { programmingLanguage: params.techTags }),
-    applicationCategory: "DeveloperApplication",
-    author: { "@id": PERSON_ID },
-    isPartOf: { "@id": WEBSITE_ID },
-  };
-}
-
 export function createBreadcrumbSchema(
   items: Array<{ name: string; url: string }>,
 ) {

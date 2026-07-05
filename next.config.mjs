@@ -83,6 +83,18 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // Projects was removed; the search engine lives as its writing series.
+      {
+        source: "/projects/mini-search-engine",
+        destination: "/series/building-a-mini-search-engine",
+        permanent: true,
+      },
+      { source: "/projects", destination: "/", permanent: true },
+      { source: "/projects/:slug*", destination: "/", permanent: true },
+    ];
+  },
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
 };
