@@ -21,6 +21,10 @@ import {
   preprocessMathInMarkdown,
 } from "@/components/admin/extensions/MathExtension";
 import {
+  VideoEmbed,
+  preprocessVideoInMarkdown,
+} from "@/components/admin/extensions/VideoExtension";
+import {
   useEffect,
   useState,
   useCallback,
@@ -407,11 +411,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       editorInstance.current
         ?.chain()
         .focus()
-        .insertContent({
-          type: "codeBlock",
-          attrs: { language: "widget:video" },
-          content: [{ type: "text", text: JSON.stringify({ src: url }) }],
-        })
+        .insertContent({ type: "videoEmbed", attrs: { src: url } })
         .run();
     }, 10);
   }, []);
@@ -506,6 +506,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       TableHeader,
       MathInline,
       MathBlock,
+      VideoEmbed,
       Placeholder.configure({ placeholder: 'Start writing, or type "/" for commands...' }),
       Markdown.configure({
         html: true,
@@ -625,7 +626,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
     if (!editor || editor.isDestroyed) return;
     if (initialContent.current) {
       editor.commands.setContent(
-        preprocessMathInMarkdown(initialContent.current),
+        preprocessMathInMarkdown(preprocessVideoInMarkdown(initialContent.current)),
         { emitUpdate: false },
       );
     }
