@@ -33,11 +33,30 @@ export async function POST(request: Request) {
   try {
     await requireAuth();
 
+    // Guard against oversized uploads (videos especially) — reject up front,
+    // before buffering the whole body into memory. Cloudflare also caps request
+    // bodies, so keep this comfortably under that.
+    const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50 MB
+    const contentLength = Number(request.headers.get("content-length") || 0);
+    if (contentLength > MAX_UPLOAD_BYTES + 1024 * 1024) {
+      return NextResponse.json(
+        { error: "File too large. Maximum upload size is 50 MB." },
+        { status: 413 },
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    if (file.size > MAX_UPLOAD_BYTES) {
+      return NextResponse.json(
+        { error: "File too large. Maximum upload size is 50 MB." },
+        { status: 413 },
+      );
     }
 
     const bytes = await file.arrayBuffer();

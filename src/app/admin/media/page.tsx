@@ -288,27 +288,46 @@ export default function AdminMediaPage() {
               }`}
             >
               {/* Thumbnail + select checkbox */}
-              {item.mimeType?.startsWith("image/") && (
-                <div
-                  className="aspect-video bg-md-surface-container relative overflow-hidden cursor-pointer"
-                  onClick={() => toggleSelect(item.id)}
-                >
+              <div
+                className="aspect-video bg-md-surface-container relative overflow-hidden cursor-pointer"
+                onClick={() => toggleSelect(item.id)}
+              >
+                {item.mimeType?.startsWith("image/") ? (
                   <img
                     src={item.url}
                     alt={item.originalName}
                     className="w-full h-full object-cover media-thumb-hover"
                   />
-                  <div
-                    className={`absolute top-1.5 left-1.5 w-5 h-5 border rounded flex items-center justify-center md-body-small transition-colors ${
-                      isSelected
-                        ? "bg-md-primary border-md-primary text-md-on-primary"
-                        : "bg-md-background/80 border-md-outline-variant"
-                    }`}
-                  >
-                    {isSelected && "✓"}
+                ) : item.mimeType?.startsWith("video/") ? (
+                  <>
+                    {/* biome-ignore lint/a11y/useMediaCaption: silent library thumbnail */}
+                    <video
+                      src={item.url}
+                      muted
+                      preload="metadata"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <span className="w-9 h-9 rounded-full bg-md-background/70 flex items-center justify-center text-md-on-surface">
+                        ▶
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center md-label-small uppercase tracking-widest text-md-on-surface-variant">
+                    {item.mimeType?.split("/")[1] || "file"}
                   </div>
+                )}
+                <div
+                  className={`absolute top-1.5 left-1.5 w-5 h-5 border rounded flex items-center justify-center md-body-small transition-colors ${
+                    isSelected
+                      ? "bg-md-primary border-md-primary text-md-on-primary"
+                      : "bg-md-background/80 border-md-outline-variant"
+                  }`}
+                >
+                  {isSelected && "✓"}
                 </div>
-              )}
+              </div>
 
               {/* Info */}
               <div className="p-3">

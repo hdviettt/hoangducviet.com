@@ -39,6 +39,7 @@ interface SlashItem {
   icon: string;
   command: (editor: Editor) => void;
   isImagePicker?: boolean;
+  isVideoPicker?: boolean;
   isWidgetPicker?: boolean;
 }
 
@@ -140,11 +141,20 @@ const slashItems: SlashItem[] = [
   {
     title: "Image",
     description: "Choose from library or upload",
-    icon: "ðŸ–¼",
+    icon: "\u{1F5BC}",
     command: () => {
       // Handled specially via onImagePicker callback in SlashMenu
     },
     isImagePicker: true,
+  },
+  {
+    title: "Video",
+    description: "Upload an MP4 video",
+    icon: "▶",
+    command: () => {
+      // Handled specially via onVideoPicker callback in SlashMenu
+    },
+    isVideoPicker: true,
   },
 ];
 
@@ -163,17 +173,22 @@ async function uploadImage(file: File): Promise<string | null> {
   }
 }
 
+// Keep in sync with the server-side guard in /api/media.
+const MAX_VIDEO_MB = 50;
+
 // ---- Slash Menu Component ----
 
 function SlashMenu({
   editor,
   onClose,
   onImagePicker,
+  onVideoPicker,
   onWidgetPicker,
 }: {
   editor: Editor;
   onClose: () => void;
   onImagePicker: () => void;
+  onVideoPicker: () => void;
   onWidgetPicker: () => void;
 }) {
   const [query, setQuery] = useState("");
@@ -209,6 +224,9 @@ function SlashMenu({
       if (item.isImagePicker) {
         onClose();
         onImagePicker();
+      } else if (item.isVideoPicker) {
+        onClose();
+        onVideoPicker();
       } else if (item.isWidgetPicker) {
         onClose();
         onWidgetPicker();
@@ -217,7 +235,7 @@ function SlashMenu({
         onClose();
       }
     },
-    [editor, onClose, onImagePicker],
+    [editor, onClose, onImagePicker, onVideoPicker, onWidgetPicker],
   );
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -333,6 +351,13 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   const [imagePickerSearch, setImagePickerSearch] = useState("");
   const [imagePickerUploading, setImagePickerUploading] = useState(false);
 
+  // Video picker modal state
+  const [showVideoPicker, setShowVideoPicker] = useState(false);
+  const [videoItems, setVideoItems] = useState<Array<{ id: number; filename: string; originalName: string; mimeType: string | null; url: string }>>([]);
+  const [videoLoading, setVideoLoading] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
+
   // Widget picker state
   const [showWidgetPicker, setShowWidgetPicker] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState<string | null>(null);
@@ -375,6 +400,55 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       editorInstance.current?.chain().focus().setImage({ src: url }).run();
     }, 10);
   }, []);
+
+  const insertVideo = useCallback((url: string) => {
+    setShowVideoPicker(false);
+    setTimeout(() => {
+      editorInstance.current
+        ?.chain()
+        .focus()
+        .insertContent({
+          type: "codeBlock",
+          attrs: { language: "widget:video" },
+          content: [{ type: "text", text: JSON.stringify({ src: url }) }],
+        })
+        .run();
+    }, 10);
+  }, []);
+
+  const openVideoPicker = useCallback(async () => {
+    setShowVideoPicker(true);
+    setVideoError(null);
+    setVideoLoading(true);
+    const res = await fetch("/api/media");
+    if (res.ok) setVideoItems(await res.json());
+    setVideoLoading(false);
+  }, []);
+
+  const handleVideoUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setVideoError(null);
+      if (file.size > MAX_VIDEO_MB * 1024 * 1024) {
+        setVideoError(
+          `File too large (${(file.size / 1024 / 1024).toFixed(0)}MB). Max ${MAX_VIDEO_MB}MB.`,
+        );
+        e.target.value = "";
+        return;
+      }
+      setVideoUploading(true);
+      const url = await uploadImage(file);
+      setVideoUploading(false);
+      if (url) {
+        insertVideo(url);
+      } else {
+        setVideoError("Upload failed — try a smaller file.");
+      }
+      e.target.value = "";
+    },
+    [insertVideo],
+  );
 
   const insertWidget = useCallback(() => {
     if (!selectedWidget) return;
@@ -594,7 +668,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           active={editor.isActive("strike")}
           title="Strikethrough"
         >
-          SÌ¶
+          <span className="line-through">S</span>
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleCode().run()}
@@ -683,13 +757,19 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
           active={editor.isActive("link")}
           title="Insert link"
         >
-          ðŸ”—
+          {"\u{1F517}"}
         </ToolbarButton>
         <ToolbarButton
           onClick={openImagePicker}
           title="Insert image"
         >
           IMG
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={openVideoPicker}
+          title="Insert video"
+        >
+          {"▶"}
         </ToolbarButton>
 
         {/* Table controls — visible when cursor is inside a table */}
@@ -764,7 +844,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         {/* Slash Command Menu */}
         {showSlash && (
           <div style={{ position: "absolute", top: slashPos.top, left: slashPos.left }}>
-            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} onImagePicker={openImagePicker} onWidgetPicker={openWidgetPicker} />
+            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} onImagePicker={openImagePicker} onVideoPicker={openVideoPicker} onWidgetPicker={openWidgetPicker} />
           </div>
         )}
       </div>
@@ -830,6 +910,70 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
                           alt={item.originalName}
                           className="w-full h-full object-cover"
                         />
+                      </button>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Video Picker Modal */}
+      {showVideoPicker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-2xl max-h-[80vh] flex flex-col">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
+              <span className="md-title-small flex-1">insert video</span>
+              <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
+                {videoUploading ? "uploading..." : "upload mp4"}
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  className="hidden"
+                  disabled={videoUploading}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowVideoPicker(false)}
+                className="text-md-on-surface-variant hover:text-md-on-surface text-lg leading-none shrink-0"
+              >
+                x
+              </button>
+            </div>
+            {videoError && (
+              <div className="px-4 py-2 md-body-small text-md-error border-b border-md-outline-variant shrink-0">
+                {videoError}
+              </div>
+            )}
+            <div className="flex-1 overflow-y-auto p-4">
+              {videoLoading ? (
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">loading...</div>
+              ) : (() => {
+                const videos = videoItems.filter((i) => i.mimeType?.startsWith("video/"));
+                return videos.length === 0 ? (
+                  <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                    no videos yet. upload one above (max {MAX_VIDEO_MB}MB).
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {videos.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => insertVideo(item.url)}
+                        className="w-full flex items-center gap-3 p-2 rounded-lg border border-md-outline-variant hover:border-md-primary text-left transition-colors"
+                      >
+                        <video
+                          src={item.url}
+                          muted
+                          preload="metadata"
+                          className="w-28 h-16 object-cover rounded bg-black shrink-0"
+                        />
+                        <span className="md-body-medium truncate">{item.originalName}</span>
                       </button>
                     ))}
                   </div>
