@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
 interface FileExplorerProps {
@@ -29,6 +29,31 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   const { theme, toggleTheme, mounted } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
+
+  // Sliding active-tab pill in the header nav.
+  const tabRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const [pill, setPill] = useState({ left: 0, width: 0, ready: false });
+  const [animatePill, setAnimatePill] = useState(false);
+
+  useEffect(() => {
+    const move = () => {
+      const idx = navItems.findIndex((it) => it.match(pathname));
+      const el = tabRefs.current[idx];
+      if (el)
+        setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: true });
+      else setPill((p) => ({ ...p, ready: false }));
+    };
+    move();
+    window.addEventListener("resize", move);
+    return () => window.removeEventListener("resize", move);
+  }, [pathname]);
+
+  // Enable the slide only after the first position is set, so the pill lands in
+  // place on load and animates only when you actually switch tabs.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setAnimatePill(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const isPostPage =
     (pathname.startsWith("/posts/") && pathname !== "/posts") ||
@@ -78,16 +103,33 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-center gap-1">
-          <nav className="flex items-center gap-1">
-            {navItems.map((item) => {
+          <nav className="relative flex items-center gap-1">
+            {/* Sliding active-tab pill — glides between tabs on navigation. */}
+            <span
+              aria-hidden="true"
+              className={`pointer-events-none absolute left-0 top-0 h-10 rounded-full bg-md-secondary-container ${
+                animatePill
+                  ? "transition-[transform,width,opacity] duration-300 ease-md-standard"
+                  : ""
+              }`}
+              style={{
+                transform: `translateX(${pill.left}px)`,
+                width: pill.width,
+                opacity: pill.ready ? 1 : 0,
+              }}
+            />
+            {navItems.map((item, i) => {
               const active = item.match(pathname);
               return (
                 <Link
                   key={item.href}
+                  ref={(el) => {
+                    tabRefs.current[i] = el;
+                  }}
                   href={item.href}
-                  className={`h-10 px-5 rounded-full inline-flex items-center md-label-large transition-colors duration-200 ease-md-standard ${
+                  className={`relative z-10 h-10 px-5 rounded-full inline-flex items-center md-label-large transition-colors duration-300 ease-md-standard ${
                     active
-                      ? "bg-md-secondary-container text-md-on-secondary-container"
+                      ? "text-md-on-secondary-container"
                       : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
                   }`}
                 >
