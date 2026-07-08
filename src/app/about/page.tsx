@@ -1,3 +1,4 @@
+import Resume from "@/components/about/Resume";
 import ProfileHero from "@/components/layout/ProfileHero";
 import { IDENTITY } from "@/lib/identity";
 import { createAboutPageSchema } from "@/lib/jsonld";
@@ -80,6 +81,9 @@ export default async function AboutPage() {
           />
         </div>
       </section>
+
+      {/* Proof — experience, certifications, focus */}
+      <Resume />
     </div>
   );
 }
