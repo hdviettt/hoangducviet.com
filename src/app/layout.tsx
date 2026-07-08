@@ -39,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: siteTitle,
     description: siteTagline,
     icons: {
-      icon: "/favicon.svg",
+      icon: "/seongon-mark.png",
     },
     alternates: {},
   };

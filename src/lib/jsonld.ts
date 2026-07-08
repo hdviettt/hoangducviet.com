@@ -7,6 +7,7 @@ import {
   SITE_ORIGIN,
   WEBSITE_ID,
 } from "./identity";
+import { CERTIFICATIONS } from "./resume";
 
 // The homepage entity graph — one connected @graph that declares this site as
 // the canonical home of the Person entity. WebSite → ProfilePage → Person →
@@ -72,17 +73,50 @@ export function createEntityGraph(params?: {
 // as the homepage — it corroborates the entity home rather than competing with
 // it, and gives AI a clean declarative bio surface to lift.
 export function createAboutPageSchema(params?: { description?: string }) {
+  const description = params?.description || IDENTITY.description;
   return {
     "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "@id": `${SITE_ORIGIN}/about#aboutpage`,
-    url: `${SITE_ORIGIN}/about`,
-    name: `About — ${IDENTITY.name}`,
-    description: params?.description || IDENTITY.description,
-    isPartOf: { "@id": WEBSITE_ID },
-    about: { "@id": PERSON_ID },
-    mainEntity: { "@id": PERSON_ID },
-    inLanguage: "en",
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        "@id": `${SITE_ORIGIN}/about#aboutpage`,
+        url: `${SITE_ORIGIN}/about`,
+        name: `About — ${IDENTITY.name}`,
+        description,
+        isPartOf: { "@id": WEBSITE_ID },
+        about: { "@id": PERSON_ID },
+        mainEntity: { "@id": PERSON_ID },
+        inLanguage: "en",
+      },
+      // Same #person node as the homepage, enriched with the employment and
+      // credentials the About page actually shows — so the résumé is machine-
+      // readable and corroborates one entity.
+      {
+        "@type": "Person",
+        "@id": PERSON_ID,
+        name: IDENTITY.name,
+        alternateName: IDENTITY.alternateName,
+        url: SITE_ORIGIN,
+        jobTitle: IDENTITY.jobTitle,
+        description,
+        worksFor: { "@id": ORG_ID },
+        knowsAbout: [...IDENTITY.knowsAbout],
+        hasCredential: CERTIFICATIONS.map((c) => ({
+          "@type": "EducationalOccupationalCredential",
+          name: c.name,
+          credentialCategory: "certificate",
+          ...(c.credentialId && { identifier: c.credentialId }),
+          recognizedBy: { "@type": "Organization", name: c.issuer },
+        })),
+        sameAs: SAME_AS,
+      },
+      {
+        "@type": "Organization",
+        "@id": ORG_ID,
+        name: IDENTITY.employer.name,
+        url: IDENTITY.employer.url,
+      },
+    ],
   };
 }
 

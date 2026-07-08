@@ -1,3 +1,4 @@
+import { IssuerLogo } from "@/components/about/IssuerLogo";
 import { Icon } from "@/components/ui/Icon";
 import { IDENTITY, SOCIAL_PROFILES } from "@/lib/identity";
 import { CERTIFICATIONS, EXPERIENCE } from "@/lib/resume";
@@ -106,19 +107,24 @@ export default function Resume() {
           {CERTIFICATIONS.map((c) => (
             <div
               key={c.name}
-              className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4 transition-colors hover:border-md-outline"
+              className="flex gap-3 rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4 transition-colors hover:border-md-outline"
             >
-              <h3 className="md-title-small text-md-on-surface leading-snug">
-                {c.name}
-              </h3>
-              <p className="mt-1 md-body-small text-md-on-surface-variant">
-                {c.issuer} · {c.date}
-              </p>
-              {c.credentialId && (
-                <p className="mt-2 md-label-small text-md-on-surface-variant/70">
-                  ID: {c.credentialId}
+              <span className="mt-0.5 shrink-0 flex items-center justify-center w-8 h-8 rounded-lg border border-md-outline-variant bg-md-surface">
+                <IssuerLogo issuer={c.issuer} className="w-4 h-4" />
+              </span>
+              <div className="min-w-0">
+                <h3 className="md-title-small text-md-on-surface leading-snug">
+                  {c.name}
+                </h3>
+                <p className="mt-0.5 md-body-small text-md-on-surface-variant">
+                  {c.issuer} · {c.date}
                 </p>
-              )}
+                {c.credentialId && (
+                  <p className="mt-1.5 md-label-small text-md-on-surface-variant/70">
+                    ID: {c.credentialId}
+                  </p>
+                )}
+              </div>
             </div>
           ))}
         </div>

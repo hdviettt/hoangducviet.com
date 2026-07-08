@@ -74,11 +74,12 @@ export default async function AboutPage() {
         imageUrl={profile?.image ?? null}
       />
 
-      {/* Expanded story — flows below the hero with a soft reveal. */}
+      {/* Expanded story — same typographic system as the hero bio so the two
+          read as one continuous voice (not a blog-post body pasted in). */}
       <section className="max-w-[640px] animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards">
         <div className="border-t border-md-outline-variant pt-10 md:pt-12">
           <div
-            className="article-content [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
+            className="text-md-on-surface-variant [&_p]:text-[17px] [&_p]:leading-[28px] [&_p]:mb-5 [&_p:last-child]:mb-0 [&_strong]:font-medium [&_strong]:text-md-on-surface [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
             dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
         </div>
