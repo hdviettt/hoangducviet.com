@@ -1,5 +1,5 @@
 import { Icon } from "@/components/ui/Icon";
-import { IDENTITY, SOCIAL_PROFILES } from "@/lib/identity";
+import { IDENTITY, SEONGON_EXPERT_URL, SOCIAL_PROFILES } from "@/lib/identity";
 // Brand marks aren't in Material Symbols — keep lucide for these four only.
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import Image from "next/image";
@@ -44,6 +44,25 @@ export default function ProfileHero({
             {name}
           </h1>
         )}
+        <a
+          href={SEONGON_EXPERT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="View my profile at SEONGON"
+          className="group inline-flex items-center gap-2 rounded-full border border-md-outline-variant bg-md-surface-container-low py-1.5 pl-2 pr-3.5 mb-6 hover:border-md-primary/40 hover:bg-md-surface-container transition-colors duration-200 ease-md-standard animate-in fade-in slide-in-from-bottom-2 duration-500 delay-150 fill-mode-backwards"
+        >
+          <Image
+            src="/seongon-mark.png"
+            alt="SEONGON logo"
+            width={1276}
+            height={1252}
+            className="w-5 h-5 object-contain"
+          />
+          <span className="md-label-large text-md-on-surface">
+            {IDENTITY.jobTitle}{" "}
+            <span className="text-md-on-surface-variant">at</span> SEONGON
+          </span>
+        </a>
         {description && (
           <div
             className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 [&_p:first-child]:text-lg [&_p:first-child]:leading-7 [&_p:first-child]:text-md-on-surface [&_p:first-child]:mb-6 [&_p:not(:first-child)]:text-[15px] [&_p:not(:first-child)]:leading-6 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards"
