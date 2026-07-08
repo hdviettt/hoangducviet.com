@@ -1,12 +1,14 @@
 // Professional history shown on the About page. Static on purpose — it changes
-// rarely and doesn't belong in the post DB. Transcribed from the LinkedIn
-// profile (linkedin.com/in/hdviet). Edit here to update.
+// rarely and doesn't belong in the post DB. Transcribed from LinkedIn
+// (linkedin.com/in/hdviet). Durations are computed live from these start/end
+// months in Resume.tsx, so "1 yr", "2 yrs 1 mo", "4 mos" stay current on their
+// own — no manual editing when a month rolls over.
 
 export interface Role {
   title: string;
   type: string; // Full-time / Internship / Apprenticeship
-  period: string; // "Aug 2025 — Present"
-  length?: string; // "1 yr"
+  start: string; // "YYYY-MM"
+  end?: string; // "YYYY-MM"; omit for a current (Present) role
   note?: string;
 }
 
@@ -14,7 +16,6 @@ export interface Company {
   company: string;
   url: string;
   logo: string; // path under /public
-  duration: string; // total tenure, e.g. "2 yrs 1 mo"
   location?: string;
   roles: Role[]; // newest first
 }
@@ -24,44 +25,44 @@ export const EXPERIENCE: Company[] = [
     company: "SEONGON",
     url: "https://seongon.com",
     logo: "/seongon-mark.png",
-    duration: "2 yrs 1 mo",
     location: "Vietnam · On-site",
     roles: [
       {
         title: "Artificial Intelligence Leader",
         type: "Full-time",
-        period: "Aug 2025 — Present",
-        length: "1 yr",
+        start: "2025-08",
       },
       {
         title: "AI Software Developer",
         type: "Full-time",
-        period: "May 2025 — Aug 2025",
-        length: "4 mos",
+        start: "2025-05",
+        end: "2025-08",
       },
       {
         title: "CEO Operations Assistant",
         type: "Full-time",
-        period: "Dec 2024 — May 2025",
-        length: "6 mos",
+        start: "2024-12",
+        end: "2025-05",
         note: "Raised the company's operational quality through process optimization and applied AI & automation (Larksuite, n8n).",
       },
       {
         title: "Startup Operations",
         type: "Apprenticeship",
-        period: "Sep 2024 — Dec 2024",
-        length: "4 mos",
+        start: "2024-09",
+        end: "2024-12",
       },
       {
         title: "Startup Idea Creator Intern",
         type: "Internship",
-        period: "Jul 2024 — Sep 2024",
-        length: "3 mos",
+        start: "2024-07",
+        end: "2024-09",
       },
     ],
   },
 ];
 
+// Kept for the About-page JSON-LD (Person → hasCredential). Not rendered on the
+// page anymore, but still true and useful for entity/SEO. Add more here as needed.
 export interface Certification {
   name: string;
   issuer: string;
