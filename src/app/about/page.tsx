@@ -35,9 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // The expanded story below the hero. Broad on purpose — not anchored to one
 // project. Overridden the moment an About body is set in /admin → Settings.
-const FALLBACK_ABOUT = `<p>I'm an AI Leader at SEONGON — Vietnam's largest SEO agency — where I help SME leaders actually ship AI, not just demo it. I'm 21, based in Vietnam, and most of what I do comes down to one habit: I understand systems by rebuilding them from scratch.</p>
-<p>Search engines, ranking algorithms, AI pipelines — I take them apart and build them again, because you can't win at a system you refuse to understand. That's where my edge comes from, and where most of my writing begins.</p>
-<p>These days my work sits between two things: <strong>agentic SEO</strong> — how content earns its place now that search is turning generative — and <strong>building the AI systems businesses run on</strong>. I write about how search and AI actually work under the hood, the strategy of shipping AI inside a company, what China's playbook teaches the rest of us, and the occasional honest post-mortem when something breaks.</p>
+const FALLBACK_ABOUT = `<p>Most of what I do comes down to one habit: I understand systems by rebuilding them from scratch. Search engines, ranking algorithms, AI pipelines — I take them apart and build them again, because you can't win at a system you refuse to understand. That's where my edge comes from, and where most of my writing begins.</p>
+<p>These days my work sits between two things: <strong>agentic SEO</strong> — how content earns its place now that search is turning generative — and <strong>building the AI systems businesses actually run on</strong>. I write about how search and AI work under the hood, the strategy of shipping AI inside a company, what China's playbook teaches the rest of us, and the occasional honest post-mortem when something breaks.</p>
 <p>If you're trying to make AI real inside your business — or you just like taking things apart to see how they work — we'll probably get along.</p>`;
 
 export default async function AboutPage() {
@@ -54,7 +53,10 @@ export default async function AboutPage() {
     profile = null;
   }
 
-  const bodyHtml = profile?.aboutHtml?.trim() || FALLBACK_ABOUT;
+  // Treat tag-only / whitespace-only aboutHtml (e.g. an empty "<p></p>" saved
+  // from the editor) as empty so the story never renders blank.
+  const aboutText = profile?.aboutHtml?.replace(/<[^>]*>/g, "").trim();
+  const bodyHtml = aboutText ? (profile!.aboutHtml as string) : FALLBACK_ABOUT;
   const jsonLd = createAboutPageSchema();
 
   return (
