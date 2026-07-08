@@ -81,7 +81,7 @@ export function createAboutPageSchema(params?: { description?: string }) {
         "@type": "AboutPage",
         "@id": `${SITE_ORIGIN}/about#aboutpage`,
         url: `${SITE_ORIGIN}/about`,
-        name: `About — ${IDENTITY.name}`,
+        name: `About - ${IDENTITY.name}`,
         description,
         isPartOf: { "@id": WEBSITE_ID },
         about: { "@id": PERSON_ID },
