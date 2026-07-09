@@ -63,7 +63,7 @@ export default function ProfileHero({
             <span className="text-md-on-surface-variant">at</span> SEONGON
           </span>
         </a>
-        {description && (
+        {description && description.replace(/<[^>]*>/g, "").trim().length > 0 && (
           <div
             className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:mb-4 [&_p:last-child]:mb-0 [&_p:first-child]:text-lg [&_p:first-child]:leading-7 [&_p:first-child]:text-md-on-surface [&_p:first-child]:mb-6 [&_p:not(:first-child)]:text-[15px] [&_p:not(:first-child)]:leading-6 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards"
             dangerouslySetInnerHTML={{ __html: description }}
