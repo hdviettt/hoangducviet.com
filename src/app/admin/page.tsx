@@ -1,31 +1,38 @@
 import { db } from "@/db";
 import { media, posts, series } from "@/db/schema";
-import { count, desc } from "drizzle-orm";
+import { count, desc, eq, sql } from "drizzle-orm";
 import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import StatusToggle from "@/components/admin/StatusToggle";
+import DeleteButton from "@/components/admin/DeleteButton";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
-import EmptyState, { StatusPill } from "@/components/admin/EmptyState";
+import EmptyState from "@/components/admin/EmptyState";
 import PageHeader from "@/components/admin/PageHeader";
+import IdeaCapture from "@/components/admin/IdeaCapture";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [postCount, projectCount, mediaCount, recentPosts] =
-    await Promise.all([
-      db.select({ value: count() }).from(posts),
-      db.select({ value: count() }).from(series),
-      db.select({ value: count() }).from(media),
-      db
-        .select({ slug: posts.slug, title: posts.title, status: posts.status, dateCreated: posts.dateCreated })
-        .from(posts)
-        .orderBy(desc(posts.dateCreated))
-        .limit(5),
-    ]);
+  const [postCount, seriesCount, mediaCount, drafts] = await Promise.all([
+    db.select({ value: count() }).from(posts),
+    db.select({ value: count() }).from(series),
+    db.select({ value: count() }).from(media),
+    db
+      .select({
+        slug: posts.slug,
+        title: posts.title,
+        status: posts.status,
+        dateCreated: posts.dateCreated,
+        dateUpdated: posts.dateUpdated,
+      })
+      .from(posts)
+      .where(eq(posts.status, "draft"))
+      .orderBy(sql`coalesce(${posts.dateUpdated}, ${posts.dateCreated}) desc`),
+  ]);
 
   const stats = [
     { label: "posts", count: postCount[0].value, href: "/admin/posts", icon: "description" },
-    { label: "projects", count: projectCount[0].value, href: "/admin/projects", icon: "folder" },
+    { label: "series", count: seriesCount[0].value, href: "/admin/projects", icon: "folder" },
     { label: "media", count: mediaCount[0].value, href: "/admin/media", icon: "image" },
   ];
 
@@ -40,7 +47,62 @@ export default async function AdminDashboard() {
         }
       />
 
-      <div className="grid grid-cols-3 gap-3 mb-8 stagger-list">
+      {/* Quick idea capture — Enter saves it as a draft */}
+      <IdeaCapture />
+
+      {/* Drafts & ideas — your backlog to develop and publish */}
+      <div className="flex items-center justify-between mt-8 mb-3">
+        <h2 className="md-label-medium uppercase tracking-wider text-md-on-surface-variant">
+          drafts &amp; ideas{drafts.length > 0 ? ` · ${drafts.length}` : ""}
+        </h2>
+        <Link
+          href="/admin/posts"
+          className="md-label-medium text-md-on-surface-variant hover:text-md-primary transition-colors"
+        >
+          all posts →
+        </Link>
+      </div>
+      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low overflow-hidden">
+        {drafts.length === 0 ? (
+          <EmptyState
+            icon="lightbulb"
+            title="no drafts yet"
+            hint="Capture an idea above to start one."
+          />
+        ) : (
+          <div className="divide-y divide-md-outline-variant stagger-list">
+            {drafts.map((d) => {
+              const date = (d.dateUpdated ?? d.dateCreated)?.toLocaleDateString(
+                "en-US",
+                { month: "short", day: "numeric" },
+              );
+              return (
+                <div
+                  key={d.slug}
+                  className="group flex items-center gap-3 px-3 py-2.5 row-hover"
+                >
+                  <StatusToggle slug={d.slug} status={d.status} apiPath="posts" />
+                  <Link
+                    href={`/admin/posts/${d.slug}/edit`}
+                    className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
+                  >
+                    {d.title || "(untitled idea)"}
+                  </Link>
+                  <span className="md-body-small text-md-on-surface-variant tabular-nums shrink-0">
+                    {date}
+                  </span>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <DeleteButton slug={d.slug} name={d.title || "this idea"} apiPath="posts" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3 mt-8 stagger-list">
         {stats.map((stat) => (
           <Link
             key={stat.label}
@@ -64,52 +126,10 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-md-outline-variant">
-        <h2 className="md-label-medium text-md-on-surface-variant uppercase tracking-wider">recent posts</h2>
-        <Link
-          href="/admin/posts"
-          className="md-label-medium text-md-on-surface-variant hover:text-md-primary transition-colors"
-        >
-          view all →
-        </Link>
+      {/* Analytics */}
+      <div className="mt-10">
+        <AnalyticsDashboard />
       </div>
-      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low mb-8 overflow-hidden">
-        <div className="flex items-center gap-3 px-4 py-2.5 border-b border-md-outline-variant bg-md-surface-container">
-          <div className="w-9 shrink-0" />
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest flex-1">title</div>
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest">status</div>
-        </div>
-        {recentPosts.length === 0 ? (
-          <EmptyState
-            title="no posts yet"
-            hint={
-              <Link href="/admin/posts/new" className="text-md-primary hover:underline">
-                + new post
-              </Link>
-            }
-          />
-        ) : (
-          <div className="divide-y divide-md-outline-variant stagger-list">
-            {recentPosts.map((post) => (
-              <div
-                key={post.slug}
-                className="flex items-center gap-3 py-2 px-3 row-hover"
-              >
-                <StatusToggle slug={post.slug} status={post.status} apiPath="posts" />
-                <Link
-                  href={`/admin/posts/${post.slug}/edit`}
-                  className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
-                >
-                  {post.title}
-                </Link>
-                <StatusPill status={post.status} />
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <AnalyticsDashboard />
     </div>
   );
 }
