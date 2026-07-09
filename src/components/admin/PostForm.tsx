@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
 import { useToast } from "@/components/admin/Toast";
 import { Icon } from "@/components/ui/Icon";
-import { Button } from "@/components/ui/Button";
 
 interface PostFormProps {
   initialData?: {
@@ -24,10 +24,37 @@ interface PostFormProps {
   isEdit?: boolean;
 }
 
-export default function PostForm({ initialData, allCategories, allProjects, isEdit }: PostFormProps) {
+type SaveState = "idle" | "saving" | "saved" | "error";
+
+const AUTOSAVE_MS = 1500;
+
+function countWords(markdown: string): number {
+  const text = markdown
+    .replace(/```[\s\S]*?```/g, " ") // code fences
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ") // images
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links → text
+    .replace(/[#>*_`~-]/g, " ");
+  return text.split(/\s+/).filter(Boolean).length;
+}
+
+function timeAgo(ts: number): string {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 5) return "just now";
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  return `${Math.floor(m / 60)}h ago`;
+}
+
+export default function PostForm({
+  initialData,
+  allCategories,
+  allProjects,
+  isEdit,
+}: PostFormProps) {
   const router = useRouter();
   const { toast } = useToast();
-  const [saving, setSaving] = useState(false);
+
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
   const [description, setDescription] = useState(initialData?.description ?? "");
@@ -38,12 +65,22 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
   const [projectSlug, setProjectSlug] = useState(initialData?.projectSlug ?? "");
   const [drawerOpen, setDrawerOpen] = useState(true);
 
+  // The slug as it exists on the server. Autosave never renames (a post that
+  // belongs to a series is referenced by slug via FK) — only an explicit save
+  // applies a slug change.
+  const savedSlugRef = useRef<string | null>(isEdit ? (initialData?.slug ?? null) : null);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [lastSavedAt, setLastSavedAt] = useState<number | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [, forceTick] = useState(0);
+  const savingRef = useRef(false);
+
   const generateSlug = (text: string) =>
     text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
-    if (!isEdit) setSlug(generateSlug(value));
+    if (!savedSlugRef.current) setSlug(generateSlug(value));
   };
 
   const toggleCategory = (catSlug: string) => {
@@ -52,32 +89,150 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const url = isEdit ? `/api/posts/${initialData?.slug}` : "/api/posts";
-      const res = await fetch(url, {
-        method: isEdit ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, slug, description, content, thumbnail, status, categories, projectSlug: projectSlug || null }),
-      });
-      if (!res.ok) { toast((await res.json()).error || "Failed to save", "error"); return; }
-      router.push("/admin/posts");
-      router.refresh();
-    } catch { toast("Network error", "error"); }
-    finally { setSaving(false); }
-  };
+  const save = useCallback(
+    async (opts: { explicit?: boolean; nextStatus?: string } = {}) => {
+      if (savingRef.current) return;
+      const effectiveStatus = opts.nextStatus ?? status;
+      const finalSlug = slug || generateSlug(title) || `post-${Date.now().toString(36)}`;
+      if (!title.trim()) {
+        if (opts.explicit) toast("Give it a title first", "error");
+        return;
+      }
+
+      savingRef.current = true;
+      setSaveState("saving");
+      try {
+        const existing = savedSlugRef.current;
+        const payload = {
+          title,
+          // Only an explicit save may rename; autosave keeps the stored slug.
+          slug: existing && !opts.explicit ? existing : finalSlug,
+          description,
+          content,
+          thumbnail,
+          status: effectiveStatus,
+          categories,
+          projectSlug: projectSlug || null,
+        };
+        const res = await fetch(
+          existing ? `/api/posts/${existing}` : "/api/posts",
+          {
+            method: existing ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          },
+        );
+        if (!res.ok) {
+          const msg = (await res.json().catch(() => ({}))).error || "Failed to save";
+          setSaveState("error");
+          if (opts.explicit) toast(msg, "error");
+          return;
+        }
+        const post = await res.json();
+        // Keep the URL in step with the stored slug without remounting the editor.
+        if (post.slug !== savedSlugRef.current) {
+          savedSlugRef.current = post.slug;
+          window.history.replaceState(null, "", `/admin/posts/${post.slug}/edit`);
+        }
+        if (opts.nextStatus) setStatus(opts.nextStatus);
+        setSaveState("saved");
+        setLastSavedAt(Date.now());
+        setDirty(false);
+        router.refresh();
+      } catch {
+        setSaveState("error");
+        if (opts.explicit) toast("Network error", "error");
+      } finally {
+        savingRef.current = false;
+      }
+    },
+    [title, slug, description, content, thumbnail, status, categories, projectSlug, toast, router],
+  );
+
+  // Mark dirty on any content/metadata change — but not on the initial mount,
+  // which would otherwise trigger a pointless autosave the moment you open a post.
+  const mountedRef = useRef(false);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional change-tracking
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    setDirty(true);
+  }, [title, description, content, thumbnail, status, categories, projectSlug]);
+
+  // Debounced autosave — only once the post exists on the server.
+  useEffect(() => {
+    if (!dirty || !savedSlugRef.current) return;
+    const id = setTimeout(() => save(), AUTOSAVE_MS);
+    return () => clearTimeout(id);
+  }, [dirty, save]);
+
+  // Keep the "saved 2m ago" label honest.
+  useEffect(() => {
+    if (!lastSavedAt) return;
+    const id = setInterval(() => forceTick((t) => t + 1), 30_000);
+    return () => clearInterval(id);
+  }, [lastSavedAt]);
+
+  // Ctrl/Cmd+S saves explicitly.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        save({ explicit: true });
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [save]);
+
+  // Don't let unsaved work disappear with the tab. A brand-new post that has
+  // never been saved is the most dangerous case, so guard that too.
+  useEffect(() => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      const hasWork = savedSlugRef.current
+        ? true
+        : Boolean(title.trim() || content.trim());
+      if (dirty && hasWork) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty, title, content]);
+
+  const words = countWords(content);
+  const readMins = Math.max(1, Math.ceil(words / 200));
+  const isPublished = status === "published";
+
+  const statusLine =
+    saveState === "saving"
+      ? "saving…"
+      : saveState === "error"
+        ? "save failed"
+        : dirty && savedSlugRef.current
+          ? "unsaved changes"
+          : lastSavedAt
+            ? `saved ${timeAgo(lastSavedAt)}`
+            : savedSlugRef.current
+              ? "saved"
+              : "not saved yet";
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex h-[calc(100vh-2.75rem)] overflow-hidden -my-8 -mx-8"
-    >
+    <div className="flex h-[calc(100vh-2.75rem)] overflow-hidden -my-8 -mx-8">
       {/* Editor pane */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
         <div className="shrink-0 bg-md-background border-b border-md-outline-variant px-8 py-3 flex items-center gap-3">
+          <Link
+            href="/admin/posts"
+            title="Back to posts"
+            className="shrink-0 p-1.5 rounded-lg text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors"
+          >
+            <Icon name="arrow_back" size={18} />
+          </Link>
           <input
             type="text"
             value={title}
@@ -86,13 +241,36 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
             className="flex-1 bg-transparent md-title-large focus:outline-none placeholder:text-md-on-surface-variant/40"
             required
           />
-          <div className="flex items-center gap-1 md-label-small text-md-on-surface-variant uppercase tracking-widest">
-            <span className={`w-1.5 h-1.5 rounded-full ${status === "published" ? "bg-md-primary" : "bg-md-on-surface-variant"}`} />
-            {status}
-          </div>
-          <Button type="submit" disabled={saving} size="sm" className="shrink-0">
-            {saving ? "saving..." : isEdit ? "update" : "publish"}
-          </Button>
+
+          {/* Save state — quiet, always visible */}
+          <span
+            className={`shrink-0 md-label-small tabular-nums ${
+              saveState === "error" ? "text-md-error" : "text-md-on-surface-variant"
+            }`}
+          >
+            {statusLine}
+          </span>
+
+          <button
+            type="button"
+            onClick={() => save({ explicit: true })}
+            disabled={saveState === "saving"}
+            className="md-btn md-btn-text md-btn-sm shrink-0"
+          >
+            save draft
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              save({ explicit: true, nextStatus: isPublished ? "draft" : "published" })
+            }
+            disabled={saveState === "saving"}
+            className={`md-btn md-btn-sm shrink-0 ${
+              isPublished ? "md-btn-tonal" : "md-btn-filled"
+            }`}
+          >
+            {isPublished ? "unpublish" : "publish"}
+          </button>
           <button
             type="button"
             onClick={() => setDrawerOpen(!drawerOpen)}
@@ -104,8 +282,23 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
         </div>
 
         {/* Editor */}
-        <div className="flex-1 min-h-0 overflow-hidden px-8 py-6">
+        <div className="flex-1 min-h-0 overflow-hidden px-8 pt-6 pb-2">
           <RichEditor content={content} onChange={setContent} />
+        </div>
+
+        {/* Writing status bar */}
+        <div className="shrink-0 px-8 py-2 flex items-center gap-4 md-label-small text-md-on-surface-variant border-t border-md-outline-variant">
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isPublished ? "bg-md-primary" : "bg-md-on-surface-variant"
+              }`}
+            />
+            {status}
+          </span>
+          <span className="tabular-nums">{words.toLocaleString()} words</span>
+          <span className="tabular-nums">{readMins} min read</span>
+          <span className="ml-auto opacity-70">⌘S / Ctrl+S to save</span>
         </div>
       </div>
 
@@ -113,27 +306,6 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
       {drawerOpen && (
         <aside className="w-80 shrink-0 border-l border-md-outline-variant bg-md-surface-container-low overflow-y-auto">
           <div className="p-5 space-y-6">
-            {/* Publish */}
-            <section>
-              <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
-                publish
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="md-field-label">status</label>
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="md-field"
-                  >
-                    <option value="draft">draft</option>
-                    <option value="published">published</option>
-                  </select>
-                </div>
-              </div>
-            </section>
-
-            {/* Metadata */}
             <section>
               <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
                 metadata
@@ -148,6 +320,11 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
                     className="md-field"
                     required
                   />
+                  {savedSlugRef.current && slug !== savedSlugRef.current && (
+                    <p className="md-label-small text-md-on-surface-variant/80 mt-1">
+                      press “save draft” to apply the new slug
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="md-field-label">description</label>
@@ -161,7 +338,7 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
                 </div>
                 {allProjects.length > 0 && (
                   <div>
-                    <label className="md-field-label">project</label>
+                    <label className="md-field-label">series</label>
                     <select
                       value={projectSlug}
                       onChange={(e) => setProjectSlug(e.target.value)}
@@ -169,7 +346,9 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
                     >
                       <option value="">none</option>
                       {allProjects.map((p) => (
-                        <option key={p.slug} value={p.slug}>{p.title}</option>
+                        <option key={p.slug} value={p.slug}>
+                          {p.title}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -177,7 +356,6 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
               </div>
             </section>
 
-            {/* Thumbnail */}
             <section>
               <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
                 thumbnail
@@ -185,13 +363,11 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
               <MediaPicker value={thumbnail} onChange={setThumbnail} />
             </section>
 
-            {/* Categories */}
             {allCategories.length > 0 && (
               <section>
                 <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
                   categories
                 </h3>
-                {/* M3 filter chips */}
                 <div className="flex flex-wrap gap-2">
                   {allCategories.map((cat) => {
                     const selected = categories.includes(cat.slug);
@@ -214,9 +390,21 @@ export default function PostForm({ initialData, allCategories, allProjects, isEd
                 </div>
               </section>
             )}
+
+            {savedSlugRef.current && (
+              <a
+                href={`/posts/${savedSlugRef.current}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 md-label-large text-md-on-surface-variant hover:text-md-primary transition-colors"
+              >
+                view post
+                <Icon name="open_in_new" size={16} />
+              </a>
+            )}
           </div>
         </aside>
       )}
-    </form>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ import StatusToggle from "@/components/admin/StatusToggle";
 import DeleteButton from "@/components/admin/DeleteButton";
 import EmptyState, { StatusPill } from "@/components/admin/EmptyState";
 import PageHeader from "@/components/admin/PageHeader";
+import NewPostShortcut from "@/components/admin/NewPostShortcut";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ export default async function AdminPostsPage() {
 
   return (
     <div className="max-w-4xl">
+      <NewPostShortcut href="/admin/posts/new" />
       <PageHeader
         title="posts"
         count={allPosts.length}
