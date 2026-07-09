@@ -108,6 +108,13 @@
     /* Article content — body text uses Google's body gray (#5f6368)
        while headings stay near-black, so heading→body contrast reads
        like blog.google. */
+    /* Chart series — categorical, validated for CVD separation and contrast
+       against the light surface (blue ↔ warm, ΔE 110 protan). Never reorder:
+       colour follows the series, not its rank. */
+    --chart-1: #1a73e8;
+    --chart-2: #c2410c;
+    --chart-grid: hsl(var(--md-sys-color-outline-variant));
+
     --article-text: hsl(213 7% 40%);
     --article-heading: hsl(220 7% 12%);
     --article-link: hsl(var(--md-sys-color-primary));
@@ -164,6 +171,11 @@
     --md-sys-elevation-level3: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -2px rgba(0, 0, 0, 0.30);
     --md-sys-elevation-level4: 0 10px 15px -3px rgba(0, 0, 0, 0.40), 0 4px 6px -4px rgba(0, 0, 0, 0.35);
     --md-sys-elevation-level5: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.40);
+
+    /* Chart series — dark steps chosen (not flipped) and re-validated against
+       the dark surface: inside the lightness band, above the chroma floor. */
+    --chart-1: #4c8df6;
+    --chart-2: #c8763f;
 
     /* Article content — dark */
     --article-text: hsl(220 9% 72%);
