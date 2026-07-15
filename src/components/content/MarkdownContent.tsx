@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -18,6 +19,38 @@ const generateId = (text: string) => {
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .trim();
+};
+
+// Raw HTML is deliberately not rendered (no rehype-raw — the `render` code
+// fence is the only gate for HTML). Table cells are the one place authors
+// legitimately reach for <br> to stack items, so turn those literal strings
+// into real line breaks instead of showing "<br>" as text.
+const BR_SPLIT = /<br\s*\/?>/i;
+const breakCellText = (node: ReactNode, keyPrefix = "c"): ReactNode => {
+  if (typeof node === "string" && BR_SPLIT.test(node)) {
+    const parts = node.split(new RegExp(BR_SPLIT.source, "gi"));
+    return parts.flatMap((part, i) =>
+      i === 0
+        ? [part]
+        : [<br key={`${keyPrefix}-br-${i}`} />, part],
+    );
+  }
+  if (Array.isArray(node)) {
+    return node.map((child, i) => breakCellText(child, `${keyPrefix}-${i}`));
+  }
+  return node;
+};
+
+const TableCell = ({
+  isHeader,
+  children,
+  ...props
+}: {
+  isHeader?: boolean;
+  children?: ReactNode;
+} & Record<string, unknown>) => {
+  const Tag = isHeader ? "th" : "td";
+  return <Tag {...props}>{breakCellText(children)}</Tag>;
 };
 
 const HeadingWithAnchor = ({ level, children, ...props }: any) => {
@@ -65,6 +98,8 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
             </div>
           );
         },
+        th: (props: any) => <TableCell isHeader {...props} />,
+        td: (props: any) => <TableCell {...props} />,
         pre: ({ children, ...props }: any) => {
           const codeEl = Array.isArray(children) ? children[0] : children;
           const className = codeEl?.props?.className || "";

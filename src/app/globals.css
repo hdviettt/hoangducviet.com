@@ -418,19 +418,33 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
 .article-content table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5rem 0;
+  /* No own margin: tables always sit inside .table-wrapper, and a margin here
+     rendered as an empty strip between the wrapper border and the header row. */
+  margin: 0;
   font-size: 0.9375rem;
 }
 
+/* Wide enough that a 3-column table overflows a phone viewport and scrolls
+   inside the wrapper, instead of squeezing every cell into one-word lines. */
 .article-content table th,
-.article-content table td { min-width: 6rem; }
+.article-content table td { min-width: 9.5rem; }
+.article-content table th:first-child,
+.article-content table td:first-child { min-width: 6rem; }
 
 .article-content th,
 .article-content td {
   padding: 0.75rem 1rem;
   border: 1px solid var(--article-border);
   text-align: left;
+  vertical-align: top;
 }
+
+/* Collapse the outer edges into the wrapper border so cells don't draw a
+   second line against it. */
+.article-content table tr > :first-child { border-left: none; }
+.article-content table tr > :last-child { border-right: none; }
+.article-content table thead tr:first-child > * { border-top: none; }
+.article-content table tbody tr:last-child > * { border-bottom: none; }
 
 .article-content th {
   background: var(--article-code-bg);
