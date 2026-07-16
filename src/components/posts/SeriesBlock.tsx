@@ -94,7 +94,7 @@ export default function SeriesBlock({
           </Link>
 
           {series.summary && (
-            <p className="mb-5 md-body-medium text-md-on-surface-variant line-clamp-5">
+            <p className="mb-5 md-body-medium text-md-on-surface-variant">
               {series.summary}
             </p>
           )}

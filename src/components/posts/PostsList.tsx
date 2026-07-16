@@ -112,7 +112,7 @@ export default function PostsList({ items, viewCounts }: PostsListProps) {
                           {post.title}
                         </h3>
                         {post.description && (
-                          <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
+                          <p className="mt-3 md-body-medium text-md-on-surface-variant">
                             {post.description}
                           </p>
                         )}

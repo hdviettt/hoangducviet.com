@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import DescriptionMeter from "@/components/admin/DescriptionMeter";
 import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
 import { useToast } from "@/components/admin/Toast";
@@ -327,14 +328,15 @@ export default function PostForm({
                   )}
                 </div>
                 <div>
-                  <label className="md-field-label">description</label>
+                  <label className="md-field-label">meta description</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    rows={3}
-                    placeholder="short excerpt for SEO"
-                    className="md-field"
+                    rows={6}
+                    placeholder="shown in full on the feed cards and as the Google snippet — aim for ≤160 characters"
+                    className="md-field !leading-6"
                   />
+                  <DescriptionMeter value={description} />
                 </div>
                 {allProjects.length > 0 && (
                   <div>

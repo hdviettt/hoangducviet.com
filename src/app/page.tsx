@@ -211,7 +211,7 @@ export default async function Home() {
                           {item.post.title}
                         </h3>
                         {item.post.description && (
-                          <p className="mt-3 md-body-medium text-md-on-surface-variant line-clamp-3">
+                          <p className="mt-3 md-body-medium text-md-on-surface-variant">
                             {item.post.description}
                           </p>
                         )}
