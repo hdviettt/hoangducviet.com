@@ -1,65 +1,61 @@
-# Cover Design System — hoangducviet.com
+# Cover Design System v2 — "Fluid Gradient"
 
-Hệ thumbnail/cover cho mọi bài viết. Mục tiêu: người đọc lướt feed nhận ra bài của
-Việt trước khi đọc tên; Việt không bao giờ phải tự thiết kế — mô tả bài viết là đủ,
-Claude sinh cover theo hệ này.
+Hệ thumbnail/cover cho mọi bài viết, theo ngôn ngữ hình ảnh Google/DeepMind:
+trừu tượng, mềm, sáng, illustrative. Việt không bao giờ phải tự thiết kế — đưa
+slug + một câu tóm ý bài, Claude sinh cover theo hệ này bằng
+`design/covers/generate.py`.
 
-## Ngôn ngữ: "Technical Blueprint"
+(v1 "Technical Blueprint" đã bị thay thế — xem git history nếu cần tham khảo.)
 
-Mọi cover là một **bản vẽ kỹ thuật** của ý tưởng trong bài — không minh họa văn học,
-không stock photo, không AI-art. Bài nói về pipeline thì vẽ schematic pipeline; bài
-nói về cache miss thì vẽ timeline hai request. Show, don't tell.
+## Ngôn ngữ
 
-### Khung cố định (mọi cover)
+Mỗi cover là một **tác phẩm gradient trừu tượng** gợi ý tưởng của bài, không
+minh họa kỹ thuật, không chữ nghĩa, không stock/AI-art. Ba lớp cố định:
 
-- **Canvas**: 1200×630 (tỉ lệ OG). Nội dung chính nằm trong safe-zone vuông trung tâm
-  630×630 — feed rows crop vuông bằng `object-cover` nên rìa trái/phải có thể mất.
-- **Nền**: navy `#0D2E6B` + lưới kép (40px mờ 8%, 200px mờ 16%) + vài dấu `+` ở giao điểm.
-- **Nét vẽ**: trắng `#FFFFFF` 2-2.5px cho khối chính; xanh nhạt `#8AB4F8` 1.2-1.5px
-  cho chi tiết phụ và dimension lines; vàng `#F9AB00` CHỈ cho một điểm nhấn duy nhất
-  (threshold, LLM node, điểm miss...). Kỷ luật: tối đa 3 màu mực trên nền navy.
-- **Chữ**: JetBrains Mono / monospace, UPPERCASE cho nhãn, 14-18px. Nhãn là spec
-  thật ("ARTIFACT-01", "0 TOKENS/RUN"), không phải caption văn xuôi.
-- **Title block** (con dấu nhận diện, góc phải-dưới, mọi cover đều có):
-  khung 370×100, 3 hàng: `HOANGDUCVIET.COM` / `DOC. <mã bài>` + `SHEET NN` /
-  `SCALE <easter egg>` + `REV. <chữ cái>`. Easter egg SCALE ăn theo nội dung bài
-  (vd bài 55 agents → `SCALE 1:55`).
+1. **Nền gradient sáng** — hai tông pastel cùng họ, chéo nhẹ.
+2. **Blob màu mờ** — 2-3 hình tròn lớn qua Gaussian blur (stdDev ~55), trôi rất chậm.
+3. **Một khối focal sắc nét** — orb thủy tinh / khối glass trắng mờ / spark 4 cánh
+   kiểu Gemini / capsule. MỘT ý mỗi cover, không nhồi.
 
-### Animation (SVG + CSS keyframes, chạy được trong thẻ `<img>`)
+### Palette (8 họ, đều light-mode-first, đứng đẹp trên cả nền tối)
 
-Chuẩn mực DeepMind: ambient, chậm, lặp vô hạn, không giật.
+`blue · indigo · teal · mint · amber · coral · violet · pink` — mỗi họ gồm
+(bg-top, bg-bottom, blobA, blobB, accent, deep) khai báo trong `generate.py`.
+Kỷ luật: một cover chủ đạo MỘT họ, tối đa mượn một màu accent của họ thứ hai.
 
-- **March**: đường dashed chảy (`stroke-dashoffset` loop 3-6s, linear) — dòng dữ liệu.
-- **Pulse**: phần tử nhấn sáng tuần tự (`opacity` 0.4→1, mỗi nhịp 1.2s, stagger).
-- **Draw**: nét vẽ tự hoàn thành một lần khi load (`stroke-dasharray` draw-in 1.5s)
-  rồi giữ nguyên.
-- KHÔNG: xoay, bounce, đổi màu nền, blink nhanh <0.8s.
-- Luôn bọc trong `@media (prefers-reduced-motion: reduce) { * { animation: none } }`.
+### Series treatment
 
-### Motif theo chủ đề (chọn khi sinh cover)
+Mọi part trong một series dùng chung MỘT motif định danh (với Mini Search Engine:
+orb + orbit + spark) và xoay vòng 8 họ màu theo số part, kèm **numeral lớn mờ**
+(01-08) góc trái. Đứng cạnh nhau trên series showcase, cả dải đọc như một bộ
+sưu tập cầu vồng. Cover của cả series (`series-<slug>.svg`) = motif định danh
+với đủ 8 chấm màu.
 
-| Chủ đề bài | Motif schematic |
-|---|---|
-| Pipeline / agent vận hành | chuỗi hộp nối mũi tên, node LLM vàng, threshold dashed |
-| Kiến trúc / blueprint / org | sơ đồ khối + dimension lines + nhãn ownership |
-| Kinh tế token / đo đạc | timeline / bar đo bằng nét, con số monospace lớn |
-| Search engine series | crawler/index/rank schematic, giữ số `#N` của series |
-| Văn hóa / Trung Quốc / opinion | vẫn blueprint nhưng motif bản đồ/độ thị quan hệ |
-| Failure / post-mortem | schematic có phần gạch đỏ `#D93025` REV bị đóng dấu |
+### Animation (SVG + CSS, chạy trong thẻ `<img>`)
 
-## Quy trình làm việc
+Ambient, chậm, không giật: `drift` (blob trôi 18-24s alternate), `float`
+(focal nhấp nhô 12s), `spin` (orbit quay 60s), `sparkle` (spark thở 6s).
+Luôn có `prefers-reduced-motion` guard. KHÔNG: nhấp nháy nhanh, đổi màu nền.
 
-1. Việt (hoặc pipeline đăng bài) đưa: slug + 1 câu tóm ý bài.
-2. Claude sinh SVG vào `public/covers/<slug>.svg` (tĩnh) — bài flagship thì thêm
-   bản động cùng tên (animation nhúng trong chính file đó).
-3. Preview render → Việt duyệt/veto trong chat.
-4. Set `posts.thumbnail = "/covers/<slug>.svg"` (script `scripts/set-post-date.cjs`
-   pattern — hoặc admin). File sống trong git, versioned, không cần R2.
+### Khung kỹ thuật
+
+- Canvas 1200×630 (OG ratio). Feed row crop vuông giữa bằng `object-cover`
+  → khối focal đặt lệch phải/giữa, tránh dồn hết ra rìa.
+- File tại `public/covers/<slug>.svg`, sống trong git, không cần R2.
+- Set `posts.thumbnail = "/covers/<slug>.svg"` bằng
+  `railway run --service database node scripts/set-post-thumbnail.cjs <slug> <url>`
+  (nhớ `MSYS_NO_PATHCONV=1` trên Git Bash).
+
+## Quy trình
+
+1. Việt đưa: slug + một câu tóm ý (hoặc chỉ cần bảo "làm cover cho bài mới").
+2. Claude chọn họ màu + motif, thêm entry vào `COVERS` trong `generate.py`, chạy
+   generator, render preview trình duyệt trong chat.
+3. Việt duyệt/veto. Duyệt → commit + set thumbnail.
 
 ## Nguyên tắc chất lượng
 
-- Một cover = MỘT ý. Không nhồi cả bài vào hình.
-- Mọi nhãn phải đúng sự thật trong bài (số, tên bước) — cover là spec, spec không bịa.
-- Nhìn ở cỡ thumbnail 144px vẫn phải đọc được hình khối chính (test bằng cách thu nhỏ).
-- Đồng bộ với hệ hình trong bài (visuals/ style A nền sáng): cover navy đậm là "bìa",
-  hình trong bài nền sáng là "ruột" — cùng palette Google, hai vai khác nhau.
+- Một cover = một ý, đọc được ở cỡ 144px.
+- Focal sắc nét nằm trên blob mờ — luôn có tương phản giữa "nét" và "sương".
+- Test cả light lẫn dark mode của feed (nền cover tự sáng nên nổi trên dark).
+- Motif mới cho chủ đề mới thì thêm helper vào generate.py, đừng one-off ngoài hệ.

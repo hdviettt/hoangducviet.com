@@ -1,63 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'JetBrains Mono', Consolas, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <pattern id="g1" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
-    </pattern>
-    <pattern id="g2" width="200" height="200" patternUnits="userSpaceOnUse">
-      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1"/>
-    </pattern>
-    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,1 L8,5 L0,9" stroke="#FFFFFF" stroke-width="1.6" fill="none"/>
-    </marker>
-    <marker id="arrb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,1 L8,5 L0,9" stroke="#8AB4F8" stroke-width="1.4" fill="none"/>
-    </marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#FDE7F3"/>
+      <stop offset="1" stop-color="#FFF9FC"/>
+    </linearGradient>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+    <radialGradient id="mse8" cx="0.35" cy="0.3" r="0.9">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.45" stop-color="#FF8BCB"/>
+      <stop offset="1" stop-color="#C2185B"/>
+    </radialGradient>
     <style>
-      .march { stroke-dasharray: 10 8; animation: march 4s linear infinite; }
-      .tmarch { stroke-dasharray: 4 8; animation: march 6s linear infinite; }
-      @keyframes march { to { stroke-dashoffset: -72; } }
-      .p1, .p2, .p3 { animation: pulse 3.6s ease-in-out infinite; }
-      .p2 { animation-delay: 1.2s; }
-      .p3 { animation-delay: 2.4s; }
-      @keyframes pulse { 0%, 100% { opacity: 0.45; } 18% { opacity: 1; } 36% { opacity: 0.45; } }
-      .glow { animation: glow 3.6s ease-in-out infinite; }
-      @keyframes glow { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
+      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
+      @keyframes d1 { to { transform: translate(22px, -16px); } }
+      @keyframes d2 { to { transform: translate(-18px, 14px); } }
+      .float { animation: fl 12s ease-in-out infinite alternate; }
+      @keyframes fl { to { transform: translateY(-12px); } }
+      .spin { animation: sp 60s linear infinite; }
+      @keyframes sp { to { transform: rotate(360deg); } }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
       @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 </style>
   </defs>
-  <rect width="1200" height="630" fill="#0D2E6B"/>
-  <rect width="1200" height="630" fill="url(#g1)"/>
-  <rect width="1200" height="630" fill="url(#g2)"/>
-  <g stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.5">
-    <path d="M594 74 h12 M600 68 v12"/>
-    <path d="M1074 434 h12 M1080 428 v12"/>
-    <path d="M154 534 h12 M160 528 v12"/>
-    <path d="M1094 134 h12 M1100 128 v12"/>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle class="drift1" cx="260" cy="170" r="230" fill="#E52592" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="500" r="240" fill="#FF8BCB" fill-opacity="0.65" filter="url(#soft)"/>
+  <circle cx="760" cy="280" r="165" fill="url(#mse8)"/>
+  <g class="spin" style="transform-origin:760px 280px">
+    <ellipse cx="760" cy="280" rx="255" ry="92" fill="none" stroke="#9C166B" stroke-opacity="0.35" stroke-width="2" transform="rotate(-18 760 280)"/>
+    <circle cx="1005" cy="215" r="13" fill="#C2185B"/>
   </g>
-  <text x="150" y="120" font-size="18" fill="#FFFFFF" letter-spacing="3">MINI SEARCH ENGINE &#183; PART 8</text>
-  <path d="M150 180 h330 a14 14 0 0 1 14 14 v54 a14 14 0 0 1 -14 14 h-270 l-32 30 v-30 h-28 a14 14 0 0 1 -14 -14 v-54 a14 14 0 0 1 14 -14 z" fill="none" stroke="#FFFFFF" stroke-width="2.2"/>
-  <text x="322" y="228" text-anchor="middle" font-size="15" fill="#FFFFFF">ask anything, keep asking</text>
-  <path d="M560 320 h330 a14 14 0 0 1 14 14 v54 a14 14 0 0 1 -14 14 h-28 v30 l-32 -30 h-270 a14 14 0 0 1 -14 -14 v-54 a14 14 0 0 1 14 -14 z" fill="none" stroke="#F9AB00" stroke-width="2.2"/>
-  <text x="732" y="368" text-anchor="middle" font-size="15" fill="#F9AB00">synthesized from the index</text>
-  <rect x="600" y="170" width="90" height="40" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.4" stroke-dasharray="5 5"/>
-  <text x="645.0" y="196.0" text-anchor="middle" font-size="12" fill="#8AB4F8">idx</text>
-  <line class="tmarch" x1="645" y1="210" x2="720" y2="316" stroke="#8AB4F8" stroke-width="1.2"/>
-  <rect x="700" y="150" width="90" height="40" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.4" stroke-dasharray="5 5"/>
-  <text x="745.0" y="176.0" text-anchor="middle" font-size="12" fill="#8AB4F8">idx</text>
-  <line class="tmarch" x1="745" y1="190" x2="720" y2="316" stroke="#8AB4F8" stroke-width="1.2"/>
-  <rect x="800" y="180" width="90" height="40" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.4" stroke-dasharray="5 5"/>
-  <text x="845.0" y="206.0" text-anchor="middle" font-size="12" fill="#8AB4F8">idx</text>
-  <line class="tmarch" x1="845" y1="220" x2="720" y2="316" stroke="#8AB4F8" stroke-width="1.2"/>
-
-  <g>
-    <rect x="770" y="480" width="370" height="100" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
-    <line x1="770" y1="514" x2="1140" y2="514" stroke="#FFFFFF" stroke-width="1"/>
-    <line x1="770" y1="548" x2="1140" y2="548" stroke="#FFFFFF" stroke-width="1"/>
-    <line x1="960" y1="514" x2="960" y2="580" stroke="#FFFFFF" stroke-width="1"/>
-    <text x="786" y="503" font-size="15" fill="#FFFFFF" letter-spacing="2">HOANGDUCVIET.COM</text>
-    <text x="786" y="537" font-size="14" fill="#8AB4F8">DOC. MSE-SERIES</text>
-    <text x="976" y="537" font-size="14" fill="#8AB4F8">SHEET 08</text>
-    <text x="786" y="571" font-size="14" fill="#8AB4F8">SCALE &#8734;:1</text>
-    <text x="976" y="571" font-size="14" fill="#8AB4F8">REV. A</text>
-  </g>
+  <g class="sparkle" style="transform-origin:600px 120px"><path d="M 600 74 Q 610.12 109.88 646 120 Q 610.12 130.12 600 166 Q 589.88 130.12 554 120 Q 589.88 109.88 600 74 Z" fill="#C2185B"/></g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#9C166B" fill-opacity="0.16" letter-spacing="-12">08</text>
 </svg>

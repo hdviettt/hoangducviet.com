@@ -3,7 +3,6 @@ import { IDENTITY, SEONGON_EXPERT_URL, SOCIAL_PROFILES } from "@/lib/identity";
 // Brand marks aren't in Material Symbols — keep lucide for these four only.
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 // lucide brand marks keyed by the identity.ts social labels (UI layer only).
 const SOCIAL_ICONS = {
@@ -13,19 +12,10 @@ const SOCIAL_ICONS = {
   LinkedIn: Linkedin,
 } as const;
 
-export interface HeroStat {
-  value: string;
-  label: string;
-  href: string;
-}
-
 interface ProfileHeroProps {
   name?: string | null;
   description?: string | null; // HTML bio
   imageUrl?: string | null;
-  // "Show, don't tell": evidence numbers rendered as a proof panel on the
-  // right half (which used to be empty). Each stat links to its receipt.
-  stats?: HeroStat[];
 }
 
 // The identity block at the top of BOTH the homepage and the About page, so
@@ -35,17 +25,10 @@ export default function ProfileHero({
   name,
   description,
   imageUrl,
-  stats,
 }: ProfileHeroProps) {
   return (
     <section className="pt-10 sm:pt-12 md:pt-16 pb-10 md:pb-14">
-      <div
-        className={
-          stats && stats.length > 0
-            ? "lg:grid lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16 xl:gap-24 items-start"
-            : ""
-        }
-      >
+      <div>
         {/* Identity — photo sits beside the name instead of stacking a full
             screen height; bio stays a tight measure underneath. */}
         <div className="max-w-[640px]">
@@ -125,31 +108,6 @@ export default function ProfileHero({
           </div>
         </div>
 
-        {/* Proof panel — deepmind-style hairline rows of big numerals. Numbers
-            are receipts, not decoration: every stat links to where it's told. */}
-        {stats && stats.length > 0 && (
-          <div className="mt-12 lg:mt-0 divide-y divide-md-outline-variant border-t border-b border-md-outline-variant animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
-            {stats.map((stat) => (
-              <Link
-                key={stat.label}
-                href={stat.href}
-                className="group flex items-baseline gap-5 py-5 md:py-6"
-              >
-                <span className="text-[40px] leading-none md:text-[48px] font-normal tracking-tight text-md-on-surface tabular-nums group-hover:text-primary transition-colors duration-200 ease-md-standard shrink-0 min-w-[76px]">
-                  {stat.value}
-                </span>
-                <span className="text-[15px] leading-6 text-md-on-surface-variant">
-                  {stat.label}
-                  <Icon
-                    name="arrow_forward"
-                    size={14}
-                    className="inline-block ml-1.5 align-middle opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
-                  />
-                </span>
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );

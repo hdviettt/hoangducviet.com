@@ -10,7 +10,7 @@
     <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
       <feGaussianBlur stdDeviation="26"/>
     </filter>
-    <radialGradient id="mse1" cx="0.35" cy="0.3" r="0.9">
+    <radialGradient id="mseAll" cx="0.35" cy="0.3" r="0.9">
       <stop offset="0" stop-color="#FFFFFF"/>
       <stop offset="0.45" stop-color="#8AB4F8"/>
       <stop offset="1" stop-color="#1A73E8"/>
@@ -30,13 +30,20 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="260" cy="170" r="230" fill="#4285F4" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="500" r="240" fill="#8AB4F8" fill-opacity="0.65" filter="url(#soft)"/>
-  <circle cx="760" cy="280" r="165" fill="url(#mse1)"/>
-  <g class="spin" style="transform-origin:760px 280px">
-    <ellipse cx="760" cy="280" rx="255" ry="92" fill="none" stroke="#174EA6" stroke-opacity="0.35" stroke-width="2" transform="rotate(-18 760 280)"/>
-    <circle cx="1005" cy="215" r="13" fill="#1A73E8"/>
+  <circle class="drift1" cx="230" cy="160" r="220" fill="#4285F4" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="470" r="250" fill="#80DEEA" fill-opacity="0.6" filter="url(#soft)"/>
+  <circle class="drift1" cx="600" cy="560" r="190" fill="#D7AEFB" fill-opacity="0.4" filter="url(#soft)"/>
+  <circle cx="600" cy="300" r="180" fill="url(#mseAll)"/>
+  <g class="spin" style="transform-origin:600px 300px">
+    <ellipse cx="600" cy="300" rx="330" ry="120" fill="none" stroke="#174EA6" stroke-opacity="0.3" stroke-width="2" transform="rotate(-16 600 300)"/>
+    <circle cx="917" cy="268" r="12" fill="#1A73E8"/>
+    <circle cx="848" cy="359" r="12" fill="#3949AB"/>
+    <circle cx="633" cy="415" r="12" fill="#0097A7"/>
+    <circle cx="399" cy="404" r="12" fill="#188038"/>
+    <circle cx="283" cy="332" r="12" fill="#EA8600"/>
+    <circle cx="352" cy="241" r="12" fill="#D93025"/>
+    <circle cx="567" cy="185" r="12" fill="#8430CE"/>
+    <circle cx="801" cy="196" r="12" fill="#C2185B"/>
   </g>
-  <g class="sparkle" style="transform-origin:600px 120px"><path d="M 600 74 Q 610.12 109.88 646 120 Q 610.12 130.12 600 166 Q 589.88 130.12 554 120 Q 589.88 109.88 600 74 Z" fill="#1A73E8"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#174EA6" fill-opacity="0.16" letter-spacing="-12">01</text>
+  <g class="sparkle" style="transform-origin:920px 130px"><path d="M 920 74 Q 932.32 117.68 976 130 Q 932.32 142.32 920 186 Q 907.68 142.32 864 130 Q 907.68 117.68 920 74 Z" fill="#1A73E8"/></g>
 </svg>

@@ -1,4 +1,5 @@
 import FeedRow, { feedRowDate } from "@/components/posts/FeedRow";
+import SeriesShowcase from "@/components/posts/SeriesShowcase";
 import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
@@ -96,14 +97,22 @@ export default async function Home() {
 
   const mainProfile = profileData[0];
 
-  // deepmind.google editorial split: the newest post is featured large on the
-  // left; everything else renders as compact hairline rows on the right.
+  // deepmind.google editorial structure: newest post featured left with
+  // compact rows right; each series gets its own full-width showcase; any
+  // remaining posts continue below as a two-column row grid.
   const featuredIndex = allItems.findIndex((i) => i.kind === "post");
   const featured =
     featuredIndex >= 0
       ? (allItems[featuredIndex] as Extract<FeedItem, { kind: "post" }>)
       : null;
-  const restItems = allItems.filter((_, idx) => idx !== featuredIndex);
+  const restPosts = allItems.filter(
+    (i, idx) => idx !== featuredIndex && i.kind === "post",
+  );
+  const seriesItems = allItems.filter(
+    (i): i is Extract<FeedItem, { kind: "series" }> => i.kind === "series",
+  );
+  const sideRows = restPosts.slice(0, 4);
+  const gridRows = restPosts.slice(4);
 
   // Collect every slug rendered on the homepage so we can fetch all view
   // counts in a single PostHog round-trip (cached 5 min in posthog-server).
@@ -141,25 +150,6 @@ export default async function Home() {
         name={mainProfile.name}
         description={mainProfile.description}
         imageUrl={imageUrl}
-        stats={[
-          {
-            // Blueprint roster size — told in the artifact-driven post.
-            value: "55",
-            label: "AI agents mapped on one operating blueprint",
-            href: "/posts/an-artifact-driven-ai-initiative-blueprint",
-          },
-          {
-            // Production count — update as the platform grows.
-            value: "19",
-            label: "agents running in production at SEONGON",
-            href: "/posts/an-artifact-driven-ai-initiative-blueprint",
-          },
-          {
-            value: String(allSlugs.length),
-            label: "essays on search, agents, and honest failures",
-            href: "/posts",
-          },
-        ]}
       />
 
       {/* Writing — deepmind.google news layout: display-size section header,
@@ -214,25 +204,47 @@ export default async function Home() {
             </Link>
           )}
 
-          {/* Rows — everything else, hairline separated */}
+          {/* Rows — the next few posts, hairline separated */}
           <div className="divide-y divide-md-outline-variant border-t border-b border-md-outline-variant lg:border-t-0 lg:[&>a:first-child]:pt-0">
-            {restItems.map((item) => (
+            {sideRows.map((item) => (
               <FeedRow
-                key={
-                  item.kind === "series"
-                    ? `series-${item.series.slug}`
-                    : item.post.slug
-                }
+                key={item.kind === "post" ? item.post.slug : ""}
                 item={item}
                 views={
-                  item.kind === "series"
-                    ? seriesViewTotal(item)
-                    : (viewCounts[item.post.slug ?? ""] ?? 0)
+                  item.kind === "post"
+                    ? (viewCounts[item.post.slug ?? ""] ?? 0)
+                    : 0
                 }
               />
             ))}
           </div>
         </div>
+
+        {/* Series — a body of work gets its own stage, not a feed row */}
+        {seriesItems.map((item) => (
+          <SeriesShowcase
+            key={`series-${item.series.slug}`}
+            item={item}
+            views={seriesViewTotal(item)}
+          />
+        ))}
+
+        {/* The rest — two-column row grid, deepmind archive treatment */}
+        {gridRows.length > 0 && (
+          <div className="mt-16 md:mt-24 grid md:grid-cols-2 gap-x-16 xl:gap-x-20 border-t border-md-outline-variant [&>a]:border-b [&>a]:border-md-outline-variant">
+            {gridRows.map((item) => (
+              <FeedRow
+                key={item.kind === "post" ? item.post.slug : ""}
+                item={item}
+                views={
+                  item.kind === "post"
+                    ? (viewCounts[item.post.slug ?? ""] ?? 0)
+                    : 0
+                }
+              />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
 interface FileExplorerProps {
@@ -28,6 +28,8 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   const pathname = usePathname();
   const { theme, toggleTheme, mounted } = useTheme();
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
   const [readingProgress, setReadingProgress] = useState(0);
 
   const isPostPage =
@@ -38,6 +40,13 @@ export default function FileExplorer({ children }: FileExplorerProps) {
     const onScroll = () => {
       const scrollTop = window.scrollY;
       setScrolled(scrollTop > 8);
+      // deepmind.google detail: the bar slides away while reading down and
+      // returns the moment you scroll back up.
+      const delta = scrollTop - lastY.current;
+      if (scrollTop < 96) setHidden(false);
+      else if (delta > 4) setHidden(true);
+      else if (delta < -4) setHidden(false);
+      lastY.current = scrollTop;
       if (isPostPage) {
         const scrollHeight =
           document.documentElement.scrollHeight - window.innerHeight;
@@ -69,12 +78,13 @@ export default function FileExplorer({ children }: FileExplorerProps) {
       )}
 
       {/* deepmind.google top bar: wordmark left, plain text links, pill action
-          right. Flat white at rest; hairline + blur only after scrolling. */}
+          right. No hard border — a translucent blur is the only edge; the bar
+          slides out of view on scroll-down and back on scroll-up. */}
       <header
-        className={`sticky top-0 z-40 transition-all duration-200 ease-md-standard ${
-          scrolled
-            ? "bg-md-surface/90 backdrop-blur-md border-b border-md-outline-variant"
-            : "bg-md-background"
+        className={`sticky top-0 z-40 transition-[transform,background-color,backdrop-filter] duration-300 ease-md-standard ${
+          hidden ? "-translate-y-full" : "translate-y-0"
+        } ${
+          scrolled ? "bg-md-background/80 backdrop-blur-lg" : "bg-md-background"
         }`}
       >
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 h-16 flex items-center gap-8">

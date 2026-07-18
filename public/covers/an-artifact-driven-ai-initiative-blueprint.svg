@@ -1,78 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'JetBrains Mono', Consolas, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <pattern id="g1" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
-    </pattern>
-    <pattern id="g2" width="200" height="200" patternUnits="userSpaceOnUse">
-      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1"/>
-    </pattern>
-    <marker id="dim" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M0,5 L10,5 M6,1 L10,5 L6,9" stroke="#8AB4F8" stroke-width="1.2" fill="none"/>
-    </marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#EAF1FF"/>
+      <stop offset="1" stop-color="#FAFCFF"/>
+    </linearGradient>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
     <style>
-      .march { stroke-dasharray: 10 8; animation: march 4s linear infinite; }
-      @keyframes march { to { stroke-dashoffset: -72; } }
-      .tmarch { stroke-dasharray: 4 8; animation: march 6s linear infinite; }
-      .ok1, .ok2, .ok3 { animation: pulse 3.6s ease-in-out infinite; }
-      .ok2 { animation-delay: 1.2s; }
-      .ok3 { animation-delay: 2.4s; }
-      @keyframes pulse { 0%, 100% { opacity: 0.45; } 18% { opacity: 1; } 36% { opacity: 0.45; } }
-      .crown { animation: crown 3.6s ease-in-out infinite; transform-origin: 880px 260px; }
-      @keyframes crown { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
+      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
+      @keyframes d1 { to { transform: translate(22px, -16px); } }
+      @keyframes d2 { to { transform: translate(-18px, 14px); } }
+      .float { animation: fl 12s ease-in-out infinite alternate; }
+      @keyframes fl { to { transform: translateY(-12px); } }
+      .spin { animation: sp 60s linear infinite; }
+      @keyframes sp { to { transform: rotate(360deg); } }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
       @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-    </style>
+</style>
   </defs>
-
-  <rect width="1200" height="630" fill="#0D2E6B"/>
-  <rect width="1200" height="630" fill="url(#g1)"/>
-  <rect width="1200" height="630" fill="url(#g2)"/>
-
-  <!-- schematic: one artifact unit -->
-  <rect x="150" y="150" width="300" height="220" rx="18" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
-  <rect x="180" y="190" width="240" height="34" rx="8" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <rect x="180" y="238" width="240" height="34" rx="8" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <rect x="180" y="286" width="150" height="34" rx="8" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <text x="190" y="213" font-size="16" fill="#8AB4F8">spec<tspan class="ok1">.......ok</tspan></text>
-  <text x="190" y="261" font-size="16" fill="#8AB4F8">owner<tspan class="ok2">......ok</tspan></text>
-  <text x="190" y="309" font-size="16" fill="#8AB4F8">agent<tspan class="ok3">......ok</tspan></text>
-  <text x="150" y="136" font-size="18" fill="#FFFFFF" letter-spacing="3">ARTIFACT-01</text>
-
-  <!-- dimension line -->
-  <line x1="150" y1="410" x2="450" y2="410" stroke="#8AB4F8" stroke-width="1.2" marker-start="url(#dim)" marker-end="url(#dim)"/>
-  <text x="300" y="438" text-anchor="middle" font-size="15" fill="#8AB4F8">one artifact = one agent</text>
-
-  <!-- flowing hand-off to the threshold -->
-  <line class="march" x1="450" y1="260" x2="700" y2="260" stroke="#FFFFFF" stroke-width="2"/>
-  <path d="M700 260 l-18 -10 m18 10 l-18 10" stroke="#FFFFFF" stroke-width="2" fill="none"/>
-  <line class="tmarch" x1="726" y1="120" x2="726" y2="420" stroke="#F9AB00" stroke-width="2.5"/>
-  <text x="742" y="140" font-size="15" fill="#F9AB00">THRESHOLD</text>
-
-  <!-- reviewer -->
-  <g class="crown">
-    <circle cx="880" cy="260" r="66" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
-    <circle cx="880" cy="240" r="14" fill="none" stroke="#FFFFFF" stroke-width="2"/>
-    <path d="M850 292 a30 20 0 0 1 60 0" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle class="drift1" cx="280" cy="180" r="240" fill="#4285F4" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="950" cy="480" r="280" fill="#8AB4F8" fill-opacity="0.7" filter="url(#soft)"/>
+  <circle class="drift2" cx="700" cy="120" r="170" fill="#A8C7FA" fill-opacity="0.5" filter="url(#soft)"/>
+  <g class="float" style="transform-origin:600px 340px">
+  <rect x="330" y="330" width="190" height="190" rx="40" fill="#FFFFFF" fill-opacity="0.4" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="2"/>
+  <rect x="470" y="250" width="210" height="210" rx="44" fill="#FFFFFF" fill-opacity="0.55" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="2"/>
+  <rect x="630" y="160" width="230" height="230" rx="48" fill="#FFFFFF" fill-opacity="0.7" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="2"/>
   </g>
-  <text x="880" y="356" text-anchor="middle" font-size="15" fill="#FFFFFF">REVIEWER</text>
-
-  <!-- register crosses -->
-  <g stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.5">
-    <path d="M594 94 h12 M600 88 v12"/>
-    <path d="M994 474 h12 M1000 468 v12"/>
-    <path d="M214 534 h12 M220 528 v12"/>
-    <path d="M1094 154 h12 M1100 148 v12"/>
-  </g>
-
-  <!-- title block -->
-  <g>
-    <rect x="770" y="480" width="370" height="100" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
-    <line x1="770" y1="514" x2="1140" y2="514" stroke="#FFFFFF" stroke-width="1"/>
-    <line x1="770" y1="548" x2="1140" y2="548" stroke="#FFFFFF" stroke-width="1"/>
-    <line x1="960" y1="514" x2="960" y2="580" stroke="#FFFFFF" stroke-width="1"/>
-    <text x="786" y="503" font-size="15" fill="#FFFFFF" letter-spacing="2">HOANGDUCVIET.COM</text>
-    <text x="786" y="537" font-size="14" fill="#8AB4F8">DOC. AI-BLUEPRINT</text>
-    <text x="976" y="537" font-size="14" fill="#8AB4F8">SHEET 01</text>
-    <text x="786" y="571" font-size="14" fill="#8AB4F8">SCALE 1:55</text>
-    <text x="976" y="571" font-size="14" fill="#8AB4F8">REV. B</text>
-  </g>
+  <g class="sparkle" style="transform-origin:920px 170px"><path d="M 920 106 Q 934.08 155.92 984 170 Q 934.08 184.08 920 234 Q 905.92 184.08 856 170 Q 905.92 155.92 920 106 Z" fill="#1A73E8"/></g>
 </svg>

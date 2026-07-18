@@ -1,66 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'JetBrains Mono', Consolas, monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <pattern id="g1" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
-    </pattern>
-    <pattern id="g2" width="200" height="200" patternUnits="userSpaceOnUse">
-      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1"/>
-    </pattern>
-    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,1 L8,5 L0,9" stroke="#FFFFFF" stroke-width="1.6" fill="none"/>
-    </marker>
-    <marker id="arrb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,1 L8,5 L0,9" stroke="#8AB4F8" stroke-width="1.4" fill="none"/>
-    </marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#FCE8E6"/>
+      <stop offset="1" stop-color="#FFF9F8"/>
+    </linearGradient>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
     <style>
-      .march { stroke-dasharray: 10 8; animation: march 4s linear infinite; }
-      .tmarch { stroke-dasharray: 4 8; animation: march 6s linear infinite; }
-      @keyframes march { to { stroke-dashoffset: -72; } }
-      .p1, .p2, .p3 { animation: pulse 3.6s ease-in-out infinite; }
-      .p2 { animation-delay: 1.2s; }
-      .p3 { animation-delay: 2.4s; }
-      @keyframes pulse { 0%, 100% { opacity: 0.45; } 18% { opacity: 1; } 36% { opacity: 0.45; } }
-      .glow { animation: glow 3.6s ease-in-out infinite; }
-      @keyframes glow { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
+      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
+      @keyframes d1 { to { transform: translate(22px, -16px); } }
+      @keyframes d2 { to { transform: translate(-18px, 14px); } }
+      .float { animation: fl 12s ease-in-out infinite alternate; }
+      @keyframes fl { to { transform: translateY(-12px); } }
+      .spin { animation: sp 60s linear infinite; }
+      @keyframes sp { to { transform: rotate(360deg); } }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
       @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 </style>
   </defs>
-  <rect width="1200" height="630" fill="#0D2E6B"/>
-  <rect width="1200" height="630" fill="url(#g1)"/>
-  <rect width="1200" height="630" fill="url(#g2)"/>
-  <g stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.5">
-    <path d="M594 74 h12 M600 68 v12"/>
-    <path d="M1074 434 h12 M1080 428 v12"/>
-    <path d="M154 534 h12 M160 528 v12"/>
-    <path d="M1094 134 h12 M1100 128 v12"/>
-  </g>
-  <rect x="170" y="380" width="420" height="46" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <text x="380.0" y="409.0" text-anchor="middle" font-size="14" fill="#8AB4F8">1 · BLUEPRINT</text>
-  <rect x="198" y="318" width="364" height="46" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <text x="380.0" y="347.0" text-anchor="middle" font-size="14" fill="#8AB4F8">2 · INFRASTRUCTURE</text>
-  <rect x="226" y="256" width="308" height="46" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <text x="380.0" y="285.0" text-anchor="middle" font-size="14" fill="#8AB4F8">3 · SKILLS DOCS</text>
-  <rect x="254" y="194" width="252" height="46" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <text x="380.0" y="223.0" text-anchor="middle" font-size="14" fill="#8AB4F8">4 · AI CAPABILITY</text>
-  <rect x="282" y="132" width="196" height="46" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
-  <text x="380.0" y="161.0" text-anchor="middle" font-size="14" fill="#8AB4F8">5 · MIDDLE MGMT</text>
-  <line x1="140" y1="120" x2="640" y2="440" stroke="#D93025" stroke-width="4" stroke-opacity="0.9"/>
-  <g transform="rotate(-12 850 250)" class="glow">
-    <rect x="720" y="200" width="260" height="86" fill="none" stroke="#D93025" stroke-width="4"/>
-    <text x="850" y="238" text-anchor="middle" font-size="26" fill="#D93025" letter-spacing="4">4 OF 5</text>
-    <text x="850" y="268" text-anchor="middle" font-size="20" fill="#D93025" letter-spacing="3">MISSED</text>
-  </g>
-  <text x="170" y="100" font-size="18" fill="#FFFFFF" letter-spacing="3">POST-MORTEM</text>
-
-  <g>
-    <rect x="770" y="480" width="370" height="100" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
-    <line x1="770" y1="514" x2="1140" y2="514" stroke="#FFFFFF" stroke-width="1"/>
-    <line x1="770" y1="548" x2="1140" y2="548" stroke="#FFFFFF" stroke-width="1"/>
-    <line x1="960" y1="514" x2="960" y2="580" stroke="#FFFFFF" stroke-width="1"/>
-    <text x="786" y="503" font-size="15" fill="#FFFFFF" letter-spacing="2">HOANGDUCVIET.COM</text>
-    <text x="786" y="537" font-size="14" fill="#8AB4F8">DOC. POST-MORTEM</text>
-    <text x="976" y="537" font-size="14" fill="#8AB4F8">SHEET 01</text>
-    <text x="786" y="571" font-size="14" fill="#8AB4F8">SCALE 1:5</text>
-    <text x="976" y="571" font-size="14" fill="#8AB4F8">REV. A</text>
-  </g>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle class="drift1" cx="240" cy="180" r="220" fill="#F28B82" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="960" cy="460" r="260" fill="#EA4335" fill-opacity="0.35" filter="url(#soft)"/>
+  <rect x="198" y="226" width="104" height="234" rx="52" fill="#F28B82" fill-opacity="0.38"/>
+  <rect x="198" y="226" width="104" height="234" rx="52" fill="none" stroke="#EA4335" stroke-opacity="0.3" stroke-width="2"/>
+  <rect x="358" y="196" width="104" height="264" rx="52" fill="#F28B82" fill-opacity="0.38"/>
+  <rect x="358" y="196" width="104" height="264" rx="52" fill="none" stroke="#EA4335" stroke-opacity="0.3" stroke-width="2"/>
+  <rect x="518" y="166" width="104" height="294" rx="52" fill="#F28B82" fill-opacity="0.38"/>
+  <rect x="518" y="166" width="104" height="294" rx="52" fill="none" stroke="#EA4335" stroke-opacity="0.3" stroke-width="2"/>
+  <rect class="float" style="transform-origin:730px 330px" x="678" y="200" width="104" height="260" rx="52" fill="#D93025" fill-opacity="0.92"/>
+  <rect x="838" y="196" width="104" height="264" rx="52" fill="#F28B82" fill-opacity="0.38"/>
+  <rect x="838" y="196" width="104" height="264" rx="52" fill="none" stroke="#EA4335" stroke-opacity="0.3" stroke-width="2"/>
 </svg>
