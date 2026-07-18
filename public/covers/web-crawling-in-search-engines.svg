@@ -8,64 +8,110 @@
       <stop offset="0" stop-color="#004aef"/>
       <stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#86F7CC"/>
-    </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
+      /* 12s loop: the crawler walks seed -> A -> B -> C and home; each link
+         draws just ahead of it; each page lights up as it's visited. */
+      .crawler {
+        offset-path: path('M 330 300 L 620 170 L 890 310 L 620 470 L 330 300');
+        offset-rotate: 0deg;
+        animation: walk 12s ease-in-out infinite;
+      }
+      @keyframes walk {
+        0%, 6% { offset-distance: 0%; }
+        22% { offset-distance: 25%; }
+        30% { offset-distance: 25%; }
+        46% { offset-distance: 50%; }
+        54% { offset-distance: 50%; }
+        70% { offset-distance: 75%; }
+        78% { offset-distance: 75%; }
+        94%, 100% { offset-distance: 100%; }
+      }
+      .l1, .l2, .l3, .l4 { stroke-dasharray: 340; stroke-dashoffset: 340; }
+      .l1 { animation: draw 12s linear infinite; }
+      .l2 { animation: draw 12s linear infinite; animation-delay: 2.88s; }
+      .l3 { animation: draw 12s linear infinite; animation-delay: 5.76s; }
+      .l4 { animation: draw 12s linear infinite; animation-delay: 8.64s; }
+      @keyframes draw {
+        0%, 2% { stroke-dashoffset: 340; }
+        20% { stroke-dashoffset: 0; }
+        88% { stroke-dashoffset: 0; }
+        95%, 100% { stroke-dashoffset: 340; }
+      }
+      .pA, .pB, .pC { opacity: 0.35; }
+      .pA { animation: visit 12s ease-out infinite; }
+      .pB { animation: visit 12s ease-out infinite; animation-delay: 2.88s; }
+      .pC { animation: visit 12s ease-out infinite; animation-delay: 5.76s; }
+      @keyframes visit {
+        0%, 20% { opacity: 0.35; }
+        26% { opacity: 1; }
+        90% { opacity: 1; }
+        97%, 100% { opacity: 0.35; }
+      }
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
       @keyframes d1 { to { transform: translate(22px, -16px); } }
       @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-12px); } }
-      .spin { animation: sp 60s linear infinite; }
-      @keyframes sp { to { transform: rotate(360deg); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
       @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-</style>
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .l1, .l2, .l3, .l4 { stroke-dashoffset: 0; }
+        .pA, .pB, .pC { opacity: 1; }
+      }
+    </style>
   </defs>
+
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="170" r="210" fill="#7E9BF7" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <line x1="615" y1="188" x2="835" y2="158" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="615" y1="188" x2="985" y2="288" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="615" y1="188" x2="675" y2="338" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="615" y1="188" x2="895" y2="418" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="615" y1="188" x2="655" y2="478" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="675" y1="338" x2="895" y2="288" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="895" y1="288" x2="895" y2="380" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <rect x="560" y="150" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="576" y="168" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="576" y="184" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="576" y="200" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="780" y="120" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="796" y="138" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="796" y="154" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="796" y="170" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="930" y="250" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="946" y="268" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="946" y="284" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="946" y="300" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="620" y="300" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="636" y="318" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="636" y="334" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="636" y="350" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="840" y="380" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="856" y="398" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="856" y="414" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="856" y="430" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="600" y="440" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="616" y="458" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="616" y="474" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="616" y="490" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <circle cx="468" cy="233.04" r="34" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
-  <circle cx="484" cy="221.52" r="34" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
-  <circle class="float" cx="500" cy="210" r="34" fill="url(#brand)"/>
-  <g class="sparkle" style="transform-origin:470px 130px"><path d="M 470 94 Q 477.92 122.08 506 130 Q 477.92 137.92 470 166 Q 462.08 137.92 434 130 Q 462.08 122.08 470 94 Z" fill="#ffce00"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#004aef" fill-opacity="0.13" letter-spacing="-12">01</text>
+  <circle class="drift1" cx="230" cy="150" r="200" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
+  <circle class="drift2" cx="1010" cy="500" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+
+  <!-- links (draw in as the crawler approaches) -->
+  <line class="l1" x1="330" y1="300" x2="620" y2="170" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="2.5"/>
+  <line class="l2" x1="620" y1="170" x2="890" y2="310" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="2.5"/>
+  <line class="l3" x1="890" y1="310" x2="620" y2="470" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="2.5"/>
+  <line class="l4" x1="620" y1="470" x2="330" y2="300" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2.5" stroke-dasharray="340"/>
+
+  <!-- seed page -->
+  <g>
+    <rect x="256" y="252" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="278" y="274" width="76" height="10" rx="5" fill="url(#brand)"/>
+    <rect x="278" y="296" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
+    <rect x="278" y="313" width="88" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
+  </g>
+  <!-- page A -->
+  <g class="pA">
+    <rect x="546" y="122" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="568" y="144" width="64" height="10" rx="5" fill="#0fd6f7"/>
+    <rect x="568" y="166" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
+    <rect x="568" y="183" width="84" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
+  </g>
+  <!-- page B -->
+  <g class="pB">
+    <rect x="816" y="262" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="838" y="284" width="70" height="10" rx="5" fill="#07ef9c"/>
+    <rect x="838" y="306" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
+    <rect x="838" y="323" width="90" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
+  </g>
+  <!-- page C -->
+  <g class="pC">
+    <rect x="546" y="422" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="568" y="444" width="58" height="10" rx="5" fill="#ffce00"/>
+    <rect x="568" y="466" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
+    <rect x="568" y="483" width="80" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
+  </g>
+
+  <!-- the crawler: gradient dot with echo ring, walking the graph -->
+  <g class="crawler">
+    <circle r="26" fill="none" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2.5"/>
+    <circle r="17" fill="url(#brand)"/>
+    <circle cx="-5" cy="-5" r="5" fill="#FFFFFF" fill-opacity="0.85"/>
+  </g>
+
+  <g class="sparkle">
+    <path d="M 1024 130 Q 1032.8 157.6 1060 166 Q 1032.8 174.4 1024 202 Q 1015.2 174.4 988 166 Q 1015.2 157.6 1024 130 Z" fill="#ffce00"/>
+  </g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#004aef" fill-opacity="0.1" letter-spacing="-12">01</text>
 </svg>

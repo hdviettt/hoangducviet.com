@@ -1,7 +1,4 @@
-import FeedRow, { feedRowDate } from "@/components/posts/FeedRow";
-import SeriesShowcase from "@/components/posts/SeriesShowcase";
-import { ViewCount } from "@/components/posts/ViewCount";
-import { Icon } from "@/components/ui/Icon";
+import FeedBlocks from "@/components/posts/FeedBlocks";
 import { getGlobalMetadata } from "@/lib/global";
 import { IDENTITY } from "@/lib/identity";
 import { createEntityGraph } from "@/lib/jsonld";
@@ -10,7 +7,6 @@ import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
 import ProfileHero from "@/components/layout/ProfileHero";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -97,24 +93,6 @@ export default async function Home() {
 
   const mainProfile = profileData[0];
 
-  // deepmind.google editorial structure: newest post featured left with
-  // compact rows right; each series gets its own full-width showcase; any
-  // remaining posts continue below as a two-column row grid.
-  const featuredIndex = allItems.findIndex((i) => i.kind === "post");
-  const featured =
-    featuredIndex >= 0
-      ? (allItems[featuredIndex] as Extract<FeedItem, { kind: "post" }>)
-      : null;
-  const restPosts = allItems.filter(
-    (i, idx) => idx !== featuredIndex && i.kind === "post",
-  );
-  const seriesItems = allItems.filter(
-    (i): i is Extract<FeedItem, { kind: "series" }> => i.kind === "series",
-  );
-  // deepmind.google keeps ~10 rows beside the sticky featured before the
-  // two-column grid takes over below.
-  const sideRows = restPosts.slice(0, 10);
-  const gridRows = restPosts.slice(10);
 
   // Collect every slug rendered on the homepage so we can fetch all view
   // counts in a single PostHog round-trip (cached 5 min in posthog-server).
@@ -127,8 +105,6 @@ export default async function Home() {
     }
   }
   const viewCounts = await getPostViewCounts(allSlugs);
-  const seriesViewTotal = (item: Extract<FeedItem, { kind: "series" }>) =>
-    item.parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   const imageUrl = mainProfile.image || null;
   const baseUrl =
@@ -154,8 +130,8 @@ export default async function Home() {
         imageUrl={imageUrl}
       />
 
-      {/* Writing — deepmind.google news layout: display-size section header,
-          newest post featured large on the left, the rest as hairline rows. */}
+      {/* Writing — one chronological feed: post rows in a two-column grid,
+          series interrupting with their sticky-rail showcases (FeedBlocks). */}
       <section className="mt-4 md:mt-8">
         <h2 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-normal tracking-tight text-md-on-surface">
           Writing
@@ -165,90 +141,9 @@ export default async function Home() {
           initiative
         </p>
 
-        <div className="mt-10 md:mt-16 lg:grid lg:grid-cols-[7fr_6fr] lg:gap-16 xl:gap-20 items-start">
-          {/* Featured — newest post. Sticky within this split (deepmind
-              behavior): it holds while the rows scroll, releases when the
-              group ends. */}
-          {featured && (
-            <Link
-              href={`/posts/${featured.post.slug}`}
-              className="group block mb-12 lg:mb-0 lg:sticky lg:top-10 lg:self-start"
-            >
-              <h3 className="text-[28px] leading-9 md:text-[42px] md:leading-[48px] font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
-                {featured.post.title}
-              </h3>
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
-                <span className="tabular-nums">
-                  {feedRowDate(featured.post.date_created)}
-                </span>
-                {(viewCounts[featured.post.slug ?? ""] ?? 0) > 0 && (
-                  <ViewCount count={viewCounts[featured.post.slug ?? ""] ?? 0} />
-                )}
-                <span className="inline-flex items-center gap-1.5 text-md-on-surface font-medium">
-                  Read post
-                  <Icon
-                    name="arrow_forward"
-                    size={16}
-                    className="transition-transform duration-200 group-hover:translate-x-0.5"
-                  />
-                </span>
-              </div>
-              {featured.post.thumbnail && (
-                <div className="mt-6 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
-                  {/* biome-ignore lint/a11y/useAltText: decorative cover, title is adjacent */}
-                  <img
-                    src={featured.post.thumbnail}
-                    alt=""
-                    loading="eager"
-                    decoding="async"
-                    className="w-full h-auto transition-transform duration-300 ease-md-standard group-hover:scale-[1.02]"
-                  />
-                </div>
-              )}
-            </Link>
-          )}
-
-          {/* Rows — the next few posts, hairline separated */}
-          <div className="divide-y divide-md-outline-variant border-t border-b border-md-outline-variant lg:border-t-0 lg:[&>a:first-child]:pt-0">
-            {sideRows.map((item) => (
-              <FeedRow
-                key={item.kind === "post" ? item.post.slug : ""}
-                item={item}
-                views={
-                  item.kind === "post"
-                    ? (viewCounts[item.post.slug ?? ""] ?? 0)
-                    : 0
-                }
-              />
-            ))}
-          </div>
+        <div className="mt-10 md:mt-16">
+          <FeedBlocks items={allItems} viewCounts={viewCounts} />
         </div>
-
-        {/* Series — a body of work gets its own stage, not a feed row */}
-        {seriesItems.map((item) => (
-          <SeriesShowcase
-            key={`series-${item.series.slug}`}
-            item={item}
-            views={seriesViewTotal(item)}
-          />
-        ))}
-
-        {/* The rest — two-column row grid, deepmind archive treatment */}
-        {gridRows.length > 0 && (
-          <div className="mt-16 md:mt-24 grid md:grid-cols-2 gap-x-16 xl:gap-x-20 border-t border-md-outline-variant [&>a]:border-b [&>a]:border-md-outline-variant">
-            {gridRows.map((item) => (
-              <FeedRow
-                key={item.kind === "post" ? item.post.slug : ""}
-                item={item}
-                views={
-                  item.kind === "post"
-                    ? (viewCounts[item.post.slug ?? ""] ?? 0)
-                    : 0
-                }
-              />
-            ))}
-          </div>
-        )}
       </section>
     </div>
   );

@@ -115,12 +115,6 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
-            <Link
-              href="/about"
-              className="hidden md:inline-flex items-center h-10 px-5 rounded-full border border-md-outline text-[14px] font-medium text-md-on-surface hover:bg-md-on-surface/5 transition-colors duration-200 ease-md-standard"
-            >
-              About me
-            </Link>
             <button
               type="button"
               onClick={toggleTheme}
