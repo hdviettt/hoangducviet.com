@@ -4,8 +4,9 @@ import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import type { FeedItem } from "@/lib/posts";
 
-// deepmind.google list row: title + meta line + optional small thumbnail on the
-// right, hairline dividers between rows, no description (the title carries it).
+// deepmind.google list row: title + meta line top-aligned with the thumbnail
+// on the right, no description (the title carries it). Each row closes with a
+// hairline (border-b applied by the parent grid).
 export function feedRowDate(iso: string | null | undefined): string {
   if (!iso) return "";
   return new Date(iso).toLocaleDateString("en-US", {
@@ -31,7 +32,7 @@ export default function FeedRow({
   const cta = isSeries ? "View series" : "Read post";
 
   return (
-    <Link href={href} className="group flex items-center gap-8 py-8 md:py-10">
+    <Link href={href} className="group flex items-start gap-8 py-8 md:py-10">
       <div className="min-w-0 flex-1">
         <h3 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
           {title}

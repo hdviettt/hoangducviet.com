@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Next.js 14 personal blog with a custom CMS admin panel. TypeScript, Drizzle ORM, PostgreSQL, Tailwind CSS, Tiptap editor for the admin. Material 3 visual system (Google Blue accent, DM Sans, layered surfaces, rounded shapes) across both the public site and the admin. Light mode default, dark mode supported. Deployed on Railway via Nixpacks with Bun runtime.
+Next.js 14 personal blog with a custom CMS admin panel. TypeScript, Drizzle ORM, PostgreSQL, Tailwind CSS, Tiptap editor for the admin. Material 3 visual system (SEONGON Prosperous Blue accent, Google Sans Flex, layered surfaces, rounded shapes) across both the public site and the admin. Light mode default, dark mode supported. Deployed on Railway via Nixpacks with Bun runtime.
 
 ## Development Commands
 
@@ -143,7 +143,7 @@ Tailwind utilities in `tailwind.config.ts` (`bg-md-*`, `text-md-*`, `border-md-*
 `rounded-{sm,md,lg,xl,2xl}`, `shadow-md-{1..5}`, `ease-md-*`).
 
 - **Light mode default**, class-based dark mode (`html.dark`). Every `md-*` token has a dark value — use tokens, never hardcode hex / `bg-white` / `text-black`.
-- **Primary = Google Blue `#1A73E8`** (`hsl(217 89% 51%)`). Change `--md-sys-color-primary` to rebrand; the rest derives from the M3 roles (secondary, tertiary, error, `surface-container-{low..highest}`, outline, outline-variant).
+- **Primary = SEONGON Prosperous Blue `#004AEF`** (`hsl(221 100% 47%)`). Change `--md-sys-color-primary` to rebrand; the rest derives from the M3 roles (secondary, tertiary, error, `surface-container-{low..highest}`, outline, outline-variant).
 - **Fonts:** `DM Sans` (closest open match to Google Sans) as the sans family — still exposed under the CSS-var name `--font-inter` for backward compat — weights 400/500/600/700; `JetBrains Mono` via `font-mono` for code and tabular numbers.
 - **Type scale:** M3 utility classes `.md-display-*`, `.md-headline-*`, `.md-title-*`, `.md-body-*`, `.md-label-*` (defined in globals.css). Prefer these over raw `text-xl`/`text-sm`.
 - **Shape:** M3 corner scale (4/8/12/16/28px), not sharp corners. Panels/cards → `rounded-xl`; pills/toggles/status chips → `rounded-full`.

@@ -1,14 +1,14 @@
 import Link from "next/link";
 
-import { Icon } from "@/components/ui/Icon";
 import { ViewCount } from "@/components/posts/ViewCount";
+import { Icon } from "@/components/ui/Icon";
 import type { FeedItem } from "@/lib/posts";
 import { feedRowDate } from "./FeedRow";
 
 type SeriesItem = Extract<FeedItem, { kind: "series" }>;
 
 // Part titles usually repeat the series name ("<Series> #3: Inverted Index");
-// inside the showcase the numbered index already carries that context.
+// inside the showcase the "Part N" meta already carries that context.
 function partLabel(title: string, seriesTitle: string): string {
   const stripped = title.replace(
     new RegExp(
@@ -21,23 +21,25 @@ function partLabel(title: string, seriesTitle: string): string {
 }
 
 // A series mirrors the featured-post anatomy: a sticky rail with the series'
-// identity (cover, title, summary) on the left, and the parts as full rows
-// with their own cover thumbnails on the right.
+// identity (cover, title, summary) on the left, and the parts on the right as
+// rows identical to a regular FeedRow — same type size, same meta, same cover.
 export default function SeriesShowcase({
   item,
   viewCounts,
+  className = "",
 }: {
   item: SeriesItem;
   viewCounts: Record<string, number>;
+  className?: string;
 }) {
   const { series, parts } = item;
   const views = parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   return (
-    <section className="mt-16 md:mt-24">
-      <div className="lg:grid lg:grid-cols-[7fr_6fr] lg:gap-16 xl:gap-20 items-start">
+    <section className={className}>
+      <div className="lg:grid lg:grid-cols-[6fr_7fr] lg:gap-12 xl:gap-16 items-start">
         {/* Sticky rail — the series' general identity */}
-        <div className="mb-12 lg:mb-0 lg:sticky lg:top-10 lg:self-start">
+        <div className="mb-10 lg:mb-0 lg:sticky lg:top-10 lg:self-start">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
             <span className="font-medium text-primary">Series</span>
             <span>{parts.length} parts</span>
@@ -67,7 +69,7 @@ export default function SeriesShowcase({
           </Link>
           <Link
             href={`/series/${series.slug}`}
-            className="group mt-7 hidden lg:block"
+            className="group mt-6 hidden lg:block"
           >
             <div className="overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
               {/* biome-ignore lint/a11y/useAltText: decorative cover, title is adjacent */}
@@ -82,23 +84,22 @@ export default function SeriesShowcase({
           </Link>
         </div>
 
-        {/* Parts — full post cards: title, meta, and a big cover each,
-            separated only by hairlines between rows */}
-        <div className="divide-y divide-md-outline-variant lg:[&>a:first-child]:pt-0">
+        {/* Parts — the exact FeedRow anatomy, so rail posts read as first-class
+            cards: same title scale, same meta line, same cover size, and the
+            same one-hairline-per-card rule as the rest of the feed. */}
+        <div className="[&>a]:border-b [&>a]:border-md-outline-variant lg:[&>a:first-child]:pt-0">
           {parts.map((part, i) => (
             <Link
               key={part.slug}
               href={`/posts/${part.slug}`}
-              className="group flex items-center gap-6 py-7 md:py-8"
+              className="group flex items-start gap-8 py-8 md:py-10"
             >
-              <span className="text-[13px] leading-5 tabular-nums text-md-on-surface-variant shrink-0 w-7 self-start pt-2">
-                {String(i + 1).padStart(2, "0")}
-              </span>
               <div className="min-w-0 flex-1">
-                <h4 className="text-[20px] leading-7 md:text-[24px] md:leading-8 font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                <h4 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                   {partLabel(part.title, series.title)}
                 </h4>
                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+                  <span className="tabular-nums">Part {i + 1}</span>
                   <span className="tabular-nums">
                     {feedRowDate(part.date_created)}
                   </span>
@@ -115,7 +116,7 @@ export default function SeriesShowcase({
                   </span>
                 </div>
               </div>
-              <div className="hidden sm:block shrink-0 w-[150px] md:w-[190px] aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+              <div className="hidden sm:block shrink-0 w-[180px] md:w-[240px] lg:w-[180px] xl:w-[240px] aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
                 {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
                 <img
                   src={`/covers/${part.slug}.svg`}

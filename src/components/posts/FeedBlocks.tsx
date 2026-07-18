@@ -41,12 +41,15 @@ export default function FeedBlocks({
             key={`series-${block.item.series.slug}`}
             item={block.item}
             viewCounts={viewCounts}
+            className={i > 0 ? "mt-10 md:mt-14" : ""}
           />
         ) : (
+          // One border language: every card closes with a hairline. Grid
+          // children stretch to the row height, so the rules align per row.
           <div
             key={`posts-${i}`}
-            className={`grid md:grid-cols-2 gap-x-16 xl:gap-x-20 [&>a]:border-md-outline-variant [&>a:not(:first-child)]:border-t md:[&>a:nth-child(2)]:border-t-0 ${
-              i > 0 ? "mt-16 md:mt-24" : ""
+            className={`grid md:grid-cols-2 gap-x-16 xl:gap-x-20 [&>a]:border-b [&>a]:border-md-outline-variant ${
+              i > 0 ? "mt-10 md:mt-14" : ""
             }`}
           >
             {block.items.map((item) => (

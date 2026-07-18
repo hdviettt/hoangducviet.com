@@ -5,17 +5,17 @@
 /* ================================
    MATERIAL DESIGN 3 — DESIGN TOKENS
    Reference: m3.material.io
-   Primary: Google Blue #1A73E8 (override --md-sys-color-primary
+   Primary: SEONGON Prosperous Blue #004AEF (override --md-sys-color-primary
    if you want a different brand color — everything else is derived).
    ================================ */
 
 @layer base {
   :root {
     /* ----- M3 color roles (light) ----- */
-    --md-sys-color-primary: 217 89% 51%;          /* #1A73E8 Google Blue */
+    --md-sys-color-primary: 221 100% 47%;         /* #004AEF SEONGON Prosperous Blue */
     --md-sys-color-on-primary: 0 0% 100%;
-    --md-sys-color-primary-container: 217 100% 92%;
-    --md-sys-color-on-primary-container: 217 100% 18%;
+    --md-sys-color-primary-container: 221 100% 93%;
+    --md-sys-color-on-primary-container: 221 100% 18%;
 
     --md-sys-color-secondary: 222 16% 35%;
     --md-sys-color-on-secondary: 0 0% 100%;
@@ -49,7 +49,7 @@
 
     --md-sys-color-inverse-surface: 220 7% 18%;
     --md-sys-color-inverse-on-surface: 220 14% 96%;
-    --md-sys-color-inverse-primary: 217 95% 78%;
+    --md-sys-color-inverse-primary: 223 100% 76%;
 
     /* Google Sans Flex loaded via <link> in layout.tsx; the variable keeps its
        historical name so every existing reference resolves to the new family. */
@@ -117,14 +117,14 @@
     /* Chart series — categorical, validated for CVD separation and contrast
        against the light surface (blue ↔ warm, ΔE 110 protan). Never reorder:
        colour follows the series, not its rank. */
-    --chart-1: #1a73e8;
+    --chart-1: #004aef;
     --chart-2: #c2410c;
     --chart-grid: hsl(var(--md-sys-color-outline-variant));
 
     --article-text: hsl(213 7% 40%);
     --article-heading: hsl(220 7% 12%);
     --article-link: hsl(var(--md-sys-color-primary));
-    --article-link-hover: hsl(217 89% 41%);
+    --article-link-hover: hsl(221 100% 38%);
     --article-border: hsl(var(--md-sys-color-outline-variant));
     --article-code-bg: hsl(var(--md-sys-color-surface-variant));
     --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
@@ -132,10 +132,10 @@
 
   .dark {
     /* ----- M3 color roles (dark) ----- */
-    --md-sys-color-primary: 217 95% 78%;          /* lighter blue for dark surface */
-    --md-sys-color-on-primary: 217 100% 14%;
-    --md-sys-color-primary-container: 217 70% 30%;
-    --md-sys-color-on-primary-container: 217 100% 92%;
+    --md-sys-color-primary: 223 100% 76%;         /* Prosperous Blue tint for dark surface */
+    --md-sys-color-on-primary: 221 100% 14%;
+    --md-sys-color-primary-container: 221 75% 32%;
+    --md-sys-color-on-primary-container: 221 100% 93%;
 
     --md-sys-color-secondary: 220 18% 78%;
     --md-sys-color-on-secondary: 222 25% 18%;
@@ -169,7 +169,7 @@
 
     --md-sys-color-inverse-surface: 220 13% 91%;
     --md-sys-color-inverse-on-surface: 220 9% 12%;
-    --md-sys-color-inverse-primary: 217 89% 51%;
+    --md-sys-color-inverse-primary: 221 100% 47%;
 
     /* ----- M3 elevation (dark) — subtler shadows ----- */
     --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
@@ -180,13 +180,13 @@
 
     /* Chart series — dark steps chosen (not flipped) and re-validated against
        the dark surface: inside the lightness band, above the chroma floor. */
-    --chart-1: #4c8df6;
+    --chart-1: #7fa3ff;
     --chart-2: #c8763f;
 
     /* Article content — dark */
     --article-text: hsl(220 9% 72%);
     --article-heading: hsl(220 18% 96%);
-    --article-link-hover: hsl(217 95% 88%);
+    --article-link-hover: hsl(223 100% 86%);
   }
 }
 
