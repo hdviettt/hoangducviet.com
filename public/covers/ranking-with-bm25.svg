@@ -8,42 +8,95 @@
       <stop offset="0" stop-color="#004aef"/>
       <stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#86F7CC"/>
-    </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
+      /* 11s loop: three equal documents get scored — the bars stretch to
+         their BM25 weights and the winner takes the gradient. */
+      .w1 { animation: score1 11s ease-in-out infinite; }
+      .w2 { animation: score2 11s ease-in-out infinite; }
+      .w3 { animation: score3 11s ease-in-out infinite; }
+      @keyframes score1 {
+        0%, 18% { width: 170px; } 40% { width: 330px; }
+        88% { width: 330px; } 95%, 100% { width: 170px; }
+      }
+      @keyframes score2 {
+        0%, 22% { width: 170px; } 44% { width: 250px; }
+        88% { width: 250px; } 95%, 100% { width: 170px; }
+      }
+      @keyframes score3 {
+        0%, 26% { width: 170px; } 40% { width: 128px; }
+        88% { width: 128px; } 95%, 100% { width: 170px; }
+      }
+      .winbar { opacity: 0; animation: score1 11s ease-in-out infinite, crown 11s ease-out infinite; }
+      @keyframes crown {
+        0%, 46% { opacity: 0; }
+        54% { opacity: 1; }
+        88% { opacity: 1; }
+        95%, 100% { opacity: 0; }
+      }
+      .b1, .b2, .b3 { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      .b1 { animation: badge 11s ease-out infinite; animation-delay: 0.2s; }
+      .b2 { animation: badge 11s ease-out infinite; animation-delay: 0.5s; }
+      .b3 { animation: badge 11s ease-out infinite; animation-delay: 0.8s; }
+      @keyframes badge {
+        0%, 56% { opacity: 0; transform: scale(0.5); }
+        62% { opacity: 1; transform: scale(1.1); }
+        65% { transform: scale(1); }
+        86% { opacity: 1; }
+        93%, 100% { opacity: 0; }
+      }
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
       @keyframes d1 { to { transform: translate(22px, -16px); } }
       @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-12px); } }
-      .spin { animation: sp 60s linear infinite; }
-      @keyframes sp { to { transform: rotate(360deg); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
       @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-</style>
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .w1 { width: 330px; } .w2 { width: 250px; } .w3 { width: 128px; }
+        .winbar, .b1, .b2, .b3 { opacity: 1; }
+      }
+    </style>
   </defs>
+
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="170" r="210" fill="#C9FBE8" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <rect x="480" y="190" width="330" height="64" rx="32" fill="url(#brand)" fill-opacity="1" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="852" cy="222" r="19" fill="none" stroke="url(#brand)" stroke-opacity="0.7" stroke-width="2.5"/>
-  <rect x="842" y="218" width="20" height="8" rx="4" fill="#07ef9c"/>
-  <rect x="480" y="285" width="250" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="772" cy="317" r="19" fill="none" stroke="url(#brand)" stroke-opacity="0.7" stroke-width="2.5"/>
-  <rect x="762" y="313" width="20" height="8" rx="4" fill="#07ef9c"/>
-  <rect x="480" y="380" width="170" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="692" cy="412" r="19" fill="none" stroke="url(#brand)" stroke-opacity="0.7" stroke-width="2.5"/>
-  <rect x="682" y="408" width="20" height="8" rx="4" fill="#07ef9c"/>
-  <rect x="440" y="218.8" width="330" height="64" rx="32" fill="none" stroke="url(#brand)" stroke-opacity="0.29" stroke-width="2.5"/>
-  <rect x="460" y="204.4" width="330" height="64" rx="32" fill="none" stroke="url(#brand)" stroke-opacity="0.42" stroke-width="2.5"/>
-  <rect x="480" y="190" width="330" height="64" rx="32" fill="url(#brand)"/>
-  <g class="sparkle" style="transform-origin:1010px 140px"><path d="M 1010 98 Q 1019.24 130.76 1052 140 Q 1019.24 149.24 1010 182 Q 1000.76 149.24 968 140 Q 1000.76 130.76 1010 98 Z" fill="#0fd6f7"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#07ef9c" fill-opacity="0.13" letter-spacing="-12">04</text>
+  <circle class="drift1" cx="250" cy="170" r="210" fill="#86F7CC" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="490" r="220" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
+
+  <!-- query chip feeding the scorer -->
+  <rect x="300" y="120" width="150" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.95" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="330" cy="142" r="10" fill="none" stroke="#004aef" stroke-width="2.5"/>
+  <line x1="338" y1="150" x2="345" y2="157" stroke="#004aef" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="360" y="137" width="66" height="10" rx="5" fill="#2E62F1" fill-opacity="0.8"/>
+
+  <!-- the three documents, scored -->
+  <g>
+    <rect class="w1" x="300" y="220" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+    <rect class="winbar" x="300" y="220" height="64" rx="32" fill="url(#brand)"/>
+    <g class="b1">
+      <circle cx="700" cy="252" r="22" fill="#ffce00"/>
+      <rect x="688" y="248" width="24" height="8" rx="4" fill="#FFFFFF"/>
+    </g>
+  </g>
+  <g>
+    <rect class="w2" x="300" y="330" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+    <g class="b2">
+      <circle cx="620" cy="362" r="19" fill="none" stroke="url(#brand)" stroke-width="2.5"/>
+      <rect x="608" y="358" width="24" height="8" rx="4" fill="#0AA6C4"/>
+    </g>
+  </g>
+  <g>
+    <rect class="w3" x="300" y="440" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+    <g class="b3">
+      <circle cx="498" cy="472" r="19" fill="none" stroke="url(#brand)" stroke-width="2.5"/>
+      <rect x="486" y="468" width="24" height="8" rx="4" fill="#04B876"/>
+    </g>
+  </g>
+
+  <g class="sparkle">
+    <path d="M 1030 130 Q 1038.8 157.6 1066 166 Q 1038.8 174.4 1030 202 Q 1021.2 174.4 994 166 Q 1021.2 157.6 1030 130 Z" fill="#ffce00"/>
+  </g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#03895A" fill-opacity="0.12" letter-spacing="-12">04</text>
 </svg>

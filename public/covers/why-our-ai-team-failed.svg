@@ -8,34 +8,61 @@
       <stop offset="0" stop-color="#004aef"/>
       <stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#86F7CC"/>
-    </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
+      /* 12s loop: five pillars stand; four fade to outlines one after
+         another; the one that held takes the weight. */
+      .g1 { animation: ghost 12s ease-in-out infinite; }
+      .g2 { animation: ghost 12s ease-in-out infinite; animation-delay: 1.1s; }
+      .g3 { animation: ghost 12s ease-in-out infinite; animation-delay: 2.2s; }
+      .g4 { animation: ghost 12s ease-in-out infinite; animation-delay: 3.3s; }
+      @keyframes ghost {
+        0%, 18% { opacity: 1; }
+        26% { opacity: 0; }
+        90% { opacity: 0; }
+        97%, 100% { opacity: 1; }
+      }
+      .survivor { animation: hold 12s ease-in-out infinite; }
+      @keyframes hold {
+        0%, 58% { transform: translateY(0); }
+        63% { transform: translateY(-12px); }
+        68%, 100% { transform: translateY(0); }
+      }
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
       @keyframes d1 { to { transform: translate(22px, -16px); } }
       @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-12px); } }
-      .spin { animation: sp 60s linear infinite; }
-      @keyframes sp { to { transform: rotate(360deg); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
       @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-</style>
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .g1, .g2, .g3, .g4 { opacity: 0; }
+      }
+    </style>
   </defs>
+
   <rect width="1200" height="630" fill="url(#bg)"/>
   <circle class="drift1" cx="240" cy="180" r="220" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
   <circle class="drift2" cx="960" cy="460" r="250" fill="#86F7CC" fill-opacity="0.4" filter="url(#soft)"/>
-  <rect x="200" y="229" width="100" height="226" rx="50" fill="none" stroke="url(#brandSoft)" stroke-opacity="0.75" stroke-width="2.5"/>
-  <rect x="355" y="199" width="100" height="256" rx="50" fill="none" stroke="url(#brandSoft)" stroke-opacity="0.75" stroke-width="2.5"/>
-  <rect x="510" y="169" width="100" height="286" rx="50" fill="none" stroke="url(#brandSoft)" stroke-opacity="0.75" stroke-width="2.5"/>
-  <rect class="float" style="transform-origin:715px 330px" x="665" y="205" width="100" height="250" rx="50" fill="url(#brand)"/>
-  <rect x="820" y="199" width="100" height="256" rx="50" fill="none" stroke="url(#brandSoft)" stroke-opacity="0.75" stroke-width="2.5"/>
-  <g class="sparkle" style="transform-origin:1010px 160px"><path d="M 1010 116 Q 1019.68 150.32 1054 160 Q 1019.68 169.68 1010 204 Q 1000.32 169.68 966 160 Q 1000.32 150.32 1010 116 Z" fill="#0fd6f7"/></g>
+
+  <!-- outlines: what remains when a pillar gives way -->
+  <rect x="200" y="199" width="100" height="256" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <rect x="355" y="169" width="100" height="286" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <rect x="510" y="139" width="100" height="316" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <rect x="820" y="169" width="100" height="286" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+
+  <!-- the four that were missed (fade away in turn) -->
+  <rect class="g1" x="200" y="199" width="100" height="256" rx="50" fill="url(#brand)"/>
+  <rect class="g2" x="355" y="169" width="100" height="286" rx="50" fill="url(#brand)"/>
+  <rect class="g3" x="510" y="139" width="100" height="316" rx="50" fill="url(#brand)"/>
+  <rect class="g4" x="820" y="169" width="100" height="286" rx="50" fill="url(#brand)"/>
+
+  <!-- the one that held -->
+  <rect class="survivor" x="665" y="139" width="100" height="316" rx="50" fill="url(#brand)"/>
+
+  <g class="sparkle">
+    <path d="M 1014 136 Q 1022.8 163.6 1050 172 Q 1022.8 180.4 1014 208 Q 1005.2 180.4 978 172 Q 1005.2 163.6 1014 136 Z" fill="#0fd6f7"/>
+  </g>
 </svg>

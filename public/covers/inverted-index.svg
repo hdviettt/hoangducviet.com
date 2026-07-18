@@ -8,57 +8,117 @@
       <stop offset="0" stop-color="#004aef"/>
       <stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#86F7CC"/>
-    </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-12px); } }
-      .spin { animation: sp 60s linear infinite; }
-      @keyframes sp { to { transform: rotate(360deg); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      /* 12s loop: each term finds its documents — the index inverts itself
+         link by link. */
+      .t1, .t2, .t3 { opacity: 0; transform-box: fill-box; transform-origin: left center; }
+      .t1 { animation: term 12s ease-out infinite; }
+      .t2 { animation: term 12s ease-out infinite; animation-delay: 0.6s; }
+      .t3 { animation: term 12s ease-out infinite; animation-delay: 1.2s; }
+      @keyframes term {
+        0%, 5% { opacity: 0; transform: translateX(-16px); }
+        11% { opacity: 1; transform: translateX(0); }
+        90% { opacity: 1; }
+        96%, 100% { opacity: 0; }
+      }
+      .k1, .k2, .k3, .k4, .k5, .k6 { stroke-dasharray: 460; stroke-dashoffset: 460; }
+      .k1 { animation: cast 12s ease-in-out infinite; animation-delay: 1.6s; }
+      .k2 { animation: cast 12s ease-in-out infinite; animation-delay: 2.2s; }
+      .k3 { animation: cast 12s ease-in-out infinite; animation-delay: 3.4s; }
+      .k4 { animation: cast 12s ease-in-out infinite; animation-delay: 4.0s; }
+      .k5 { animation: cast 12s ease-in-out infinite; animation-delay: 4.6s; }
+      .k6 { animation: cast 12s ease-in-out infinite; animation-delay: 5.8s; }
+      @keyframes cast {
+        0%, 2% { stroke-dashoffset: 460; }
+        14% { stroke-dashoffset: 0; }
+        82% { stroke-dashoffset: 0; }
+        88%, 100% { stroke-dashoffset: 460; }
+      }
+      .d1, .d2, .d3, .d4, .d5 { opacity: 0.35; }
+      .d1 { animation: litdoc 12s ease-out infinite; animation-delay: 2.3s; }
+      .d2 { animation: litdoc 12s ease-out infinite; animation-delay: 4.1s; }
+      .d3 { animation: litdoc 12s ease-out infinite; animation-delay: 2.9s; }
+      .d4 { animation: litdoc 12s ease-out infinite; animation-delay: 4.7s; }
+      .d5 { animation: litdoc 12s ease-out infinite; animation-delay: 6.5s; }
+      @keyframes litdoc {
+        0%, 4% { opacity: 0.35; }
+        10% { opacity: 1; }
+        80% { opacity: 1; }
+        88%, 100% { opacity: 0.35; }
+      }
+      .drift1 { animation: dd1 18s ease-in-out infinite alternate; }
+      .drift2 { animation: dd2 24s ease-in-out infinite alternate; }
+      @keyframes dd1 { to { transform: translate(22px, -16px); } }
+      @keyframes dd2 { to { transform: translate(-18px, 14px); } }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
       @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-</style>
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .t1, .t2, .t3 { opacity: 1; }
+        .k1, .k2, .k3, .k4, .k5, .k6 { stroke-dashoffset: 0; }
+        .d1, .d2, .d3, .d4, .d5 { opacity: 1; }
+      }
+    </style>
   </defs>
+
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="170" r="210" fill="#86F7CC" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <line x1="578" y1="190" x2="780" y2="170" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="578" y1="190" x2="780" y2="330" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="578" y1="290" x2="780" y2="170" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="578" y1="290" x2="900" y2="250" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="578" y1="290" x2="900" y2="410" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <line x1="578" y1="390" x2="780" y2="470" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
-  <rect x="470" y="170" width="108" height="40" rx="20" fill="url(#brand)"/>
-  <rect x="490" y="186" width="64" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.9"/>
-  <rect x="470" y="270" width="108" height="40" rx="20" fill="url(#brand)"/>
-  <rect x="490" y="286" width="50" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.9"/>
-  <rect x="470" y="370" width="108" height="40" rx="20" fill="url(#brand)"/>
-  <rect x="490" y="386" width="36" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.9"/>
-  <rect x="780" y="140" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="796" y="158" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="796" y="174" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="900" y="220" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="916" y="238" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="916" y="254" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="780" y="300" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="796" y="318" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="796" y="334" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="900" y="380" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="916" y="398" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="916" y="414" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="780" y="440" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="796" y="458" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="796" y="474" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <g class="sparkle" style="transform-origin:1010px 130px"><path d="M 1010 90 Q 1018.8 121.2 1050 130 Q 1018.8 138.8 1010 170 Q 1001.2 138.8 970 130 Q 1001.2 121.2 1010 90 Z" fill="#ffce00"/></g>
+  <circle class="drift1" cx="250" cy="170" r="210" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="490" r="220" fill="#9FEFFC" fill-opacity="0.5" filter="url(#soft)"/>
+
+  <!-- the postings: term -> documents -->
+  <line class="k1" x1="578" y1="190" x2="780" y2="170" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <line class="k2" x1="578" y1="190" x2="780" y2="330" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <line class="k3" x1="578" y1="290" x2="900" y2="250" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <line class="k4" x1="578" y1="290" x2="900" y2="410" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <line class="k5" x1="578" y1="390" x2="780" y2="470" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <line class="k6" x1="578" y1="390" x2="780" y2="330" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+
+  <!-- terms -->
+  <g class="t1">
+    <rect x="470" y="170" width="108" height="40" rx="20" fill="url(#brand)"/>
+    <rect x="492" y="186" width="64" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.92"/>
+  </g>
+  <g class="t2">
+    <rect x="470" y="270" width="108" height="40" rx="20" fill="url(#brand)"/>
+    <rect x="492" y="286" width="50" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.92"/>
+  </g>
+  <g class="t3">
+    <rect x="470" y="370" width="108" height="40" rx="20" fill="url(#brand)"/>
+    <rect x="492" y="386" width="58" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.92"/>
+  </g>
+
+  <!-- documents -->
+  <g class="d1">
+    <rect x="780" y="138" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.95" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="796" y="156" width="56" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.85"/>
+    <rect x="796" y="171" width="44" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.55"/>
+  </g>
+  <g class="d2">
+    <rect x="900" y="218" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.95" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="916" y="236" width="56" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.85"/>
+    <rect x="916" y="251" width="44" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.55"/>
+  </g>
+  <g class="d3">
+    <rect x="780" y="298" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.95" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="796" y="316" width="56" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.85"/>
+    <rect x="796" y="331" width="44" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.55"/>
+  </g>
+  <g class="d4">
+    <rect x="900" y="378" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.95" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="916" y="396" width="56" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.85"/>
+    <rect x="916" y="411" width="44" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.55"/>
+  </g>
+  <g class="d5">
+    <rect x="780" y="438" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.95" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="796" y="456" width="56" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.85"/>
+    <rect x="796" y="471" width="44" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.55"/>
+  </g>
+
+  <g class="sparkle">
+    <path d="M 1030 130 Q 1038.8 157.6 1066 166 Q 1038.8 174.4 1030 202 Q 1021.2 174.4 994 166 Q 1021.2 157.6 1030 130 Z" fill="#ffce00"/>
+  </g>
   <text x="60" y="580" font-size="360" font-weight="700" fill="#04B876" fill-opacity="0.13" letter-spacing="-12">03</text>
 </svg>

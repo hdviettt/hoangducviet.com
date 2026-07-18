@@ -8,90 +8,96 @@
       <stop offset="0" stop-color="#004aef"/>
       <stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#86F7CC"/>
-    </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
+      /* 12s loop: scattered keywords fly into their clusters; the hulls
+         close around them; the outliers stay behind — that's HDBSCAN. */
+      .cg1 { animation: gather1 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
+      .cg2 { animation: gather2 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
+      .cg3 { animation: gather3 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
+      @keyframes gather1 {
+        0%, 10% { transform: translate(-390px, -30px); }
+        30% { transform: translate(0, 0); }
+        90% { transform: translate(0, 0); }
+        97%, 100% { transform: translate(-390px, -30px); }
+      }
+      @keyframes gather2 {
+        0%, 16% { transform: translate(-600px, -240px); }
+        38% { transform: translate(0, 0); }
+        90% { transform: translate(0, 0); }
+        97%, 100% { transform: translate(-600px, -240px); }
+      }
+      @keyframes gather3 {
+        0%, 22% { transform: translate(-90px, -270px); }
+        46% { transform: translate(0, 0); }
+        90% { transform: translate(0, 0); }
+        97%, 100% { transform: translate(-90px, -270px); }
+      }
+      .h1, .h2, .h3 { opacity: 0; }
+      .h1 { animation: hull 12s ease-out infinite; }
+      .h2 { animation: hull 12s ease-out infinite; animation-delay: 0.96s; }
+      .h3 { animation: hull 12s ease-out infinite; animation-delay: 1.92s; }
+      @keyframes hull {
+        0%, 32% { opacity: 0; }
+        40% { opacity: 1; }
+        88% { opacity: 1; }
+        95%, 100% { opacity: 0; }
+      }
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
       @keyframes d1 { to { transform: translate(22px, -16px); } }
       @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-12px); } }
-      .spin { animation: sp 60s linear infinite; }
-      @keyframes sp { to { transform: rotate(360deg); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
       @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-</style>
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .h1, .h2, .h3 { opacity: 1; }
+      }
+    </style>
   </defs>
+
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="640" cy="210" r="190" fill="#9FEFFC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift2" cx="880" cy="430" r="160" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift1" cx="330" cy="420" r="150" fill="#C7D6FB" fill-opacity="0.6" filter="url(#soft)"/>
-  <circle cx="226" cy="202" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="367" cy="183" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="242" cy="207" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="145" cy="192" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="279" cy="249" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="118" cy="151" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="117" cy="252" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="298" cy="98" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="385" cy="283" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="286" cy="213" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="137" cy="93" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="249" cy="102" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="147" cy="138" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="99" cy="183" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="222" cy="258" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="246" cy="218" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="240" cy="222" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="227" cy="146" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="389" cy="289" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="342" cy="232" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="185" cy="136" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="177" cy="104" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="320" cy="170" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <circle cx="344" cy="167" r="5" fill="#004aef" fill-opacity="0.3"/>
-  <path d="M 420 210 C 480 210, 500 210, 540 210" fill="none" stroke="url(#brand)" stroke-opacity="0.7" stroke-width="3" marker-end="none"/>
-  <circle cx="660" cy="200" r="102" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
-  <circle cx="716" cy="206" r="6" fill="#004aef"/>
-  <circle cx="599" cy="258" r="6" fill="#004aef"/>
-  <circle cx="723" cy="236" r="6" fill="#004aef"/>
-  <circle cx="636" cy="158" r="6" fill="#004aef"/>
-  <circle cx="662" cy="199" r="6" fill="#004aef"/>
-  <circle cx="591" cy="212" r="6" fill="#004aef"/>
-  <circle cx="644" cy="147" r="6" fill="#004aef"/>
-  <circle cx="701" cy="128" r="6" fill="#004aef"/>
-  <circle cx="665" cy="204" r="6" fill="#004aef"/>
-  <circle cx="702" cy="265" r="6" fill="#004aef"/>
-  <circle cx="715" cy="177" r="6" fill="#004aef"/>
-  <circle cx="614" cy="248" r="6" fill="#004aef"/>
-  <circle cx="670" cy="152" r="6" fill="#004aef"/>
-  <circle cx="618" cy="271" r="6" fill="#004aef"/>
-  <circle cx="890" cy="420" r="80" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
-  <circle cx="909" cy="426" r="6" fill="#04B876"/>
-  <circle cx="934" cy="388" r="6" fill="#04B876"/>
-  <circle cx="889" cy="420" r="6" fill="#04B876"/>
-  <circle cx="911" cy="430" r="6" fill="#04B876"/>
-  <circle cx="892" cy="417" r="6" fill="#04B876"/>
-  <circle cx="922" cy="463" r="6" fill="#04B876"/>
-  <circle cx="871" cy="380" r="6" fill="#04B876"/>
-  <circle cx="841" cy="399" r="6" fill="#04B876"/>
-  <circle cx="874" cy="413" r="6" fill="#04B876"/>
-  <circle cx="882" cy="423" r="6" fill="#04B876"/>
-  <circle cx="360" cy="430" r="70" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
-  <circle cx="375" cy="422" r="6" fill="#0AA6C4"/>
-  <circle cx="364" cy="428" r="6" fill="#0AA6C4"/>
-  <circle cx="362" cy="438" r="6" fill="#0AA6C4"/>
-  <circle cx="364" cy="428" r="6" fill="#0AA6C4"/>
-  <circle cx="362" cy="427" r="6" fill="#0AA6C4"/>
-  <circle cx="392" cy="459" r="6" fill="#0AA6C4"/>
-  <circle cx="331" cy="438" r="6" fill="#0AA6C4"/>
-  <circle cx="370" cy="411" r="6" fill="#0AA6C4"/>
-  <g class="sparkle" style="transform-origin:1020px 150px"><path d="M 1020 106 Q 1029.68 140.32 1064 150 Q 1029.68 159.68 1020 194 Q 1010.32 159.68 976 150 Q 1010.32 140.32 1020 106 Z" fill="#ffce00"/></g>
+  <circle class="drift1" cx="660" cy="210" r="190" fill="#9FEFFC" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="880" cy="440" r="180" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+
+  <!-- outliers: the noise that never joins a cluster -->
+  <g fill="#7E9BF7" fill-opacity="0.45">
+    <circle cx="150" cy="120" r="5"/><circle cx="230" cy="90" r="5"/><circle cx="320" cy="140" r="5"/>
+    <circle cx="180" cy="210" r="5"/><circle cx="285" cy="250" r="5"/><circle cx="140" cy="300" r="5"/>
+    <circle cx="360" cy="80" r="5"/><circle cx="410" cy="180" r="5"/>
+  </g>
+
+  <!-- cluster 1: gathers mid-right -->
+  <g class="cg1">
+    <g fill="#004aef">
+      <circle cx="630" cy="180" r="6"/><circle cx="668" cy="164" r="6"/><circle cx="700" cy="196" r="6"/>
+      <circle cx="648" cy="222" r="6"/><circle cx="690" cy="238" r="6"/><circle cx="616" cy="252" r="6"/>
+      <circle cx="662" cy="200" r="6"/><circle cx="636" cy="212" r="6"/>
+    </g>
+  </g>
+  <circle class="h1" cx="658" cy="208" r="92" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
+
+  <!-- cluster 2: gathers lower-right -->
+  <g class="cg2">
+    <g fill="#04B876">
+      <circle cx="860" cy="400" r="6"/><circle cx="896" cy="386" r="6"/><circle cx="922" cy="418" r="6"/>
+      <circle cx="874" cy="440" r="6"/><circle cx="908" cy="452" r="6"/><circle cx="846" cy="428" r="6"/>
+    </g>
+  </g>
+  <circle class="h2" cx="885" cy="420" r="72" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
+
+  <!-- cluster 3: gathers lower-left-center -->
+  <g class="cg3">
+    <g fill="#0AA6C4">
+      <circle cx="330" cy="420" r="6"/><circle cx="362" cy="406" r="6"/><circle cx="384" cy="436" r="6"/>
+      <circle cx="342" cy="456" r="6"/><circle cx="372" cy="466" r="6"/>
+    </g>
+  </g>
+  <circle class="h3" cx="358" cy="438" r="62" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
+
+  <g class="sparkle">
+    <path d="M 1030 130 Q 1038.8 157.6 1066 166 Q 1038.8 174.4 1030 202 Q 1021.2 174.4 994 166 Q 1021.2 157.6 1030 130 Z" fill="#ffce00"/>
+  </g>
 </svg>

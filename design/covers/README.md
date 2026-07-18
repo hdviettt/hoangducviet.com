@@ -1,16 +1,28 @@
 # Cover Design System v3 — "SEONGON Flow"
 
-Hệ thumbnail/cover cho mọi bài viết: độ mềm/fluid của Google/DeepMind hòa với
-nhận diện SEONGON (nguồn: `Downloads/seongon-assets`, bản 22 Jun). Việt không bao giờ phải tự thiết kế — đưa
-slug + một câu tóm ý bài, Claude sinh cover theo hệ này bằng
-`design/covers/generate.py`.
+Hệ thumbnail/cover: mỗi cover là một **flow demo chạy được** của chủ đề bài viết
+(v5), trong palette SEONGON. Cover được HAND-AUTHOR từng file tại
+`public/covers/<slug>.svg` — không còn generator (đã gỡ; xem git history).
+Việt không phải tự thiết kế: đưa slug + một câu tóm ý, Claude dựng demo.
 
 (v1 "Technical Blueprint" và v2 "Fluid Gradient" thuần Google đã bị thay thế —
 xem git history.)
 
 ## Ngôn ngữ
 
-**Luật số 1 (học từ DeepMind): thumbnail LÀ chủ đề.** Khối focal phải minh họa
+**Luật số 1: thumbnail LÀ chủ đề, và động thái LÀ lời giải thích.** Mỗi cover
+là một demo ngắn của khái niệm: search tự gõ ra kết quả, crawler bò qua các
+trang, term tự nối tới docs, bars tự xếp hạng, phiếu PageRank chảy qua đồ thị.
+Animation không trang trí — nó DIỄN quy trình.
+
+**Nguyên tắc timeline** (đúc từ 14 covers hiện có): loop 9-12s; mở màn 0-10%;
+hành động chính 10-60% (stagger bằng animation-delay, LUÔN set base-state cho
+phần tử có delay để không lộ sớm); hold 60-90%; reset mượt 90-100%. Vocabulary
+chuyển động: type (width), pop (scale+opacity), draw (stroke-dashoffset),
+travel (offset-path), breathe/pulse (scale nhỏ), absorb (translate+fade).
+`prefers-reduced-motion` phải cho ra khung hình hoàn chỉnh cuối cùng.
+
+**Luật cũ vẫn giữ:** Khối focal phải minh họa
 được nội dung bài — người xem chưa đọc title vẫn đoán ra bài nói về gì
 (crawling = mạng trang liên kết, inverted index = term trỏ tới docs, AIO = thẻ
 SERP có answer card...). Không trừu tượng suông, không chữ nghĩa, không

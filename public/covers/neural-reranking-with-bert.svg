@@ -8,53 +8,105 @@
       <stop offset="0" stop-color="#004aef"/>
       <stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#86F7CC"/>
-    </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
+      /* 12s loop: candidates thread through the model and come out in a
+         different order — the top pick earns the gradient. */
+      .c1, .c2, .c3, .c4 { stroke-dasharray: 560; stroke-dashoffset: 560; }
+      .c1 { animation: thread 12s ease-in-out infinite; animation-delay: 0.0s; }
+      .c2 { animation: thread 12s ease-in-out infinite; animation-delay: 0.5s; }
+      .c3 { animation: thread 12s ease-in-out infinite; animation-delay: 1.0s; }
+      .c4 { animation: thread 12s ease-in-out infinite; animation-delay: 1.5s; }
+      @keyframes thread {
+        0%, 12% { stroke-dashoffset: 560; }
+        34% { stroke-dashoffset: 0; }
+        84% { stroke-dashoffset: 0; }
+        92%, 100% { stroke-dashoffset: 560; }
+      }
+      .model { animation: hum 2.4s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+      @keyframes hum { from { transform: scale(1); } to { transform: scale(1.035); } }
+      .o1, .o2, .o3, .o4 { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      .o1 { animation: outp 12s ease-out infinite; animation-delay: 3.6s; }
+      .o2 { animation: outp 12s ease-out infinite; animation-delay: 4.0s; }
+      .o3 { animation: outp 12s ease-out infinite; animation-delay: 4.4s; }
+      .o4 { animation: outp 12s ease-out infinite; animation-delay: 4.8s; }
+      @keyframes outp {
+        0%, 4% { opacity: 0; transform: translateX(-14px); }
+        10% { opacity: 1; transform: translateX(0); }
+        62% { opacity: 1; }
+        66%, 100% { opacity: 0; }
+      }
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
       @keyframes d1 { to { transform: translate(22px, -16px); } }
       @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-12px); } }
-      .spin { animation: sp 60s linear infinite; }
-      @keyframes sp { to { transform: rotate(360deg); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
       @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-</style>
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .c1, .c2, .c3, .c4 { stroke-dashoffset: 0; }
+        .o1, .o2, .o3, .o4 { opacity: 1; }
+      }
+    </style>
   </defs>
+
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="170" r="210" fill="#C7D6FB" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift1" cx="240" cy="170" r="210" fill="#C7D6FB" fill-opacity="0.7" filter="url(#soft)"/>
   <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <path d="M 566 166 C 700 166, 700 326, 880 326" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2.5"/>
-  <path d="M 566 246 C 700 246, 700 166, 880 166" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2.5"/>
-  <path d="M 566 326 C 700 326, 700 406, 880 406" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2.5"/>
-  <path d="M 566 406 C 700 406, 700 246, 880 246" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2.5"/>
-  <rect x="600" y="208.8" width="120" height="200" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.29" stroke-width="2.5"/>
-  <rect x="620" y="194.4" width="120" height="200" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.42" stroke-width="2.5"/>
-  <rect x="640" y="180" width="120" height="200" rx="28" fill="url(#brand)"/>
-  <rect x="470" y="140" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="486" y="158" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="486" y="174" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="470" y="220" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="486" y="238" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="486" y="254" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="470" y="300" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="486" y="318" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="486" y="334" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="470" y="380" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
-  <rect x="486" y="398" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="486" y="414" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="880" y="140" width="96" height="52" rx="12" fill="url(#brand)" fill-opacity="1" stroke="#FFFFFF" stroke-width="2"/>
-  <rect x="880" y="220" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.9" stroke="#FFFFFF" stroke-width="2"/>
-  <rect x="880" y="300" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.9" stroke="#FFFFFF" stroke-width="2"/>
-  <rect x="880" y="380" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.9" stroke="#FFFFFF" stroke-width="2"/>
-  <g class="sparkle" style="transform-origin:1010px 120px"><path d="M 1010 82 Q 1018.36 111.64 1048 120 Q 1018.36 128.36 1010 158 Q 1001.64 128.36 972 120 Q 1001.64 111.64 1010 82 Z" fill="#ffce00"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#2E62F1" fill-opacity="0.13" letter-spacing="-12">07</text>
+
+  <!-- crossing threads: order in ≠ order out -->
+  <path class="c1" d="M 496 166 C 640 166, 640 246, 790 246" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
+  <path class="c2" d="M 496 246 C 640 246, 640 166, 790 166" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
+  <path class="c3" d="M 496 326 C 640 326, 640 406, 790 406" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
+  <path class="c4" d="M 496 406 C 640 406, 640 326, 790 326" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
+
+  <!-- candidates in retrieval order -->
+  <g>
+    <rect x="400" y="140" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="416" y="158" width="56" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
+    <rect x="400" y="220" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="416" y="238" width="48" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
+    <rect x="400" y="300" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="416" y="318" width="52" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
+    <rect x="400" y="380" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="416" y="398" width="44" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
+  </g>
+
+  <!-- the cross-encoder, humming; echoes trail behind -->
+  <rect x="576" y="234" width="120" height="200" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.18" stroke-width="2.5"/>
+  <rect x="598" y="218" width="120" height="200" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.34" stroke-width="2.5"/>
+  <g class="model">
+    <rect x="620" y="202" width="120" height="200" rx="28" fill="url(#brand)"/>
+    <circle cx="656" cy="250" r="7" fill="#FFFFFF" fill-opacity="0.9"/>
+    <circle cx="704" cy="250" r="7" fill="#FFFFFF" fill-opacity="0.9"/>
+    <circle cx="656" cy="302" r="7" fill="#FFFFFF" fill-opacity="0.7"/>
+    <circle cx="704" cy="302" r="7" fill="#FFFFFF" fill-opacity="0.7"/>
+    <circle cx="656" cy="354" r="7" fill="#FFFFFF" fill-opacity="0.5"/>
+    <circle cx="704" cy="354" r="7" fill="#FFFFFF" fill-opacity="0.5"/>
+  </g>
+
+  <!-- reranked output -->
+  <g class="o1">
+    <rect x="790" y="140" width="96" height="52" rx="12" fill="url(#brand)"/>
+    <rect x="806" y="158" width="48" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.92"/>
+  </g>
+  <g class="o2">
+    <rect x="790" y="220" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="806" y="238" width="56" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
+  </g>
+  <g class="o3">
+    <rect x="790" y="300" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="806" y="318" width="44" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
+  </g>
+  <g class="o4">
+    <rect x="790" y="380" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <rect x="806" y="398" width="52" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
+  </g>
+
+  <g class="sparkle">
+    <path d="M 1010 130 Q 1018.8 157.6 1046 166 Q 1018.8 174.4 1010 202 Q 1001.2 174.4 974 166 Q 1001.2 157.6 1010 130 Z" fill="#ffce00"/>
+  </g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#2E62F1" fill-opacity="0.12" letter-spacing="-12">07</text>
 </svg>

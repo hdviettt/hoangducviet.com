@@ -8,71 +8,93 @@
       <stop offset="0" stop-color="#004aef"/>
       <stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#86F7CC"/>
-    </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
+      /* 11s loop: one builder ships app after app after app. */
+      .a1, .a2, .a3, .a4, .a5, .a6 { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      .a1 { animation: ship1 11s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
+      .a2 { animation: ship2 11s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; animation-delay: 0.9s; }
+      .a3 { animation: ship3 11s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; animation-delay: 1.8s; }
+      .a4 { animation: ship4 11s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; animation-delay: 2.7s; }
+      .a5 { animation: ship5 11s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; animation-delay: 3.6s; }
+      .a6 { animation: ship6 11s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; animation-delay: 4.5s; }
+      @keyframes ship1 { 0%, 8% { opacity: 0; transform: translate(-278px, 104px) scale(0.25); } 20% { opacity: 1; transform: translate(0, 0) scale(1); } 88% { opacity: 1; } 95%, 100% { opacity: 0; } }
+      @keyframes ship2 { 0%, 8% { opacity: 0; transform: translate(-418px, 54px) scale(0.25); } 20% { opacity: 1; transform: translate(0, 0) scale(1); } 88% { opacity: 1; } 95%, 100% { opacity: 0; } }
+      @keyframes ship3 { 0%, 8% { opacity: 0; transform: translate(-318px, -26px) scale(0.25); } 20% { opacity: 1; transform: translate(0, 0) scale(1); } 88% { opacity: 1; } 95%, 100% { opacity: 0; } }
+      @keyframes ship4 { 0%, 8% { opacity: 0; transform: translate(-498px, -96px) scale(0.25); } 20% { opacity: 1; transform: translate(0, 0) scale(1); } 88% { opacity: 1; } 95%, 100% { opacity: 0; } }
+      @keyframes ship5 { 0%, 8% { opacity: 0; transform: translate(-278px, -156px) scale(0.25); } 20% { opacity: 1; transform: translate(0, 0) scale(1); } 88% { opacity: 1; } 95%, 100% { opacity: 0; } }
+      @keyframes ship6 { 0%, 8% { opacity: 0; transform: translate(-438px, -216px) scale(0.25); } 20% { opacity: 1; transform: translate(0, 0) scale(1); } 88% { opacity: 1; } 95%, 100% { opacity: 0; } }
+      .pulse { animation: pu 11s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      @keyframes pu {
+        0%, 6% { transform: scale(1); } 8% { transform: scale(1.05); } 10% { transform: scale(1); }
+        14% { transform: scale(1.05); } 16% { transform: scale(1); }
+        23% { transform: scale(1.05); } 25% { transform: scale(1); }
+        32% { transform: scale(1.05); } 34% { transform: scale(1); }
+        41% { transform: scale(1.05); } 43% { transform: scale(1); }
+        50% { transform: scale(1.05); } 52%, 100% { transform: scale(1); }
+      }
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
       @keyframes d1 { to { transform: translate(22px, -16px); } }
       @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-12px); } }
-      .spin { animation: sp 60s linear infinite; }
-      @keyframes sp { to { transform: rotate(360deg); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; }
+      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
       @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-</style>
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .a1, .a2, .a3, .a4, .a5, .a6 { opacity: 1; }
+      }
+    </style>
   </defs>
+
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="160" r="200" fill="#7E9BF7" fill-opacity="0.4" filter="url(#soft)"/>
+  <circle class="drift1" cx="240" cy="160" r="200" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
   <circle class="drift2" cx="950" cy="470" r="250" fill="#9FEFFC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle cx="264" cy="307.52" r="66" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
-  <circle cx="286" cy="291.68" r="66" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
-  <circle cx="308" cy="275.84" r="66" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
-  <circle cx="330" cy="260" r="66" fill="url(#brand)"/>
-  <circle cx="330" cy="238" r="22" fill="#FFFFFF" fill-opacity="0.9"/>
-  <path d="M288 302 a42 30 0 0 1 84 0" fill="#FFFFFF" fill-opacity="0.9"/>
-  <rect x="560" y="120" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="576" cy="134" r="4" fill="#004aef"/>
-  <circle cx="589" cy="134" r="4" fill="#0fd6f7"/>
-  <circle cx="602" cy="134" r="4" fill="#07ef9c"/>
-  <rect x="572" y="146" width="72" height="34" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
-  <line x1="410" y1="275" x2="560" y2="156" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
-  <rect x="720" y="170" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="736" cy="184" r="4" fill="#004aef"/>
-  <circle cx="749" cy="184" r="4" fill="#0fd6f7"/>
-  <circle cx="762" cy="184" r="4" fill="#07ef9c"/>
-  <rect x="732" y="196" width="72" height="34" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
-  <line x1="410" y1="275" x2="720" y2="206" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
-  <rect x="600" y="260" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="616" cy="274" r="4" fill="#004aef"/>
-  <circle cx="629" cy="274" r="4" fill="#0fd6f7"/>
-  <circle cx="642" cy="274" r="4" fill="#07ef9c"/>
-  <rect x="612" y="286" width="72" height="34" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
-  <line x1="410" y1="275" x2="600" y2="296" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
-  <rect x="780" y="320" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="796" cy="334" r="4" fill="#004aef"/>
-  <circle cx="809" cy="334" r="4" fill="#0fd6f7"/>
-  <circle cx="822" cy="334" r="4" fill="#07ef9c"/>
-  <rect x="792" y="346" width="72" height="34" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
-  <line x1="410" y1="275" x2="780" y2="356" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
-  <rect x="560" y="380" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="576" cy="394" r="4" fill="#004aef"/>
-  <circle cx="589" cy="394" r="4" fill="#0fd6f7"/>
-  <circle cx="602" cy="394" r="4" fill="#07ef9c"/>
-  <rect x="572" y="406" width="72" height="34" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
-  <line x1="410" y1="275" x2="560" y2="416" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
-  <rect x="720" y="440" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="736" cy="454" r="4" fill="#004aef"/>
-  <circle cx="749" cy="454" r="4" fill="#0fd6f7"/>
-  <circle cx="762" cy="454" r="4" fill="#07ef9c"/>
-  <rect x="732" y="466" width="72" height="34" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
-  <line x1="410" y1="275" x2="720" y2="476" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
-  <g class="sparkle" style="transform-origin:1000px 140px"><path d="M 1000 94 Q 1010.12 129.88 1046 140 Q 1010.12 150.12 1000 186 Q 989.88 150.12 954 140 Q 989.88 129.88 1000 94 Z" fill="#ffce00"/></g>
+
+  <!-- the builder, echoes trailing -->
+  <circle cx="264" cy="325" r="66" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
+  <circle cx="286" cy="309" r="66" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
+  <circle cx="308" cy="293" r="66" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
+  <g class="pulse">
+    <circle cx="330" cy="277" r="66" fill="url(#brand)"/>
+    <circle cx="330" cy="255" r="22" fill="#FFFFFF" fill-opacity="0.92"/>
+    <path d="M288 319 a42 30 0 0 1 84 0" fill="#FFFFFF" fill-opacity="0.92"/>
+  </g>
+
+  <!-- the apps, shipped one after another -->
+  <g class="a1">
+    <rect x="560" y="120" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="576" cy="134" r="4" fill="#004aef"/><circle cx="589" cy="134" r="4" fill="#0fd6f7"/><circle cx="602" cy="134" r="4" fill="#07ef9c"/>
+    <rect x="572" y="146" width="72" height="34" rx="8" fill="url(#brand)" fill-opacity="0.6"/>
+  </g>
+  <g class="a2">
+    <rect x="700" y="170" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="716" cy="184" r="4" fill="#004aef"/><circle cx="729" cy="184" r="4" fill="#0fd6f7"/><circle cx="742" cy="184" r="4" fill="#07ef9c"/>
+    <rect x="712" y="196" width="72" height="34" rx="8" fill="url(#brand)" fill-opacity="0.6"/>
+  </g>
+  <g class="a3">
+    <rect x="600" y="250" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="616" cy="264" r="4" fill="#004aef"/><circle cx="629" cy="264" r="4" fill="#0fd6f7"/><circle cx="642" cy="264" r="4" fill="#07ef9c"/>
+    <rect x="612" y="276" width="72" height="34" rx="8" fill="url(#brand)" fill-opacity="0.6"/>
+  </g>
+  <g class="a4">
+    <rect x="780" y="320" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="796" cy="334" r="4" fill="#004aef"/><circle cx="809" cy="334" r="4" fill="#0fd6f7"/><circle cx="822" cy="334" r="4" fill="#07ef9c"/>
+    <rect x="792" y="346" width="72" height="34" rx="8" fill="url(#brand)" fill-opacity="0.6"/>
+  </g>
+  <g class="a5">
+    <rect x="560" y="380" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="576" cy="394" r="4" fill="#004aef"/><circle cx="589" cy="394" r="4" fill="#0fd6f7"/><circle cx="602" cy="394" r="4" fill="#07ef9c"/>
+    <rect x="572" y="406" width="72" height="34" rx="8" fill="url(#brand)" fill-opacity="0.6"/>
+  </g>
+  <g class="a6">
+    <rect x="720" y="440" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
+    <circle cx="736" cy="454" r="4" fill="#004aef"/><circle cx="749" cy="454" r="4" fill="#0fd6f7"/><circle cx="762" cy="454" r="4" fill="#07ef9c"/>
+    <rect x="732" y="466" width="72" height="34" rx="8" fill="#ffce00" fill-opacity="0.8"/>
+  </g>
+
+  <g class="sparkle">
+    <path d="M 1000 140 Q 1009.2 168.8 1038 178 Q 1009.2 187.2 1000 216 Q 990.8 187.2 962 178 Q 990.8 168.8 1000 140 Z" fill="#ffce00"/>
+  </g>
 </svg>
