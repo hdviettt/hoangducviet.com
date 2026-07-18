@@ -10,13 +10,17 @@ xem git history.)
 
 ## Ngôn ngữ
 
-Mỗi cover là một **tác phẩm gradient trừu tượng** gợi ý tưởng của bài, không
-minh họa kỹ thuật, không chữ nghĩa, không stock/AI-art. Ba lớp cố định:
+**Luật số 1 (học từ DeepMind): thumbnail LÀ chủ đề.** Khối focal phải minh họa
+được nội dung bài — người xem chưa đọc title vẫn đoán ra bài nói về gì
+(crawling = mạng trang liên kết, inverted index = term trỏ tới docs, AIO = thẻ
+SERP có answer card...). Không trừu tượng suông, không chữ nghĩa, không
+stock/AI-art. Ba lớp cố định:
 
 1. **Nền gradient sáng** — hai tông pastel cùng họ, chéo nhẹ.
 2. **Blob màu mờ** — 2-3 hình tròn lớn qua Gaussian blur (stdDev ~55), trôi rất chậm.
-3. **Một khối focal sắc nét** — orb thủy tinh / khối glass trắng mờ / spark 4 cánh
-   kiểu Gemini / capsule. MỘT ý mỗi cover, không nhồi.
+3. **Khối focal sắc nét minh họa chủ đề** — lắp từ vocabulary có sẵn trong
+   generate.py: `page_tile` (trang/tài liệu), `app_window`, `node`/`link`
+   (đồ thị), capsule, orb, chat bubble, magnifier. MỘT ý mỗi cover, không nhồi.
 
 ### Palette — brand SEONGON
 

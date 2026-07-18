@@ -35,18 +35,30 @@
   <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="#9FEFFC" stroke-opacity="0.5" stroke-width="110" stroke-linecap="round"/>
   <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="url(#brand)" stroke-opacity="0.85" stroke-width="64" stroke-linecap="round"/>
   <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="#FFFFFF" stroke-opacity="0.7" stroke-width="22" stroke-linecap="round"/>
-  <rect x="140" y="54" width="34" height="34" rx="7" fill="#ffce00" fill-opacity="0.40" transform="rotate(-17 140 54)"/>
-  <rect x="192" y="94" width="21" height="21" rx="7" fill="#ffce00" fill-opacity="0.44" transform="rotate(0 192 94)"/>
-  <rect x="204" y="119" width="22" height="22" rx="7" fill="#ffce00" fill-opacity="0.48" transform="rotate(-16 204 119)"/>
-  <rect x="266" y="178" width="23" height="23" rx="7" fill="#ffce00" fill-opacity="0.53" transform="rotate(-11 266 178)"/>
-  <rect x="317" y="209" width="33" height="33" rx="7" fill="#ffce00" fill-opacity="0.57" transform="rotate(-4 317 209)"/>
-  <rect x="377" y="133" width="39" height="39" rx="7" fill="#ffce00" fill-opacity="0.61" transform="rotate(-8 377 133)"/>
-  <rect x="370" y="159" width="27" height="27" rx="7" fill="#ffce00" fill-opacity="0.65" transform="rotate(13 370 159)"/>
-  <rect x="412" y="225" width="34" height="34" rx="7" fill="#ffce00" fill-opacity="0.70" transform="rotate(-5 412 225)"/>
-  <rect x="473" y="189" width="21" height="21" rx="7" fill="#ffce00" fill-opacity="0.74" transform="rotate(-12 473 189)"/>
-  <rect x="520" y="245" width="27" height="27" rx="7" fill="#ffce00" fill-opacity="0.78" transform="rotate(3 520 245)"/>
-  <rect x="547" y="250" width="37" height="37" rx="7" fill="#ffce00" fill-opacity="0.82" transform="rotate(8 547 250)"/>
-  <rect x="576" y="297" width="32" height="32" rx="7" fill="#ffce00" fill-opacity="0.87" transform="rotate(15 576 297)"/>
-  <rect x="643" y="285" width="42" height="42" rx="7" fill="#ffce00" fill-opacity="0.91" transform="rotate(-15 643 285)"/>
+  <rect x="150" y="120" width="96" height="72" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="166" cy="134" r="4" fill="#004aef"/>
+  <circle cx="179" cy="134" r="4" fill="#0fd6f7"/>
+  <circle cx="192" cy="134" r="4" fill="#07ef9c"/>
+  <rect x="162" y="146" width="72" height="34" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
+  <rect x="300" y="90" width="92" height="69" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="316" cy="104" r="4" fill="#004aef"/>
+  <circle cx="329" cy="104" r="4" fill="#0fd6f7"/>
+  <circle cx="342" cy="104" r="4" fill="#07ef9c"/>
+  <rect x="312" y="116" width="68" height="31" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
+  <rect x="450" y="160" width="88" height="66" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="466" cy="174" r="4" fill="#004aef"/>
+  <circle cx="479" cy="174" r="4" fill="#0fd6f7"/>
+  <circle cx="492" cy="174" r="4" fill="#07ef9c"/>
+  <rect x="462" y="186" width="64" height="28" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
+  <rect x="260" y="230" width="84" height="63" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="276" cy="244" r="4" fill="#004aef"/>
+  <circle cx="289" cy="244" r="4" fill="#0fd6f7"/>
+  <circle cx="302" cy="244" r="4" fill="#07ef9c"/>
+  <rect x="272" y="256" width="60" height="25" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
+  <rect x="420" y="280" width="80" height="60" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="436" cy="294" r="4" fill="#004aef"/>
+  <circle cx="449" cy="294" r="4" fill="#0fd6f7"/>
+  <circle cx="462" cy="294" r="4" fill="#07ef9c"/>
+  <rect x="432" y="306" width="56" height="22" rx="8" fill="url(#brandSoft)" fill-opacity="0.65"/>
   <g class="sparkle" style="transform-origin:1030px 150px"><path d="M 1030 102 Q 1040.56 139.44 1078 150 Q 1040.56 160.56 1030 198 Q 1019.44 160.56 982 150 Q 1019.44 139.44 1030 102 Z" fill="#07ef9c"/></g>
 </svg>

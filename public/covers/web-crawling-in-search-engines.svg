@@ -15,11 +15,6 @@
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <radialGradient id="mse1" cx="0.35" cy="0.3" r="0.95">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#004aef"/>
-    </radialGradient>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
@@ -35,16 +30,42 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="260" cy="170" r="220" fill="#7E9BF7" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="500" r="230" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle cx="682" cy="336.15999999999997" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
-  <circle cx="708" cy="317.44" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
-  <circle cx="734" cy="298.72" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
-  <circle cx="760" cy="280" r="160" fill="url(#mse1)"/>
-  <g class="spin" style="transform-origin:760px 280px">
-    <ellipse cx="760" cy="280" rx="250" ry="90" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2" transform="rotate(-18 760 280)"/>
-    <circle cx="1000" cy="215" r="12" fill="#ffce00"/>
-  </g>
-  <g class="sparkle" style="transform-origin:590px 120px"><path d="M 590 78 Q 599.24 110.76 632 120 Q 599.24 129.24 590 162 Q 580.76 129.24 548 120 Q 580.76 110.76 590 78 Z" fill="#0fd6f7"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#004aef" fill-opacity="0.14" letter-spacing="-12">01</text>
+  <circle class="drift1" cx="240" cy="170" r="210" fill="#7E9BF7" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+  <line x1="615" y1="188" x2="835" y2="158" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="615" y1="188" x2="985" y2="288" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="615" y1="188" x2="675" y2="338" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="615" y1="188" x2="895" y2="418" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="615" y1="188" x2="655" y2="478" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="675" y1="338" x2="895" y2="288" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="895" y1="288" x2="895" y2="380" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <rect x="560" y="150" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="576" y="168" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="576" y="184" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="576" y="200" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="780" y="120" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="796" y="138" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="796" y="154" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="796" y="170" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="930" y="250" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="946" y="268" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="946" y="284" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="946" y="300" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="620" y="300" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="636" y="318" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="636" y="334" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="636" y="350" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="840" y="380" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="856" y="398" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="856" y="414" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="856" y="430" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="600" y="440" width="110" height="76" rx="14" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="616" y="458" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="616" y="474" width="76" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="616" y="490" width="43" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <circle cx="468" cy="233.04" r="34" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
+  <circle cx="484" cy="221.52" r="34" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
+  <circle class="float" cx="500" cy="210" r="34" fill="url(#brand)"/>
+  <g class="sparkle" style="transform-origin:470px 130px"><path d="M 470 94 Q 477.92 122.08 506 130 Q 477.92 137.92 470 166 Q 462.08 137.92 434 130 Q 462.08 122.08 470 94 Z" fill="#ffce00"/></g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#004aef" fill-opacity="0.13" letter-spacing="-12">01</text>
 </svg>

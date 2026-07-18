@@ -15,11 +15,6 @@
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <radialGradient id="mse8" cx="0.35" cy="0.3" r="0.95">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="#3DF3B1"/>
-      <stop offset="1" stop-color="#03895A"/>
-    </radialGradient>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
@@ -35,16 +30,28 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="260" cy="170" r="220" fill="#3DF3B1" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="500" r="230" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle cx="682" cy="336.15999999999997" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
-  <circle cx="708" cy="317.44" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
-  <circle cx="734" cy="298.72" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
-  <circle cx="760" cy="280" r="160" fill="url(#mse8)"/>
-  <g class="spin" style="transform-origin:760px 280px">
-    <ellipse cx="760" cy="280" rx="250" ry="90" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2" transform="rotate(-18 760 280)"/>
-    <circle cx="1000" cy="215" r="12" fill="#ffce00"/>
-  </g>
-  <g class="sparkle" style="transform-origin:590px 120px"><path d="M 590 78 Q 599.24 110.76 632 120 Q 599.24 129.24 590 162 Q 580.76 129.24 548 120 Q 580.76 110.76 590 78 Z" fill="#0fd6f7"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#03895A" fill-opacity="0.14" letter-spacing="-12">08</text>
+  <circle class="drift1" cx="240" cy="170" r="210" fill="#3DF3B1" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+  <path d="M470 150 h300 a20 20 0 0 1 20 20 v70 a20 20 0 0 1 -20 20 h-240 l-38 34 v-34 h-22 a20 20 0 0 1 -20 -20 v-70 a20 20 0 0 1 20 -20 z" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
+  <rect x="500" y="184" width="200" height="10" rx="5" fill="#7E9BF7"/>
+  <rect x="500" y="206" width="140" height="10" rx="5" fill="#C7D6FB"/>
+  <rect x="580" y="358.8" width="340" height="120" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.29" stroke-width="2.5"/>
+  <rect x="600" y="344.4" width="340" height="120" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.42" stroke-width="2.5"/>
+  <rect x="620" y="330" width="340" height="120" rx="28" fill="url(#brand)"/>
+  <rect x="650" y="362" width="240" height="11" rx="5.5" fill="#FFFFFF" fill-opacity="0.95"/>
+  <rect x="650" y="386" width="180" height="11" rx="5.5" fill="#FFFFFF" fill-opacity="0.8"/>
+  <rect x="880" y="150" width="80" height="54" rx="10" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="896" y="168" width="46" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="896" y="184" width="22" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <line x1="920" y1="204" x2="850" y2="380" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
+  <rect x="980" y="220" width="80" height="54" rx="10" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="996" y="238" width="46" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="996" y="254" width="22" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <line x1="1020" y1="274" x2="850" y2="380" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
+  <rect x="930" y="300" width="80" height="54" rx="10" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="946" y="318" width="46" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="946" y="334" width="22" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <line x1="970" y1="354" x2="850" y2="380" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2"/>
+  <g class="sparkle" style="transform-origin:560px 300px"><path d="M 560 266 Q 567.48 292.52 594 300 Q 567.48 307.48 560 334 Q 552.52 307.48 526 300 Q 552.52 292.52 560 266 Z" fill="#0fd6f7"/></g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#03895A" fill-opacity="0.13" letter-spacing="-12">08</text>
 </svg>

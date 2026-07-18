@@ -15,11 +15,6 @@
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <radialGradient id="mseAll" cx="0.35" cy="0.3" r="0.95">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="#7E9BF7"/>
-      <stop offset="1" stop-color="#004aef"/>
-    </radialGradient>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
@@ -37,21 +32,35 @@
   <rect width="1200" height="630" fill="url(#bg)"/>
   <circle class="drift1" cx="230" cy="160" r="210" fill="#7E9BF7" fill-opacity="0.5" filter="url(#soft)"/>
   <circle class="drift2" cx="1000" cy="470" r="240" fill="#3DF3B1" fill-opacity="0.45" filter="url(#soft)"/>
-  <circle cx="488" cy="380.64" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.02" stroke-width="2.5"/>
-  <circle cx="516" cy="360.48" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
-  <circle cx="544" cy="340.32" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
-  <circle cx="572" cy="320.16" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
-  <circle cx="600" cy="300" r="180" fill="url(#mseAll)"/>
-  <g class="spin" style="transform-origin:600px 300px">
-    <ellipse cx="600" cy="300" rx="330" ry="118" fill="none" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2" transform="rotate(-16 600 300)"/>
-    <circle cx="930" cy="300" r="11" fill="#004aef"/>
-    <circle cx="833" cy="383" r="11" fill="#0fd6f7"/>
-    <circle cx="600" cy="418" r="11" fill="#04B876"/>
-    <circle cx="367" cy="383" r="11" fill="#07ef9c"/>
-    <circle cx="270" cy="300" r="11" fill="#ffce00"/>
-    <circle cx="367" cy="217" r="11" fill="#0AA6C4"/>
-    <circle cx="600" cy="182" r="11" fill="#2E62F1"/>
-    <circle cx="833" cy="217" r="11" fill="#03895A"/>
+  <rect x="180" y="360" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="196" y="378" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="196" y="394" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="300" y="430" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="316" y="448" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="316" y="464" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="830" y="150" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="846" y="168" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="846" y="184" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="950" y="260" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="966" y="278" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="966" y="294" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="860" y="400" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="876" y="418" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="876" y="434" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <circle cx="482" cy="336.15999999999997" r="150" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
+  <circle cx="508" cy="317.44" r="150" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
+  <circle cx="534" cy="298.72" r="150" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
+  <circle cx="560" cy="280" r="150" fill="#FFFFFF" fill-opacity="0.35" stroke="url(#brand)" stroke-width="10"/>
+  <line x1="672" y1="392" x2="780" y2="500" stroke="url(#brand)" stroke-width="26" stroke-linecap="round"/>
+  <g class="spin" style="transform-origin:560px 280px">
+    <circle cx="750" cy="280" r="10" fill="#004aef"/>
+    <circle cx="694" cy="414" r="10" fill="#0fd6f7"/>
+    <circle cx="560" cy="470" r="10" fill="#04B876"/>
+    <circle cx="426" cy="414" r="10" fill="#07ef9c"/>
+    <circle cx="370" cy="280" r="10" fill="#ffce00"/>
+    <circle cx="426" cy="146" r="10" fill="#0AA6C4"/>
+    <circle cx="560" cy="90" r="10" fill="#2E62F1"/>
+    <circle cx="694" cy="146" r="10" fill="#03895A"/>
   </g>
-  <g class="sparkle" style="transform-origin:930px 130px"><path d="M 930 78 Q 941.44 118.56 982 130 Q 941.44 141.44 930 182 Q 918.56 141.44 878 130 Q 918.56 118.56 930 78 Z" fill="#ffce00"/></g>
+  <g class="sparkle" style="transform-origin:930px 120px"><path d="M 930 70 Q 941.0 109.0 980 120 Q 941.0 131.0 930 170 Q 919.0 131.0 880 120 Q 919.0 109.0 930 70 Z" fill="#ffce00"/></g>
 </svg>

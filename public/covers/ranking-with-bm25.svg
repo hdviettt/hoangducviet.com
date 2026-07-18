@@ -15,11 +15,6 @@
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <radialGradient id="mse4" cx="0.35" cy="0.3" r="0.95">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="#C9FBE8"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </radialGradient>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
@@ -35,16 +30,20 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="260" cy="170" r="220" fill="#C9FBE8" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="500" r="230" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle cx="682" cy="336.15999999999997" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
-  <circle cx="708" cy="317.44" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
-  <circle cx="734" cy="298.72" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
-  <circle cx="760" cy="280" r="160" fill="url(#mse4)"/>
-  <g class="spin" style="transform-origin:760px 280px">
-    <ellipse cx="760" cy="280" rx="250" ry="90" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2" transform="rotate(-18 760 280)"/>
-    <circle cx="1000" cy="215" r="12" fill="#ffce00"/>
-  </g>
-  <g class="sparkle" style="transform-origin:590px 120px"><path d="M 590 78 Q 599.24 110.76 632 120 Q 599.24 129.24 590 162 Q 580.76 129.24 548 120 Q 580.76 110.76 590 78 Z" fill="#0fd6f7"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#07ef9c" fill-opacity="0.14" letter-spacing="-12">04</text>
+  <circle class="drift1" cx="240" cy="170" r="210" fill="#C9FBE8" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+  <rect x="480" y="190" width="330" height="64" rx="32" fill="url(#brand)" fill-opacity="1" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="852" cy="222" r="19" fill="none" stroke="url(#brand)" stroke-opacity="0.7" stroke-width="2.5"/>
+  <rect x="842" y="218" width="20" height="8" rx="4" fill="#07ef9c"/>
+  <rect x="480" y="285" width="250" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="772" cy="317" r="19" fill="none" stroke="url(#brand)" stroke-opacity="0.7" stroke-width="2.5"/>
+  <rect x="762" y="313" width="20" height="8" rx="4" fill="#07ef9c"/>
+  <rect x="480" y="380" width="170" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.85" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="692" cy="412" r="19" fill="none" stroke="url(#brand)" stroke-opacity="0.7" stroke-width="2.5"/>
+  <rect x="682" y="408" width="20" height="8" rx="4" fill="#07ef9c"/>
+  <rect x="440" y="218.8" width="330" height="64" rx="32" fill="none" stroke="url(#brand)" stroke-opacity="0.29" stroke-width="2.5"/>
+  <rect x="460" y="204.4" width="330" height="64" rx="32" fill="none" stroke="url(#brand)" stroke-opacity="0.42" stroke-width="2.5"/>
+  <rect x="480" y="190" width="330" height="64" rx="32" fill="url(#brand)"/>
+  <g class="sparkle" style="transform-origin:1010px 140px"><path d="M 1010 98 Q 1019.24 130.76 1052 140 Q 1019.24 149.24 1010 182 Q 1000.76 149.24 968 140 Q 1000.76 130.76 1010 98 Z" fill="#0fd6f7"/></g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#07ef9c" fill-opacity="0.13" letter-spacing="-12">04</text>
 </svg>

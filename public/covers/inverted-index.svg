@@ -15,11 +15,6 @@
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <radialGradient id="mse3" cx="0.35" cy="0.3" r="0.95">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="#86F7CC"/>
-      <stop offset="1" stop-color="#04B876"/>
-    </radialGradient>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
       .drift2 { animation: d2 24s ease-in-out infinite alternate; }
@@ -35,16 +30,35 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="260" cy="170" r="220" fill="#86F7CC" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="500" r="230" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle cx="682" cy="336.15999999999997" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
-  <circle cx="708" cy="317.44" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
-  <circle cx="734" cy="298.72" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
-  <circle cx="760" cy="280" r="160" fill="url(#mse3)"/>
-  <g class="spin" style="transform-origin:760px 280px">
-    <ellipse cx="760" cy="280" rx="250" ry="90" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2" transform="rotate(-18 760 280)"/>
-    <circle cx="1000" cy="215" r="12" fill="#ffce00"/>
-  </g>
-  <g class="sparkle" style="transform-origin:590px 120px"><path d="M 590 78 Q 599.24 110.76 632 120 Q 599.24 129.24 590 162 Q 580.76 129.24 548 120 Q 580.76 110.76 590 78 Z" fill="#0fd6f7"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#04B876" fill-opacity="0.14" letter-spacing="-12">03</text>
+  <circle class="drift1" cx="240" cy="170" r="210" fill="#86F7CC" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+  <line x1="578" y1="190" x2="780" y2="170" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="578" y1="190" x2="780" y2="330" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="578" y1="290" x2="780" y2="170" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="578" y1="290" x2="900" y2="250" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="578" y1="290" x2="900" y2="410" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <line x1="578" y1="390" x2="780" y2="470" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2"/>
+  <rect x="470" y="170" width="108" height="40" rx="20" fill="url(#brand)"/>
+  <rect x="490" y="186" width="64" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="470" y="270" width="108" height="40" rx="20" fill="url(#brand)"/>
+  <rect x="490" y="286" width="50" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="470" y="370" width="108" height="40" rx="20" fill="url(#brand)"/>
+  <rect x="490" y="386" width="36" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="780" y="140" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="796" y="158" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="796" y="174" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="900" y="220" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="916" y="238" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="916" y="254" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="780" y="300" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="796" y="318" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="796" y="334" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="900" y="380" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="916" y="398" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="916" y="414" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="780" y="440" width="96" height="64" rx="12" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-opacity="0.95" stroke-width="2"/>
+  <rect x="796" y="458" width="62" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="796" y="474" width="33" height="7" rx="3.5" fill="#7E9BF7" fill-opacity="0.8"/>
+  <g class="sparkle" style="transform-origin:1010px 130px"><path d="M 1010 90 Q 1018.8 121.2 1050 130 Q 1018.8 138.8 1010 170 Q 1001.2 138.8 970 130 Q 1001.2 121.2 1010 90 Z" fill="#ffce00"/></g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#04B876" fill-opacity="0.13" letter-spacing="-12">03</text>
 </svg>
