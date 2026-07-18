@@ -141,6 +141,25 @@ export default async function Home() {
         name={mainProfile.name}
         description={mainProfile.description}
         imageUrl={imageUrl}
+        stats={[
+          {
+            // Blueprint roster size — told in the artifact-driven post.
+            value: "55",
+            label: "AI agents mapped on one operating blueprint",
+            href: "/posts/an-artifact-driven-ai-initiative-blueprint",
+          },
+          {
+            // Production count — update as the platform grows.
+            value: "19",
+            label: "agents running in production at SEONGON",
+            href: "/posts/an-artifact-driven-ai-initiative-blueprint",
+          },
+          {
+            value: String(allSlugs.length),
+            label: "essays on search, agents, and honest failures",
+            href: "/posts",
+          },
+        ]}
       />
 
       {/* Writing — deepmind.google news layout: display-size section header,
