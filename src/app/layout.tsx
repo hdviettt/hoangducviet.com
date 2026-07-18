@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -8,16 +8,11 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { PostHogProvider } from "@/components/providers/PostHogProvider";
 import { getGlobalMetadata } from "@/lib/global";
 
-// DM Sans is the closest open-source match to Google Sans (the font Google
-// uses on blog.google, store.google.com, etc.). Keeps the --font-inter
-// variable name so existing CSS references don't break.
-const sans = DM_Sans({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
+// Google Sans Flex — the variable font Google ships on deepmind.google (public
+// on Google Fonts since 2025; opsz 6..144 covers both display and text cuts).
+// Loaded via <link> in <head> because next/font's compiled list doesn't carry
+// it yet. globals.css defines --font-inter with this family first, so every
+// existing CSS reference keeps working.
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "vietnamese"],
   variable: "--font-mono",
@@ -66,7 +61,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${jetbrainsMono.variable} overflow-x-hidden`}
+      className={`${jetbrainsMono.variable} overflow-x-hidden`}
       suppressHydrationWarning
     >
       <head>
@@ -74,6 +69,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://us-assets.i.posthog.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"

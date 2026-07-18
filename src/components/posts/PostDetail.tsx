@@ -1,13 +1,10 @@
 import Link from "next/link";
 
 import MarkdownContent from "@/components/content/MarkdownContent";
-import InlineTableOfContents from "@/components/posts/InlineTableOfContents";
 import { LikeButton } from "@/components/posts/LikeButton";
 import PostNavigation from "@/components/posts/PostNavigation";
-import SeriesHeader from "@/components/posts/SeriesHeader";
 import SeriesParts from "@/components/posts/SeriesParts";
 import { ViewCount } from "@/components/posts/ViewCount";
-import { Icon } from "@/components/ui/Icon";
 
 import { getAnonId } from "@/lib/anon";
 import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
@@ -96,120 +93,138 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
   const prevHref = navPrev ? `/posts/${navPrev.slug}` : null;
   const nextHref = navNext ? `/posts/${navNext.slug}` : null;
 
+  // deepmind.google opens articles with a bold centered standfirst. Our posts
+  // already carry one as a leading "## TL;DR ... ---" block, so lift it out of
+  // the prose and let the description fill in for older posts without one.
+  const { standfirst, body } = splitStandfirst(
+    data.content || "",
+    data.description,
+  );
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="pt-12 sm:pt-16 md:pt-24 pb-24">
-        {/* Back button — there's only one place to go back to: home */}
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 md-label-large text-md-on-surface-variant hover:text-md-on-surface transition-colors duration-200 ease-md-standard mb-10 md:mb-16"
-        >
-          <Icon
-            name="arrow_back"
-            size={18}
-            className="text-primary/60 group-hover:text-primary transition-colors"
-          />
-          Home
-        </Link>
-
-        <div className="lg:grid lg:grid-cols-[200px_minmax(0,720px)] xl:grid-cols-[220px_minmax(0,720px)] lg:gap-16 xl:gap-24 items-start">
-          {/* TOC + Series sidebar — left rail, sticky */}
-          <aside className="toc-scroll hidden lg:block sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain pr-1">
-            {data.content && <InlineTableOfContents content={data.content} />}
+      <article className="pt-12 sm:pt-16 md:pt-20 pb-24">
+        {/* deepmind.google article anatomy: centered meta → display title →
+            byline → full-width rounded hero → centered standfirst → prose. */}
+        <header className="mx-auto max-w-[880px] text-center mb-10 md:mb-14">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[14px] leading-5 text-md-on-surface-variant mb-5 md:mb-7">
+            <time className="tabular-nums" dateTime={data.date_created ?? ""}>
+              {data.date_created &&
+                new Date(data.date_created).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+            </time>
             {seriesCtx && (
+              <Link
+                href={`/series/${seriesCtx.series.slug}`}
+                className="hover:text-primary transition-colors"
+              >
+                {seriesCtx.series.title} · Part {seriesCtx.partNumber} of{" "}
+                {seriesCtx.total}
+              </Link>
+            )}
+            {!seriesCtx && seriesAssoc && (
+              <Link
+                href={`/series/${seriesAssoc.slug}`}
+                className="hover:text-primary transition-colors"
+              >
+                {seriesAssoc.title}
+              </Link>
+            )}
+            {data.content && (
+              <span className="tabular-nums">
+                {readingTimeMinutes(data.content)} min read
+              </span>
+            )}
+            {viewCount > 0 && <ViewCount count={viewCount} />}
+          </div>
+          <h1
+            className="text-[34px] leading-[1.12] sm:text-[44px] md:text-[54px] md:leading-[1.08] font-normal tracking-tight"
+            style={{ color: "var(--article-heading)" }}
+          >
+            {data.title}
+          </h1>
+          <p className="mt-5 md:mt-7 text-[16px] leading-6 text-md-on-surface-variant">
+            Hoang Duc Viet
+          </p>
+        </header>
+
+        {thumbnailUrl && (
+          <div className="mx-auto max-w-[1360px] mb-12 md:mb-16 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+            {/* biome-ignore lint/a11y/useAltText: cover image, title precedes it */}
+            <img
+              src={thumbnailUrl}
+              alt=""
+              decoding="async"
+              className="w-full h-auto"
+            />
+          </div>
+        )}
+
+        {standfirst && (
+          <div className="standfirst mx-auto max-w-[720px] text-center mb-12 md:mb-16">
+            <MarkdownContent content={standfirst} />
+          </div>
+        )}
+
+        <div className="mx-auto max-w-[720px] min-w-0">
+          {body ? (
+            <div className="article-content">
+              <MarkdownContent content={body} />
+            </div>
+          ) : (
+            <p className="text-muted-foreground">No content here yet.</p>
+          )}
+
+          <div className="my-16 md:my-20">
+            <LikeButton
+              slug={postSlug}
+              initialLiked={likeState.liked}
+              initialCount={likeState.count}
+            />
+          </div>
+
+          {seriesCtx && (
+            <div className="mb-16">
               <SeriesParts
                 series={seriesCtx.series}
                 parts={seriesCtx.parts}
                 currentSlug={postSlug}
               />
-            )}
-          </aside>
-
-          {/* Main Content */}
-          <div className="min-w-0">
-            {/* Article Header — deck-label + display title pattern */}
-            <header className="mb-8 sm:mb-10 md:mb-12">
-              {seriesCtx && (
-                <SeriesHeader
-                  series={seriesCtx.series}
-                  partNumber={seriesCtx.partNumber}
-                  total={seriesCtx.total}
-                />
-              )}
-              {!seriesCtx && seriesAssoc && (
-                <Link
-                  href={`/series/${seriesAssoc.slug}`}
-                  className="md-label-medium uppercase tracking-widest text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard block mb-3"
-                >
-                  {seriesAssoc.title}
-                </Link>
-              )}
-              <h1
-                className="text-3xl sm:text-[36px] sm:leading-[44px] md:text-[44px] md:leading-[52px] font-normal tracking-tight mb-6 md:mb-8"
-                style={{ color: "var(--article-heading)" }}
-              >
-                {data.title}
-              </h1>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground/70">
-                <time
-                  className="tabular-nums"
-                  dateTime={data.date_created ?? ""}
-                >
-                  {data.date_created &&
-                    new Date(data.date_created).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                </time>
-                {data.content && (
-                  <>
-                    <span className="opacity-50">·</span>
-                    <span className="tabular-nums">
-                      {readingTimeMinutes(data.content)} min read
-                    </span>
-                  </>
-                )}
-                {viewCount > 0 && (
-                  <>
-                    <span className="opacity-50">·</span>
-                    <ViewCount count={viewCount} />
-                  </>
-                )}
-              </div>
-            </header>
-
-            {/* Article Content */}
-            {data.content ? (
-              <div className="article-content">
-                <MarkdownContent content={data.content} />
-              </div>
-            ) : (
-              <p className="text-muted-foreground">No content here yet.</p>
-            )}
-
-            <div className="my-16 md:my-20">
-              <LikeButton
-                slug={postSlug}
-                initialLiked={likeState.liked}
-                initialCount={likeState.count}
-              />
             </div>
-          </div>
+          )}
         </div>
 
-        <PostNavigation
-          previous={navPrev ? { ...navPrev, href: prevHref } : null}
-          next={navNext ? { ...navNext, href: nextHref } : null}
-          context={navContext}
-        />
+        <div className="mx-auto max-w-[880px]">
+          <PostNavigation
+            previous={navPrev ? { ...navPrev, href: prevHref } : null}
+            next={navNext ? { ...navNext, href: nextHref } : null}
+            context={navContext}
+          />
+        </div>
       </article>
     </>
   );
+}
+
+// Lift a leading "## TL;DR ... ---" block out of the markdown so it can render
+// as the centered standfirst. Falls back to the meta description when a post
+// has no TL;DR block; body stays untouched in that case.
+function splitStandfirst(
+  markdown: string,
+  description?: string | null,
+): { standfirst: string | null; body: string } {
+  const m = markdown.match(/^\s*##\s*TL;DR\s*\r?\n+([\s\S]*?)\r?\n+---\s*\r?\n/);
+  if (m) {
+    return { standfirst: m[1].trim(), body: markdown.slice(m[0].length) };
+  }
+  return { standfirst: description?.trim() || null, body: markdown };
 }
 
 // ~200 wpm typical adult reading speed. Strip markdown image and code-fence

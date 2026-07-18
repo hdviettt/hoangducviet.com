@@ -1,4 +1,4 @@
-import SeriesBlock from "@/components/posts/SeriesBlock";
+import FeedRow, { feedRowDate } from "@/components/posts/FeedRow";
 import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
@@ -63,26 +63,6 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-function itemDate(item: FeedItem): string {
-  return item.kind === "series" ? item.lastDate : item.post.date_created || "";
-}
-
-function groupByYear(
-  items: FeedItem[],
-): Array<{ year: number; items: FeedItem[] }> {
-  const yearMap = new Map<number, FeedItem[]>();
-  const yearOrder: number[] = [];
-  for (const item of items) {
-    const iso = itemDate(item);
-    const year = iso ? new Date(iso).getFullYear() : 0;
-    if (!yearMap.has(year)) {
-      yearMap.set(year, []);
-      yearOrder.push(year);
-    }
-    yearMap.get(year)!.push(item);
-  }
-  return yearOrder.map((year) => ({ year, items: yearMap.get(year)! }));
-}
 
 export default async function Home() {
   let profileData: any[] = [];
@@ -114,8 +94,16 @@ export default async function Home() {
     );
   }
 
-  const itemsByYear = groupByYear(allItems);
   const mainProfile = profileData[0];
+
+  // deepmind.google editorial split: the newest post is featured large on the
+  // left; everything else renders as compact hairline rows on the right.
+  const featuredIndex = allItems.findIndex((i) => i.kind === "post");
+  const featured =
+    featuredIndex >= 0
+      ? (allItems[featuredIndex] as Extract<FeedItem, { kind: "post" }>)
+      : null;
+  const restItems = allItems.filter((_, idx) => idx !== featuredIndex);
 
   // Collect every slug rendered on the homepage so we can fetch all view
   // counts in a single PostHog round-trip (cached 5 min in posthog-server).
@@ -155,83 +143,78 @@ export default async function Home() {
         imageUrl={imageUrl}
       />
 
-      {/* Writing — M3 card grid, year-grouped. Each post/series renders as
-          an outlined card with hover elevation (blog.google pattern). 2-col
-          on desktop, single column on mobile. */}
-      {itemsByYear.length > 0 && (
-        <div className="space-y-14 md:space-y-20">
-          {itemsByYear.map(({ year, items }) => (
-            <section key={year}>
-              <h2 className="text-2xl md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface mb-6 md:mb-8">
-                {year}
-              </h2>
+      {/* Writing — deepmind.google news layout: display-size section header,
+          newest post featured large on the left, the rest as hairline rows. */}
+      <section className="mt-4 md:mt-8">
+        <h2 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-normal tracking-tight text-md-on-surface">
+          Writing
+        </h2>
+        <p className="mt-2 md:mt-3 text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal text-md-on-surface-variant max-w-[820px]">
+          Search engines, AI agents, and honest write-ups from a real AI
+          initiative
+        </p>
 
-              <div className="grid gap-4 md:gap-5 md:grid-cols-2">
-                {items.map((item) => {
-                  if (item.kind === "series") {
-                    return (
-                      <SeriesBlock
-                        key={`series-${item.series.slug}`}
-                        series={item.series}
-                        parts={item.parts}
-                        firstDate={item.firstDate}
-                        lastDate={item.lastDate}
-                        viewCount={seriesViewTotal(item)}
-                      />
-                    );
-                  }
-                  const date = item.post.date_created
-                    ? new Date(item.post.date_created).toLocaleDateString(
-                        "en-US",
-                        { month: "short", day: "numeric", year: "numeric" },
-                      )
-                    : "";
-                  const views = item.post.slug
-                    ? (viewCounts[item.post.slug] ?? 0)
-                    : 0;
-                  return (
-                    <Link
-                      key={item.post.slug}
-                      href={`/posts/${item.post.slug}`}
-                      className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
-                    >
-                      <div className="flex flex-col flex-1">
-                        {/* Meta row */}
-                        <div className="flex items-center gap-3 flex-wrap mb-3">
-                          <span className="md-label-small tabular-nums text-md-on-surface-variant">
-                            {date}
-                          </span>
-                          {views > 0 && (
-                            <span className="md-label-small text-md-on-surface-variant">
-                              <ViewCount count={views} />
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
-                          {item.post.title}
-                        </h3>
-                        {item.post.description && (
-                          <p className="mt-3 md-body-medium text-md-on-surface-variant">
-                            {item.post.description}
-                          </p>
-                        )}
-                        <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
-                          Read post
-                          <Icon
-                            name="arrow_forward"
-                            size={16}
-                            className="transition-transform duration-200 group-hover:translate-x-0.5"
-                          />
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                })}
+        <div className="mt-10 md:mt-16 lg:grid lg:grid-cols-[7fr_6fr] lg:gap-16 xl:gap-20 items-start">
+          {/* Featured — newest post */}
+          {featured && (
+            <Link
+              href={`/posts/${featured.post.slug}`}
+              className="group block mb-12 lg:mb-0"
+            >
+              <h3 className="text-[28px] leading-9 md:text-[42px] md:leading-[48px] font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                {featured.post.title}
+              </h3>
+              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+                <span className="tabular-nums">
+                  {feedRowDate(featured.post.date_created)}
+                </span>
+                {(viewCounts[featured.post.slug ?? ""] ?? 0) > 0 && (
+                  <ViewCount count={viewCounts[featured.post.slug ?? ""] ?? 0} />
+                )}
+                <span className="inline-flex items-center gap-1.5 text-md-on-surface font-medium">
+                  Read post
+                  <Icon
+                    name="arrow_forward"
+                    size={16}
+                    className="transition-transform duration-200 group-hover:translate-x-0.5"
+                  />
+                </span>
               </div>
-            </section>
-          ))}
+              {featured.post.thumbnail && (
+                <div className="mt-6 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+                  {/* biome-ignore lint/a11y/useAltText: decorative cover, title is adjacent */}
+                  <img
+                    src={featured.post.thumbnail}
+                    alt=""
+                    loading="eager"
+                    decoding="async"
+                    className="w-full h-auto transition-transform duration-300 ease-md-standard group-hover:scale-[1.02]"
+                  />
+                </div>
+              )}
+            </Link>
+          )}
+
+          {/* Rows — everything else, hairline separated */}
+          <div className="divide-y divide-md-outline-variant border-t border-b border-md-outline-variant lg:border-t-0 lg:[&>a:first-child]:pt-0">
+            {restItems.map((item) => (
+              <FeedRow
+                key={
+                  item.kind === "series"
+                    ? `series-${item.series.slug}`
+                    : item.post.slug
+                }
+                item={item}
+                views={
+                  item.kind === "series"
+                    ? seriesViewTotal(item)
+                    : (viewCounts[item.post.slug ?? ""] ?? 0)
+                }
+              />
+            ))}
+          </div>
         </div>
-      )}
+      </section>
     </div>
   );
 }

@@ -1,135 +1,57 @@
 "use client";
 
-import { Icon } from "@/components/ui/Icon";
 import type { FeedItem } from "@/lib/posts";
-import Link from "next/link";
 import { useMemo } from "react";
-import SeriesBlock from "./SeriesBlock";
-import { ViewCount } from "./ViewCount";
+import FeedRow from "./FeedRow";
 
 interface PostsListProps {
   items: FeedItem[];
   viewCounts: Record<string, number>;
 }
 
-interface ItemsByYear {
-  year: number;
-  items: FeedItem[];
-}
-
 function itemDate(item: FeedItem): string {
   return item.kind === "series" ? item.lastDate : item.post.date_created || "";
 }
 
-function itemYear(item: FeedItem): number {
-  const iso = itemDate(item);
-  return iso ? new Date(iso).getFullYear() : 0;
-}
-
+// deepmind.google archive: display header + one continuous hairline list.
 export default function PostsList({ items, viewCounts }: PostsListProps) {
-  const itemsByYear = useMemo<ItemsByYear[]>(() => {
-    const sorted = [...items].sort((a, b) =>
-      itemDate(b).localeCompare(itemDate(a)),
-    );
-    const yearMap = new Map<number, FeedItem[]>();
-    const yearOrder: number[] = [];
-    for (const item of sorted) {
-      const y = itemYear(item);
-      if (!yearMap.has(y)) {
-        yearMap.set(y, []);
-        yearOrder.push(y);
-      }
-      yearMap.get(y)!.push(item);
-    }
-    return yearOrder.map((year) => ({ year, items: yearMap.get(year)! }));
-  }, [items]);
+  const sorted = useMemo(
+    () => [...items].sort((a, b) => itemDate(b).localeCompare(itemDate(a))),
+    [items],
+  );
+
+  const seriesViewTotal = (item: Extract<FeedItem, { kind: "series" }>) =>
+    item.parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   return (
     <div className="pt-12 sm:pt-16 md:pt-20 pb-16 md:pb-20">
-      <span className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-3 block">
-        archive
-      </span>
-      <h1 className="text-4xl sm:text-5xl md:text-[57px] md:leading-[64px] font-normal tracking-tight text-md-on-surface mb-12 sm:mb-16 md:mb-20">
-        writing
+      <h1 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-normal tracking-tight text-md-on-surface">
+        Writing
       </h1>
+      <p className="mt-2 md:mt-3 text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal text-md-on-surface-variant max-w-[820px] mb-10 md:mb-14">
+        Every post and series, newest first
+      </p>
 
-      {itemsByYear.length === 0 ? (
+      {sorted.length === 0 ? (
         <p className="md-body-medium text-md-on-surface-variant">
           Nothing published yet.
         </p>
       ) : (
-        <div className="space-y-14 md:space-y-20">
-          {itemsByYear.map(({ year, items: yearItems }) => (
-            <section key={year}>
-              <h2 className="text-2xl md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface mb-6 md:mb-8">
-                {year}
-              </h2>
-
-              <div className="grid gap-4 md:gap-5 md:grid-cols-2">
-                {yearItems.map((item) => {
-                  if (item.kind === "series") {
-                    return (
-                      <SeriesBlock
-                        key={`series-${item.series.slug}`}
-                        series={item.series}
-                        parts={item.parts}
-                        firstDate={item.firstDate}
-                        lastDate={item.lastDate}
-                        viewCount={item.parts.reduce(
-                          (sum, p) => sum + (viewCounts[p.slug] ?? 0),
-                          0,
-                        )}
-                      />
-                    );
-                  }
-                  const post = item.post;
-                  const date = post.date_created
-                    ? new Date(post.date_created).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                    : "";
-                  const views = post.slug ? (viewCounts[post.slug] ?? 0) : 0;
-                  return (
-                    <Link
-                      key={post.slug}
-                      href={`/posts/${post.slug}`}
-                      className="group flex flex-col p-6 rounded-2xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container hover:shadow-md-1 transition-all duration-200 ease-md-standard"
-                    >
-                      <div className="flex flex-col flex-1">
-                        <div className="flex items-center gap-3 flex-wrap mb-3">
-                          <span className="md-label-small tabular-nums text-md-on-surface-variant">
-                            {date}
-                          </span>
-                          {views > 0 && (
-                            <span className="md-label-small text-md-on-surface-variant">
-                              <ViewCount count={views} />
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="md-title-large md:text-2xl md:leading-8 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
-                          {post.title}
-                        </h3>
-                        {post.description && (
-                          <p className="mt-3 md-body-medium text-md-on-surface-variant">
-                            {post.description}
-                          </p>
-                        )}
-                        <span className="mt-auto pt-5 inline-flex items-center gap-1 md-label-medium text-md-on-surface-variant group-hover:text-primary transition-colors duration-200">
-                          Read post
-                          <Icon
-                            name="arrow_forward"
-                            size={16}
-                            className="transition-transform duration-200 group-hover:translate-x-0.5"
-                          />
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
+        <div className="max-w-[880px] divide-y divide-md-outline-variant border-t border-b border-md-outline-variant">
+          {sorted.map((item) => (
+            <FeedRow
+              key={
+                item.kind === "series"
+                  ? `series-${item.series.slug}`
+                  : item.post.slug
+              }
+              item={item}
+              views={
+                item.kind === "series"
+                  ? seriesViewTotal(item)
+                  : (viewCounts[item.post.slug ?? ""] ?? 0)
+              }
+            />
           ))}
         </div>
       )}

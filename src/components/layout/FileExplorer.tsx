@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
 interface FileExplorerProps {
@@ -29,31 +29,6 @@ export default function FileExplorer({ children }: FileExplorerProps) {
   const { theme, toggleTheme, mounted } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
-
-  // Sliding active-tab pill in the header nav.
-  const tabRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-  const [pill, setPill] = useState({ left: 0, width: 0, ready: false });
-  const [animatePill, setAnimatePill] = useState(false);
-
-  useEffect(() => {
-    const move = () => {
-      const idx = navItems.findIndex((it) => it.match(pathname));
-      const el = tabRefs.current[idx];
-      if (el)
-        setPill({ left: el.offsetLeft, width: el.offsetWidth, ready: true });
-      else setPill((p) => ({ ...p, ready: false }));
-    };
-    move();
-    window.addEventListener("resize", move);
-    return () => window.removeEventListener("resize", move);
-  }, [pathname]);
-
-  // Enable the slide only after the first position is set, so the pill lands in
-  // place on load and animates only when you actually switch tabs.
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setAnimatePill(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
 
   const isPostPage =
     (pathname.startsWith("/posts/") && pathname !== "/posts") ||
@@ -93,44 +68,34 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         </div>
       )}
 
-      {/* Minimal centered M3 top app bar — no brand, pill nav, theme toggle.
-          Flat at rest, elevation + blur once the user scrolls past the hero. */}
+      {/* deepmind.google top bar: wordmark left, plain text links, pill action
+          right. Flat white at rest; hairline + blur only after scrolling. */}
       <header
         className={`sticky top-0 z-40 transition-all duration-200 ease-md-standard ${
           scrolled
-            ? "bg-md-surface/85 backdrop-blur-md shadow-md-1 border-b border-md-outline-variant"
+            ? "bg-md-surface/90 backdrop-blur-md border-b border-md-outline-variant"
             : "bg-md-background"
         }`}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 h-16 flex items-center justify-center gap-1">
-          <nav className="relative flex items-center gap-1">
-            {/* Sliding active-tab pill — glides between tabs on navigation. */}
-            <span
-              aria-hidden="true"
-              className={`pointer-events-none absolute left-0 top-0 h-10 rounded-full bg-md-secondary-container ${
-                animatePill
-                  ? "transition-[transform,width,opacity] duration-300 ease-md-standard"
-                  : ""
-              }`}
-              style={{
-                transform: `translateX(${pill.left}px)`,
-                width: pill.width,
-                opacity: pill.ready ? 1 : 0,
-              }}
-            />
-            {navItems.map((item, i) => {
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 h-16 flex items-center gap-8">
+          <Link
+            href="/"
+            className="text-[17px] font-medium tracking-tight text-md-on-surface whitespace-nowrap"
+          >
+            Hoang Duc Viet
+          </Link>
+
+          <nav className="hidden sm:flex items-center gap-6">
+            {navItems.map((item) => {
               const active = item.match(pathname);
               return (
                 <Link
                   key={item.href}
-                  ref={(el) => {
-                    tabRefs.current[i] = el;
-                  }}
                   href={item.href}
-                  className={`relative z-10 h-10 px-5 rounded-full inline-flex items-center md-label-large transition-colors duration-300 ease-md-standard ${
+                  className={`text-[14px] leading-5 transition-colors duration-200 ease-md-standard ${
                     active
-                      ? "text-md-on-secondary-container"
-                      : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
+                      ? "text-md-on-surface font-medium"
+                      : "text-md-on-surface-variant hover:text-md-on-surface"
                   }`}
                 >
                   {item.label}
@@ -139,31 +104,33 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             })}
           </nav>
 
-          <span className="mx-2 w-px h-5 bg-md-outline-variant" />
-
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="w-10 h-10 inline-flex items-center justify-center rounded-full text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
-            aria-label="Toggle theme"
-          >
-            {!mounted ? (
-              <span className="w-5 h-5 inline-block" />
-            ) : (
-              <Icon
-                name={theme === "light" ? "dark_mode" : "light_mode"}
-                size={20}
-              />
-            )}
-          </button>
+          <div className="ml-auto flex items-center gap-2">
+            <Link
+              href="/about"
+              className="hidden md:inline-flex items-center h-10 px-5 rounded-full border border-md-outline text-[14px] font-medium text-md-on-surface hover:bg-md-on-surface/5 transition-colors duration-200 ease-md-standard"
+            >
+              About me
+            </Link>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-md-outline text-md-on-surface-variant hover:bg-md-on-surface/5 hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
+              aria-label="Toggle theme"
+            >
+              {!mounted ? (
+                <span className="w-5 h-5 inline-block" />
+              ) : (
+                <Icon
+                  name={theme === "light" ? "dark_mode" : "light_mode"}
+                  size={20}
+                />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
-      <main
-        className={`mx-auto px-4 sm:px-6 lg:px-10 pb-16 ${
-          isPostPage ? "max-w-6xl" : "max-w-4xl"
-        }`}
-      >
+      <main className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 pb-16">
         {children}
       </main>
     </div>

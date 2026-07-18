@@ -100,6 +100,21 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
         },
         th: (props: any) => <TableCell isHeader {...props} />,
         td: (props: any) => <TableCell {...props} />,
+        // Our img renderer emits <figure>, which is invalid inside <p> and
+        // triggers hydration warnings. Unwrap paragraphs whose only content
+        // is an image; leave real text paragraphs untouched.
+        p: ({ node, children, ...props }: any) => {
+          const kids = (node?.children || []).filter(
+            (c: any) => !(c.type === "text" && !String(c.value).trim()),
+          );
+          if (
+            kids.length > 0 &&
+            kids.every((c: any) => c.tagName === "img")
+          ) {
+            return <>{children}</>;
+          }
+          return <p {...props}>{children}</p>;
+        },
         pre: ({ children, ...props }: any) => {
           const codeEl = Array.isArray(children) ? children[0] : children;
           const className = codeEl?.props?.className || "";
@@ -138,7 +153,7 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                 alt={alt || ""}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-auto rounded-lg"
+                className="w-full h-auto rounded-[var(--md-sys-shape-corner-large-increased)]"
               />
               {alt && (
                 <figcaption

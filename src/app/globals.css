@@ -31,12 +31,12 @@
     --md-sys-color-on-error: 0 0% 100%;
 
     --md-sys-color-background: 0 0% 100%;
-    --md-sys-color-on-background: 220 7% 12%;     /* #1F1F1F */
+    --md-sys-color-on-background: 0 0% 4%;        /* #0a0a0a — deepmind.google ink */
 
     --md-sys-color-surface: 0 0% 100%;
-    --md-sys-color-on-surface: 220 7% 12%;
+    --md-sys-color-on-surface: 0 0% 4%;           /* #0a0a0a */
     --md-sys-color-surface-variant: 210 17% 98%;  /* #F8F9FA */
-    --md-sys-color-on-surface-variant: 220 6% 36%;
+    --md-sys-color-on-surface-variant: 227 5% 32%; /* #4e4f56 — deepmind secondary text */
 
     --md-sys-color-surface-container-lowest: 0 0% 100%;
     --md-sys-color-surface-container-low: 210 17% 98%;
@@ -45,11 +45,15 @@
     --md-sys-color-surface-container-highest: 220 13% 91%;
 
     --md-sys-color-outline: 220 9% 86%;            /* #DADCE0 */
-    --md-sys-color-outline-variant: 220 13% 93%;
+    --md-sys-color-outline-variant: 213 21% 90%;   /* #e1e6ec — deepmind hairline */
 
     --md-sys-color-inverse-surface: 220 7% 18%;
     --md-sys-color-inverse-on-surface: 220 14% 96%;
     --md-sys-color-inverse-primary: 217 95% 78%;
+
+    /* Google Sans Flex loaded via <link> in layout.tsx; the variable keeps its
+       historical name so every existing reference resolves to the new family. */
+    --font-inter: "Google Sans Flex", "DM Sans", Arial, Helvetica, sans-serif;
 
     /* ----- M3 shape (corner radius) ----- */
     --md-sys-shape-corner-none: 0;
@@ -57,6 +61,8 @@
     --md-sys-shape-corner-small: 8px;
     --md-sys-shape-corner-medium: 12px;
     --md-sys-shape-corner-large: 16px;
+    /* deepmind.google's image radius — sits in M3 Expressive's expanded scale */
+    --md-sys-shape-corner-large-increased: 24px;
     --md-sys-shape-corner-extra-large: 28px;
     --md-sys-shape-corner-full: 9999px;
 
@@ -277,14 +283,29 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
    ================================ */
 
 .article-content {
-  font-size: 17px;
-  line-height: 28px;
+  /* deepmind.google prose: 17.5px / 1.45 */
+  font-size: 1.09375rem;
+  line-height: 1.45;
   color: var(--article-text);
   font-family: var(--font-inter), "Google Sans", system-ui, -apple-system, sans-serif;
   font-feature-settings: "kern" 1, "cv11", "ss01";
   letter-spacing: 0;
   overflow-wrap: break-word;
   word-break: normal;
+}
+
+/* deepmind.google standfirst — the bold centered dek between hero and prose */
+.standfirst p {
+  font-size: 19px;
+  line-height: 1.42;
+  font-weight: 500;
+  color: hsl(var(--md-sys-color-on-surface));
+}
+.standfirst p + p { margin-top: 0.75rem; }
+.standfirst a { color: hsl(var(--md-sys-color-primary)); text-decoration: none; }
+.standfirst a:hover { text-decoration: underline; }
+@media (min-width: 768px) {
+  .standfirst p { font-size: 22px; line-height: 1.4; }
 }
 
 .article-content > p,
@@ -315,7 +336,8 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
 }
 
 .article-content h1 { font-size: 36px; line-height: 44px; margin-top: 3rem;   margin-bottom: 1.25rem; }
-.article-content h2 { font-size: 28px; line-height: 36px; margin-top: 3rem;   margin-bottom: 1rem; }
+/* H2 = M3 headline-large (32/40) with deepmind's generous air above */
+.article-content h2 { font-size: 32px; line-height: 40px; margin-top: 4rem;   margin-bottom: 1.25rem; }
 .article-content h3 { font-size: 22px; line-height: 28px; margin-top: 2.25rem; margin-bottom: 0.75rem; font-weight: 500; }
 .article-content h4 { font-size: 18px; line-height: 24px; margin-top: 1.75rem; margin-bottom: 0.5rem; font-weight: 500; }
 .article-content h5 { font-size: 16px; line-height: 24px; margin-top: 1.5rem;  margin-bottom: 0.5rem; font-weight: 500; }
