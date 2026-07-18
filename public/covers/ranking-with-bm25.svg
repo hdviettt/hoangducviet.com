@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'JetBrains Mono', Consolas, monospace">
+  <defs>
+    <pattern id="g1" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+    <pattern id="g2" width="200" height="200" patternUnits="userSpaceOnUse">
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,1 L8,5 L0,9" stroke="#FFFFFF" stroke-width="1.6" fill="none"/>
+    </marker>
+    <marker id="arrb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,1 L8,5 L0,9" stroke="#8AB4F8" stroke-width="1.4" fill="none"/>
+    </marker>
+    <style>
+      .march { stroke-dasharray: 10 8; animation: march 4s linear infinite; }
+      .tmarch { stroke-dasharray: 4 8; animation: march 6s linear infinite; }
+      @keyframes march { to { stroke-dashoffset: -72; } }
+      .p1, .p2, .p3 { animation: pulse 3.6s ease-in-out infinite; }
+      .p2 { animation-delay: 1.2s; }
+      .p3 { animation-delay: 2.4s; }
+      @keyframes pulse { 0%, 100% { opacity: 0.45; } 18% { opacity: 1; } 36% { opacity: 0.45; } }
+      .glow { animation: glow 3.6s ease-in-out infinite; }
+      @keyframes glow { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+  </defs>
+  <rect width="1200" height="630" fill="#0D2E6B"/>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <rect width="1200" height="630" fill="url(#g2)"/>
+  <g stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.5">
+    <path d="M594 74 h12 M600 68 v12"/>
+    <path d="M1074 434 h12 M1080 428 v12"/>
+    <path d="M154 534 h12 M160 528 v12"/>
+    <path d="M1094 134 h12 M1100 128 v12"/>
+  </g>
+  <text x="150" y="120" font-size="18" fill="#FFFFFF" letter-spacing="3">MINI SEARCH ENGINE &#183; PART 4</text>
+  <text x="150" y="230" font-size="24" fill="#FFFFFF">score(q,d) = &#931; idf(t) &#183; </text>
+  <text x="520" y="200" font-size="20" fill="#8AB4F8">tf &#183; (k&#8321;+1)</text>
+  <line x1="500" y1="218" x2="740" y2="218" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="504" y="252" font-size="20" fill="#8AB4F8">tf + k&#8321;(1-b+b&#183;|d|/avg)</text>
+  <rect class="p1" x="150" y="320" width="300" height="26" fill="#F9AB00" fill-opacity="0.85"/>
+  <text x="460" y="338" font-size="14" fill="#8AB4F8">doc 1</text>
+  <rect class="p2" x="150" y="364" width="210" height="26" fill="#8AB4F8" fill-opacity="0.85"/>
+  <text x="370" y="382" font-size="14" fill="#8AB4F8">doc 2</text>
+  <rect class="p3" x="150" y="408" width="130" height="26" fill="#8AB4F8" fill-opacity="0.85"/>
+  <text x="290" y="426" font-size="14" fill="#8AB4F8">doc 3</text>
+
+  <g>
+    <rect x="770" y="480" width="370" height="100" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="770" y1="514" x2="1140" y2="514" stroke="#FFFFFF" stroke-width="1"/>
+    <line x1="770" y1="548" x2="1140" y2="548" stroke="#FFFFFF" stroke-width="1"/>
+    <line x1="960" y1="514" x2="960" y2="580" stroke="#FFFFFF" stroke-width="1"/>
+    <text x="786" y="503" font-size="15" fill="#FFFFFF" letter-spacing="2">HOANGDUCVIET.COM</text>
+    <text x="786" y="537" font-size="14" fill="#8AB4F8">DOC. MSE-SERIES</text>
+    <text x="976" y="537" font-size="14" fill="#8AB4F8">SHEET 04</text>
+    <text x="786" y="571" font-size="14" fill="#8AB4F8">SCALE B=0.75</text>
+    <text x="976" y="571" font-size="14" fill="#8AB4F8">REV. A</text>
+  </g>
+</svg>

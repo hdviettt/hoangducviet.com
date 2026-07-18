@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'JetBrains Mono', Consolas, monospace">
+  <defs>
+    <pattern id="g1" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+    <pattern id="g2" width="200" height="200" patternUnits="userSpaceOnUse">
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,1 L8,5 L0,9" stroke="#FFFFFF" stroke-width="1.6" fill="none"/>
+    </marker>
+    <marker id="arrb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,1 L8,5 L0,9" stroke="#8AB4F8" stroke-width="1.4" fill="none"/>
+    </marker>
+    <style>
+      .march { stroke-dasharray: 10 8; animation: march 4s linear infinite; }
+      .tmarch { stroke-dasharray: 4 8; animation: march 6s linear infinite; }
+      @keyframes march { to { stroke-dashoffset: -72; } }
+      .p1, .p2, .p3 { animation: pulse 3.6s ease-in-out infinite; }
+      .p2 { animation-delay: 1.2s; }
+      .p3 { animation-delay: 2.4s; }
+      @keyframes pulse { 0%, 100% { opacity: 0.45; } 18% { opacity: 1; } 36% { opacity: 0.45; } }
+      .glow { animation: glow 3.6s ease-in-out infinite; }
+      @keyframes glow { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+  </defs>
+  <rect width="1200" height="630" fill="#0D2E6B"/>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <rect width="1200" height="630" fill="url(#g2)"/>
+  <g stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.5">
+    <path d="M594 74 h12 M600 68 v12"/>
+    <path d="M1074 434 h12 M1080 428 v12"/>
+    <path d="M154 534 h12 M160 528 v12"/>
+    <path d="M1094 134 h12 M1100 128 v12"/>
+  </g>
+  <rect x="150" y="200" width="220" height="140" rx="14" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+  <text x="260.0" y="276.0" text-anchor="middle" font-size="18" fill="#FFFFFF">FRONTIER<tspan x='260' dy='24'>MODEL</tspan></text>
+  <line class="march" x1="370" y1="270" x2="520" y2="270" stroke="#FFFFFF" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="560" y="150" width="120" height="56" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
+  <text x="620.0" y="184.0" text-anchor="middle" font-size="13" fill="#8AB4F8">app</text>
+  <rect x="700" y="190" width="120" height="56" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
+  <text x="760.0" y="224.0" text-anchor="middle" font-size="13" fill="#8AB4F8">app</text>
+  <rect x="620" y="290" width="120" height="56" rx="14" fill="none" stroke="#F9AB00" stroke-width="1.5"/>
+  <text x="680.0" y="324.0" text-anchor="middle" font-size="13" fill="#F9AB00">app</text>
+  <rect x="760" y="330" width="120" height="56" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
+  <text x="820.0" y="364.0" text-anchor="middle" font-size="13" fill="#8AB4F8">app</text>
+  <rect x="560" y="380" width="120" height="56" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
+  <text x="620.0" y="414.0" text-anchor="middle" font-size="13" fill="#8AB4F8">app</text>
+  <rect x="820" y="210" width="120" height="56" rx="14" fill="none" stroke="#8AB4F8" stroke-width="1.5"/>
+  <text x="880.0" y="244.0" text-anchor="middle" font-size="13" fill="#8AB4F8">app</text>
+  <line x1="680" y1="318" x2="760" y2="218" stroke="#8AB4F8" stroke-width="1" stroke-opacity="0.6"/>
+  <line x1="680" y1="318" x2="680" y2="318" stroke="#8AB4F8" stroke-width="1" stroke-opacity="0.6"/>
+  <line x1="680" y1="318" x2="820" y2="358" stroke="#8AB4F8" stroke-width="1" stroke-opacity="0.6"/>
+  <line x1="680" y1="318" x2="620" y2="408" stroke="#8AB4F8" stroke-width="1" stroke-opacity="0.6"/>
+  <line x1="680" y1="318" x2="880" y2="238" stroke="#8AB4F8" stroke-width="1" stroke-opacity="0.6"/>
+  <text x="150" y="120" font-size="18" fill="#FFFFFF" letter-spacing="3">INTEGRATION &#8811; INVENTION</text>
+
+  <g>
+    <rect x="770" y="480" width="370" height="100" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+    <line x1="770" y1="514" x2="1140" y2="514" stroke="#FFFFFF" stroke-width="1"/>
+    <line x1="770" y1="548" x2="1140" y2="548" stroke="#FFFFFF" stroke-width="1"/>
+    <line x1="960" y1="514" x2="960" y2="580" stroke="#FFFFFF" stroke-width="1"/>
+    <text x="786" y="503" font-size="15" fill="#FFFFFF" letter-spacing="2">HOANGDUCVIET.COM</text>
+    <text x="786" y="537" font-size="14" fill="#8AB4F8">DOC. CN-WISDOM</text>
+    <text x="976" y="537" font-size="14" fill="#8AB4F8">SHEET 01</text>
+    <text x="786" y="571" font-size="14" fill="#8AB4F8">SCALE 1:1.4B</text>
+    <text x="976" y="571" font-size="14" fill="#8AB4F8">REV. A</text>
+  </g>
+</svg>
