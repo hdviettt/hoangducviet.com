@@ -111,8 +111,10 @@ export default async function Home() {
   const seriesItems = allItems.filter(
     (i): i is Extract<FeedItem, { kind: "series" }> => i.kind === "series",
   );
-  const sideRows = restPosts.slice(0, 4);
-  const gridRows = restPosts.slice(4);
+  // deepmind.google keeps ~10 rows beside the sticky featured before the
+  // two-column grid takes over below.
+  const sideRows = restPosts.slice(0, 10);
+  const gridRows = restPosts.slice(10);
 
   // Collect every slug rendered on the homepage so we can fetch all view
   // counts in a single PostHog round-trip (cached 5 min in posthog-server).
@@ -164,11 +166,13 @@ export default async function Home() {
         </p>
 
         <div className="mt-10 md:mt-16 lg:grid lg:grid-cols-[7fr_6fr] lg:gap-16 xl:gap-20 items-start">
-          {/* Featured — newest post */}
+          {/* Featured — newest post. Sticky within this split (deepmind
+              behavior): it holds while the rows scroll, releases when the
+              group ends. */}
           {featured && (
             <Link
               href={`/posts/${featured.post.slug}`}
-              className="group block mb-12 lg:mb-0"
+              className="group block mb-12 lg:mb-0 lg:sticky lg:top-10 lg:self-start"
             >
               <h3 className="text-[28px] leading-9 md:text-[42px] md:leading-[48px] font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                 {featured.post.title}

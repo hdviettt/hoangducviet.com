@@ -1,14 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
-      <stop offset="0" stop-color="#FEF7E0"/>
-      <stop offset="1" stop-color="#FFFDF6"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#F2F6FF"/>
+      <stop offset="1" stop-color="#F3FEF9"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#004aef"/>
+      <stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#7E9BF7"/>
+      <stop offset="1" stop-color="#86F7CC"/>
     </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
-    </filter>
-    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="26"/>
     </filter>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
@@ -25,24 +30,23 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="280" cy="440" r="250" fill="#FDD663" fill-opacity="0.6" filter="url(#soft)"/>
-  <circle class="drift2" cx="920" cy="180" r="250" fill="#F28B82" fill-opacity="0.45" filter="url(#soft)"/>
-  <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="#FDD663" stroke-opacity="0.35" stroke-width="120" stroke-linecap="round"/>
-  <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="#F9AB00" stroke-opacity="0.55" stroke-width="74" stroke-linecap="round"/>
-  <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="#FFFFFF" stroke-opacity="0.7" stroke-width="30" stroke-linecap="round"/>
-  <rect x="139" y="51" width="36" height="36" rx="8" fill="#EA4335" fill-opacity="0.35" transform="rotate(-17 139 51)"/>
-  <rect x="189" y="92" width="23" height="23" rx="8" fill="#EA4335" fill-opacity="0.39" transform="rotate(0 189 92)"/>
-  <rect x="197" y="117" width="24" height="24" rx="8" fill="#EA4335" fill-opacity="0.43" transform="rotate(-16 197 117)"/>
-  <rect x="257" y="178" width="25" height="25" rx="8" fill="#EA4335" fill-opacity="0.47" transform="rotate(-11 257 178)"/>
-  <rect x="306" y="209" width="35" height="35" rx="8" fill="#EA4335" fill-opacity="0.51" transform="rotate(-4 306 209)"/>
-  <rect x="364" y="125" width="41" height="41" rx="8" fill="#EA4335" fill-opacity="0.55" transform="rotate(-8 364 125)"/>
-  <rect x="352" y="150" width="29" height="29" rx="8" fill="#EA4335" fill-opacity="0.59" transform="rotate(13 352 150)"/>
-  <rect x="391" y="219" width="36" height="36" rx="8" fill="#EA4335" fill-opacity="0.62" transform="rotate(-5 391 219)"/>
-  <rect x="450" y="178" width="23" height="23" rx="8" fill="#EA4335" fill-opacity="0.66" transform="rotate(-12 450 178)"/>
-  <rect x="495" y="236" width="29" height="29" rx="8" fill="#EA4335" fill-opacity="0.70" transform="rotate(3 495 236)"/>
-  <rect x="519" y="239" width="39" height="39" rx="8" fill="#EA4335" fill-opacity="0.74" transform="rotate(8 519 239)"/>
-  <rect x="543" y="287" width="34" height="34" rx="8" fill="#EA4335" fill-opacity="0.78" transform="rotate(15 543 287)"/>
-  <rect x="609" y="272" width="44" height="44" rx="8" fill="#EA4335" fill-opacity="0.82" transform="rotate(-15 609 272)"/>
-  <rect x="628" y="342" width="25" height="25" rx="8" fill="#EA4335" fill-opacity="0.86" transform="rotate(-0 628 342)"/>
-  <g class="sparkle" style="transform-origin:1020px 150px"><path d="M 1020 98 Q 1031.44 138.56 1072 150 Q 1031.44 161.44 1020 202 Q 1008.56 161.44 968 150 Q 1008.56 138.56 1020 98 Z" fill="#D93025"/></g>
+  <circle class="drift1" cx="300" cy="440" r="240" fill="#57E2FA" fill-opacity="0.4" filter="url(#soft)"/>
+  <circle class="drift2" cx="920" cy="170" r="240" fill="#3DF3B1" fill-opacity="0.4" filter="url(#soft)"/>
+  <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="#9FEFFC" stroke-opacity="0.5" stroke-width="110" stroke-linecap="round"/>
+  <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="url(#brand)" stroke-opacity="0.85" stroke-width="64" stroke-linecap="round"/>
+  <path class="drift1" d="M -80 470 C 420 540, 700 110, 1290 220" fill="none" stroke="#FFFFFF" stroke-opacity="0.7" stroke-width="22" stroke-linecap="round"/>
+  <rect x="140" y="54" width="34" height="34" rx="7" fill="#ffce00" fill-opacity="0.40" transform="rotate(-17 140 54)"/>
+  <rect x="192" y="94" width="21" height="21" rx="7" fill="#ffce00" fill-opacity="0.44" transform="rotate(0 192 94)"/>
+  <rect x="204" y="119" width="22" height="22" rx="7" fill="#ffce00" fill-opacity="0.48" transform="rotate(-16 204 119)"/>
+  <rect x="266" y="178" width="23" height="23" rx="7" fill="#ffce00" fill-opacity="0.53" transform="rotate(-11 266 178)"/>
+  <rect x="317" y="209" width="33" height="33" rx="7" fill="#ffce00" fill-opacity="0.57" transform="rotate(-4 317 209)"/>
+  <rect x="377" y="133" width="39" height="39" rx="7" fill="#ffce00" fill-opacity="0.61" transform="rotate(-8 377 133)"/>
+  <rect x="370" y="159" width="27" height="27" rx="7" fill="#ffce00" fill-opacity="0.65" transform="rotate(13 370 159)"/>
+  <rect x="412" y="225" width="34" height="34" rx="7" fill="#ffce00" fill-opacity="0.70" transform="rotate(-5 412 225)"/>
+  <rect x="473" y="189" width="21" height="21" rx="7" fill="#ffce00" fill-opacity="0.74" transform="rotate(-12 473 189)"/>
+  <rect x="520" y="245" width="27" height="27" rx="7" fill="#ffce00" fill-opacity="0.78" transform="rotate(3 520 245)"/>
+  <rect x="547" y="250" width="37" height="37" rx="7" fill="#ffce00" fill-opacity="0.82" transform="rotate(8 547 250)"/>
+  <rect x="576" y="297" width="32" height="32" rx="7" fill="#ffce00" fill-opacity="0.87" transform="rotate(15 576 297)"/>
+  <rect x="643" y="285" width="42" height="42" rx="7" fill="#ffce00" fill-opacity="0.91" transform="rotate(-15 643 285)"/>
+  <g class="sparkle" style="transform-origin:1030px 150px"><path d="M 1030 102 Q 1040.56 139.44 1078 150 Q 1040.56 160.56 1030 198 Q 1019.44 160.56 982 150 Q 1019.44 139.44 1030 102 Z" fill="#07ef9c"/></g>
 </svg>

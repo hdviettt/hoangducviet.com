@@ -1,19 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
-      <stop offset="0" stop-color="#FEF7E0"/>
-      <stop offset="1" stop-color="#FFFDF6"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#F2F6FF"/>
+      <stop offset="1" stop-color="#F3FEF9"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#004aef"/>
+      <stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#7E9BF7"/>
+      <stop offset="1" stop-color="#86F7CC"/>
     </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="26"/>
-    </filter>
-    <radialGradient id="mse5" cx="0.35" cy="0.3" r="0.9">
+    <radialGradient id="mse5" cx="0.35" cy="0.3" r="0.95">
       <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="#FDD663"/>
-      <stop offset="1" stop-color="#EA8600"/>
+      <stop offset="0.45" stop-color="#FFEB99"/>
+      <stop offset="1" stop-color="#ffce00"/>
     </radialGradient>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
@@ -30,13 +35,16 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="260" cy="170" r="230" fill="#F9AB00" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="500" r="240" fill="#FDD663" fill-opacity="0.65" filter="url(#soft)"/>
-  <circle cx="760" cy="280" r="165" fill="url(#mse5)"/>
+  <circle class="drift1" cx="260" cy="170" r="220" fill="#FFEB99" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="500" r="230" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle cx="682" cy="336.15999999999997" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
+  <circle cx="708" cy="317.44" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
+  <circle cx="734" cy="298.72" r="160" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
+  <circle cx="760" cy="280" r="160" fill="url(#mse5)"/>
   <g class="spin" style="transform-origin:760px 280px">
-    <ellipse cx="760" cy="280" rx="255" ry="92" fill="none" stroke="#B06000" stroke-opacity="0.35" stroke-width="2" transform="rotate(-18 760 280)"/>
-    <circle cx="1005" cy="215" r="13" fill="#EA8600"/>
+    <ellipse cx="760" cy="280" rx="250" ry="90" fill="none" stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2" transform="rotate(-18 760 280)"/>
+    <circle cx="1000" cy="215" r="12" fill="#ffce00"/>
   </g>
-  <g class="sparkle" style="transform-origin:600px 120px"><path d="M 600 74 Q 610.12 109.88 646 120 Q 610.12 130.12 600 166 Q 589.88 130.12 554 120 Q 589.88 109.88 600 74 Z" fill="#EA8600"/></g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#B06000" fill-opacity="0.16" letter-spacing="-12">05</text>
+  <g class="sparkle" style="transform-origin:590px 120px"><path d="M 590 78 Q 599.24 110.76 632 120 Q 599.24 129.24 590 162 Q 580.76 129.24 548 120 Q 580.76 110.76 590 78 Z" fill="#0fd6f7"/></g>
+  <text x="60" y="580" font-size="360" font-weight="700" fill="#ffce00" fill-opacity="0.14" letter-spacing="-12">05</text>
 </svg>

@@ -1,19 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
-      <stop offset="0" stop-color="#EAF1FF"/>
-      <stop offset="1" stop-color="#FAFCFF"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#F2F6FF"/>
+      <stop offset="1" stop-color="#F3FEF9"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#004aef"/>
+      <stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#7E9BF7"/>
+      <stop offset="1" stop-color="#86F7CC"/>
     </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="26"/>
-    </filter>
-    <radialGradient id="mseAll" cx="0.35" cy="0.3" r="0.9">
+    <radialGradient id="mseAll" cx="0.35" cy="0.3" r="0.95">
       <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="#8AB4F8"/>
-      <stop offset="1" stop-color="#1A73E8"/>
+      <stop offset="0.45" stop-color="#7E9BF7"/>
+      <stop offset="1" stop-color="#004aef"/>
     </radialGradient>
     <style>
       .drift1 { animation: d1 18s ease-in-out infinite alternate; }
@@ -30,20 +35,23 @@
 </style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="230" cy="160" r="220" fill="#4285F4" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="470" r="250" fill="#80DEEA" fill-opacity="0.6" filter="url(#soft)"/>
-  <circle class="drift1" cx="600" cy="560" r="190" fill="#D7AEFB" fill-opacity="0.4" filter="url(#soft)"/>
+  <circle class="drift1" cx="230" cy="160" r="210" fill="#7E9BF7" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="470" r="240" fill="#3DF3B1" fill-opacity="0.45" filter="url(#soft)"/>
+  <circle cx="488" cy="380.64" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.02" stroke-width="2.5"/>
+  <circle cx="516" cy="360.48" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="2.5"/>
+  <circle cx="544" cy="340.32" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.26" stroke-width="2.5"/>
+  <circle cx="572" cy="320.16" r="180" fill="none" stroke="url(#brand)" stroke-opacity="0.38" stroke-width="2.5"/>
   <circle cx="600" cy="300" r="180" fill="url(#mseAll)"/>
   <g class="spin" style="transform-origin:600px 300px">
-    <ellipse cx="600" cy="300" rx="330" ry="120" fill="none" stroke="#174EA6" stroke-opacity="0.3" stroke-width="2" transform="rotate(-16 600 300)"/>
-    <circle cx="917" cy="268" r="12" fill="#1A73E8"/>
-    <circle cx="848" cy="359" r="12" fill="#3949AB"/>
-    <circle cx="633" cy="415" r="12" fill="#0097A7"/>
-    <circle cx="399" cy="404" r="12" fill="#188038"/>
-    <circle cx="283" cy="332" r="12" fill="#EA8600"/>
-    <circle cx="352" cy="241" r="12" fill="#D93025"/>
-    <circle cx="567" cy="185" r="12" fill="#8430CE"/>
-    <circle cx="801" cy="196" r="12" fill="#C2185B"/>
+    <ellipse cx="600" cy="300" rx="330" ry="118" fill="none" stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2" transform="rotate(-16 600 300)"/>
+    <circle cx="930" cy="300" r="11" fill="#004aef"/>
+    <circle cx="833" cy="383" r="11" fill="#0fd6f7"/>
+    <circle cx="600" cy="418" r="11" fill="#04B876"/>
+    <circle cx="367" cy="383" r="11" fill="#07ef9c"/>
+    <circle cx="270" cy="300" r="11" fill="#ffce00"/>
+    <circle cx="367" cy="217" r="11" fill="#0AA6C4"/>
+    <circle cx="600" cy="182" r="11" fill="#2E62F1"/>
+    <circle cx="833" cy="217" r="11" fill="#03895A"/>
   </g>
-  <g class="sparkle" style="transform-origin:920px 130px"><path d="M 920 74 Q 932.32 117.68 976 130 Q 932.32 142.32 920 186 Q 907.68 142.32 864 130 Q 907.68 117.68 920 74 Z" fill="#1A73E8"/></g>
+  <g class="sparkle" style="transform-origin:930px 130px"><path d="M 930 78 Q 941.44 118.56 982 130 Q 941.44 141.44 930 182 Q 918.56 141.44 878 130 Q 918.56 118.56 930 78 Z" fill="#ffce00"/></g>
 </svg>

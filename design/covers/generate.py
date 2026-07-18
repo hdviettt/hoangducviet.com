@@ -1,28 +1,31 @@
-"""Cover generator v2 — the "Fluid Gradient" system (see README.md).
+"""Cover generator v3 — "SEONGON Flow" (see README.md).
 
-Google/DeepMind-flavored abstract art: soft light gradients, large blurred
-color blobs, one crisp glassy focal composition per post, ambient motion.
-Run:
+Fusion of three languages:
+- Google/DeepMind fluidity: soft light gradients, blurred blobs, glassy focus.
+- SEONGON identity: the Prosperous Blue -> Future Green gradient, and the
+  brand keyvisual's signature ECHO OUTLINES trailing behind a filled shape.
+- Illustrative motifs: one abstract composition per post, one idea each.
 
-    python design/covers/generate.py          # writes public/covers/*.svg
-
-Adding a cover for a new post = add one entry to COVERS with a motif function.
+Run:  python design/covers/generate.py   ->  public/covers/*.svg
+Adding a post = one COVERS entry + (optionally) one motif function.
 """
 
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parents[2] / "public" / "covers"
 
-# name: (bg_top, bg_bottom, blob_a, blob_b, accent, deep)
-PALETTES = {
-    "blue": ("#EAF1FF", "#FAFCFF", "#4285F4", "#8AB4F8", "#1A73E8", "#174EA6"),
-    "indigo": ("#E8EAF6", "#FBFBFF", "#5C6BC0", "#9FA8DA", "#3949AB", "#283593"),
-    "teal": ("#E0F7FA", "#F7FEFF", "#12B5CB", "#80DEEA", "#0097A7", "#006064"),
-    "mint": ("#E6F4EA", "#F8FEF9", "#34A853", "#81C995", "#188038", "#0D652D"),
-    "amber": ("#FEF7E0", "#FFFDF6", "#F9AB00", "#FDD663", "#EA8600", "#B06000"),
-    "coral": ("#FCE8E6", "#FFF9F8", "#EA4335", "#F28B82", "#D93025", "#A50E0E"),
-    "violet": ("#F3E8FD", "#FDFBFF", "#A142F4", "#D7AEFB", "#8430CE", "#681DA8"),
-    "pink": ("#FDE7F3", "#FFF9FC", "#E52592", "#FF8BCB", "#C2185B", "#9C166B"),
+# ---- SEONGON brand ----------------------------------------------------------
+P_BLUE = "#004aef"   # Prosperous Blue
+F_GREEN = "#07ef9c"  # Future Green
+T_CYAN = "#0fd6f7"   # Transform Cyan
+B_YELLOW = "#ffce00" # Breakthrough Yellow
+INKX = "#1e2126"
+
+TINTS = {
+    "blue": ["#004aef", "#2E62F1", "#7E9BF7", "#C7D6FB"],
+    "green": ["#07ef9c", "#3DF3B1", "#86F7CC", "#C9FBE8"],
+    "cyan": ["#0fd6f7", "#57E2FA", "#9FEFFC", "#D7F9FE"],
+    "yellow": ["#ffce00", "#FFDC4D", "#FFEB99", "#FFF7D6"],
 }
 
 STYLE = """
@@ -39,45 +42,67 @@ STYLE = """
       @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 """
 
-
-def frame(pal: str, body: str, extra_defs: str = "") -> str:
-    bg1, bg2, ba, bb, accent, deep = PALETTES[pal]
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
-      <stop offset="0" stop-color="{bg1}"/>
-      <stop offset="1" stop-color="{bg2}"/>
+BASE_DEFS = f"""    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="{P_BLUE}"/>
+      <stop offset="1" stop-color="{F_GREEN}"/>
+    </linearGradient>
+    <linearGradient id="brandSoft" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="{TINTS['blue'][2]}"/>
+      <stop offset="1" stop-color="{TINTS['green'][2]}"/>
     </linearGradient>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="26"/>
-    </filter>
-{extra_defs}    <style>{STYLE}</style>
+"""
+
+
+def frame(body: str, extra_defs: str = "", bg=("#F2F6FF", "#F3FEF9")) -> str:
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="{bg[0]}"/>
+      <stop offset="1" stop-color="{bg[1]}"/>
+    </linearGradient>
+{BASE_DEFS}{extra_defs}    <style>{STYLE}</style>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
 {body}</svg>
 """
 
 
-def blob(cx, cy, r, color, opacity=0.6, cls="drift1"):
+def blob(cx, cy, r, color, opacity=0.5, cls="drift1"):
     return (
         f'  <circle class="{cls}" cx="{cx}" cy="{cy}" r="{r}" fill="{color}" '
         f'fill-opacity="{opacity}" filter="url(#soft)"/>\n'
     )
 
 
-def glass_rect(x, y, w, h, rx=28, opacity=0.5):
-    return (
-        f'  <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" '
-        f'fill="#FFFFFF" fill-opacity="{opacity}" stroke="#FFFFFF" '
-        f'stroke-opacity="0.85" stroke-width="2"/>\n'
-    )
+def echo_rrect(x, y, w, h, rx, n=3, step=26, stroke="url(#brand)", body_fill="url(#brand)"):
+    """The SEONGON keyvisual move: a filled shape with outline echoes trailing
+    down-left behind it, fading as they recede."""
+    s = ""
+    for i in range(n, 0, -1):
+        o = 0.55 - i * 0.13
+        s += (
+            f'  <rect x="{x - i * step}" y="{y + i * step * 0.72}" width="{w}" height="{h}" '
+            f'rx="{rx}" fill="none" stroke="{stroke}" stroke-opacity="{o:.2f}" stroke-width="2.5"/>\n'
+        )
+    s += f'  <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" fill="{body_fill}"/>\n'
+    return s
 
 
-def spark(cx, cy, r, fill, cls="sparkle"):
-    """Gemini-style four-point star with pinched waists."""
+def echo_circle(cx, cy, r, n=3, step=24, stroke="url(#brand)"):
+    s = ""
+    for i in range(n, 0, -1):
+        o = 0.5 - i * 0.12
+        s += (
+            f'  <circle cx="{cx - i * step}" cy="{cy + i * step * 0.72}" r="{r}" '
+            f'fill="none" stroke="{stroke}" stroke-opacity="{o:.2f}" stroke-width="2.5"/>\n'
+        )
+    return s
+
+
+def spark(cx, cy, r, fill=B_YELLOW, cls="sparkle"):
     d = r * 0.22
     path = (
         f"M {cx} {cy - r} Q {cx + d} {cy - d} {cx + r} {cy} "
@@ -91,8 +116,17 @@ def spark(cx, cy, r, fill, cls="sparkle"):
     )
 
 
+def orb(cx, cy, r, grad_id, deep, light):
+    defs = f"""    <radialGradient id="{grad_id}" cx="0.35" cy="0.3" r="0.95">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.45" stop-color="{light}"/>
+      <stop offset="1" stop-color="{deep}"/>
+    </radialGradient>
+"""
+    return defs, f'  <circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#{grad_id})"/>\n'
+
+
 def ribbon(points, width, stroke, opacity=0.85, cls=""):
-    """A smooth flowing band through (x, y) control pairs."""
     (x0, y0), (x1, y1), (x2, y2), (x3, y3) = points
     c = f' class="{cls}"' if cls else ""
     return (
@@ -102,201 +136,197 @@ def ribbon(points, width, stroke, opacity=0.85, cls=""):
     )
 
 
-def orb(cx, cy, r, pal, grad_id):
-    _, _, ba, bb, accent, deep = PALETTES[pal]
-    defs = f"""    <radialGradient id="{grad_id}" cx="0.35" cy="0.3" r="0.9">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.45" stop-color="{bb}"/>
-      <stop offset="1" stop-color="{accent}"/>
-    </radialGradient>
-"""
-    body = f'  <circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#{grad_id})"/>\n'
-    return defs, body
-
-
 # ---------------------------------------------------------------- motifs
 
 
 def m_blueprint():
-    b = blob(280, 180, 240, PALETTES["blue"][2], 0.55, "drift1")
-    b += blob(950, 480, 280, PALETTES["blue"][3], 0.7, "drift2")
-    b += blob(700, 120, 170, "#A8C7FA", 0.5, "drift2")
-    b += '  <g class="float" style="transform-origin:600px 340px">\n'
-    b += glass_rect(330, 330, 190, 190, 40, 0.4)
-    b += glass_rect(470, 250, 210, 210, 44, 0.55)
-    b += glass_rect(630, 160, 230, 230, 48, 0.7)
+    b = blob(260, 180, 230, TINTS["blue"][1], 0.4, "drift1")
+    b += blob(960, 470, 260, TINTS["green"][1], 0.45, "drift2")
+    b += '  <g class="float" style="transform-origin:620px 300px">\n'
+    b += echo_rrect(560, 150, 250, 250, 52, n=4, step=30)
     b += "  </g>\n"
-    b += spark(920, 170, 64, PALETTES["blue"][4])
+    b += echo_rrect(300, 330, 150, 150, 34, n=2, step=22, body_fill="url(#brandSoft)")
+    b += spark(1000, 150, 54, B_YELLOW)
     return "", b
 
 
 def m_failed():
-    """Five pillars: one held, four dissolving into fog."""
-    pal = PALETTES["coral"]
-    b = blob(240, 180, 220, pal[3], 0.5, "drift1")
-    b += blob(960, 460, 260, pal[2], 0.35, "drift2")
-    xs = [250, 410, 570, 730, 890]
+    b = blob(240, 180, 220, TINTS["blue"][2], 0.45, "drift1")
+    b += blob(960, 460, 250, TINTS["green"][2], 0.4, "drift2")
+    xs = [250, 405, 560, 715, 870]
     for i, x in enumerate(xs):
-        h = 260 + (i % 3) * 30
-        y = 460 - h
+        h = 250 + (i % 3) * 30
+        y = 455 - h
         if i == 3:
-            # the one pillar that held
             b += (
                 f'  <rect class="float" style="transform-origin:{x}px 330px" '
-                f'x="{x - 52}" y="{y}" width="104" height="{h}" rx="52" '
-                f'fill="{pal[4]}" fill-opacity="0.92"/>\n'
+                f'x="{x - 50}" y="{y}" width="100" height="{h}" rx="50" fill="url(#brand)"/>\n'
             )
         else:
-            # ghost pillars: clearly capsules, clearly faded — not smoke
             b += (
-                f'  <rect x="{x - 52}" y="{y + 26}" width="104" height="{h - 26}" '
-                f'rx="52" fill="{pal[3]}" fill-opacity="0.38"/>\n'
-                f'  <rect x="{x - 52}" y="{y + 26}" width="104" height="{h - 26}" '
-                f'rx="52" fill="none" stroke="{pal[2]}" stroke-opacity="0.3" stroke-width="2"/>\n'
+                f'  <rect x="{x - 50}" y="{y + 24}" width="100" height="{h - 24}" '
+                f'rx="50" fill="none" stroke="url(#brandSoft)" stroke-opacity="0.75" stroke-width="2.5"/>\n'
             )
+    b += spark(1010, 160, 44, T_CYAN)
     return "", b
 
 
 def m_cn_wisdom():
-    """Integration: a stream of small pieces converging into one flow."""
-    a, c = PALETTES["amber"], PALETTES["coral"]
-    import math
+    b = blob(300, 440, 240, TINTS["cyan"][1], 0.4, "drift1")
+    b += blob(920, 170, 240, TINTS["green"][1], 0.4, "drift2")
+    pts = [(-80, 470), (420, 540), (700, 110), (1290, 220)]
+    b += ribbon(pts, 110, TINTS["cyan"][2], 0.5, "drift1")
+    b += ribbon(pts, 64, "url(#brand)", 0.85, "drift1")
+    b += ribbon(pts, 22, "#FFFFFF", 0.7, "drift1")
     import random
 
-    b = blob(280, 440, 250, a[3], 0.6, "drift1")
-    b += blob(920, 180, 250, c[3], 0.45, "drift2")
-    # the flow band: layered soft strokes, one graceful diagonal S
-    pts = [(-80, 470), (420, 540), (700, 110), (1290, 220)]
-    b += ribbon(pts, 120, a[3], 0.35, "drift1")
-    b += ribbon(pts, 74, a[2], 0.55, "drift1")
-    b += ribbon(pts, 30, "#FFFFFF", 0.7, "drift1")
-    # pieces feeding the flow from the top-left
     rnd = random.Random(7)
-    for i in range(14):
-        t = i / 14
-        x = 150 + t * 520 + rnd.uniform(-30, 30)
-        y = 150 + t * 180 + rnd.uniform(-56, 56) - (1 - t) * 60
-        wsize = 22 + rnd.random() * 22
+    for i in range(13):
+        t = i / 13
+        x = 150 + t * 520 + rnd.uniform(-28, 28)
+        y = 150 + t * 175 + rnd.uniform(-52, 52) - (1 - t) * 60
+        wsize = 20 + rnd.random() * 22
         b += (
-            f'  <rect x="{x:.0f}" y="{y:.0f}" width="{wsize:.0f}" '
-            f'height="{wsize:.0f}" rx="8" fill="{c[2]}" '
-            f'fill-opacity="{0.35 + t * 0.55:.2f}" '
+            f'  <rect x="{x:.0f}" y="{y:.0f}" width="{wsize:.0f}" height="{wsize:.0f}" '
+            f'rx="7" fill="{B_YELLOW}" fill-opacity="{0.4 + t * 0.55:.2f}" '
             f'transform="rotate({rnd.uniform(-20, 20):.0f} {x:.0f} {y:.0f})"/>\n'
         )
-    b += spark(1020, 150, 52, c[4])
+    b += spark(1030, 150, 48, F_GREEN)
     return "", b
 
 
 def m_liu():
-    pal = "violet"
-    defs, b = orb(430, 320, 150, pal, "liuOrb")
-    bl = blob(240, 160, 200, PALETTES[pal][2], 0.45, "drift1")
-    bl += blob(950, 470, 260, PALETTES[pal][3], 0.6, "drift2")
-    sats = [(660, 160, 64), (760, 300, 52), (700, 440, 58), (850, 200, 44), (880, 400, 48)]
-    s = '  <g class="float" style="transform-origin:760px 300px">\n'
-    for x, y, w in sats:
-        s += glass_rect(x, y, w, w, 16, 0.55)
-    s += "  </g>\n"
-    return defs, bl + b + s
+    defs, body = orb(430, 310, 150, "liuOrb", P_BLUE, TINTS["blue"][2])
+    b = blob(240, 160, 200, TINTS["blue"][2], 0.4, "drift1")
+    b += blob(950, 470, 250, TINTS["cyan"][2], 0.5, "drift2")
+    b += echo_circle(430, 310, 150, n=3, step=26)
+    b += body
+    sats = [(660, 160, 60), (760, 300, 48), (700, 440, 54), (850, 200, 42), (880, 400, 46)]
+    b += '  <g class="float" style="transform-origin:760px 300px">\n'
+    for i, (x, y, w) in enumerate(sats):
+        fill = B_YELLOW if i == 3 else "#FFFFFF"
+        op = 0.9 if i == 3 else 0.55
+        b += (
+            f'  <rect x="{x}" y="{y}" width="{w}" height="{w}" rx="14" fill="{fill}" '
+            f'fill-opacity="{op}" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2"/>\n'
+        )
+    b += "  </g>\n"
+    return defs, b
 
 
 def m_clustering():
     import math
     import random
 
-    pal = PALETTES["teal"]
+    b = blob(640, 210, 190, TINTS["cyan"][2], 0.5, "drift1")
+    b += blob(880, 430, 160, TINTS["green"][2], 0.5, "drift2")
+    b += blob(330, 420, 150, TINTS["blue"][3], 0.6, "drift1")
     rnd = random.Random(11)
-    b = blob(640, 210, 200, pal[3], 0.55, "drift1")
-    b += blob(860, 430, 170, pal[2], 0.4, "drift2")
-    b += blob(330, 420, 150, "#A7FFEB", 0.55, "drift1")
-    # halos
-    for cx, cy, r in [(640, 210, 120), (880, 430, 96), (340, 420, 84)]:
-        b += f'  <circle cx="{cx}" cy="{cy}" r="{r}" fill="#FFFFFF" fill-opacity="0.35" filter="url(#softer)"/>\n'
-    # loose field drifting in
-    for _ in range(26):
+    for _ in range(24):
         x, y = 90 + rnd.random() * 320, 90 + rnd.random() * 200
-        b += f'  <circle cx="{x:.0f}" cy="{y:.0f}" r="5" fill="{pal[4]}" fill-opacity="0.35"/>\n'
-    # clustered dots
-    for cx, cy, r, n in [(640, 210, 86, 14), (880, 430, 66, 10), (340, 420, 56, 8)]:
+        b += f'  <circle cx="{x:.0f}" cy="{y:.0f}" r="5" fill="{P_BLUE}" fill-opacity="0.3"/>\n'
+    clusters = [
+        (640, 210, 88, 14, P_BLUE),
+        (880, 430, 66, 10, "#04B876"),
+        (340, 420, 56, 8, "#0AA6C4"),
+    ]
+    for cx, cy, r, n, col in clusters:
+        b += (
+            f'  <circle cx="{cx}" cy="{cy}" r="{r + 14}" fill="none" '
+            f'stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>\n'
+        )
         rr = random.Random(int(cx))
         for _ in range(n):
             ang, dist = rr.random() * 6.283, rr.random() * r
             b += (
                 f'  <circle cx="{cx + math.cos(ang) * dist:.0f}" '
-                f'cy="{cy + math.sin(ang) * dist:.0f}" r="6" fill="{pal[4]}"/>\n'
+                f'cy="{cy + math.sin(ang) * dist:.0f}" r="6" fill="{col}"/>\n'
             )
+    b += spark(1020, 150, 44, B_YELLOW)
     return "", b
 
 
-SERIES_HUES = ["blue", "indigo", "teal", "mint", "amber", "coral", "violet", "pink"]
+# Series: 8 parts rotate through brand-family hue pairs (deep, light).
+SERIES_HUES = [
+    (P_BLUE, "#7E9BF7"),
+    (T_CYAN, "#9FEFFC"),
+    ("#04B876", "#86F7CC"),
+    (F_GREEN, "#C9FBE8"),
+    (B_YELLOW, "#FFEB99"),
+    ("#0AA6C4", "#57E2FA"),
+    ("#2E62F1", "#C7D6FB"),
+    ("#03895A", "#3DF3B1"),
+]
 
 
 def m_series_part(n: int):
-    """Mini Search Engine part n: the engine orb + orbit + big numeral."""
-    pal = SERIES_HUES[n - 1]
-    p = PALETTES[pal]
-    defs, body = orb(760, 280, 165, pal, f"mse{n}")
-    b = blob(260, 170, 230, p[2], 0.5, "drift1")
-    b += blob(1000, 500, 240, p[3], 0.65, "drift2")
+    deep, light = SERIES_HUES[n - 1]
+    defs, body = orb(760, 280, 160, f"mse{n}", deep, light)
+    b = blob(260, 170, 220, light, 0.55, "drift1")
+    b += blob(1000, 500, 230, TINTS["green"][2], 0.5, "drift2")
+    b += echo_circle(760, 280, 160, n=3, step=26)
     b += body
-    # orbit ring + satellite
-    b += f'  <g class="spin" style="transform-origin:760px 280px">\n'
-    b += f'    <ellipse cx="760" cy="280" rx="255" ry="92" fill="none" stroke="{p[5]}" stroke-opacity="0.35" stroke-width="2" transform="rotate(-18 760 280)"/>\n'
-    b += f'    <circle cx="1005" cy="215" r="13" fill="{p[4]}"/>\n'
+    b += '  <g class="spin" style="transform-origin:760px 280px">\n'
+    b += (
+        f'    <ellipse cx="760" cy="280" rx="250" ry="90" fill="none" '
+        f'stroke="url(#brand)" stroke-opacity="0.45" stroke-width="2" transform="rotate(-18 760 280)"/>\n'
+    )
+    b += f'    <circle cx="1000" cy="215" r="12" fill="{B_YELLOW}"/>\n'
     b += "  </g>\n"
-    b += spark(600, 120, 46, p[4])
-    # translucent numeral, cropped by the left edge like a magazine folio
+    b += spark(590, 120, 42, T_CYAN)
     b += (
         f'  <text x="60" y="580" font-size="360" font-weight="700" '
-        f'fill="{p[5]}" fill-opacity="0.16" letter-spacing="-12">{n:02d}</text>\n'
+        f'fill="{deep}" fill-opacity="0.14" letter-spacing="-12">{n:02d}</text>\n'
     )
     return defs, b
 
 
 def m_series_cover():
-    """The whole series: one orb, eight hued orbit dots."""
     import math
 
-    defs, body = orb(600, 300, 180, "blue", "mseAll")
-    b = blob(230, 160, 220, PALETTES["blue"][2], 0.5, "drift1")
-    b += blob(1000, 470, 250, PALETTES["teal"][3], 0.6, "drift2")
-    b += blob(600, 560, 190, PALETTES["violet"][3], 0.4, "drift1")
+    defs, body = orb(600, 300, 180, "mseAll", P_BLUE, TINTS["blue"][2])
+    b = blob(230, 160, 210, TINTS["blue"][2], 0.5, "drift1")
+    b += blob(1000, 470, 240, TINTS["green"][1], 0.45, "drift2")
+    b += echo_circle(600, 300, 180, n=4, step=28)
     b += body
     b += '  <g class="spin" style="transform-origin:600px 300px">\n'
-    b += '    <ellipse cx="600" cy="300" rx="330" ry="120" fill="none" stroke="#174EA6" stroke-opacity="0.3" stroke-width="2" transform="rotate(-16 600 300)"/>\n'
-    for i, hue in enumerate(SERIES_HUES):
+    b += (
+        '    <ellipse cx="600" cy="300" rx="330" ry="118" fill="none" '
+        'stroke="url(#brand)" stroke-opacity="0.4" stroke-width="2" transform="rotate(-16 600 300)"/>\n'
+    )
+    for i, (deep, _light) in enumerate(SERIES_HUES):
         ang = i * math.tau / 8
-        x = 600 + 330 * math.cos(ang) * math.cos(-0.28) - 120 * math.sin(ang) * math.sin(-0.28)
-        y = 300 + 330 * math.cos(ang) * math.sin(-0.28) * 0.35 + 120 * math.sin(ang) * math.cos(-0.28)
-        b += f'    <circle cx="{x:.0f}" cy="{y:.0f}" r="12" fill="{PALETTES[hue][4]}"/>\n'
+        x = 600 + 330 * math.cos(ang)
+        y = 300 + 118 * math.sin(ang)
+        b += f'    <circle cx="{x:.0f}" cy="{y:.0f}" r="11" fill="{deep}"/>\n'
     b += "  </g>\n"
-    b += spark(920, 130, 56, PALETTES["blue"][4])
+    b += spark(930, 130, 52, B_YELLOW)
     return defs, b
 
 
 COVERS = {
-    "an-artifact-driven-ai-initiative-blueprint": ("blue", m_blueprint),
-    "why-our-ai-team-failed": ("coral", m_failed),
-    "the-chinese-ai-wisdom": ("amber", m_cn_wisdom),
-    "liu-xiaopai-and-chinese-vibe-code-rush": ("violet", m_liu),
-    "agentic-keyword-clustering": ("teal", m_clustering),
-    "web-crawling-in-search-engines": ("blue", lambda: m_series_part(1)),
-    "designing-the-web-crawler": ("indigo", lambda: m_series_part(2)),
-    "inverted-index": ("teal", lambda: m_series_part(3)),
-    "ranking-with-bm25": ("mint", lambda: m_series_part(4)),
-    "ranking-with-pagerank": ("amber", lambda: m_series_part(5)),
-    "ai-overviews": ("coral", lambda: m_series_part(6)),
-    "neural-reranking-with-bert": ("violet", lambda: m_series_part(7)),
-    "ai-mode": ("pink", lambda: m_series_part(8)),
-    "series-building-a-mini-search-engine": ("blue", m_series_cover),
+    "an-artifact-driven-ai-initiative-blueprint": m_blueprint,
+    "why-our-ai-team-failed": m_failed,
+    "the-chinese-ai-wisdom": m_cn_wisdom,
+    "liu-xiaopai-and-chinese-vibe-code-rush": m_liu,
+    "agentic-keyword-clustering": m_clustering,
+    "web-crawling-in-search-engines": lambda: m_series_part(1),
+    "designing-the-web-crawler": lambda: m_series_part(2),
+    "inverted-index": lambda: m_series_part(3),
+    "ranking-with-bm25": lambda: m_series_part(4),
+    "ranking-with-pagerank": lambda: m_series_part(5),
+    "ai-overviews": lambda: m_series_part(6),
+    "neural-reranking-with-bert": lambda: m_series_part(7),
+    "ai-mode": lambda: m_series_part(8),
+    "series-building-a-mini-search-engine": m_series_cover,
 }
 
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    for slug, (pal, motif) in COVERS.items():
+    for slug, motif in COVERS.items():
         defs, body = motif()
-        (OUT / f"{slug}.svg").write_text(frame(pal, body, defs), encoding="utf-8")
+        (OUT / f"{slug}.svg").write_text(frame(body, defs), encoding="utf-8")
         print("wrote", slug)
 
 
