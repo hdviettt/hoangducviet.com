@@ -25,12 +25,13 @@ function partLabel(title: string, seriesTitle: string): string {
 // with their own cover thumbnails on the right.
 export default function SeriesShowcase({
   item,
-  views,
+  viewCounts,
 }: {
   item: SeriesItem;
-  views: number;
+  viewCounts: Record<string, number>;
 }) {
   const { series, parts } = item;
+  const views = parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   return (
     <section className="mt-16 md:mt-24">
@@ -81,23 +82,40 @@ export default function SeriesShowcase({
           </Link>
         </div>
 
-        {/* Parts — full rows with their own covers, hairline separated */}
-        <div className="divide-y divide-md-outline-variant border-t border-b border-md-outline-variant lg:[&>a:first-child]:pt-0 lg:border-t-0">
+        {/* Parts — full post cards: title, meta, and a big cover each,
+            separated only by hairlines between rows */}
+        <div className="divide-y divide-md-outline-variant lg:[&>a:first-child]:pt-0">
           {parts.map((part, i) => (
             <Link
               key={part.slug}
               href={`/posts/${part.slug}`}
-              className="group flex items-center gap-6 py-6"
+              className="group flex items-center gap-6 py-7 md:py-8"
             >
-              <span className="text-[13px] leading-5 tabular-nums text-md-on-surface-variant shrink-0 w-7">
+              <span className="text-[13px] leading-5 tabular-nums text-md-on-surface-variant shrink-0 w-7 self-start pt-2">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div className="min-w-0 flex-1">
-                <h4 className="text-[19px] leading-7 md:text-[22px] md:leading-8 font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                <h4 className="text-[20px] leading-7 md:text-[24px] md:leading-8 font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                   {partLabel(part.title, series.title)}
                 </h4>
+                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+                  <span className="tabular-nums">
+                    {feedRowDate(part.date_created)}
+                  </span>
+                  {(viewCounts[part.slug] ?? 0) > 0 && (
+                    <ViewCount count={viewCounts[part.slug] ?? 0} />
+                  )}
+                  <span className="inline-flex items-center gap-1.5 text-md-on-surface font-medium">
+                    Read post
+                    <Icon
+                      name="arrow_forward"
+                      size={16}
+                      className="transition-transform duration-200 group-hover:translate-x-0.5"
+                    />
+                  </span>
+                </div>
               </div>
-              <div className="hidden sm:block shrink-0 w-[104px] aspect-square overflow-hidden rounded-2xl bg-md-surface-container">
+              <div className="hidden sm:block shrink-0 w-[150px] md:w-[190px] aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
                 {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
                 <img
                   src={`/covers/${part.slug}.svg`}

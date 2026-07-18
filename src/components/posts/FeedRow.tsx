@@ -31,7 +31,7 @@ export default function FeedRow({
   const cta = isSeries ? "View series" : "Read post";
 
   return (
-    <Link href={href} className="group flex items-start gap-6 py-7 md:py-8">
+    <Link href={href} className="group flex items-center gap-8 py-8 md:py-10">
       <div className="min-w-0 flex-1">
         <h3 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
           {title}
@@ -53,7 +53,7 @@ export default function FeedRow({
         </div>
       </div>
       {thumbnail && (
-        <div className="hidden sm:block shrink-0 w-[128px] md:w-[144px] aspect-square overflow-hidden rounded-2xl bg-md-surface-container">
+        <div className="hidden sm:block shrink-0 w-[180px] md:w-[240px] aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
           {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
           <img
             src={thumbnail}

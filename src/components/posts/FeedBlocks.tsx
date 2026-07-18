@@ -32,8 +32,6 @@ export default function FeedBlocks({
   viewCounts: Record<string, number>;
 }) {
   const blocks = toBlocks(items);
-  const seriesViewTotal = (item: Extract<FeedItem, { kind: "series" }>) =>
-    item.parts.reduce((sum, p) => sum + (viewCounts[p.slug] ?? 0), 0);
 
   return (
     <div>
@@ -42,12 +40,12 @@ export default function FeedBlocks({
           <SeriesShowcase
             key={`series-${block.item.series.slug}`}
             item={block.item}
-            views={seriesViewTotal(block.item)}
+            viewCounts={viewCounts}
           />
         ) : (
           <div
             key={`posts-${i}`}
-            className={`grid md:grid-cols-2 gap-x-16 xl:gap-x-20 border-t border-md-outline-variant [&>a]:border-b [&>a]:border-md-outline-variant ${
+            className={`grid md:grid-cols-2 gap-x-16 xl:gap-x-20 [&>a]:border-md-outline-variant [&>a:not(:first-child)]:border-t md:[&>a:nth-child(2)]:border-t-0 ${
               i > 0 ? "mt-16 md:mt-24" : ""
             }`}
           >
