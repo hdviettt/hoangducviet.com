@@ -133,7 +133,7 @@ export default async function Home() {
       {/* Writing — one chronological feed: post rows in a two-column grid,
           series interrupting with their sticky-rail showcases (FeedBlocks). */}
       <section className="mt-4 md:mt-8">
-        <h2 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-normal tracking-tight text-md-on-surface">
+        <h2 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
           Writing
         </h2>
         <p className="mt-2 md:mt-3 text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal text-md-on-surface-variant max-w-[820px]">

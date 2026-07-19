@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { ViewCount } from "@/components/posts/ViewCount";
-import { Icon } from "@/components/ui/Icon";
 import type { FeedItem } from "@/lib/posts";
 import { feedRowDate } from "./FeedRow";
 
@@ -47,7 +46,7 @@ export default function SeriesShowcase({
             {views > 0 && <ViewCount count={views} />}
           </div>
           <Link href={`/series/${series.slug}`} className="group block mt-3">
-            <h3 className="text-[28px] leading-9 md:text-[42px] md:leading-[48px] font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+            <h3 className="text-[28px] leading-9 md:text-[42px] md:leading-[48px] font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
               {series.title}
             </h3>
           </Link>
@@ -56,21 +55,7 @@ export default function SeriesShowcase({
               {series.summary}
             </p>
           )}
-          <Link
-            href={`/series/${series.slug}`}
-            className="group mt-5 inline-flex items-center gap-1.5 text-[14px] leading-5 font-medium text-md-on-surface hover:text-primary transition-colors duration-200 ease-md-standard"
-          >
-            View series
-            <Icon
-              name="arrow_forward"
-              size={16}
-              className="transition-transform duration-200 group-hover:translate-x-0.5"
-            />
-          </Link>
-          <Link
-            href={`/series/${series.slug}`}
-            className="group mt-6 hidden lg:block"
-          >
+          <Link href={`/series/${series.slug}`} className="group mt-6 block">
             <div className="overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
               {/* biome-ignore lint/a11y/useAltText: decorative cover, title is adjacent */}
               <img
@@ -85,20 +70,25 @@ export default function SeriesShowcase({
         </div>
 
         {/* Parts — the exact FeedRow anatomy, so rail posts read as first-class
-            cards: same title scale, same meta line, same cover size, and the
-            same one-hairline-per-card rule as the rest of the feed. */}
+            cards: same title scale, same description, same meta line, same
+            cover size, and the same one-hairline-per-card rule as the feed. */}
         <div className="[&>a]:border-b [&>a]:border-md-outline-variant lg:[&>a:first-child]:pt-0">
           {parts.map((part, i) => (
             <Link
               key={part.slug}
               href={`/posts/${part.slug}`}
-              className="group flex items-start gap-8 py-8 md:py-10"
+              className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
             >
               <div className="min-w-0 flex-1">
-                <h4 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                <h4 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                   {partLabel(part.title, series.title)}
                 </h4>
-                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+                {part.description && (
+                  <p className="mt-3 text-[16px] leading-[26px] text-md-on-surface-variant">
+                    {part.description}
+                  </p>
+                )}
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
                   <span className="tabular-nums">Part {i + 1}</span>
                   <span className="tabular-nums">
                     {feedRowDate(part.date_created)}
@@ -106,17 +96,9 @@ export default function SeriesShowcase({
                   {(viewCounts[part.slug] ?? 0) > 0 && (
                     <ViewCount count={viewCounts[part.slug] ?? 0} />
                   )}
-                  <span className="inline-flex items-center gap-1.5 text-md-on-surface font-medium">
-                    Read post
-                    <Icon
-                      name="arrow_forward"
-                      size={16}
-                      className="transition-transform duration-200 group-hover:translate-x-0.5"
-                    />
-                  </span>
                 </div>
               </div>
-              <div className="hidden sm:block shrink-0 w-[180px] md:w-[240px] lg:w-[180px] xl:w-[240px] aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+              <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] lg:w-[180px] xl:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
                 {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
                 <img
                   src={`/covers/${part.slug}.svg`}

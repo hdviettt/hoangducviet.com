@@ -145,7 +145,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
             {viewCount > 0 && <ViewCount count={viewCount} />}
           </div>
           <h1
-            className="text-[34px] leading-[1.12] sm:text-[44px] md:text-[54px] md:leading-[1.08] font-normal tracking-tight"
+            className="text-[34px] leading-[1.12] sm:text-[44px] md:text-[54px] md:leading-[1.08] font-medium tracking-tight"
             style={{ color: "var(--article-heading)" }}
           >
             {data.title}

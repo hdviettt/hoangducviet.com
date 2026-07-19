@@ -173,6 +173,7 @@ export type FeedItem =
         title: string;
         date_created: string;
         thumbnail: string | null;
+        description: string | null;
       }[];
       firstDate: string;
       lastDate: string;
@@ -240,6 +241,7 @@ export async function getFeedItems(options?: {
         title: post.title ?? "",
         date_created: dateIso,
         thumbnail: post.thumbnail ?? null,
+        description: post.description ?? null,
       });
       if (dateIso < entry.firstDate) entry.firstDate = dateIso;
       if (dateIso > entry.lastDate) entry.lastDate = dateIso;

@@ -43,7 +43,7 @@ export default async function PostsPage() {
   const viewCounts = await getPostViewCounts(slugs);
 
   return <div className="pt-12 sm:pt-16 md:pt-20 pb-16 md:pb-20">
-      <h1 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-normal tracking-tight text-md-on-surface">
+      <h1 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
         Writing
       </h1>
       <p className="mt-2 md:mt-3 text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal text-md-on-surface-variant max-w-[820px] mb-10 md:mb-14">
