@@ -36,7 +36,10 @@ export default function SeriesShowcase({
 
   return (
     <section className={className}>
-      <div className="lg:grid lg:grid-cols-[6fr_7fr] lg:gap-12 xl:gap-16 items-start">
+      {/* Same 2-col geometry as the regular feed grid (50/50, same gaps) so
+          the parts column's left edge lines up with the right column of the
+          post rows above and below — deepmind.google uses one grid for both. */}
+      <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 xl:gap-x-20 items-start">
         {/* Sticky rail — the series' general identity */}
         <div className="mb-10 lg:mb-0 lg:sticky lg:top-10 lg:self-start">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
