@@ -40,8 +40,10 @@ export default function SeriesShowcase({
           the parts column's left edge lines up with the right column of the
           post rows above and below — deepmind.google uses one grid for both. */}
       <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 xl:gap-x-20 items-start">
-        {/* Sticky rail — the series' general identity */}
-        <div className="mb-10 lg:mb-0 lg:sticky lg:top-10 lg:self-start">
+        {/* Sticky rail — the series' general identity. On mobile the cover
+            moves above the text (order-first) so it reads image→text like
+            every other card, instead of stacking against part 1's cover. */}
+        <div className="mb-10 lg:mb-0 lg:sticky lg:top-10 lg:self-start flex flex-col">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
             <span className="font-medium text-primary">Series</span>
             <span>{parts.length} parts</span>
@@ -58,7 +60,10 @@ export default function SeriesShowcase({
               {series.summary}
             </p>
           )}
-          <Link href={`/series/${series.slug}`} className="group mt-6 block">
+          <Link
+            href={`/series/${series.slug}`}
+            className="group block order-first mb-6 lg:order-none lg:mb-0 lg:mt-6"
+          >
             <div className="overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
               {/* biome-ignore lint/a11y/useAltText: decorative cover, title is adjacent */}
               <img
