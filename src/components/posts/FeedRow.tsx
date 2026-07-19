@@ -54,8 +54,10 @@ export default function FeedRow({
           {views > 0 && <ViewCount count={views} />}
         </div>
       </div>
+      {/* inset hairline ring: near-white SVG covers dissolve into the page
+          background without it — keeps every thumbnail a crisp frame */}
       {thumbnail && (
-        <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+        <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
           {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
           <img
             src={thumbnail}

@@ -56,7 +56,7 @@ export default function SeriesShowcase({
             </p>
           )}
           <Link href={`/series/${series.slug}`} className="group mt-6 block">
-            <div className="overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+            <div className="overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
               {/* biome-ignore lint/a11y/useAltText: decorative cover, title is adjacent */}
               <img
                 src={`/covers/series-${series.slug}.svg`}
@@ -98,7 +98,7 @@ export default function SeriesShowcase({
                   )}
                 </div>
               </div>
-              <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] lg:w-[180px] xl:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+              <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] lg:w-[180px] xl:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
                 {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
                 <img
                   src={`/covers/${part.slug}.svg`}

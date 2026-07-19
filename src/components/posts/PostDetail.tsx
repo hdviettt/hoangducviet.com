@@ -156,7 +156,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
         </header>
 
         {thumbnailUrl && (
-          <div className="mx-auto max-w-[1360px] mb-12 md:mb-16 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container">
+          <div className="mx-auto max-w-[1360px] mb-12 md:mb-16 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
             {/* biome-ignore lint/a11y/useAltText: cover image, title precedes it */}
             <img
               src={thumbnailUrl}
