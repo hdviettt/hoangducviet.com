@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-label="Where the platform's parts execute: half of them never involve a model" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="680" fill="#F7F9FC"/>
+  <text x="64" y="80" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">WHAT THE PLATFORM IS MADE OF, AND WHERE IT RUNS</text>
+  <text x="214" y="140" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1" text-anchor="end">THE PARTS</text>
+  <text x="876" y="140" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">HOW THEY EXECUTE</text>
+  <line x1="64" y1="156" x2="1136" y2="156" stroke="#DDE3EC" stroke-width="1.25"/>
+  <path d="M 227 178.0 C 551.5 178.0, 551.5 178.0, 876 178.0 L 876 242.6 C 551.5 242.6, 551.5 242.6, 227 242.6 Z" fill="#F4DFA6" fill-opacity="0.75"/>
+  <path d="M 227 262.6 C 551.5 262.6, 551.5 242.6, 876 242.6 L 876 351.4 C 551.5 351.4, 551.5 371.4, 227 371.4 Z" fill="#F4DFA6" fill-opacity="0.75"/>
+  <path d="M 227 371.4 C 551.5 371.4, 551.5 395.4, 876 395.4 L 876 500.8 C 551.5 500.8, 551.5 476.8, 227 476.8 Z" fill="#C9D8F7" fill-opacity="0.75"/>
+  <path d="M 227 496.8 C 551.5 496.8, 551.5 500.8, 876 500.8 L 876 572.2 C 551.5 572.2, 551.5 568.2, 227 568.2 Z" fill="#C9D8F7" fill-opacity="0.75"/>
+  <rect x="214" y="178.0" width="13" height="64.6" rx="3" fill="#D9A400"/>
+  <text x="192" y="206.3" font-size="19" font-weight="700" fill="#0A0A0A" text-anchor="end">19 agents</text>
+  <text x="192" y="230.3" font-size="14.5" fill="#8A93A3" text-anchor="end">one Markdown file each</text>
+  <rect x="214" y="262.6" width="13" height="214.2" rx="3" fill="#04B876"/>
+  <text x="192" y="365.7" font-size="19" font-weight="700" fill="#0A0A0A" text-anchor="end">63 skills</text>
+  <text x="192" y="389.7" font-size="14.5" fill="#8A93A3" text-anchor="end">31 of them ship Python</text>
+  <rect x="214" y="496.8" width="13" height="71.4" rx="3" fill="#004AEF"/>
+  <text x="192" y="528.5" font-size="19" font-weight="700" fill="#0A0A0A" text-anchor="end">21 connectors</text>
+  <text x="192" y="552.5" font-size="14.5" fill="#8A93A3" text-anchor="end">never call a model</text>
+  <rect x="876" y="178.0" width="13" height="173.4" rx="3" fill="#D9A400"/>
+  <text x="902" y="260.7" font-size="19" font-weight="700" fill="#0A0A0A">51 parts run with a model</text>
+  <text x="902" y="284.7" font-size="14.5" fill="#8A93A3">judgment, conversation, drafting</text>
+  <rect x="876" y="395.4" width="13" height="176.8" rx="3" fill="#004AEF"/>
+  <text x="902" y="479.8" font-size="19" font-weight="700" fill="#0A0A0A">52 parts never do</text>
+  <text x="902" y="503.8" font-size="14.5" fill="#8A93A3">scripts, connectors, orchestrators</text>
+  <line x1="64" y1="596" x2="1136" y2="596" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="64" y="634" font-size="19" font-weight="700" fill="#0A0A0A">Half the platform never invokes a model.</text>
+  <text x="64" y="660" font-size="15" fill="#8A93A3">That half is what makes the other half affordable. Counted by parts in the repo, not by tokens spent.</text>
+</svg>
