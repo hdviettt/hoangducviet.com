@@ -1,5 +1,3 @@
-import { unstable_cache } from "next/cache";
-
 const POSTHOG_API_HOST =
   process.env.POSTHOG_API_HOST ?? "https://us.posthog.com";
 const PROJECT_ID = process.env.POSTHOG_PROJECT_ID;
@@ -28,11 +26,11 @@ const LEGACY_SLUG_ALIASES: Record<string, string[]> = {
   "ai-mode": ["building-a-mini-search-engine-8-ai-mode"],
 };
 
-// Returns a plain Record (not Map) because unstable_cache JSON-serializes
-// its values — a Map round-trips to {} and loses .get(). Plain objects
-// survive the cache boundary intact.
-async function fetchAllPathCounts(): Promise<Record<string, number>> {
-  if (!PROJECT_ID || !API_KEY) return {};
+// Returns null on failure so callers can tell "PostHog didn't answer"
+// apart from "these paths genuinely have zero views" — the two must not
+// be cached the same way.
+async function fetchAllPathCounts(): Promise<Record<string, number> | null> {
+  if (!PROJECT_ID || !API_KEY) return null;
 
   const query = `
     SELECT properties.$pathname AS path, count() AS c
@@ -56,10 +54,10 @@ async function fetchAllPathCounts(): Promise<Record<string, number>> {
         },
         body: JSON.stringify({ query: { kind: "HogQLQuery", query } }),
         cache: "no-store",
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(8000),
       },
     );
-    if (!res.ok) return {};
+    if (!res.ok) return null;
     const data = (await res.json()) as {
       results?: Array<[string, number]>;
     };
@@ -69,15 +67,44 @@ async function fetchAllPathCounts(): Promise<Record<string, number>> {
     }
     return out;
   } catch {
-    return {};
+    return null;
   }
 }
 
-const getCachedPathCounts = unstable_cache(
-  fetchAllPathCounts,
-  ["posthog-all-paths"],
-  { revalidate: 300, tags: ["posthog-views"] },
-);
+// Module-level cache with stale-while-error semantics. The previous
+// unstable_cache setup stored the empty failure fallback for 5 minutes,
+// so one slow or rate-limited PostHog query blanked every view count on
+// the site until the next revalidation — counts flickered off and on.
+// Now a failed refresh keeps serving the last good data, and failures
+// only retry after a short cooldown instead of on every request.
+const TTL_MS = 5 * 60_000;
+const RETRY_MS = 30_000;
+let cachedCounts: Record<string, number> = {};
+let lastSuccessAt = 0;
+let lastAttemptAt = 0;
+let inflight: Promise<void> | null = null;
+
+async function refreshCounts(): Promise<void> {
+  lastAttemptAt = Date.now();
+  const fresh = await fetchAllPathCounts();
+  if (fresh) {
+    cachedCounts = fresh;
+    lastSuccessAt = Date.now();
+  }
+}
+
+async function getCachedPathCounts(): Promise<Record<string, number>> {
+  const now = Date.now();
+  const isFresh = now - lastSuccessAt < TTL_MS;
+  const isCoolingDown = now - lastAttemptAt < RETRY_MS;
+  if (!isFresh && !isCoolingDown) {
+    inflight ??= refreshCounts().finally(() => {
+      inflight = null;
+    });
+    await inflight;
+  }
+  return cachedCounts;
+}
 
 function totalForSlug(counts: Record<string, number>, slug: string): number {
   if (!/^[a-zA-Z0-9_-]+$/.test(slug)) return 0;
@@ -105,8 +132,9 @@ function totalForSlug(counts: Record<string, number>, slug: string): number {
 /**
  * All-time PostHog `$pageview` count for a single post slug. Includes the
  * current `/posts/<slug>` URL, any `/series/<x>/<slug>` URL, and pre-rename
- * legacy URLs from `LEGACY_SLUG_ALIASES`. Cached 5 minutes globally,
- * fail-silent to 0.
+ * legacy URLs from `LEGACY_SLUG_ALIASES`. Cached 5 minutes globally; when
+ * PostHog fails or times out, the last good counts keep serving (stale)
+ * rather than dropping to 0.
  */
 export async function getPostViewCount(slug: string): Promise<number> {
   const counts = await getCachedPathCounts();
