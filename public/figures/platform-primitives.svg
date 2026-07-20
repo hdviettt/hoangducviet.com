@@ -2,7 +2,7 @@
   <rect width="1200" height="720" fill="#F7F9FC"/>
 
   <!-- ── chain ───────────────────────────────────────────── -->
-  <text x="64" y="86" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">HOW WORK MOVES</text>
+  <text x="64" y="86" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">ONE TASK, IN THE SDK&#8217;S VOCABULARY</text>
 
   <circle cx="70" cy="146" r="4.5" fill="#D9A400"/>
   <text x="86" y="152" font-size="19" font-weight="700" fill="#0A0A0A">Agent</text>
@@ -38,10 +38,10 @@
     <line x1="9" y1="31" x2="20" y2="31" stroke="#D9A400" stroke-width="1.8" stroke-linecap="round"/>
   </g>
   <text x="64" y="356" font-size="25" font-weight="700" fill="#0A0A0A">Agent</text>
-  <text x="64" y="388" font-size="16" font-weight="600" fill="#8A6D00">Judgment</text>
-  <text x="64" y="420" font-size="15.5" fill="#3D4149">A thin job description. It decides</text>
-  <text x="64" y="443" font-size="15.5" fill="#3D4149">which skill the situation calls for,</text>
-  <text x="64" y="466" font-size="15.5" fill="#3D4149">then gets out of the way.</text>
+  <text x="64" y="388" font-size="16" font-weight="600" fill="#8A6D00">The adapter</text>
+  <text x="64" y="420" font-size="15.5" fill="#3D4149">A thin layer that lets a model use</text>
+  <text x="64" y="443" font-size="15.5" fill="#3D4149">the other two. Delete it and the</text>
+  <text x="64" y="466" font-size="15.5" fill="#3D4149">work itself still survives.</text>
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5">
     <text x="64" y="506" fill="#0A0A0A" font-weight="700">agents/publish-article.md</text>
     <text x="64" y="530" fill="#6B7280">model: sonnet</text>
@@ -56,10 +56,10 @@
     <line x1="8" y1="26" x2="28" y2="26" stroke="#04B876" stroke-width="1.8" stroke-linecap="round"/>
   </g>
   <text x="452" y="356" font-size="25" font-weight="700" fill="#0A0A0A">Skill</text>
-  <text x="452" y="388" font-size="16" font-weight="600" fill="#04915D">Know-how</text>
-  <text x="452" y="420" font-size="15.5" fill="#3D4149">The process, the checklist, the</text>
-  <text x="452" y="443" font-size="15.5" fill="#3D4149">rubric, and often the script that</text>
-  <text x="452" y="466" font-size="15.5" fill="#3D4149">executes it end to end.</text>
+  <text x="452" y="388" font-size="16" font-weight="600" fill="#04915D">The asset</text>
+  <text x="452" y="420" font-size="15.5" fill="#3D4149">The steps, the standards, the</text>
+  <text x="452" y="443" font-size="15.5" fill="#3D4149">judgment points. The thing the</text>
+  <text x="452" y="466" font-size="15.5" fill="#3D4149">company is actually accumulating.</text>
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5">
     <text x="452" y="506" fill="#0A0A0A" font-weight="700">skills/wp-publish/</text>
     <text x="468" y="530" fill="#6B7280">SKILL.md</text>
@@ -75,8 +75,8 @@
     <line x1="13" y1="22" x2="27" y2="22" stroke="#004AEF" stroke-width="1.8" stroke-linecap="round"/>
   </g>
   <text x="840" y="356" font-size="25" font-weight="700" fill="#0A0A0A">Tool</text>
-  <text x="840" y="388" font-size="16" font-weight="600" fill="#0038B8">Muscle</text>
-  <text x="840" y="420" font-size="15.5" fill="#3D4149">A pure connector to one outside</text>
+  <text x="840" y="388" font-size="16" font-weight="600" fill="#0038B8">The connector</text>
+  <text x="840" y="420" font-size="15.5" fill="#3D4149">A crude link to one outside</text>
   <text x="840" y="443" font-size="15.5" fill="#3D4149">system. No methodology inside it,</text>
   <text x="840" y="466" font-size="15.5" fill="#3D4149">and it never calls a model.</text>
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5">
@@ -88,6 +88,6 @@
 
   <!-- ── punchline ───────────────────────────────────────── -->
   <line x1="64" y1="640" x2="1136" y2="640" stroke="#DDE3EC" stroke-width="1.25"/>
-  <text x="64" y="678" font-size="19" font-weight="700" fill="#0A0A0A">Skills are mandatory. Agents are optional.</text>
-  <text x="596" y="678" font-size="15.5" fill="#8A93A3">Which is why the platform holds 63 of one and 19 of the other.</text>
+  <text x="64" y="678" font-size="19" font-weight="700" fill="#0A0A0A">Only one of the three is the asset.</text>
+  <text x="520" y="678" font-size="15.5" fill="#8A93A3">Which is why the platform holds 63 skills and only 19 agents.</text>
 </svg>
