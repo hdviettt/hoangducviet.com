@@ -11,35 +11,40 @@
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
-    <clipPath id="revealExp"><rect class="clipExp" x="380" y="180" width="0" height="300"/></clipPath>
-    <clipPath id="revealAct"><rect class="clipAct" x="380" y="130" width="0" height="350"/></clipPath>
     <style>
-      /* 11s loop: the plan said costs go DOWN as bots join the team; the
-         line that actually got drawn went UP, one bot at a time.
-         Yellow-led palette: this is the warning-sign cover of the set. */
-      .clipExp { animation: exp 11s ease-in-out infinite; }
-      @keyframes exp { 0%, 8% { width: 0; } 22% { width: 460px; } 94% { width: 460px; } 99%, 100% { width: 0; } }
-      .clipAct { animation: act 11s ease-in-out infinite; }
-      @keyframes act { 0%, 24% { width: 0; } 52% { width: 460px; } 94% { width: 460px; } 99%, 100% { width: 0; } }
-      .bot1, .bot2, .bot3, .peak, .exdown { opacity: 0; transform-box: fill-box; transform-origin: center; }
-      .bot1 { animation: pop1 11s ease-out infinite; }
-      .bot2 { animation: pop2 11s ease-out infinite; }
-      .bot3 { animation: pop3 11s ease-out infinite; }
-      @keyframes pop1 { 0%, 28% { opacity: 0; transform: scale(0.6); } 32% { opacity: 1; transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
-      @keyframes pop2 { 0%, 37% { opacity: 0; transform: scale(0.6); } 41% { opacity: 1; transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
-      @keyframes pop3 { 0%, 46% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
-      .exdown { animation: exd 11s ease-out infinite; }
-      @keyframes exd { 0%, 20% { opacity: 0; } 24% { opacity: 1; } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
-      .peak { animation: pk 11s ease-out infinite; }
-      @keyframes pk { 0%, 52% { opacity: 0; transform: scale(0.4); } 57% { opacity: 1; transform: scale(1.15); } 62% { transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
+      /* 11s loop: the AI bot joins a two-person team (green spark of hope).
+         Then, instead of the team shrinking, MORE people keep joining and
+         the money stack keeps climbing — until the yellow warning pops.
+         Yellow-led palette: the warning-sign cover of the set. */
+      .bot, .hope, .p3, .p4, .p5, .m3, .m4, .m5, .m6, .warn { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      .bot { animation: bt 11s ease-out infinite; }
+      @keyframes bt { 0%, 6% { opacity: 0; transform: translateY(10px) scale(0.85); } 10% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      .hope { animation: hp 11s ease-out infinite; }
+      @keyframes hp { 0%, 10% { opacity: 0; transform: scale(0.4); } 14% { opacity: 1; transform: scale(1.1); } 18% { opacity: 1; transform: scale(1); } 24% { opacity: 0; transform: scale(0.6); } 100% { opacity: 0; } }
+      .p3 { animation: pp3 11s ease-out infinite; }
+      .p4 { animation: pp4 11s ease-out infinite; }
+      .p5 { animation: pp5 11s ease-out infinite; }
+      @keyframes pp3 { 0%, 20% { opacity: 0; transform: translateY(10px) scale(0.85); } 24% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      @keyframes pp4 { 0%, 30% { opacity: 0; transform: translateY(10px) scale(0.85); } 34% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      @keyframes pp5 { 0%, 40% { opacity: 0; transform: translateY(10px) scale(0.85); } 44% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      .m3 { animation: mm3 11s ease-out infinite; }
+      .m4 { animation: mm4 11s ease-out infinite; }
+      .m5 { animation: mm5 11s ease-out infinite; }
+      .m6 { animation: mm6 11s ease-out infinite; }
+      @keyframes mm3 { 0%, 24% { opacity: 0; transform: translateY(8px); } 28% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      @keyframes mm4 { 0%, 34% { opacity: 0; transform: translateY(8px); } 38% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      @keyframes mm5 { 0%, 44% { opacity: 0; transform: translateY(8px); } 48% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      @keyframes mm6 { 0%, 50% { opacity: 0; transform: translateY(8px); } 54% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      .warn { animation: wr 11s ease-out infinite; }
+      @keyframes wr { 0%, 56% { opacity: 0; transform: scale(0.4); } 61% { opacity: 1; transform: scale(1.15); } 66% { transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
       .drift1 { animation: d1 20s ease-in-out infinite alternate; }
       .drift2 { animation: d2 26s ease-in-out infinite alternate; }
       @keyframes d1 { to { transform: translate(20px, -14px); } }
       @keyframes d2 { to { transform: translate(-16px, 12px); } }
       @media (prefers-reduced-motion: reduce) {
         * { animation: none !important; }
-        .clipExp, .clipAct { width: 460px; }
-        .bot1, .bot2, .bot3, .peak, .exdown { opacity: 1; }
+        .bot, .p3, .p4, .p5, .m3, .m4, .m5, .m6, .warn { opacity: 1; }
+        .hope { opacity: 0; }
       }
     </style>
   </defs>
@@ -48,55 +53,58 @@
   <circle class="drift1" cx="230" cy="480" r="200" fill="#FFE58A" fill-opacity="0.55" filter="url(#soft)"/>
   <circle class="drift2" cx="1010" cy="150" r="190" fill="#B8C9FF" fill-opacity="0.45" filter="url(#soft)"/>
 
-  <!-- chart card, echoed -->
-  <rect x="352" y="162" width="560" height="360" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.16" stroke-width="2.5"/>
-  <rect x="336" y="146" width="560" height="360" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.32" stroke-width="2.5"/>
-  <rect x="320" y="130" width="560" height="360" rx="24" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
+  <!-- the team card, echoed -->
+  <rect x="352" y="172" width="560" height="350" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.16" stroke-width="2.5"/>
+  <rect x="336" y="156" width="560" height="350" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.32" stroke-width="2.5"/>
+  <rect x="320" y="140" width="560" height="350" rx="24" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="360" y1="340" x2="840" y2="340" stroke="#E1E6EC" stroke-width="2"/>
 
-  <!-- axes -->
-  <line x1="380" y1="180" x2="380" y2="440" stroke="#E1E6EC" stroke-width="2.5"/>
-  <line x1="380" y1="440" x2="850" y2="440" stroke="#E1E6EC" stroke-width="2.5"/>
+  <!-- the team it started with -->
+  <circle cx="390" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.9"/>
+  <rect x="364" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.9"/>
+  <circle cx="466" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.7"/>
+  <rect x="440" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.7"/>
 
-  <!-- the plan: costs drift down (dashed) -->
-  <g clip-path="url(#revealExp)">
-    <path d="M 380 260 C 500 270, 640 300, 830 350" fill="none" stroke="#9AA4B6" stroke-width="4" stroke-dasharray="12 10" stroke-linecap="round"/>
+  <!-- the bot that was going to fix everything -->
+  <g class="bot">
+    <line x1="542" y1="238" x2="542" y2="228" stroke="#0fd6f7" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="542" cy="224" r="4" fill="#0fd6f7"/>
+    <rect x="524" y="244" width="36" height="32" rx="9" fill="url(#brand)"/>
+    <circle cx="534" cy="258" r="3.5" fill="#FFFFFF"/>
+    <circle cx="550" cy="258" r="3.5" fill="#FFFFFF"/>
+    <rect x="516" y="286" width="52" height="40" rx="15" fill="url(#brand)"/>
   </g>
-  <g class="exdown">
-    <circle cx="830" cy="350" r="7" fill="#9AA4B6"/>
-    <path d="M 852 342 L 852 362 M 845 355 L 852 363 L 859 355" fill="none" stroke="#9AA4B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-
-  <!-- reality: costs climb (solid, brand) -->
-  <g clip-path="url(#revealAct)">
-    <path d="M 380 420 C 480 410, 560 380, 640 330 C 720 280, 780 230, 830 190" fill="none" stroke="url(#brand)" stroke-width="6" stroke-linecap="round"/>
-  </g>
-
-  <!-- each bump = one more bot on the team -->
-  <g class="bot1">
-    <rect x="475" y="340" width="52" height="44" rx="12" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="2"/>
-    <circle cx="501" cy="336" r="4" fill="#0fd6f7"/>
-    <circle cx="491" cy="360" r="4.5" fill="#004aef"/>
-    <circle cx="511" cy="360" r="4.5" fill="#004aef"/>
-    <rect x="491" y="371" width="20" height="4" rx="2" fill="#9AA4B6"/>
-  </g>
-  <g class="bot2">
-    <rect x="600" y="255" width="52" height="44" rx="12" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="2"/>
-    <circle cx="626" cy="251" r="4" fill="#0fd6f7"/>
-    <circle cx="616" cy="275" r="4.5" fill="#004aef"/>
-    <circle cx="636" cy="275" r="4.5" fill="#004aef"/>
-    <rect x="616" y="286" width="20" height="4" rx="2" fill="#9AA4B6"/>
-  </g>
-  <g class="bot3">
-    <rect x="725" y="165" width="52" height="44" rx="12" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="2"/>
-    <circle cx="751" cy="161" r="4" fill="#0fd6f7"/>
-    <circle cx="741" cy="185" r="4.5" fill="#004aef"/>
-    <circle cx="761" cy="185" r="4.5" fill="#004aef"/>
-    <rect x="741" y="196" width="20" height="4" rx="2" fill="#9AA4B6"/>
+  <g class="hope">
+    <path d="M 588 196 Q 593.6 213.6 610 218.5 Q 593.6 223.4 588 241 Q 582.4 223.4 566 218.5 Q 582.4 213.6 588 196 Z" fill="#07ef9c"/>
   </g>
 
-  <!-- the peak: the yellow warning where the line ends up -->
-  <g class="peak">
-    <circle cx="830" cy="190" r="9" fill="#ffce00"/>
-    <path d="M 830 128 Q 837 148.4 857 154 Q 837 159.6 830 180 Q 823 159.6 803 154 Q 823 148.4 830 128 Z" fill="#ffce00"/>
+  <!-- ...and the people who kept arriving anyway -->
+  <g class="p3">
+    <circle cx="618" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.8"/>
+    <rect x="592" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.8"/>
+  </g>
+  <g class="p4">
+    <circle cx="694" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.65"/>
+    <rect x="668" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.65"/>
+  </g>
+  <g class="p5">
+    <circle cx="770" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.5"/>
+    <rect x="744" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.5"/>
+  </g>
+
+  <!-- the money stack that kept climbing -->
+  <rect x="806" y="452" width="52" height="16" rx="8" fill="#7E9BF7" fill-opacity="0.8"/>
+  <rect x="806" y="432" width="52" height="16" rx="8" fill="#86F7CC"/>
+  <g class="m3"><rect x="806" y="412" width="52" height="16" rx="8" fill="#7E9BF7" fill-opacity="0.8"/></g>
+  <g class="m4"><rect x="806" y="392" width="52" height="16" rx="8" fill="#86F7CC"/></g>
+  <g class="m5"><rect x="806" y="372" width="52" height="16" rx="8" fill="#7E9BF7" fill-opacity="0.8"/></g>
+  <g class="m6">
+    <rect x="806" y="352" width="52" height="16" rx="8" fill="#FFD84D"/>
+    <text x="832" y="345" font-size="22" font-weight="700" fill="#B98A00" text-anchor="middle">$</text>
+  </g>
+
+  <!-- the verdict -->
+  <g class="warn">
+    <path d="M 880 268 Q 887 288.4 907 294 Q 887 299.6 880 320 Q 873 299.6 853 294 Q 873 288.4 880 268 Z" fill="#ffce00"/>
   </g>
 </svg>
