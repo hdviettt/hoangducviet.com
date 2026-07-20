@@ -25,14 +25,25 @@ travel (offset-path), breathe/pulse (scale nhỏ), absorb (translate+fade).
 **Luật cũ vẫn giữ:** Khối focal phải minh họa
 được nội dung bài — người xem chưa đọc title vẫn đoán ra bài nói về gì
 (crawling = mạng trang liên kết, inverted index = term trỏ tới docs, AIO = thẻ
-SERP có answer card...). Không trừu tượng suông, không chữ nghĩa, không
-stock/AI-art. Ba lớp cố định:
+SERP có answer card...). Không trừu tượng suông, không stock/AI-art. Chữ được
+phép khi chữ LÀ chủ đề (keyword chips thật, hán tự, code) — không dùng chữ để
+chú thích.
 
-1. **Nền gradient sáng** — hai tông pastel cùng họ, chéo nhẹ.
-2. **Blob màu mờ** — 2-3 hình tròn lớn qua Gaussian blur (stdDev ~55), trôi rất chậm.
-3. **Khối focal sắc nét minh họa chủ đề** — lắp từ vocabulary có sẵn trong
-   generate.py: `page_tile` (trang/tài liệu), `app_window`, `node`/`link`
-   (đồ thị), capsule, orb, chat bubble, magnifier. MỘT ý mỗi cover, không nhồi.
+### Đa dạng có kỷ luật (v5.1)
+
+Identity nằm ở **palette + echo outlines + motion grammar + radius 24** —
+KHÔNG nằm ở một layout/gradient cố định. Trước v5.1 mọi cover dùng chung một
+nền blue→green hai blob nên cả feed bị một màu; giờ:
+
+- **Bài lẻ (standalone): mỗi bài một MÀU CHỦ ĐẠO** trong 4 màu brand, quyết
+  định wash nền + focal của riêng nó (failed = yellow cảnh báo, clustering =
+  blue, vibe-code = cyan + editor tối, cn-wisdom = green). Bố cục cũng tự do:
+  chart, cụm chip, cửa sổ code, chữ lớn — miễn kể đúng chủ đề.
+- **Series: các part CHUNG một design style** (motif định danh + numeral),
+  cover series là motif gốc. Đây là nơi duy nhất yêu cầu đồng nhất về style.
+- Ba lớp nền sáng / blob mờ / focal sắc nét vẫn là khung mặc định, nhưng tông
+  màu và bố cục phải đổi theo bài; một surface tối (editor code) được phép làm
+  focal nếu nội dung cần, nền tổng thể vẫn sáng.
 
 ### Palette — brand SEONGON
 

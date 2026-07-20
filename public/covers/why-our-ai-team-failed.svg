@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+      <stop offset="0" stop-color="#FFFCF0"/>
+      <stop offset="1" stop-color="#FFF6D9"/>
     </linearGradient>
     <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
       <stop offset="0" stop-color="#004aef"/>
@@ -11,58 +11,92 @@
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="55"/>
     </filter>
+    <clipPath id="revealExp"><rect class="clipExp" x="380" y="180" width="0" height="300"/></clipPath>
+    <clipPath id="revealAct"><rect class="clipAct" x="380" y="130" width="0" height="350"/></clipPath>
     <style>
-      /* 12s loop: five pillars stand; four fade to outlines one after
-         another; the one that held takes the weight. */
-      .g1 { animation: ghost 12s ease-in-out infinite; }
-      .g2 { animation: ghost 12s ease-in-out infinite; animation-delay: 1.1s; }
-      .g3 { animation: ghost 12s ease-in-out infinite; animation-delay: 2.2s; }
-      .g4 { animation: ghost 12s ease-in-out infinite; animation-delay: 3.3s; }
-      @keyframes ghost {
-        0%, 18% { opacity: 1; }
-        26% { opacity: 0; }
-        90% { opacity: 0; }
-        97%, 100% { opacity: 1; }
-      }
-      .survivor { animation: hold 12s ease-in-out infinite; }
-      @keyframes hold {
-        0%, 58% { transform: translateY(0); }
-        63% { transform: translateY(-12px); }
-        68%, 100% { transform: translateY(0); }
-      }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
+      /* 11s loop: the plan said costs go DOWN as bots join the team; the
+         line that actually got drawn went UP, one bot at a time.
+         Yellow-led palette: this is the warning-sign cover of the set. */
+      .clipExp { animation: exp 11s ease-in-out infinite; }
+      @keyframes exp { 0%, 8% { width: 0; } 22% { width: 460px; } 94% { width: 460px; } 99%, 100% { width: 0; } }
+      .clipAct { animation: act 11s ease-in-out infinite; }
+      @keyframes act { 0%, 24% { width: 0; } 52% { width: 460px; } 94% { width: 460px; } 99%, 100% { width: 0; } }
+      .bot1, .bot2, .bot3, .peak, .exdown { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      .bot1 { animation: pop1 11s ease-out infinite; }
+      .bot2 { animation: pop2 11s ease-out infinite; }
+      .bot3 { animation: pop3 11s ease-out infinite; }
+      @keyframes pop1 { 0%, 28% { opacity: 0; transform: scale(0.6); } 32% { opacity: 1; transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
+      @keyframes pop2 { 0%, 37% { opacity: 0; transform: scale(0.6); } 41% { opacity: 1; transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
+      @keyframes pop3 { 0%, 46% { opacity: 0; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
+      .exdown { animation: exd 11s ease-out infinite; }
+      @keyframes exd { 0%, 20% { opacity: 0; } 24% { opacity: 1; } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
+      .peak { animation: pk 11s ease-out infinite; }
+      @keyframes pk { 0%, 52% { opacity: 0; transform: scale(0.4); } 57% { opacity: 1; transform: scale(1.15); } 62% { transform: scale(1); } 93% { opacity: 1; } 98%, 100% { opacity: 0; } }
+      .drift1 { animation: d1 20s ease-in-out infinite alternate; }
+      .drift2 { animation: d2 26s ease-in-out infinite alternate; }
+      @keyframes d1 { to { transform: translate(20px, -14px); } }
+      @keyframes d2 { to { transform: translate(-16px, 12px); } }
       @media (prefers-reduced-motion: reduce) {
         * { animation: none !important; }
-        .g1, .g2, .g3, .g4 { opacity: 0; }
+        .clipExp, .clipAct { width: 460px; }
+        .bot1, .bot2, .bot3, .peak, .exdown { opacity: 1; }
       }
     </style>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="180" r="220" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
-  <circle class="drift2" cx="960" cy="460" r="250" fill="#86F7CC" fill-opacity="0.4" filter="url(#soft)"/>
+  <circle class="drift1" cx="230" cy="480" r="200" fill="#FFE58A" fill-opacity="0.55" filter="url(#soft)"/>
+  <circle class="drift2" cx="1010" cy="150" r="190" fill="#B8C9FF" fill-opacity="0.45" filter="url(#soft)"/>
 
-  <!-- outlines: what remains when a pillar gives way -->
-  <rect x="200" y="199" width="100" height="256" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
-  <rect x="355" y="169" width="100" height="286" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
-  <rect x="510" y="139" width="100" height="316" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
-  <rect x="820" y="169" width="100" height="286" rx="50" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
+  <!-- chart card, echoed -->
+  <rect x="352" y="162" width="560" height="360" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.16" stroke-width="2.5"/>
+  <rect x="336" y="146" width="560" height="360" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.32" stroke-width="2.5"/>
+  <rect x="320" y="130" width="560" height="360" rx="24" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
 
-  <!-- the four that were missed (fade away in turn) -->
-  <rect class="g1" x="200" y="199" width="100" height="256" rx="50" fill="url(#brand)"/>
-  <rect class="g2" x="355" y="169" width="100" height="286" rx="50" fill="url(#brand)"/>
-  <rect class="g3" x="510" y="139" width="100" height="316" rx="50" fill="url(#brand)"/>
-  <rect class="g4" x="820" y="169" width="100" height="286" rx="50" fill="url(#brand)"/>
+  <!-- axes -->
+  <line x1="380" y1="180" x2="380" y2="440" stroke="#E1E6EC" stroke-width="2.5"/>
+  <line x1="380" y1="440" x2="850" y2="440" stroke="#E1E6EC" stroke-width="2.5"/>
 
-  <!-- the one that held -->
-  <rect class="survivor" x="665" y="139" width="100" height="316" rx="50" fill="url(#brand)"/>
+  <!-- the plan: costs drift down (dashed) -->
+  <g clip-path="url(#revealExp)">
+    <path d="M 380 260 C 500 270, 640 300, 830 350" fill="none" stroke="#9AA4B6" stroke-width="4" stroke-dasharray="12 10" stroke-linecap="round"/>
+  </g>
+  <g class="exdown">
+    <circle cx="830" cy="350" r="7" fill="#9AA4B6"/>
+    <path d="M 852 342 L 852 362 M 845 355 L 852 363 L 859 355" fill="none" stroke="#9AA4B6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 
-  <g class="sparkle">
-    <path d="M 1014 136 Q 1022.8 163.6 1050 172 Q 1022.8 180.4 1014 208 Q 1005.2 180.4 978 172 Q 1005.2 163.6 1014 136 Z" fill="#0fd6f7"/>
+  <!-- reality: costs climb (solid, brand) -->
+  <g clip-path="url(#revealAct)">
+    <path d="M 380 420 C 480 410, 560 380, 640 330 C 720 280, 780 230, 830 190" fill="none" stroke="url(#brand)" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <!-- each bump = one more bot on the team -->
+  <g class="bot1">
+    <rect x="475" y="340" width="52" height="44" rx="12" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="2"/>
+    <circle cx="501" cy="336" r="4" fill="#0fd6f7"/>
+    <circle cx="491" cy="360" r="4.5" fill="#004aef"/>
+    <circle cx="511" cy="360" r="4.5" fill="#004aef"/>
+    <rect x="491" y="371" width="20" height="4" rx="2" fill="#9AA4B6"/>
+  </g>
+  <g class="bot2">
+    <rect x="600" y="255" width="52" height="44" rx="12" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="2"/>
+    <circle cx="626" cy="251" r="4" fill="#0fd6f7"/>
+    <circle cx="616" cy="275" r="4.5" fill="#004aef"/>
+    <circle cx="636" cy="275" r="4.5" fill="#004aef"/>
+    <rect x="616" y="286" width="20" height="4" rx="2" fill="#9AA4B6"/>
+  </g>
+  <g class="bot3">
+    <rect x="725" y="165" width="52" height="44" rx="12" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="2"/>
+    <circle cx="751" cy="161" r="4" fill="#0fd6f7"/>
+    <circle cx="741" cy="185" r="4.5" fill="#004aef"/>
+    <circle cx="761" cy="185" r="4.5" fill="#004aef"/>
+    <rect x="741" y="196" width="20" height="4" rx="2" fill="#9AA4B6"/>
+  </g>
+
+  <!-- the peak: the yellow warning where the line ends up -->
+  <g class="peak">
+    <circle cx="830" cy="190" r="9" fill="#ffce00"/>
+    <path d="M 830 128 Q 837 148.4 857 154 Q 837 159.6 830 180 Q 823 159.6 803 154 Q 823 148.4 830 128 Z" fill="#ffce00"/>
   </g>
 </svg>

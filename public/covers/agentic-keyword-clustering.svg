@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+      <stop offset="0" stop-color="#EDF3FF"/>
+      <stop offset="1" stop-color="#FBFDFF"/>
     </linearGradient>
     <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
       <stop offset="0" stop-color="#004aef"/>
@@ -12,92 +12,95 @@
       <feGaussianBlur stdDeviation="55"/>
     </filter>
     <style>
-      /* 12s loop: scattered keywords fly into their clusters; the hulls
-         close around them; the outliers stay behind — that's HDBSCAN. */
-      .cg1 { animation: gather1 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      .cg2 { animation: gather2 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      .cg3 { animation: gather3 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes gather1 {
-        0%, 10% { transform: translate(-390px, -30px); }
-        30% { transform: translate(0, 0); }
-        90% { transform: translate(0, 0); }
-        97%, 100% { transform: translate(-390px, -30px); }
-      }
-      @keyframes gather2 {
-        0%, 16% { transform: translate(-600px, -240px); }
-        38% { transform: translate(0, 0); }
-        90% { transform: translate(0, 0); }
-        97%, 100% { transform: translate(-600px, -240px); }
-      }
-      @keyframes gather3 {
-        0%, 22% { transform: translate(-90px, -270px); }
-        46% { transform: translate(0, 0); }
-        90% { transform: translate(0, 0); }
-        97%, 100% { transform: translate(-90px, -270px); }
-      }
-      .h1, .h2, .h3 { opacity: 0; }
-      .h1 { animation: hull 12s ease-out infinite; }
-      .h2 { animation: hull 12s ease-out infinite; animation-delay: 0.96s; }
-      .h3 { animation: hull 12s ease-out infinite; animation-delay: 1.92s; }
-      @keyframes hull {
-        0%, 32% { opacity: 0; }
-        40% { opacity: 1; }
-        88% { opacity: 1; }
-        95%, 100% { opacity: 0; }
-      }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
+      /* 12s loop: real Vietnamese keywords fly out of the scatter into three
+         intent bands (learn / compare / buy). One keyword is a different
+         product entirely — it stays behind and dims: that's the noise
+         cluster. Blue-led palette. */
+      .c1 { animation: m1 12s ease-in-out infinite; }
+      .c2 { animation: m2 12s ease-in-out infinite; }
+      .c3 { animation: m3 12s ease-in-out infinite; }
+      .c4 { animation: m4 12s ease-in-out infinite; }
+      .c5 { animation: m5 12s ease-in-out infinite; }
+      .c6 { animation: m6 12s ease-in-out infinite; }
+      @keyframes m1 { 0%, 16% { transform: rotate(-4deg); } 24% { transform: translate(90px, 215px) rotate(0deg); } 94% { transform: translate(90px, 215px) rotate(0deg); } 100% { transform: rotate(-4deg); } }
+      @keyframes m2 { 0%, 22% { transform: rotate(3deg); } 30% { transform: translate(58px, 165px) rotate(0deg); } 94% { transform: translate(58px, 165px) rotate(0deg); } 100% { transform: rotate(3deg); } }
+      @keyframes m3 { 0%, 28% { transform: rotate(-3deg); } 36% { transform: translate(-30px, 201px) rotate(0deg); } 94% { transform: translate(-30px, 201px) rotate(0deg); } 100% { transform: rotate(-3deg); } }
+      @keyframes m4 { 0%, 34% { transform: rotate(5deg); } 42% { transform: translate(-68px, 321px) rotate(0deg); } 94% { transform: translate(-68px, 321px) rotate(0deg); } 100% { transform: rotate(5deg); } }
+      @keyframes m5 { 0%, 40% { transform: rotate(-5deg); } 48% { transform: translate(70px, 332px) rotate(0deg); } 94% { transform: translate(70px, 332px) rotate(0deg); } 100% { transform: rotate(-5deg); } }
+      @keyframes m6 { 0%, 46% { transform: rotate(4deg); } 54% { transform: translate(-2px, 287px) rotate(0deg); } 94% { transform: translate(-2px, 287px) rotate(0deg); } 100% { transform: rotate(4deg); } }
+      .c1, .c2, .c3, .c4, .c5, .c6, .noise { transform-box: fill-box; transform-origin: center; }
+      .noise { animation: nz 12s ease-in-out infinite; }
+      @keyframes nz { 0%, 55% { transform: rotate(6deg); opacity: 1; } 60% { transform: rotate(2deg) translate(6px, 0); } 65% { transform: rotate(8deg) translate(-4px, 0); } 72% { transform: rotate(6deg); opacity: 0.45; } 94% { opacity: 0.45; } 100% { transform: rotate(6deg); opacity: 1; } }
+      .row1 { animation: r1 12s ease-out infinite; }
+      .row2 { animation: r2 12s ease-out infinite; }
+      .row3 { animation: r3 12s ease-out infinite; }
+      @keyframes r1 { 0%, 22% { stroke-opacity: 0; } 26% { stroke-opacity: 0.9; } 34%, 100% { stroke-opacity: 0; } }
+      @keyframes r2 { 0%, 40% { stroke-opacity: 0; } 44% { stroke-opacity: 0.9; } 52%, 100% { stroke-opacity: 0; } }
+      @keyframes r3 { 0%, 52% { stroke-opacity: 0; } 56% { stroke-opacity: 0.9; } 64%, 100% { stroke-opacity: 0; } }
+      .drift1 { animation: d1 20s ease-in-out infinite alternate; }
+      .drift2 { animation: d2 26s ease-in-out infinite alternate; }
+      @keyframes d1 { to { transform: translate(18px, -12px); } }
+      @keyframes d2 { to { transform: translate(-14px, 12px); } }
       @media (prefers-reduced-motion: reduce) {
         * { animation: none !important; }
-        .h1, .h2, .h3 { opacity: 1; }
+        .c1 { transform: translate(90px, 215px); }
+        .c2 { transform: translate(58px, 165px); }
+        .c3 { transform: translate(-30px, 201px); }
+        .c4 { transform: translate(-68px, 321px); }
+        .c5 { transform: translate(70px, 332px); }
+        .c6 { transform: translate(-2px, 287px); }
+        .noise { opacity: 0.45; }
       }
     </style>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="660" cy="210" r="190" fill="#9FEFFC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift2" cx="880" cy="440" r="180" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift1" cx="240" cy="180" r="200" fill="#B8C9FF" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="480" r="200" fill="#9FEFFC" fill-opacity="0.45" filter="url(#soft)"/>
 
-  <!-- outliers: the noise that never joins a cluster -->
-  <g fill="#7E9BF7" fill-opacity="0.45">
-    <circle cx="150" cy="120" r="5"/><circle cx="230" cy="90" r="5"/><circle cx="320" cy="140" r="5"/>
-    <circle cx="180" cy="210" r="5"/><circle cx="285" cy="250" r="5"/><circle cx="140" cy="300" r="5"/>
-    <circle cx="360" cy="80" r="5"/><circle cx="410" cy="180" r="5"/>
+  <!-- intent bands, echoed on the last one -->
+  <rect class="row1" x="300" y="296" width="600" height="84" rx="20" fill="#E7EEFF" stroke="#004aef" stroke-opacity="0" stroke-width="2.5"/>
+  <rect class="row2" x="300" y="392" width="600" height="84" rx="20" fill="#E0F9FE" stroke="#0fd6f7" stroke-opacity="0" stroke-width="2.5"/>
+  <rect x="332" y="520" width="600" height="84" rx="20" fill="none" stroke="url(#brand)" stroke-opacity="0.28" stroke-width="2.5"/>
+  <rect class="row3" x="300" y="488" width="600" height="84" rx="20" fill="#E2FCF1" stroke="#07ef9c" stroke-opacity="0" stroke-width="2.5"/>
+
+  <!-- band labels: colored dot + label bar -->
+  <circle cx="332" cy="338" r="7" fill="#004aef"/>
+  <rect x="348" y="333" width="54" height="10" rx="5" fill="#004aef" fill-opacity="0.45"/>
+  <circle cx="332" cy="434" r="7" fill="#0fd6f7"/>
+  <rect x="348" y="429" width="54" height="10" rx="5" fill="#0fd6f7" fill-opacity="0.5"/>
+  <circle cx="332" cy="530" r="7" fill="#07ef9c"/>
+  <rect x="348" y="525" width="54" height="10" rx="5" fill="#07ef9c" fill-opacity="0.55"/>
+
+  <!-- keywords: scattered, then clustered -->
+  <g class="c1">
+    <rect x="330" y="100" width="232" height="46" rx="23" fill="#FFFFFF" stroke="#D7DEEA" stroke-width="1.5"/>
+    <text x="446" y="130" font-size="24" font-weight="500" fill="#3A3F4B" text-anchor="middle">máy lọc nước là gì</text>
+  </g>
+  <g class="c2">
+    <rect x="600" y="150" width="226" height="46" rx="23" fill="#FFFFFF" stroke="#D7DEEA" stroke-width="1.5"/>
+    <text x="713" y="180" font-size="24" font-weight="500" fill="#3A3F4B" text-anchor="middle">cách chọn máy lọc</text>
+  </g>
+  <g class="c3">
+    <rect x="450" y="210" width="168" height="46" rx="23" fill="#FFFFFF" stroke="#D7DEEA" stroke-width="1.5"/>
+    <text x="534" y="240" font-size="24" font-weight="500" fill="#3A3F4B" text-anchor="middle">loại nào tốt</text>
+  </g>
+  <g class="c4">
+    <rect x="700" y="90" width="224" height="46" rx="23" fill="#FFFFFF" stroke="#D7DEEA" stroke-width="1.5"/>
+    <text x="812" y="120" font-size="24" font-weight="500" fill="#3A3F4B" text-anchor="middle">review máy lọc RO</text>
+  </g>
+  <g class="c5">
+    <rect x="350" y="175" width="212" height="46" rx="23" fill="#FFFFFF" stroke="#D7DEEA" stroke-width="1.5"/>
+    <text x="456" y="205" font-size="24" font-weight="500" fill="#3A3F4B" text-anchor="middle">giá máy lọc nước</text>
+  </g>
+  <g class="c6">
+    <rect x="640" y="220" width="214" height="46" rx="23" fill="#FFFFFF" stroke="#D7DEEA" stroke-width="1.5"/>
+    <text x="747" y="250" font-size="24" font-weight="500" fill="#3A3F4B" text-anchor="middle">mua máy lọc nước</text>
   </g>
 
-  <!-- cluster 1: gathers mid-right -->
-  <g class="cg1">
-    <g fill="#004aef">
-      <circle cx="630" cy="180" r="6"/><circle cx="668" cy="164" r="6"/><circle cx="700" cy="196" r="6"/>
-      <circle cx="648" cy="222" r="6"/><circle cx="690" cy="238" r="6"/><circle cx="616" cy="252" r="6"/>
-      <circle cx="662" cy="200" r="6"/><circle cx="636" cy="212" r="6"/>
-    </g>
-  </g>
-  <circle class="h1" cx="658" cy="208" r="92" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
-
-  <!-- cluster 2: gathers lower-right -->
-  <g class="cg2">
-    <g fill="#04B876">
-      <circle cx="860" cy="400" r="6"/><circle cx="896" cy="386" r="6"/><circle cx="922" cy="418" r="6"/>
-      <circle cx="874" cy="440" r="6"/><circle cx="908" cy="452" r="6"/><circle cx="846" cy="428" r="6"/>
-    </g>
-  </g>
-  <circle class="h2" cx="885" cy="420" r="72" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
-
-  <!-- cluster 3: gathers lower-left-center -->
-  <g class="cg3">
-    <g fill="#0AA6C4">
-      <circle cx="330" cy="420" r="6"/><circle cx="362" cy="406" r="6"/><circle cx="384" cy="436" r="6"/>
-      <circle cx="342" cy="456" r="6"/><circle cx="372" cy="466" r="6"/>
-    </g>
-  </g>
-  <circle class="h3" cx="358" cy="438" r="62" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
-
-  <g class="sparkle">
-    <path d="M 1030 130 Q 1038.8 157.6 1066 166 Q 1038.8 174.4 1030 202 Q 1021.2 174.4 994 166 Q 1021.2 157.6 1030 130 Z" fill="#ffce00"/>
+  <!-- the noise point: a different product, never joins a band -->
+  <g class="noise">
+    <rect x="590" y="34" width="224" height="46" rx="23" fill="#FFFFFF" fill-opacity="0.8" stroke="#C4CAD6" stroke-width="1.5" stroke-dasharray="7 6"/>
+    <text x="702" y="64" font-size="24" font-weight="500" fill="#8A90A0" text-anchor="middle">máy lọc không khí</text>
   </g>
 </svg>
