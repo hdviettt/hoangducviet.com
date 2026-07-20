@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Agent, skill and tool: what each one is, who owns it, and how a request moves between them" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="720" fill="#F7F9FC"/>
+
+  <!-- ── chain ───────────────────────────────────────────── -->
+  <text x="64" y="86" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">HOW WORK MOVES</text>
+
+  <circle cx="70" cy="146" r="4.5" fill="#D9A400"/>
+  <text x="86" y="152" font-size="19" font-weight="700" fill="#0A0A0A">Agent</text>
+  <line x1="168" y1="146" x2="288" y2="146" stroke="#C8D0DC" stroke-width="1.25"/>
+  <path d="M 282 141 L 289 146 L 282 151" fill="none" stroke="#C8D0DC" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="228" y="138" font-size="12.5" fill="#8A93A3" text-anchor="middle" font-style="italic">picks</text>
+
+  <circle cx="308" cy="146" r="4.5" fill="#04B876"/>
+  <text x="324" y="152" font-size="19" font-weight="700" fill="#0A0A0A">Skill</text>
+  <line x1="384" y1="146" x2="504" y2="146" stroke="#C8D0DC" stroke-width="1.25"/>
+  <path d="M 498 141 L 505 146 L 498 151" fill="none" stroke="#C8D0DC" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="444" y="138" font-size="12.5" fill="#8A93A3" text-anchor="middle" font-style="italic">calls</text>
+
+  <circle cx="524" cy="146" r="4.5" fill="#004AEF"/>
+  <text x="540" y="152" font-size="19" font-weight="700" fill="#0A0A0A">Tool</text>
+  <line x1="600" y1="146" x2="720" y2="146" stroke="#C8D0DC" stroke-width="1.25"/>
+  <path d="M 714 141 L 721 146 L 714 151" fill="none" stroke="#C8D0DC" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="660" y="138" font-size="12.5" fill="#8A93A3" text-anchor="middle" font-style="italic">reaches</text>
+
+  <text x="740" y="152" font-size="16" fill="#4A5262">Google Docs, WordPress, Ahrefs, Meta Ads</text>
+
+  <line x1="64" y1="212" x2="1136" y2="212" stroke="#DDE3EC" stroke-width="1.25"/>
+
+  <!-- ── column dividers ─────────────────────────────────── -->
+  <line x1="420" y1="248" x2="420" y2="600" stroke="#E4E9F1" stroke-width="1.25"/>
+  <line x1="808" y1="248" x2="808" y2="600" stroke="#E4E9F1" stroke-width="1.25"/>
+
+  <!-- ── AGENT ───────────────────────────────────────────── -->
+  <g transform="translate(64, 262)">
+    <path d="M 2 0 h 20 l 10 10 v 30 a 3 3 0 0 1 -3 3 h -27 a 3 3 0 0 1 -3 -3 v -37 a 3 3 0 0 1 3 -3 z" fill="none" stroke="#D9A400" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M 22 0 v 10 h 10" fill="none" stroke="#D9A400" stroke-width="1.8" stroke-linejoin="round"/>
+    <line x1="9" y1="22" x2="25" y2="22" stroke="#D9A400" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="9" y1="31" x2="20" y2="31" stroke="#D9A400" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+  <text x="64" y="356" font-size="25" font-weight="700" fill="#0A0A0A">Agent</text>
+  <text x="64" y="388" font-size="16" font-weight="600" fill="#8A6D00">Judgment</text>
+  <text x="64" y="420" font-size="15.5" fill="#3D4149">A thin job description. It decides</text>
+  <text x="64" y="443" font-size="15.5" fill="#3D4149">which skill the situation calls for,</text>
+  <text x="64" y="466" font-size="15.5" fill="#3D4149">then gets out of the way.</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5">
+    <text x="64" y="506" fill="#0A0A0A" font-weight="700">agents/publish-article.md</text>
+    <text x="64" y="530" fill="#6B7280">model: sonnet</text>
+    <text x="64" y="552" fill="#6B7280">skills: [wp-publish]</text>
+  </g>
+  <line x1="64" y1="576" x2="380" y2="576" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="64" y="598" font-size="13.5" fill="#8A93A3">19 in production  ·  optional by design</text>
+
+  <!-- ── SKILL ───────────────────────────────────────────── -->
+  <g transform="translate(452, 262)">
+    <path d="M 0 6 a 3 3 0 0 1 3 -3 h 12 l 6 6 h 15 a 3 3 0 0 1 3 3 v 25 a 3 3 0 0 1 -3 3 h -33 a 3 3 0 0 1 -3 -3 z" fill="none" stroke="#04B876" stroke-width="1.8" stroke-linejoin="round"/>
+    <line x1="8" y1="26" x2="28" y2="26" stroke="#04B876" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+  <text x="452" y="356" font-size="25" font-weight="700" fill="#0A0A0A">Skill</text>
+  <text x="452" y="388" font-size="16" font-weight="600" fill="#04915D">Know-how</text>
+  <text x="452" y="420" font-size="15.5" fill="#3D4149">The process, the checklist, the</text>
+  <text x="452" y="443" font-size="15.5" fill="#3D4149">rubric, and often the script that</text>
+  <text x="452" y="466" font-size="15.5" fill="#3D4149">executes it end to end.</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5">
+    <text x="452" y="506" fill="#0A0A0A" font-weight="700">skills/wp-publish/</text>
+    <text x="468" y="530" fill="#6B7280">SKILL.md</text>
+    <text x="468" y="552" fill="#6B7280">scripts/</text>
+  </g>
+  <line x1="452" y1="576" x2="768" y2="576" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="452" y="598" font-size="13.5" fill="#8A93A3">63 packaged  ·  mandatory</text>
+
+  <!-- ── TOOL ────────────────────────────────────────────── -->
+  <g transform="translate(840, 262)">
+    <path d="M 14 12 h -5 a 10 10 0 0 0 0 20 h 5" fill="none" stroke="#004AEF" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M 26 12 h 5 a 10 10 0 0 1 0 20 h -5" fill="none" stroke="#004AEF" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="13" y1="22" x2="27" y2="22" stroke="#004AEF" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+  <text x="840" y="356" font-size="25" font-weight="700" fill="#0A0A0A">Tool</text>
+  <text x="840" y="388" font-size="16" font-weight="600" fill="#0038B8">Muscle</text>
+  <text x="840" y="420" font-size="15.5" fill="#3D4149">A pure connector to one outside</text>
+  <text x="840" y="443" font-size="15.5" fill="#3D4149">system. No methodology inside it,</text>
+  <text x="840" y="466" font-size="15.5" fill="#3D4149">and it never calls a model.</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5">
+    <text x="840" y="506" fill="#0A0A0A" font-weight="700">wordpress/create_post</text>
+    <text x="840" y="530" fill="#6B7280">POST /wp/v2/posts</text>
+  </g>
+  <line x1="840" y1="576" x2="1136" y2="576" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="840" y="598" font-size="13.5" fill="#8A93A3">21 connectors  ·  platform team only</text>
+
+  <!-- ── punchline ───────────────────────────────────────── -->
+  <line x1="64" y1="640" x2="1136" y2="640" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="64" y="678" font-size="19" font-weight="700" fill="#0A0A0A">Skills are mandatory. Agents are optional.</text>
+  <text x="596" y="678" font-size="15.5" fill="#8A93A3">Which is why the platform holds 63 of one and 19 of the other.</text>
+</svg>

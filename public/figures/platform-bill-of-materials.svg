@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="What had to exist before the first agent could run, compared with what the nineteenth agent needed" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="760" fill="#F7F9FC"/>
+
+  <text x="64" y="80" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">WHAT EACH AGENT HAD TO PAY FOR</text>
+
+  <!-- column heads -->
+  <text x="64" y="132" font-size="21" font-weight="700" fill="#0A0A0A">Agent #1</text>
+  <text x="176" y="132" font-size="15" fill="#8A93A3">May</text>
+  <line x1="64" y1="152" x2="556" y2="152" stroke="#0A0A0A" stroke-width="1.5"/>
+
+  <text x="660" y="132" font-size="21" font-weight="700" fill="#0A0A0A">Agent #19</text>
+  <text x="790" y="132" font-size="15" fill="#8A93A3">July</text>
+  <line x1="660" y1="152" x2="1136" y2="152" stroke="#0A0A0A" stroke-width="1.5"/>
+
+  <!-- left stack: infrastructure -->
+  <g font-size="15" fill="#4A5262">
+    <rect x="64" y="190" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="211">Deploy pipeline and health checks</text>
+    <rect x="64" y="232" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="253">Database schema and migrations</text>
+    <rect x="64" y="274" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="295">Auth, roles, admin surface</text>
+    <rect x="64" y="316" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="337">Encrypted credential store</text>
+    <rect x="64" y="358" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="379">Connectors to outside systems</text>
+    <rect x="64" y="400" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="421">The SDK runner itself</text>
+    <rect x="64" y="442" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="463">Run history and cost tracking</text>
+    <rect x="64" y="484" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="505">Eval harness and gold cases</text>
+    <rect x="64" y="526" width="492" height="30" rx="4" fill="#EBEFF5"/><text x="84" y="547">Background worker queue</text>
+  </g>
+  <rect x="64" y="568" width="492" height="30" rx="4" fill="#FFF3CF"/>
+  <text x="84" y="589" font-size="15" font-weight="700" fill="#8A6D00">Its own job description</text>
+  <rect x="64" y="610" width="492" height="30" rx="4" fill="#E2F8EF"/>
+  <text x="84" y="631" font-size="15" font-weight="700" fill="#04915D">Its own skill</text>
+
+  <!-- right: the slab that was already standing -->
+  <rect x="660" y="190" width="476" height="366" rx="6" fill="#F0F3F8"/>
+  <text x="898" y="360" font-size="19" font-weight="700" fill="#8A93A3" text-anchor="middle">All of it, already standing</text>
+  <text x="898" y="390" font-size="15" fill="#A3AAB8" text-anchor="middle">built once, in May, for everyone after</text>
+
+  <!-- right: the only new work -->
+  <rect x="660" y="568" width="476" height="30" rx="4" fill="#FFF3CF"/>
+  <text x="680" y="589" font-size="15" font-weight="700" fill="#8A6D00">Its own job description</text>
+  <rect x="660" y="610" width="476" height="30" rx="4" fill="#E2F8EF"/>
+  <text x="680" y="631" font-size="15" font-weight="700" fill="#04915D">Its own skill</text>
+
+  <rect x="638" y="568" width="3.5" height="72" fill="#0A0A0A"/>
+  <text x="620" y="592" font-size="13.5" font-weight="700" fill="#0A0A0A" text-anchor="end">the only</text>
+  <text x="620" y="612" font-size="13.5" font-weight="700" fill="#0A0A0A" text-anchor="end">new work</text>
+
+  <!-- footer -->
+  <line x1="64" y1="676" x2="1136" y2="676" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="64" y="714" font-size="19" font-weight="700" fill="#0A0A0A">A platform is not what makes agents possible.</text>
+  <text x="64" y="740" font-size="15.5" fill="#8A93A3">It is what makes the twentieth one boring.</text>
+</svg>

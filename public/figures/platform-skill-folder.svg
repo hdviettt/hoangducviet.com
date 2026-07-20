@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-label="Inside one skill folder: the manifest a model reads and the scripts it never sees" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="600" fill="#F7F9FC"/>
+
+  <text x="64" y="80" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">INSIDE ONE SKILL FOLDER</text>
+
+  <!-- root -->
+  <text x="64" y="142" font-size="16.5" font-weight="700" fill="#0A0A0A" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">skills/wp-publish/</text>
+
+  <!-- tree rules -->
+  <g stroke="#C2CBD9" stroke-width="1.25" fill="none">
+    <path d="M 78 158 V 398"/>
+    <path d="M 78 182 H 108"/>
+    <path d="M 78 226 H 108"/>
+    <path d="M 78 398 H 108"/>
+    <path d="M 150 242 V 350"/>
+    <path d="M 150 270 H 180"/>
+    <path d="M 150 310 H 180"/>
+    <path d="M 150 350 H 180"/>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16">
+    <text x="120" y="188" font-weight="700" fill="#8A6D00">SKILL.md</text>
+    <text x="120" y="232" font-weight="700" fill="#0038B8">scripts/</text>
+    <text x="192" y="276" fill="#3D4149">prep_doc.py</text>
+    <text x="192" y="316" fill="#3D4149">process_images.py</text>
+    <text x="192" y="356" fill="#3D4149">publish_run.py</text>
+    <text x="120" y="404" fill="#3D4149">references/</text>
+  </g>
+
+  <!-- leader: the whole folder -->
+  <circle cx="250" cy="136" r="3.5" fill="#04B876"/>
+  <path d="M 250 136 H 596" fill="none" stroke="#A7E3C9" stroke-width="1.25"/>
+
+  <!-- leader: SKILL.md -->
+  <circle cx="238" cy="182" r="3.5" fill="#D9A400"/>
+  <path d="M 238 182 H 470 V 250 H 596" fill="none" stroke="#E0C88A" stroke-width="1.25"/>
+
+  <!-- leader: scripts/ -->
+  <circle cx="212" cy="226" r="3.5" fill="#004AEF"/>
+  <path d="M 212 226 H 430 V 380 H 596" fill="none" stroke="#B9C8E8" stroke-width="1.25"/>
+
+  <!-- annotations -->
+  <text x="620" y="142" font-size="17" font-weight="700" fill="#0A0A0A">A champion owns the whole folder</text>
+  <text x="620" y="170" font-size="15" fill="#3D4149">The person who knows the work edits it, and</text>
+  <text x="620" y="193" font-size="15" fill="#3D4149">no platform code changes hands.</text>
+
+  <text x="620" y="256" font-size="17" font-weight="700" fill="#0A0A0A">The model reads this</text>
+  <text x="620" y="284" font-size="15" fill="#3D4149">When the skill should trigger, the process step</text>
+  <text x="620" y="307" font-size="15" fill="#3D4149">by step, and the contracts it must keep.</text>
+
+  <text x="620" y="386" font-size="17" font-weight="700" fill="#0A0A0A">The model never reads this</text>
+  <text x="620" y="414" font-size="15" fill="#3D4149">Plain Python. Identical result every run, at zero</text>
+  <text x="620" y="437" font-size="15" fill="#3D4149">tokens. Thirty-one of our 63 skills ship code.</text>
+
+  <!-- footer -->
+  <line x1="64" y1="500" x2="1136" y2="500" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="64" y="538" font-size="17" font-weight="700" fill="#0A0A0A">A model should not pay by the token to resize an image.</text>
+  <text x="64" y="564" font-size="15" fill="#8A93A3">It should pay to decide which image belongs in the article.</text>
+</svg>
