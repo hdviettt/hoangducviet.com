@@ -62,6 +62,17 @@ export default function FileExplorer({ children }: FileExplorerProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isPostPage]);
 
+  // App Router keeps the scroll position when navigating between two pages
+  // of the same dynamic route (post → next post lands at the bottom), so
+  // reset it ourselves. Skip the first render so hash links from outside
+  // (#section) still land on their anchor.
+  const prevPathname = useRef(pathname);
+  useEffect(() => {
+    if (prevPathname.current === pathname) return;
+    prevPathname.current = pathname;
+    if (!window.location.hash) window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <div className="min-h-screen bg-md-background">
       {/* Reading progress bar — pinned to the very top on post pages */}
