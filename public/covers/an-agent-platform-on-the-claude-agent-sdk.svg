@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#EFF4FF"/>
+      <stop offset="1" stop-color="#F3FEF9"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#004aef"/>
+      <stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+    <style>
+      /* 12s loop: the agent house. Two Markdown files drop in, one after the
+         other, and each time a dashed (planned) room fills with the brand
+         gradient: adding an agent is adding a file. The basement, the
+         infrastructure every room shares, hums the whole time. */
+      .f1, .f2 { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      .f1 { animation: fly1 12s ease-in-out infinite; }
+      .f2 { animation: fly2 12s ease-in-out infinite; }
+      @keyframes fly1 { 0%, 5% { opacity: 0; transform: translate(0, 0) scale(1); } 9% { opacity: 1; } 20% { opacity: 1; transform: translate(310px, 200px) scale(0.8); } 24% { opacity: 0; transform: translate(320px, 210px) scale(0.5); } 100% { opacity: 0; transform: translate(0, 0); } }
+      @keyframes fly2 { 0%, 38% { opacity: 0; transform: translate(0, 0) scale(1); } 42% { opacity: 1; } 53% { opacity: 1; transform: translate(170px, 320px) scale(0.8); } 57% { opacity: 0; transform: translate(180px, 330px) scale(0.5); } 100% { opacity: 0; transform: translate(0, 0); } }
+      .r1, .r2 { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      .r1 { animation: room1 12s ease-out infinite; }
+      .r2 { animation: room2 12s ease-out infinite; }
+      @keyframes room1 { 0%, 22% { opacity: 0; transform: scale(0.85); } 27% { opacity: 1; transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      @keyframes room2 { 0%, 55% { opacity: 0; transform: scale(0.85); } 60% { opacity: 1; transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      .base { animation: hum 12s ease-in-out infinite; }
+      @keyframes hum { 0%, 100% { fill-opacity: 0.75; } 27% { fill-opacity: 1; } 45% { fill-opacity: 0.75; } 60% { fill-opacity: 1; } 80% { fill-opacity: 0.8; } }
+      .spark { opacity: 0; transform-box: fill-box; transform-origin: center; animation: sp 12s ease-out infinite; }
+      @keyframes sp { 0%, 62% { opacity: 0; transform: scale(0.4); } 67% { opacity: 1; transform: scale(1.12); } 72% { transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
+      .planned { animation: pl 12s ease-in-out infinite; }
+      @keyframes pl { 0%, 100% { stroke-opacity: 0.5; } 50% { stroke-opacity: 0.75; } }
+      .drift1 { animation: d1 20s ease-in-out infinite alternate; }
+      .drift2 { animation: d2 26s ease-in-out infinite alternate; }
+      @keyframes d1 { to { transform: translate(18px, -12px); } }
+      @keyframes d2 { to { transform: translate(-14px, 12px); } }
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .r1, .r2, .spark { opacity: 1; }
+        .f1, .f2 { opacity: 0; }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle class="drift1" cx="230" cy="470" r="200" fill="#B8C9FF" fill-opacity="0.5" filter="url(#soft)"/>
+  <circle class="drift2" cx="1000" cy="150" r="190" fill="#86F7CC" fill-opacity="0.45" filter="url(#soft)"/>
+
+  <!-- the house, echoed -->
+  <path d="M 378 258 L 618 128 L 858 258 L 858 578 L 378 578 Z" fill="none" stroke="url(#brand)" stroke-opacity="0.16" stroke-width="3" transform="translate(20, 20)"/>
+  <path d="M 360 240 L 600 110 L 840 240 L 840 560 L 360 560 Z" fill="#FFFFFF" fill-opacity="0.65" stroke="url(#brand)" stroke-width="3.5"/>
+
+  <!-- rooms: lit = built agents, dashed = the rest of the blueprint -->
+  <rect x="396" y="272" width="130" height="90" rx="14" fill="url(#brand)" fill-opacity="0.9"/>
+  <circle cx="461" cy="317" r="8" fill="#FFFFFF"/>
+  <g class="planned" fill="none" stroke="#7E9BF7" stroke-width="2.5" stroke-dasharray="7 7">
+    <rect x="536" y="272" width="130" height="90" rx="14"/>
+    <rect x="676" y="272" width="130" height="90" rx="14"/>
+    <rect x="396" y="382" width="130" height="90" rx="14"/>
+    <rect x="676" y="382" width="130" height="90" rx="14"/>
+  </g>
+  <rect x="536" y="382" width="130" height="90" rx="14" fill="url(#brand)" fill-opacity="0.72"/>
+  <circle cx="601" cy="427" r="8" fill="#FFFFFF"/>
+
+  <!-- rooms that light up when their file arrives -->
+  <g class="r1">
+    <rect x="536" y="272" width="130" height="90" rx="14" fill="url(#brand)" fill-opacity="0.82"/>
+    <circle cx="601" cy="317" r="8" fill="#FFFFFF"/>
+  </g>
+  <g class="r2">
+    <rect x="396" y="382" width="130" height="90" rx="14" fill="url(#brand)" fill-opacity="0.82"/>
+    <circle cx="461" cy="427" r="8" fill="#FFFFFF"/>
+  </g>
+
+  <!-- the basement every room shares -->
+  <rect class="base" x="378" y="492" width="444" height="50" rx="12" fill="url(#brand)" fill-opacity="0.8"/>
+  <ellipse cx="428" cy="510" rx="13" ry="5.5" fill="#FFFFFF" fill-opacity="0.9"/>
+  <path d="M 415 510 v 12 a 13 5.5 0 0 0 26 0 v -12" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.5"/>
+  <rect x="478" y="504" width="20" height="16" rx="4" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.5"/>
+  <path d="M 482 504 v -5 a 6 6 0 0 1 12 0 v 5" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.5"/>
+  <circle cx="545" cy="517" r="9" fill="none" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="2.5"/>
+  <circle cx="545" cy="517" r="3" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="590" y="509" width="52" height="7" rx="3.5" fill="#FFFFFF" fill-opacity="0.85"/>
+  <rect x="590" y="521" width="38" height="7" rx="3.5" fill="#FFFFFF" fill-opacity="0.6"/>
+  <rect x="668" y="509" width="7" height="19" rx="3.5" fill="#FFFFFF" fill-opacity="0.6"/>
+  <rect x="680" y="503" width="7" height="25" rx="3.5" fill="#FFFFFF" fill-opacity="0.8"/>
+  <rect x="692" y="512" width="7" height="16" rx="3.5" fill="#FFFFFF" fill-opacity="0.7"/>
+
+  <!-- the files that become agents -->
+  <g class="f1">
+    <path d="M 290 100 h 34 l 14 14 v 44 a 6 6 0 0 1 -6 6 h -42 a 6 6 0 0 1 -6 -6 v -52 a 6 6 0 0 1 6 -6 z" fill="#FFFFFF" stroke="#C9D4EE" stroke-width="2"/>
+    <rect x="294" y="118" width="30" height="5" rx="2.5" fill="#004aef" fill-opacity="0.7"/>
+    <rect x="294" y="129" width="24" height="5" rx="2.5" fill="#004aef" fill-opacity="0.5"/>
+    <rect x="294" y="140" width="28" height="5" rx="2.5" fill="#07ef9c" fill-opacity="0.7"/>
+    <rect x="294" y="151" width="20" height="5" rx="2.5" fill="#9AA4B6" fill-opacity="0.6"/>
+  </g>
+  <g class="f2">
+    <path d="M 290 100 h 34 l 14 14 v 44 a 6 6 0 0 1 -6 6 h -42 a 6 6 0 0 1 -6 -6 v -52 a 6 6 0 0 1 6 -6 z" fill="#FFFFFF" stroke="#C9D4EE" stroke-width="2"/>
+    <rect x="294" y="118" width="30" height="5" rx="2.5" fill="#004aef" fill-opacity="0.7"/>
+    <rect x="294" y="129" width="24" height="5" rx="2.5" fill="#004aef" fill-opacity="0.5"/>
+    <rect x="294" y="140" width="28" height="5" rx="2.5" fill="#07ef9c" fill-opacity="0.7"/>
+    <rect x="294" y="151" width="20" height="5" rx="2.5" fill="#9AA4B6" fill-opacity="0.6"/>
+  </g>
+
+  <g class="spark">
+    <path d="M 900 92 Q 907 112.4 927 118 Q 907 123.6 900 144 Q 893 123.6 873 118 Q 893 112.4 900 92 Z" fill="#ffce00"/>
+  </g>
+</svg>
