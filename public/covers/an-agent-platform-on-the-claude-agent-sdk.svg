@@ -1,113 +1,123 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <radialGradient id="glowbg" cx="0.5" cy="0.46" r="0.72">
-      <stop offset="0" stop-color="#101B33"/>
-      <stop offset="0.55" stop-color="#0A101E"/>
-      <stop offset="1" stop-color="#05070D"/>
+    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.75">
+      <stop offset="0" stop-color="#0E1A31"/><stop offset="0.55" stop-color="#080D18"/><stop offset="1" stop-color="#04060B"/>
     </radialGradient>
-    <linearGradient id="core" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#0057ff"/>
-      <stop offset="1" stop-color="#07ef9c"/>
+    <linearGradient id="slabTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123056"/><stop offset="1" stop-color="#0C2440"/>
     </linearGradient>
-    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#07ef9c" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#07ef9c" stop-opacity="0.1"/>
+    <linearGradient id="edge" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#0057ff"/><stop offset="1" stop-color="#07ef9c"/>
     </linearGradient>
-    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#5B7BB5" stroke-opacity="0.11" stroke-width="1"/>
-    </pattern>
-    <filter id="lum" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="7" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <linearGradient id="chipTop" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#2E86FF"/><stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <filter id="lum" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="softglow" x="-70%" y="-70%" width="240%" height="240%">
-      <feGaussianBlur stdDeviation="26"/>
-    </filter>
+    <filter id="haze" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="34"/></filter>
     <style>
-      /* 13s loop: the core never moves. Two housings slide over it in turn,
-         one the model reads, one the worker runs. Dark technical drawing,
-         deliberately unlike the rest of the cover set. */
-      .shellA { animation: sa 13s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-      .shellB { animation: sb 13s cubic-bezier(0.4, 0, 0.2, 1) infinite; opacity: 0; }
-      @keyframes sa {
-        0% { opacity: 0; transform: translateX(-70px); }
-        7%, 40% { opacity: 1; transform: translateX(0); }
-        49% { opacity: 0; transform: translateX(-70px); }
-        100% { opacity: 0; transform: translateX(-70px); }
-      }
-      @keyframes sb {
-        0%, 46% { opacity: 0; transform: translateX(70px); }
-        55%, 90% { opacity: 1; transform: translateX(0); }
-        97%, 100% { opacity: 0; transform: translateX(70px); }
-      }
-      .pulse { animation: pl 13s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes pl { 0%, 100% { opacity: 0.9; } 46%, 54% { opacity: 1; transform: scale(1.015); } }
-      .tick { animation: tk 13s ease-in-out infinite; }
-      @keyframes tk { 0%, 100% { stroke-opacity: 0.28; } 50% { stroke-opacity: 0.5; } }
+      .m0 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 1.65s; }
+      .m1 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 2.58s; }
+      .m2 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 3.34s; }
+      .m3 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 3.97s; }
+      .m4 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 4.48s; }
+      .m5 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 4.90s; }
+      .m6 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 5.25s; }
+      .m7 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 5.53s; }
+      .m8 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 5.76s; }
+      .m9 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 5.95s; }
+      .m10 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 6.11s; }
+      .m11 { opacity: 0; animation: pop 15s ease-out infinite; animation-delay: 6.23s; }
+      @keyframes pop { 0% { opacity: 0; transform: translateY(-16px); } 3% { opacity: 1; transform: translateY(0); } 88% { opacity: 1; } 94%, 100% { opacity: 0; } }
+      .slab { animation: rise 15s ease-out infinite; }
+      @keyframes rise { 0% { opacity: 0.35; } 8%, 100% { opacity: 1; } }
       .spark { animation: sk 7s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.9) rotate(0deg); opacity: 0.85; } to { transform: scale(1.12) rotate(8deg); opacity: 1; } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .shellA { opacity: 0; }
-        .shellB { opacity: 1; transform: translateX(0); }
-      }
+      @keyframes sk { from { transform: scale(0.9) rotate(-6deg); opacity: 0.8; } to { transform: scale(1.12) rotate(6deg); opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } [class^="m"] { opacity: 1; } }
     </style>
   </defs>
 
-  <rect width="1200" height="630" fill="url(#glowbg)"/>
-  <rect width="1200" height="630" fill="url(#grid)"/>
-  <ellipse cx="600" cy="330" rx="300" ry="180" fill="#0B6BFF" fill-opacity="0.22" filter="url(#softglow)"/>
-  <ellipse cx="770" cy="400" rx="200" ry="130" fill="#07ef9c" fill-opacity="0.16" filter="url(#softglow)"/>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <ellipse cx="600" cy="330" rx="330" ry="190" fill="#0B6BFF" fill-opacity="0.20" filter="url(#haze)"/>
+  <ellipse cx="740" cy="400" rx="220" ry="140" fill="#07ef9c" fill-opacity="0.14" filter="url(#haze)"/>
 
-  <!-- technical framing -->
-  <g class="tick" stroke="#7FA6E8" stroke-opacity="0.28" stroke-width="1.5" fill="none">
-    <path d="M 96 128 h 34 M 96 128 v 34"/>
-    <path d="M 1104 128 h -34 M 1104 128 v 34"/>
-    <path d="M 96 502 h 34 M 96 502 v -34"/>
-    <path d="M 1104 502 h -34 M 1104 502 v -34"/>
+  <g opacity="0.28" transform="translate(30, 22)">
+  <polygon points="562.5,161.0 862.5,311.0 637.5,423.5 337.5,273.5" fill="none" stroke="url(#edge)" stroke-width="2"/>
+  </g>
+  <g class="slab">
+  <polygon points="337.5,273.5 637.5,423.5 637.5,469.5 337.5,319.5" fill="#0A1729" stroke="url(#edge)" stroke-width="1.6"/>
+  <polygon points="637.5,423.5 862.5,311.0 862.5,357.0 637.5,469.5" fill="#08121F" stroke="url(#edge)" stroke-width="1.6"/>
+  <path d="M 337.5 289.1 L 637.5 439.1 L 862.5 326.6" fill="none" stroke="#5B7BB5" stroke-opacity="0.30" stroke-width="1"/>
+  <path d="M 337.5 302.0 L 637.5 452.0 L 862.5 339.5" fill="none" stroke="#5B7BB5" stroke-opacity="0.30" stroke-width="1"/>
+  <polygon points="562.5,161.0 862.5,311.0 637.5,423.5 337.5,273.5" fill="url(#slabTop)" stroke="url(#edge)" stroke-width="2"/>
+  <path d="M 637.5 198.5 L 412.5 311.0" stroke="#5B7BB5" stroke-opacity="0.22" stroke-width="1"/>
+  <path d="M 712.5 236.0 L 487.5 348.5" stroke="#5B7BB5" stroke-opacity="0.22" stroke-width="1"/>
+  <path d="M 787.5 273.5 L 562.5 386.0" stroke="#5B7BB5" stroke-opacity="0.22" stroke-width="1"/>
+  <path d="M 487.5 198.5 L 787.5 348.5" stroke="#5B7BB5" stroke-opacity="0.22" stroke-width="1"/>
+  <path d="M 412.5 236.0 L 712.5 386.0" stroke="#5B7BB5" stroke-opacity="0.22" stroke-width="1"/>
   </g>
 
-  <!-- the core: the procedure, unchanged -->
-  <g class="pulse" filter="url(#lum)">
-    <rect x="452" y="222" width="196" height="15" rx="7.5" fill="url(#core)"/>
-    <rect x="452" y="262" width="296" height="15" rx="7.5" fill="url(#core)"/>
-    <rect x="452" y="302" width="242" height="15" rx="7.5" fill="url(#core)"/>
-    <rect x="452" y="342" width="318" height="15" rx="7.5" fill="url(#core)"/>
-    <rect x="452" y="382" width="210" height="15" rx="7.5" fill="url(#fade)"/>
+  <g class="m0" filter="url(#lum)">
+  <polygon points="522.5,172.5 562.5,192.5 562.5,218.5 522.5,198.5" fill="#13386B"/>
+  <polygon points="562.5,192.5 602.5,172.5 602.5,198.5 562.5,218.5" fill="#0C2342"/>
+  <polygon points="562.5,152.5 602.5,172.5 562.5,192.5 522.5,172.5" fill="#2E86FF"/>
   </g>
-  <circle cx="432" cy="229" r="4" fill="#07ef9c"/>
-  <circle cx="432" cy="269" r="4" fill="#07ef9c" fill-opacity="0.8"/>
-  <circle cx="432" cy="309" r="4" fill="#07ef9c" fill-opacity="0.6"/>
-  <circle cx="432" cy="349" r="4" fill="#07ef9c" fill-opacity="0.45"/>
-  <circle cx="432" cy="389" r="4" fill="#07ef9c" fill-opacity="0.3"/>
+  <g class="m1" filter="url(#lum)">
+  <polygon points="447.5,210.0 487.5,230.0 487.5,256.0 447.5,236.0" fill="#104163"/>
+  <polygon points="487.5,230.0 527.5,210.0 527.5,236.0 487.5,256.0" fill="#0A283D"/>
+  <polygon points="487.5,190.0 527.5,210.0 487.5,230.0 447.5,210.0" fill="#269BEB"/>
+  </g>
+  <g class="m2" filter="url(#lum)">
+  <polygon points="597.5,210.0 637.5,230.0 637.5,256.0 597.5,236.0" fill="#104163"/>
+  <polygon points="637.5,230.0 677.5,210.0 677.5,236.0 637.5,256.0" fill="#0A283D"/>
+  <polygon points="637.5,190.0 677.5,210.0 637.5,230.0 597.5,210.0" fill="#269BEB"/>
+  </g>
+  <g class="m3" filter="url(#lum)">
+  <polygon points="372.5,247.5 412.5,267.5 412.5,293.5 372.5,273.5" fill="#0D4A5A"/>
+  <polygon points="412.5,267.5 452.5,247.5 452.5,273.5 412.5,293.5" fill="#082E38"/>
+  <polygon points="412.5,227.5 452.5,247.5 412.5,267.5 372.5,247.5" fill="#1EB0D7"/>
+  </g>
+  <g class="m4" filter="url(#lum)">
+  <polygon points="522.5,247.5 562.5,267.5 562.5,293.5 522.5,273.5" fill="#0D4A5A"/>
+  <polygon points="562.5,267.5 602.5,247.5 602.5,273.5 562.5,293.5" fill="#082E38"/>
+  <polygon points="562.5,227.5 602.5,247.5 562.5,267.5 522.5,247.5" fill="#1EB0D7"/>
+  </g>
+  <g class="m5" filter="url(#lum)">
+  <polygon points="672.5,247.5 712.5,267.5 712.5,293.5 672.5,273.5" fill="#8A6D00"/>
+  <polygon points="712.5,267.5 752.5,247.5 752.5,273.5 712.5,293.5" fill="#6B5400"/>
+  <polygon points="712.5,227.5 752.5,247.5 712.5,267.5 672.5,247.5" fill="#FFCE00"/>
+  </g>
+  <g class="m6" filter="url(#lum)">
+  <polygon points="447.5,285.0 487.5,305.0 487.5,331.0 447.5,311.0" fill="#0A5352"/>
+  <polygon points="487.5,305.0 527.5,285.0 527.5,311.0 487.5,331.0" fill="#063333"/>
+  <polygon points="487.5,265.0 527.5,285.0 487.5,305.0 447.5,285.0" fill="#17C5C4"/>
+  </g>
+  <g class="m7" filter="url(#lum)">
+  <polygon points="597.5,285.0 637.5,305.0 637.5,331.0 597.5,311.0" fill="#0A5352"/>
+  <polygon points="637.5,305.0 677.5,285.0 677.5,311.0 637.5,331.0" fill="#063333"/>
+  <polygon points="637.5,265.0 677.5,285.0 637.5,305.0 597.5,285.0" fill="#17C5C4"/>
+  </g>
+  <g class="m8" filter="url(#lum)">
+  <polygon points="747.5,285.0 787.5,305.0 787.5,331.0 747.5,311.0" fill="#0A5352"/>
+  <polygon points="787.5,305.0 827.5,285.0 827.5,311.0 787.5,331.0" fill="#063333"/>
+  <polygon points="787.5,265.0 827.5,285.0 787.5,305.0 747.5,285.0" fill="#17C5C4"/>
+  </g>
+  <g class="m9" filter="url(#lum)">
+  <polygon points="522.5,322.5 562.5,342.5 562.5,368.5 522.5,348.5" fill="#065C4A"/>
+  <polygon points="562.5,342.5 602.5,322.5 602.5,348.5 562.5,368.5" fill="#04392E"/>
+  <polygon points="562.5,302.5 602.5,322.5 562.5,342.5 522.5,322.5" fill="#0FDAB0"/>
+  </g>
+  <g class="m10" filter="url(#lum)">
+  <polygon points="672.5,322.5 712.5,342.5 712.5,368.5 672.5,348.5" fill="#065C4A"/>
+  <polygon points="712.5,342.5 752.5,322.5 752.5,348.5 712.5,368.5" fill="#04392E"/>
+  <polygon points="712.5,302.5 752.5,322.5 712.5,342.5 672.5,322.5" fill="#0FDAB0"/>
+  </g>
+  <g class="m11" filter="url(#lum)">
+  <polygon points="597.5,360.0 637.5,380.0 637.5,406.0 597.5,386.0" fill="#036442"/>
+  <polygon points="637.5,380.0 677.5,360.0 677.5,386.0 637.5,406.0" fill="#023E29"/>
+  <polygon points="637.5,340.0 677.5,360.0 637.5,380.0 597.5,360.0" fill="#07EF9C"/>
+  </g>
 
-  <!-- housing A: read by a model -->
-  <g class="shellA">
-    <rect x="386" y="180" width="428" height="270" rx="20" fill="none" stroke="#FFCE00" stroke-width="2.5" stroke-opacity="0.9"/>
-    <path d="M 386 214 h 428" stroke="#FFCE00" stroke-opacity="0.35" stroke-width="1.25"/>
-    <rect x="386" y="132" width="184" height="38" rx="19" fill="#FFCE00" fill-opacity="0.14" stroke="#FFCE00" stroke-opacity="0.5" stroke-width="1.25"/>
-    <circle cx="412" cy="151" r="6" fill="#FFCE00"/>
-    <text x="428" y="158" font-size="20" font-weight="700" fill="#FFD84D" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">agent.md</text>
-    <path d="M 814 300 l 26 0 M 830 292 l 10 8 l -10 8" fill="none" stroke="#FFCE00" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-
-  <!-- housing B: run by the worker -->
-  <g class="shellB">
-    <rect x="386" y="180" width="428" height="270" rx="20" fill="none" stroke="#2E86FF" stroke-width="2.5" stroke-opacity="0.9"/>
-    <path d="M 386 214 h 428" stroke="#2E86FF" stroke-opacity="0.35" stroke-width="1.25"/>
-    <rect x="386" y="132" width="236" height="38" rx="19" fill="#2E86FF" fill-opacity="0.14" stroke="#2E86FF" stroke-opacity="0.5" stroke-width="1.25"/>
-    <rect x="404" y="144" width="15" height="15" rx="3.5" fill="#2E86FF"/>
-    <text x="430" y="158" font-size="20" font-weight="700" fill="#7FB4FF" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">publish_run.py</text>
-    <path d="M 814 300 l 26 0 M 830 292 l 10 8 l -10 8" fill="none" stroke="#2E86FF" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-
-  <!-- dimension line: the core is the measured thing -->
-  <g stroke="#7FA6E8" stroke-opacity="0.3" stroke-width="1.25" fill="none">
-    <path d="M 452 470 v 14 M 770 470 v 14 M 452 477 h 318"/>
-  </g>
-  <circle cx="611" cy="477" r="3" fill="#07ef9c" fill-opacity="0.7"/>
-
-  <g class="spark">
-    <path d="M 906 168 Q 913.5 190 936 196 Q 913.5 202 906 224 Q 898.5 202 876 196 Q 898.5 190 906 168 Z" fill="#FFCE00"/>
-  </g>
+  <g class="spark"><path d="M 946 152 Q 953.5 174 976 180 Q 953.5 186 946 208 Q 938.5 186 916 180 Q 938.5 174 946 152 Z" fill="#FFCE00"/></g>
 </svg>

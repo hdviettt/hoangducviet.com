@@ -41,6 +41,11 @@ nền blue→green hai blob nên cả feed bị một màu; giờ:
   chart, cụm chip, cửa sổ code, chữ lớn — miễn kể đúng chủ đề.
 - **Series: các part CHUNG một design style** (motif định danh + numeral),
   cover series là motif gốc. Đây là nơi duy nhất yêu cầu đồng nhất về style.
+- **Bài trụ được phép ra khỏi họ.** Cover của bài nền tảng (vd bài platform)
+  dùng register riêng: nền TỐI, hình chiếu trục đo, nét phát sáng — giữ đúng 4
+  màu brand nhưng bỏ hẳn từ vựng "thẻ bo tròn + thanh ngang + chip" của bộ. Giữa
+  một feed toàn cover sáng, nó tự báo hiệu đây là bài trụ mà không cần nhãn
+  featured. Chỉ dùng cho bài hub, không dùng đại trà, nếu không thì mất tác dụng.
 - Ba lớp nền sáng / blob mờ / focal sắc nét vẫn là khung mặc định, nhưng tông
   màu và bố cục phải đổi theo bài; một surface tối (editor code) được phép làm
   focal nếu nội dung cần, nền tổng thể vẫn sáng.
