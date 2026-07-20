@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 640" role="img" aria-label="The three floors of the agent house and who owns each" font-family="Arial, Helvetica, sans-serif">
+  <rect width="1100" height="640" rx="24" fill="#FFFFFF"/>
+  <rect x="0.75" y="0.75" width="1098.5" height="638.5" rx="23.25" fill="none" stroke="#E1E6EC" stroke-width="1.5"/>
+
+  <!-- Floor 1: Interface -->
+  <rect x="70" y="52" width="700" height="160" rx="16" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="1.5"/>
+  <rect x="70" y="52" width="6" height="160" rx="3" fill="#07ef9c"/>
+  <text x="100" y="86" font-size="20" font-weight="700" fill="#0A0A0A">Interface</text>
+  <text x="100" y="110" font-size="15" fill="#4E4F56">what the end user sees</text>
+  <rect x="100" y="128" width="180" height="62" rx="12" fill="#F0FDF7" stroke="#BFEFD9" stroke-width="1.5"/>
+  <path d="M 122 152 h 42 a 8 8 0 0 1 8 8 v 10 a 8 8 0 0 1 -8 8 h -28 l -10 9 v -9 h -4 a 8 8 0 0 1 -8 -8 v -10 a 8 8 0 0 1 8 -8 z" fill="#07ef9c" fill-opacity="0.85"/>
+  <text x="188" y="166" font-size="16" font-weight="600" fill="#1F2430">Lark bot</text>
+  <rect x="300" y="128" width="180" height="62" rx="12" fill="#F0FDF7" stroke="#BFEFD9" stroke-width="1.5"/>
+  <circle cx="326" cy="150" r="4" fill="#0fd6f7"/><circle cx="340" cy="150" r="4" fill="#07ef9c"/><circle cx="354" cy="150" r="4" fill="#ffce00"/>
+  <rect x="320" y="162" width="70" height="8" rx="4" fill="#9FDFC9"/>
+  <text x="408" y="166" font-size="16" font-weight="600" fill="#1F2430">Web app</text>
+  <rect x="812" y="112" width="218" height="44" rx="22" fill="#E4FDF2"/>
+  <circle cx="838" cy="134" r="7" fill="#04B876"/>
+  <text x="854" y="140" font-size="16" font-weight="700" fill="#04915D">Champion owns</text>
+
+  <!-- Floor 2: Agent + Skill -->
+  <rect x="70" y="232" width="700" height="176" rx="16" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="1.5"/>
+  <rect x="70" y="232" width="6" height="176" rx="3" fill="#07ef9c"/>
+  <text x="100" y="266" font-size="20" font-weight="700" fill="#0A0A0A">Agent + Skill</text>
+  <text x="100" y="290" font-size="15" fill="#4E4F56">job description + packaged know-how</text>
+  <rect x="100" y="306" width="220" height="84" rx="12" fill="#FAFBFD" stroke="#D7DEEA" stroke-width="1.5"/>
+  <rect x="118" y="322" width="10" height="14" rx="2" fill="#004aef" fill-opacity="0.85"/>
+  <text x="138" y="334" font-size="15" font-weight="700" fill="#1F2430" font-family="monospace">agent-*.md</text>
+  <rect x="118" y="348" width="150" height="7" rx="3.5" fill="#C9D4EE"/>
+  <rect x="118" y="362" width="120" height="7" rx="3.5" fill="#C9D4EE"/>
+  <rect x="118" y="376" width="136" height="7" rx="3.5" fill="#DCE3F2"/>
+  <path d="M 356 314 h 44 l 12 12 h 92 a 10 10 0 0 1 10 10 v 44 a 10 10 0 0 1 -10 10 h -148 a 10 10 0 0 1 -10 -10 v -56 a 10 10 0 0 1 10 -10 z" fill="#E4FDF2" stroke="#9FE8C9" stroke-width="1.5"/>
+  <text x="376" y="366" font-size="15" font-weight="700" fill="#04915D" font-family="monospace">skills/ ×63</text>
+  <rect x="546" y="306" width="200" height="84" rx="12" fill="#FFFFFF" stroke="#E1E6EC" stroke-width="1.5"/>
+  <text x="566" y="334" font-size="14" font-weight="700" fill="#4E4F56">19 agents today</text>
+  <text x="566" y="356" font-size="13.5" fill="#7A8090">3 hidden sidecars</text>
+  <text x="566" y="376" font-size="13.5" fill="#7A8090">4 on 1M context</text>
+  <rect x="812" y="298" width="218" height="44" rx="22" fill="#E4FDF2"/>
+  <circle cx="838" cy="320" r="7" fill="#04B876"/>
+  <text x="854" y="326" font-size="16" font-weight="700" fill="#04915D">Champion owns</text>
+
+  <!-- Floor 3: System -->
+  <rect x="70" y="428" width="700" height="160" rx="16" fill="#F4F7FF" stroke="#D9E2F7" stroke-width="1.5"/>
+  <rect x="70" y="428" width="6" height="160" rx="3" fill="#004aef"/>
+  <text x="100" y="462" font-size="20" font-weight="700" fill="#0A0A0A">System</text>
+  <text x="100" y="486" font-size="15" fill="#4E4F56">the floor nobody upstairs may touch</text>
+  <g font-size="14.5" font-weight="600">
+    <rect x="100" y="504" width="152" height="38" rx="19" fill="#FFFFFF" stroke="#C9D4EE" stroke-width="1.5"/>
+    <text x="176" y="528" fill="#2B3A67" text-anchor="middle">SDK runtime</text>
+    <rect x="264" y="504" width="118" height="38" rx="19" fill="#FFFFFF" stroke="#C9D4EE" stroke-width="1.5"/>
+    <text x="323" y="528" fill="#2B3A67" text-anchor="middle">Postgres</text>
+    <rect x="394" y="504" width="180" height="38" rx="19" fill="#FFFFFF" stroke="#C9D4EE" stroke-width="1.5"/>
+    <text x="484" y="528" fill="#2B3A67" text-anchor="middle">21 connectors</text>
+    <rect x="586" y="504" width="90" height="38" rx="19" fill="#FFFFFF" stroke="#C9D4EE" stroke-width="1.5"/>
+    <text x="631" y="528" fill="#2B3A67" text-anchor="middle">Eval</text>
+    <rect x="688" y="504" width="72" height="38" rx="19" fill="#FFFFFF" stroke="#C9D4EE" stroke-width="1.5"/>
+    <text x="724" y="528" fill="#2B3A67" text-anchor="middle">Auth</text>
+  </g>
+  <rect x="812" y="486" width="218" height="44" rx="22" fill="#E7EEFF"/>
+  <circle cx="838" cy="508" r="7" fill="#004aef"/>
+  <text x="854" y="514" font-size="16" font-weight="700" fill="#0038B8">AI Team owns</text>
+</svg>

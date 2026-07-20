@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" role="img" aria-label="Inside a skill folder: the manifest the model reads and the scripts that run without it" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9AA4B6"/>
+    </marker>
+  </defs>
+  <rect width="1100" height="560" rx="24" fill="#FFFFFF"/>
+  <rect x="0.75" y="0.75" width="1098.5" height="558.5" rx="23.25" fill="none" stroke="#E1E6EC" stroke-width="1.5"/>
+
+  <text x="56" y="60" font-size="14" font-weight="700" fill="#7A8090" letter-spacing="1">INSIDE ONE SKILL FOLDER</text>
+  <text x="56" y="92" font-size="21" font-weight="700" fill="#0A0A0A" font-family="monospace">.claude/skills/tech-wp-publish/</text>
+
+  <!-- SKILL.md -->
+  <rect x="56" y="120" width="470" height="164" rx="16" fill="#FFF7DC" stroke="#F2D98C" stroke-width="1.5"/>
+  <rect x="80" y="144" width="10" height="14" rx="2" fill="#B98A00"/>
+  <text x="100" y="156" font-size="16" font-weight="700" fill="#5C4A00" font-family="monospace">SKILL.md</text>
+  <rect x="380" y="138" width="122" height="28" rx="14" fill="#FFEFB8"/>
+  <text x="441" y="157" font-size="12.5" font-weight="700" fill="#8A6D00" text-anchor="middle">the model reads</text>
+  <text x="80" y="192" font-size="14.5" fill="#5C4A00">Frontmatter: when should this skill trigger</text>
+  <text x="80" y="218" font-size="14.5" fill="#5C4A00">Body: the process, step by step</text>
+  <text x="80" y="244" font-size="14.5" fill="#5C4A00">Contracts: "creds passed as env vars, never echoed"</text>
+  <text x="80" y="268" font-size="13" fill="#8A6D00" font-style="italic">Loaded into context only when the agent declares this skill</text>
+
+  <!-- scripts -->
+  <rect x="56" y="304" width="470" height="196" rx="16" fill="#F4F7FF" stroke="#C9D4EE" stroke-width="1.5"/>
+  <path d="M 80 328 h 24 l 6 6 h 30 a 6 6 0 0 1 6 6 v 20 a 6 6 0 0 1 -6 6 h -60 a 6 6 0 0 1 -6 -6 v -26 a 6 6 0 0 1 6 -6 z" fill="#004aef" fill-opacity="0.8"/>
+  <text x="160" y="356" font-size="16" font-weight="700" fill="#2B3A67" font-family="monospace">scripts/</text>
+  <rect x="380" y="332" width="122" height="28" rx="14" fill="#E7EEFF"/>
+  <text x="441" y="351" font-size="12.5" font-weight="700" fill="#0038B8" text-anchor="middle">no model at all</text>
+  <text x="96" y="394" font-size="14.5" fill="#2B3A67" font-family="monospace">prep_doc.py</text>
+  <text x="300" y="394" font-size="13.5" fill="#7A8090">normalize the HTML</text>
+  <text x="96" y="424" font-size="14.5" fill="#2B3A67" font-family="monospace">process_images.py</text>
+  <text x="300" y="424" font-size="13.5" fill="#7A8090">resize, rename, caption</text>
+  <text x="96" y="454" font-size="14.5" fill="#2B3A67" font-family="monospace">publish_run.py</text>
+  <text x="300" y="454" font-size="13.5" fill="#7A8090">the 0-LLM orchestrator</text>
+  <text x="80" y="482" font-size="13" fill="#5B6B99" font-style="italic">Plain Python. Same result every run, for free.</text>
+
+  <!-- right column: what this buys -->
+  <line x1="566" y1="120" x2="566" y2="500" stroke="#E1E6EC" stroke-width="1.5"/>
+
+  <text x="606" y="144" font-size="19" font-weight="700" fill="#0A0A0A">Why the split matters</text>
+
+  <circle cx="618" cy="188" r="14" fill="#E4FDF2"/>
+  <path d="M 611 188 l 5 5 l 9 -10" fill="none" stroke="#04B876" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="646" y="182" font-size="15.5" font-weight="700" fill="#1F2430">Know-how outlives the model</text>
+  <text x="646" y="206" font-size="14.5" fill="#4E4F56">A marketer edits the checklist. No</text>
+  <text x="646" y="228" font-size="14.5" fill="#4E4F56">engineer, no deploy, no prompt surgery.</text>
+
+  <circle cx="618" cy="272" r="14" fill="#E4FDF2"/>
+  <path d="M 611 272 l 5 5 l 9 -10" fill="none" stroke="#04B876" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="646" y="266" font-size="15.5" font-weight="700" fill="#1F2430">Tokens go to judgment only</text>
+  <text x="646" y="290" font-size="14.5" fill="#4E4F56">Scripts do the mechanical parts, so the</text>
+  <text x="646" y="312" font-size="14.5" fill="#4E4F56">model never pays to reformat a table.</text>
+
+  <circle cx="618" cy="356" r="14" fill="#E4FDF2"/>
+  <path d="M 611 356 l 5 5 l 9 -10" fill="none" stroke="#04B876" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="646" y="350" font-size="15.5" font-weight="700" fill="#1F2430">Skills are reusable across agents</text>
+  <text x="646" y="374" font-size="14.5" fill="#4E4F56">One rubric, many rooms. Fix it once and</text>
+  <text x="646" y="396" font-size="14.5" fill="#4E4F56">every agent that declares it improves.</text>
+
+  <rect x="606" y="428" width="438" height="72" rx="14" fill="#FAFBFD" stroke="#D7DEEA" stroke-width="1.5"/>
+  <text x="630" y="458" font-size="14.5" font-weight="700" fill="#1F2430">A skill can graduate into pure code.</text>
+  <text x="630" y="482" font-size="14" fill="#4E4F56">When every step stops needing judgment, it becomes a job.</text>
+</svg>
