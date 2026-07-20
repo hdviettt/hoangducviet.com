@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Sequence of one request: user, interface, runner, SDK, tools and skills, run history" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#6B7280"/>
+    </marker>
+    <marker id="tipa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#B98A00"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#F7F9FC"/>
+
+  <text x="64" y="76" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">ONE REQUEST, IN ORDER</text>
+
+  <!-- participants -->
+  <g text-anchor="middle">
+    <text x="120" y="120" font-size="16" font-weight="700" fill="#0A0A0A">User</text>
+    <text x="300" y="120" font-size="16" font-weight="700" fill="#0A0A0A">Interface</text>
+    <text x="300" y="140" font-size="13" fill="#8A93A3">Lark or web</text>
+    <text x="480" y="120" font-size="16" font-weight="700" fill="#0A0A0A">Runner</text>
+    <text x="480" y="140" font-size="13" fill="#8A93A3">plain Python</text>
+    <text x="680" y="120" font-size="16" font-weight="700" fill="#8A6D00">Claude Agent SDK</text>
+    <text x="680" y="140" font-size="13" fill="#B98A00">the only paid participant</text>
+    <text x="880" y="120" font-size="16" font-weight="700" fill="#0A0A0A">Tools and skills</text>
+    <text x="880" y="140" font-size="13" fill="#8A93A3">connectors, scripts</text>
+    <text x="1074" y="120" font-size="16" font-weight="700" fill="#0A0A0A">Run history</text>
+    <text x="1074" y="140" font-size="13" fill="#8A93A3">Postgres</text>
+  </g>
+  <line x1="64" y1="158" x2="1136" y2="158" stroke="#DDE3EC" stroke-width="1.25"/>
+
+  <!-- lifelines -->
+  <g stroke="#C8D0DC" stroke-width="1.25" stroke-dasharray="4 6">
+    <line x1="120" y1="172" x2="120" y2="652"/>
+    <line x1="300" y1="172" x2="300" y2="652"/>
+    <line x1="480" y1="172" x2="480" y2="652"/>
+    <line x1="680" y1="172" x2="680" y2="652"/>
+    <line x1="880" y1="172" x2="880" y2="652"/>
+    <line x1="1074" y1="172" x2="1074" y2="652"/>
+  </g>
+
+  <!-- activation bars -->
+  <rect x="295" y="196" width="10" height="428" rx="3" fill="#E8EDF5"/>
+  <rect x="475" y="240" width="10" height="356" rx="3" fill="#E8EDF5"/>
+  <rect x="675" y="336" width="10" height="188" rx="3" fill="#FFF3CF" stroke="#E3C983" stroke-width="1.25"/>
+  <rect x="875" y="422" width="10" height="48" rx="3" fill="#E8EDF5"/>
+  <rect x="1069" y="556" width="10" height="24" rx="3" fill="#E8EDF5"/>
+
+  <!-- messages -->
+  <g stroke="#9AA4B6" stroke-width="1.4" fill="none">
+    <line x1="120" y1="196" x2="291" y2="196" marker-end="url(#tip)"/>
+    <line x1="305" y1="240" x2="471" y2="240" marker-end="url(#tip)"/>
+    <path d="M 485 288 H 528 V 312 H 489" marker-end="url(#tip)"/>
+    <line x1="485" y1="336" x2="671" y2="336" marker-end="url(#tip)"/>
+  </g>
+  <g stroke="#B98A00" stroke-width="1.4" fill="none">
+    <line x1="685" y1="422" x2="871" y2="422" marker-end="url(#tipa)"/>
+  </g>
+  <g stroke="#9AA4B6" stroke-width="1.4" fill="none" stroke-dasharray="5 5">
+    <line x1="871" y1="470" x2="689" y2="470" marker-end="url(#tip)"/>
+    <line x1="671" y1="524" x2="489" y2="524" marker-end="url(#tip)"/>
+  </g>
+  <g stroke="#9AA4B6" stroke-width="1.4" fill="none">
+    <line x1="485" y1="568" x2="1065" y2="568" marker-end="url(#tip)"/>
+  </g>
+  <g stroke="#9AA4B6" stroke-width="1.4" fill="none" stroke-dasharray="5 5">
+    <line x1="471" y1="612" x2="309" y2="612" marker-end="url(#tip)"/>
+    <line x1="291" y1="644" x2="126" y2="644" marker-end="url(#tip)"/>
+  </g>
+
+  <!-- message labels -->
+  <g font-size="13.5" fill="#4A5262">
+    <text x="210" y="188" text-anchor="middle">asks for something</text>
+    <text x="388" y="232" text-anchor="middle">start a run</text>
+    <text x="540" y="284">reads agent.md</text>
+    <text x="540" y="302">builds options</text>
+    <text x="578" y="328" text-anchor="middle">opens a session</text>
+    <text x="778" y="414" text-anchor="middle" fill="#8A6D00">calls a tool, runs a skill</text>
+    <text x="780" y="462" text-anchor="middle">result</text>
+    <text x="580" y="516" text-anchor="middle">events, output, token usage</text>
+    <text x="775" y="560" text-anchor="middle">writes steps, tokens, cost</text>
+    <text x="390" y="604" text-anchor="middle">result</text>
+    <text x="208" y="636" text-anchor="middle">answer and files</text>
+  </g>
+
+  <!-- loop fragment -->
+  <rect x="628" y="368" width="286" height="126" rx="4" fill="none" stroke="#C8D0DC" stroke-width="1.25"/>
+  <path d="M 628 368 h 74 v 16 l -10 10 h -64 z" fill="#EEF1F6" stroke="#C8D0DC" stroke-width="1.25"/>
+  <text x="640" y="382" font-size="12" font-weight="700" fill="#6B7280">loop</text>
+  <text x="712" y="382" font-size="12.5" fill="#8A93A3">until the task is done</text>
+
+  <!-- footer -->
+  <line x1="64" y1="674" x2="1136" y2="674" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="64" y="706" font-size="17" font-weight="700" fill="#0A0A0A">Six participants. Exactly one of them bills you.</text>
+  <text x="556" y="706" font-size="15" fill="#8A93A3">Everything before and after the amber column is plain code.</text>
+</svg>
