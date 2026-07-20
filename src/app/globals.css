@@ -423,6 +423,39 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
   border-radius: var(--md-sys-shape-corner-medium);
 }
 
+/* Diagrams carry more detail than a 720px measure can show: at column width
+   their labels land around 8px. Figures served from /figures/ break out of the
+   measure on wide screens and pan horizontally on narrow ones. Scoped to that
+   path on purpose, so author-uploaded photos in older posts keep their size
+   instead of being stretched past their natural resolution. */
+.article-content figure:has(img[src^="/figures/"]) {
+  margin: 2.5rem 0;
+}
+
+@media (min-width: 900px) {
+  .article-content figure:has(img[src^="/figures/"]) {
+    width: min(1080px, calc(100vw - 5rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 899px) {
+  .article-content figure:has(img[src^="/figures/"]) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .article-content figure:has(img[src^="/figures/"]) img {
+    min-width: 680px;
+    max-width: none;
+  }
+  .article-content figure:has(img[src^="/figures/"]) figcaption {
+    position: sticky;
+    left: 0;
+    max-width: calc(100vw - 3rem);
+  }
+}
+
 .article-content hr {
   border: none;
   border-top: 1px solid var(--article-border);
