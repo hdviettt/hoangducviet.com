@@ -20,6 +20,7 @@ interface MediaPickerProps {
 export default function MediaPicker({ value, onChange, label }: MediaPickerProps) {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [preview, setPreview] = useState(false);
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -73,9 +74,18 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
       )}
       <div className="flex items-center gap-2">
         {value ? (
-          <div className="relative w-20 h-14 border border-md-outline-variant bg-md-surface-container rounded-lg overflow-hidden shrink-0">
-            <img src={value} alt="" className="w-full h-full object-cover" />
-          </div>
+          // object-contain, not cover: a 1200x630 cover cropped to a 80x56 box
+          // hides the composition. Click opens it at full size, which is the
+          // only way to review a cover that lives in /public and therefore
+          // never appears in the uploaded media library.
+          <button
+            type="button"
+            onClick={() => setPreview(true)}
+            title="view full size"
+            className="relative w-28 h-20 border border-md-outline-variant bg-md-surface-container rounded-lg overflow-hidden shrink-0 hover:border-md-primary transition-colors"
+          >
+            <img src={value} alt="" className="w-full h-full object-contain" />
+          </button>
         ) : (
           <div className="w-20 h-14 border border-dashed border-md-outline-variant rounded-lg flex items-center justify-center shrink-0">
             <span className="md-body-small text-md-on-surface-variant">none</span>
@@ -100,6 +110,39 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
           )}
         </div>
       </div>
+
+      {/* Full-size preview. SVG covers animate here, so this doubles as the
+          only place to check an animated cover before publishing. */}
+      {preview && value && (
+        <button
+          type="button"
+          aria-label="close preview"
+          onClick={() => setPreview(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6"
+        >
+          <div className="w-full max-w-4xl">
+            <img
+              src={value}
+              alt=""
+              className="w-full h-auto rounded-2xl shadow-md-4 bg-md-surface-container"
+            />
+            <div className="mt-3 flex items-center justify-between gap-4">
+              <span className="md-body-small font-mono text-white/70 truncate">
+                {value}
+              </span>
+              <a
+                href={value}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="md-body-small text-white/90 underline shrink-0"
+              >
+                open in new tab
+              </a>
+            </div>
+          </div>
+        </button>
+      )}
 
       {/* Modal */}
       {open && (
