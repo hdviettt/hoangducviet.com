@@ -1,3 +1,4 @@
+import { feedRowDate } from "@/components/posts/FeedRow";
 import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
@@ -143,55 +144,66 @@ export default async function SeriesPage({ params }: SeriesParams) {
     );
   }
 
+  const totalViews = posts.reduce(
+    (sum: number, p: any) => sum + (p.slug ? (viewCounts[p.slug] ?? 0) : 0),
+    0,
+  );
+  // The feed shows the series cover from /covers/, so the series page leads
+  // with the same image. Falling back to the stored thumbnail would repeat a
+  // picture that already appears inside the description body.
+  const coverUrl = `/covers/series-${params.seriesSlug}.svg`;
+
   return (
-    <div className="pt-12 sm:pt-16 md:pt-24 pb-24 md:pb-32">
+    <div className="pt-12 sm:pt-16 md:pt-20 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* Back — there's only one place to go back to: home */}
-      <Link
-        href="/"
-        className="group inline-flex items-center gap-2 md-label-large text-md-on-surface-variant hover:text-md-on-surface transition-colors mb-10 md:mb-16"
-      >
-        <Icon
-          name="arrow_back"
-          size={18}
-          className="text-primary/60 group-hover:text-primary transition-colors"
-        />
-        home
-      </Link>
 
-      {/* Flagship hero — overline, display heading, lede summary, primary CTA */}
-      <header className="mb-12 sm:mb-16 md:mb-20 max-w-3xl">
-        <span className="md-label-medium uppercase tracking-widest text-primary mb-3 block">
-          {isSeries ? `series · ${posts.length} parts` : "series"}
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[56px] md:leading-[64px] font-normal tracking-tight text-md-on-surface">
+      {/* Same anatomy as the feed's series block: meta line, display title,
+          summary, then the cover. */}
+      <header className="mb-10 md:mb-14">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+          <span className="font-medium text-primary">Series</span>
+          {isSeries && <span>{posts.length} parts</span>}
+          {seriesDate && (
+            <time className="tabular-nums" dateTime={seriesItem.date_created ?? ""}>
+              {seriesDate}
+            </time>
+          )}
+          {totalViews > 0 && <ViewCount count={totalViews} />}
+        </div>
+
+        <h1 className="mt-3 text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
           {seriesItem.title}
         </h1>
 
         {seriesItem.summary && (
-          <p className="mt-6 text-lg md:text-xl leading-relaxed text-md-on-surface-variant max-w-2xl">
+          <p className="mt-4 text-[18px] leading-[30px] text-md-on-surface-variant max-w-[760px]">
             {seriesItem.summary}
           </p>
         )}
 
-        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-          {seriesDate && (
-            <time
-              dateTime={seriesItem.date_created ?? ""}
-              className="tabular-nums text-md-on-surface-variant/70"
+        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[15px] leading-5 font-medium">
+          {firstPost && (
+            <Link
+              href={`/posts/${firstPost.slug}`}
+              className="group inline-flex items-center gap-1.5 text-md-on-surface hover:text-primary transition-colors duration-200 ease-md-standard"
             >
-              {seriesDate}
-            </time>
+              {isSeries ? "Start reading, part 1" : "Start reading"}
+              <Icon
+                name="arrow_forward"
+                size={16}
+                className="transition-transform duration-200 group-hover:translate-x-0.5"
+              />
+            </Link>
           )}
           {seriesItem.url && (
             <a
               href={seriesItem.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-primary hover:underline transition-colors"
+              className="inline-flex items-center gap-1.5 text-md-on-surface-variant hover:text-primary transition-colors"
             >
               {(() => {
                 try {
@@ -204,76 +216,72 @@ export default async function SeriesPage({ params }: SeriesParams) {
             </a>
           )}
         </div>
-
-        {firstPost && (
-          <Link
-            href={`/posts/${firstPost.slug}`}
-            className="mt-8 inline-flex items-center gap-2 h-12 px-6 rounded-full bg-md-primary text-md-on-primary md-label-large hover:shadow-md-1 hover:brightness-105 transition-all duration-200 ease-md-standard"
-          >
-            {isSeries ? "Start reading — Part 1" : "Start reading"}
-            <Icon name="arrow_forward" size={18} />
-          </Link>
-        )}
       </header>
 
-      {/* Long-form description */}
+      <div className="mb-12 md:mb-16 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
+        {/* biome-ignore lint/a11y/useAltText: decorative cover, title precedes it */}
+        <img src={coverUrl} alt="" decoding="async" className="w-full h-auto" />
+      </div>
+
       {seriesItem.description && (
         <div
-          className="article-content mb-16 md:mb-20 max-w-2xl"
+          className="article-content mx-auto max-w-[720px] mb-16 md:mb-20"
           dangerouslySetInnerHTML={{ __html: seriesItem.description }}
         />
       )}
 
-      {/* Parts — a numbered syllabus that reads as one curriculum */}
+      {/* Parts carry the same card anatomy as the feed: full description, one
+          hairline per card, cover on the right, image on top below sm. */}
       {posts.length > 0 && (
-        <section className="max-w-2xl">
-          <h2 className="md-label-medium uppercase tracking-widest text-md-on-surface-variant mb-2 block pb-3 border-b border-md-outline-variant">
-            {isSeries ? "the series" : "posts in this series"}
+        <section>
+          <h2 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-md-on-surface-variant pb-4 border-b border-md-outline-variant">
+            {isSeries ? "The series" : "Posts in this series"}
           </h2>
-
-          <ol className="flex flex-col">
+          <div className="[&>a]:border-b [&>a]:border-md-outline-variant">
             {posts.map((post: any, i: number) => {
-              const d = post.date_created ? new Date(post.date_created) : null;
-              const date = d
-                ? d.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : "";
               const cleanTitle = isSeries
                 ? stripPartPrefix(post.title)
                 : post.title;
               const views = post.slug ? (viewCounts[post.slug] ?? 0) : 0;
-
               return (
-                <li key={post.slug}>
-                  <Link
-                    href={`/posts/${post.slug}`}
-                    className="group grid grid-cols-[2rem_1fr] gap-4 md:gap-6 -mx-3 px-3 py-5 rounded-xl border-b border-md-outline-variant hover:bg-md-surface-container-low transition-colors duration-200 ease-md-standard"
-                  >
-                    <span className="md-title-medium tabular-nums text-primary/50 group-hover:text-primary transition-colors duration-200 pt-0.5">
-                      {isSeries ? String(i + 1).padStart(2, "0") : "→"}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="md-title-large font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200">
-                        {cleanTitle}
-                      </h3>
-                      {post.description && (
-                        <p className="mt-1.5 md-body-medium text-md-on-surface-variant line-clamp-2">
-                          {post.description}
-                        </p>
-                      )}
-                      <div className="mt-2.5 flex items-center gap-3 flex-wrap md-label-small tabular-nums text-md-on-surface-variant/70">
-                        {date && <span>{date}</span>}
-                        {views > 0 && <ViewCount count={views} />}
-                      </div>
+                <Link
+                  key={post.slug}
+                  href={`/posts/${post.slug}`}
+                  className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
+                >
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                      {cleanTitle}
+                    </h3>
+                    {post.description && (
+                      <p className="mt-3 text-[16px] leading-[26px] text-md-on-surface-variant">
+                        {post.description}
+                      </p>
+                    )}
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+                      {isSeries && <span className="tabular-nums">Part {i + 1}</span>}
+                      <span className="tabular-nums">
+                        {feedRowDate(post.date_created)}
+                      </span>
+                      {views > 0 && <ViewCount count={views} />}
                     </div>
-                  </Link>
-                </li>
+                  </div>
+                  {post.thumbnail && (
+                    <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
+                      {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
+                      <img
+                        src={post.thumbnail}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform duration-300 ease-md-standard group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  )}
+                </Link>
               );
             })}
-          </ol>
+          </div>
         </section>
       )}
     </div>

@@ -25,10 +25,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Check localStorage for stored preference, default to light
+    // A stored choice wins; otherwise follow the operating system, matching
+    // the pre-hydration script in layout.tsx so the two never disagree.
     const stored = localStorage.getItem("theme") as Theme | null;
     if (stored) {
       setTheme(stored);
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setTheme("dark");
     }
     setMounted(true);
   }, []);

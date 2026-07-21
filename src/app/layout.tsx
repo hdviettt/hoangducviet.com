@@ -40,15 +40,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Script to prevent theme flash - runs before React hydration
-// Default is light mode, only switch to dark if explicitly stored
+// Runs before hydration so the first paint is already the right theme.
+// A stored choice always wins; with no choice we follow the operating system,
+// which is what a visitor arriving in dark mode expects to see.
 const themeScript = `
   (function() {
     try {
-      var theme = localStorage.getItem('theme');
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      }
+      var stored = localStorage.getItem('theme');
+      var dark = stored
+        ? stored === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (dark) document.documentElement.classList.add('dark');
     } catch (e) {}
   })();
 `;
