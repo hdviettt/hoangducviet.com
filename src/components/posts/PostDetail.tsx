@@ -10,6 +10,7 @@ import { getAnonId } from "@/lib/anon";
 import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
 import { getLikeState } from "@/lib/likes";
 import { getPostViewCount } from "@/lib/posthog-server";
+import { socialImagePath } from "@/lib/og";
 import {
   getAdjacentPosts,
   getPostBySlug,
@@ -65,6 +66,15 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
       : `${baseUrl}${data.thumbnail}`
     : undefined;
 
+  // Structured data and social cards want a raster; the page itself keeps the
+  // animated SVG.
+  const sharePath = socialImagePath(data.thumbnail);
+  const shareUrl = sharePath
+    ? sharePath.startsWith("http")
+      ? sharePath
+      : `${baseUrl}${sharePath}`
+    : undefined;
+
   const jsonLd = [
     createBlogPostingSchema({
       title: data.title || "",
@@ -72,7 +82,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
       url: postUrl,
       datePublished: data.date_created || "",
       dateModified: data.date_updated || data.date_created || "",
-      image: thumbnailUrl,
+      image: shareUrl,
       authorName: "Hoang Duc Viet",
       authorUrl: baseUrl,
     }),
