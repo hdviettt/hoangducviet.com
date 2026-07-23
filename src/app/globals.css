@@ -548,6 +548,56 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
   background: hsl(var(--md-sys-color-surface-container-high));
 }
 
+/* The canvas around media that does not fill the frame. `ambient` blurs the
+   slide's own picture behind itself, so the letterbox is an out-of-focus
+   continuation of the artwork rather than a grey band — it can never clash,
+   and every slide gets a different one for free. */
+.media-carousel .media-carousel__frame > img.media-carousel__mat,
+.article-content
+  .media-carousel
+  .media-carousel__frame
+  > img.media-carousel__mat {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  min-width: 0;
+  object-fit: cover;
+  /* Scaled past the frame so the blur's soft edge never reaches the corners. */
+  transform: scale(1.3);
+  filter: blur(36px) saturate(1.5);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* One fixed brand wash instead — same on every slide. A soft disc rising from
+   the bottom-right keeps it from reading as a flat gradient sweep; it is the
+   move deepmind.google uses on its own slide canvases. */
+.media-carousel__frame[data-mat="brand"] {
+  background:
+    radial-gradient(
+        closest-side circle at 50% 50%,
+        hsl(var(--md-sys-color-primary) / 0.13),
+        hsl(var(--md-sys-color-primary) / 0.13) 99%,
+        transparent
+      )
+      72% 112% / 58% 150% no-repeat,
+    radial-gradient(
+      125% 115% at 10% -10%,
+      hsl(var(--md-sys-color-primary) / 0.2),
+      transparent 60%
+    ),
+    radial-gradient(
+      115% 115% at 95% 105%,
+      hsl(var(--md-sys-color-tertiary) / 0.18),
+      transparent 55%
+    ),
+    hsl(var(--md-sys-color-surface-container));
+}
+
 /* Three classes deep on purpose: the article's own figure rules are two
    classes plus an element, and a slide is a figure holding an img, so
    anything less specific loses to them. */
@@ -555,6 +605,8 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
 .media-carousel .media-carousel__frame > video,
 .article-content .media-carousel .media-carousel__frame > img,
 .article-content .media-carousel .media-carousel__frame > video {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;

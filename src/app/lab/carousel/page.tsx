@@ -32,19 +32,64 @@ only thing telling you there is more to the right.
 }
 \`\`\`
 
-## Mixed ratios (the awkward case)
+## Mixed ratios — \`mat: "brand"\` (default)
 
 These are the article diagrams, which are wider than 16:9. They letterbox
-instead of cropping, because cropping a diagram destroys it. If a carousel has
-to hold assets like these, set an explicit \`ratio\`.
+instead of cropping, because cropping a diagram destroys it. The leftover
+canvas is a SEONGON wash with a soft disc rising through it, so it reads as a
+designed surface rather than a grey band.
+
+All three blocks below deliberately set \`ratio: "3 / 2"\` against 2.2:1
+diagrams, so the canvas is big enough to judge. In a real post you would match
+the ratio and see almost none of it.
 
 \`\`\`widget:carousel
-[
-  { "src": "/figures/platform-primitives.svg", "caption": "Three primitives: an agent is a Markdown file, a skill is a folder, a connector is a contract." },
-  { "src": "/figures/platform-ownership.svg", "caption": "Who owns what. Green is a person's call, blue is the platform's, amber is the model's." },
-  { "src": "/figures/platform-request-sequence.svg", "caption": "One request, end to end, in the order it actually happens." },
-  { "src": "/figures/platform-where-it-runs.svg", "caption": "Where each piece runs once it leaves a laptop." }
-]
+{
+  "ratio": "3 / 2",
+  "items": [
+    { "src": "/figures/platform-primitives.svg", "caption": "Three primitives: an agent is a Markdown file, a skill is a folder, a connector is a contract." },
+    { "src": "/figures/platform-ownership.svg", "caption": "Who owns what. Green is a person's call, blue is the platform's, amber is the model's." },
+    { "src": "/figures/platform-request-sequence.svg", "caption": "One request, end to end, in the order it actually happens." },
+    { "src": "/figures/platform-where-it-runs.svg", "caption": "Where each piece runs once it leaves a laptop." }
+  ]
+}
+\`\`\`
+
+## Same slides — \`mat: "ambient"\`
+
+A blurred, scaled copy of the slide's own picture instead — the letterbox
+becomes an out-of-focus continuation, so it can never clash. Barely shows
+behind near-white diagrams like these; much stronger under colourful or
+photographic slides.
+
+\`\`\`widget:carousel
+{
+  "mat": "ambient",
+  "ratio": "3 / 2",
+  "items": [
+    { "src": "/figures/platform-primitives.svg", "caption": "Three primitives: an agent is a Markdown file, a skill is a folder, a connector is a contract." },
+    { "src": "/figures/platform-ownership.svg", "caption": "Who owns what. Green is a person's call, blue is the platform's, amber is the model's." },
+    { "src": "/figures/platform-request-sequence.svg", "caption": "One request, end to end, in the order it actually happens." },
+    { "src": "/figures/platform-where-it-runs.svg", "caption": "Where each piece runs once it leaves a laptop." }
+  ]
+}
+\`\`\`
+
+## Same slides — \`mat: "flat"\`
+
+What it looked like before: a plain surface tint.
+
+\`\`\`widget:carousel
+{
+  "mat": "flat",
+  "ratio": "3 / 2",
+  "items": [
+    { "src": "/figures/platform-primitives.svg", "caption": "Three primitives: an agent is a Markdown file, a skill is a folder, a connector is a contract." },
+    { "src": "/figures/platform-ownership.svg", "caption": "Who owns what. Green is a person's call, blue is the platform's, amber is the model's." },
+    { "src": "/figures/platform-request-sequence.svg", "caption": "One request, end to end, in the order it actually happens." },
+    { "src": "/figures/platform-where-it-runs.svg", "caption": "Where each piece runs once it leaves a laptop." }
+  ]
+}
 \`\`\`
 
 ## Clips

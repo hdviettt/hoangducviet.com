@@ -28,12 +28,29 @@ interface MediaCarouselProps {
    * with no chrome on hover and nothing to pause or scrub.
    */
   controls?: boolean;
+  /**
+   * What fills the canvas around media that does not match `ratio`.
+   * - `brand` (default): a SEONGON wash with a soft disc, the same on every
+   *   slide. Reads as a designed canvas rather than a grey band, and holds up
+   *   under the light technical diagrams most posts here carry.
+   * - `ambient`: a blurred, scaled copy of the slide's own image, so the
+   *   letterbox is an out-of-focus continuation that can never clash. Better
+   *   for colourful or photographic sets; nearly invisible behind white
+   *   diagrams. Videos use their poster, or fall back to a plain tint.
+   * - `flat`: a plain surface tint, no decoration.
+   */
+  mat?: "brand" | "ambient" | "flat";
 }
 
 const VIDEO_EXT = /\.(mp4|webm|ogv|mov|m4v)(\?|#|$)/i;
 
 const isVideo = (item: CarouselItem) =>
   item.type ? item.type === "video" : VIDEO_EXT.test(item.src || "");
+
+// The still a slide can blur behind itself: an image is its own backdrop, a
+// video only has one if the author supplied a poster.
+const backdropOf = (item: CarouselItem) =>
+  isVideo(item) ? item.poster : item.src;
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
@@ -55,6 +72,7 @@ export default function MediaCarousel({
   ratio = "16 / 9",
   label = "Media carousel",
   controls = false,
+  mat = "brand",
 }: MediaCarouselProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -242,7 +260,18 @@ export default function MediaCarousel({
             <div
               className="media-carousel__frame"
               data-fit={item.fit === "cover" ? "cover" : "contain"}
+              data-mat={mat}
             >
+              {mat === "ambient" && backdropOf(item) && (
+                <img
+                  className="media-carousel__mat"
+                  src={backdropOf(item)}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
               {isVideo(item) ? (
                 // No controls by default: a demo clip should read as a moving
                 // picture, not a video player. Nothing appears on hover, there
