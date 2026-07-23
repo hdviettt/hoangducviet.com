@@ -1,120 +1,70 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
   <defs>
-    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.95">
-      <stop offset="0" stop-color="#0E1A31"/><stop offset="0.55" stop-color="#080D18"/><stop offset="1" stop-color="#04060B"/>
+    <radialGradient id="bg" cx="0.5" cy="0.44" r="0.95">
+      <stop offset="0" stop-color="#0E1A31"/><stop offset="0.58" stop-color="#080D18"/><stop offset="1" stop-color="#04060B"/>
     </radialGradient>
-    <linearGradient id="edgeBlue" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#0057FF"/><stop offset="1" stop-color="#2E86FF"/></linearGradient>
-    <linearGradient id="rail" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2E86FF"/><stop offset="1" stop-color="#2E86FF"/></linearGradient>
-    <radialGradient id="amber" cx="0.4" cy="0.34" r="0.8"><stop offset="0" stop-color="#FFF0B0"/><stop offset="0.55" stop-color="#FFCE00"/><stop offset="1" stop-color="#D9A400"/></radialGradient>
-    <radialGradient id="amberHaze" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFCE00" stop-opacity="0.5"/><stop offset="1" stop-color="#FFCE00" stop-opacity="0"/></radialGradient>
-    <pattern id="grid" width="46" height="46" patternUnits="userSpaceOnUse"><path d="M 46 0 L 0 0 0 46" fill="none" stroke="#5B7BB5" stroke-opacity="0.06" stroke-width="1"/></pattern>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="26"/></filter>
-    <clipPath id="win"><rect x="908" y="250" width="216" height="150" rx="10"/></clipPath>
-    <style>
-      .flow { stroke-dasharray: 5 9; animation: dash 1.4s linear infinite; }
-      @keyframes dash { to { stroke-dashoffset: -28; } }
-      .pulse { animation: run 3.4s ease-in-out infinite; }
-      @keyframes run { 0%{opacity:0;transform:translateX(0)} 8%{opacity:1} 92%{opacity:1} 100%{opacity:0;transform:translateX(430px)} }
-      .breathe { animation: br 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes br { 0%,100%{opacity:.85;transform:scale(1)} 50%{opacity:1;transform:scale(1.05)} }
-      @media (prefers-reduced-motion: reduce){ .flow{animation:none} .pulse{opacity:1;animation:none} .breathe{animation:none} }
-    </style>
+    <linearGradient id="paneA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111F36" stop-opacity="0.85"/><stop offset="1" stop-color="#0B1730" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="paneR" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A2447"/><stop offset="1" stop-color="#081E3C"/>
+    </linearGradient>
+    <linearGradient id="amberEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD84D" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#FFC400"/>
+      <stop offset="1" stop-color="#FFD84D" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="26"/></filter>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect width="1200" height="630" fill="url(#grid)"/>
-  <ellipse cx="470" cy="320" rx="300" ry="200" fill="#0B6BFF" fill-opacity="0.13" filter="url(#soft)"/>
+  <ellipse cx="600" cy="315" rx="380" ry="240" fill="#0B6BFF" fill-opacity="0.09" filter="url(#soft)"/>
 
-  <g transform="translate(600 315) scale(1.06) translate(-600 -330)">
+  <g transform="translate(600 315) scale(1.02)">
+    <!-- centre the stack around (0,0); skewY gives depth -->
+    <g transform="translate(-300 -150) skewY(16)">
+      <!-- back pane: target markup, faintest -->
+      <g transform="translate(70 -34)">
+        <rect x="0" y="0" width="286" height="250" rx="9" fill="url(#paneA)" stroke="#2B476E" stroke-width="0"/>
+        <rect x="0" y="0" width="286" height="250" rx="9" fill="none" stroke="#2B476E" stroke-width="1.5"/>
+        <g stroke="#2E5C9E" stroke-width="2" stroke-linecap="round" opacity="0.42">
+          <line x1="30" y1="48" x2="196" y2="48"/><line x1="30" y1="74" x2="150" y2="74"/>
+          <line x1="30" y1="100" x2="224" y2="100"/><line x1="30" y1="126" x2="140" y2="126"/>
+          <line x1="30" y1="152" x2="200" y2="152"/><line x1="30" y1="178" x2="168" y2="178"/>
+        </g>
+      </g>
+      <!-- front pane: source markup -->
+      <g transform="translate(0 34)">
+        <rect x="0" y="0" width="286" height="250" rx="9" fill="url(#paneA)" stroke="#375782" stroke-width="1.75"/>
+        <g stroke="#3E6DA8" stroke-width="2" stroke-linecap="round" opacity="0.62">
+          <line x1="30" y1="48" x2="176" y2="48"/><line x1="30" y1="74" x2="214" y2="74"/>
+          <line x1="30" y1="100" x2="146" y2="100"/><line x1="30" y1="126" x2="196" y2="126"/>
+          <line x1="30" y1="152" x2="172" y2="152"/><line x1="30" y1="178" x2="120" y2="178"/>
+        </g>
+      </g>
+    </g>
 
-  <!-- ============ 1. CONTENT — a raw Google Doc, messy inline styles ============ -->
-  <g>
-    <rect x="76" y="238" width="196" height="174" rx="12" fill="#0C1B30" stroke="#31507D" stroke-width="1.5"/>
-    <rect x="76" y="238" width="196" height="34" rx="12" fill="#12233C"/>
-    <rect x="76" y="256" width="196" height="16" fill="#12233C"/>
-    <circle cx="95" cy="255" r="4" fill="#3E6DA8"/><circle cx="109" cy="255" r="4" fill="#3E6DA8"/>
-    <text x="120" y="260" font-size="11" fill="#6E86AB" class="mono" font-family="ui-monospace,Menlo,Consolas,monospace">doc.html</text>
-    <!-- messy markup lines: reddish = inline-style noise -->
-    <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="10.5">
-      <text x="92" y="300" fill="#C97B7B">&lt;p style="margin:0"&gt;</text>
-      <text x="92" y="318" fill="#C97B7B">&lt;span style="fw:400"&gt;</text>
-      <text x="92" y="336" fill="#7C93B6">Lorem ipsum dolor</text>
-      <text x="92" y="354" fill="#C97B7B">&lt;/span&gt;&lt;br&gt;</text>
-      <text x="92" y="372" fill="#7C93B6">sit amet, elit sed</text>
-      <text x="92" y="390" fill="#C97B7B">&lt;img src="blob:.."&gt;</text>
+    <!-- the single amber seam: one bright vertical edge where the two are reconciled -->
+    <g transform="translate(0 0)">
+      <rect x="-6" y="-150" width="12" height="300" fill="#FFC400" opacity="0.12" filter="url(#soft)"/>
+      <rect x="-1.5" y="-140" width="3" height="280" fill="url(#amberEdge)"/>
+    </g>
+
+    <!-- the result pane: crisp blue, forward, emerging past the seam -->
+    <g transform="translate(16 -120) skewY(16)">
+      <rect x="0" y="0" width="286" height="250" rx="9" fill="#0A1F3D" stroke="#2E86FF" stroke-width="2"/>
+      <g stroke-linecap="round">
+        <line x1="30" y1="48" x2="196" y2="48" stroke="#2E86FF" stroke-width="7"/>
+        <line x1="30" y1="76" x2="236" y2="76" stroke="#3E6DA8" stroke-width="3"/>
+        <line x1="30" y1="96" x2="236" y2="96" stroke="#3E6DA8" stroke-width="3"/>
+        <line x1="30" y1="116" x2="210" y2="116" stroke="#3E6DA8" stroke-width="3"/>
+        <line x1="30" y1="150" x2="196" y2="150" stroke="#28405f" stroke-width="3"/>
+        <line x1="30" y1="170" x2="236" y2="170" stroke="#28405f" stroke-width="3"/>
+        <line x1="30" y1="190" x2="168" y2="190" stroke="#28405f" stroke-width="3"/>
+      </g>
     </g>
   </g>
 
-  <!-- content -> agent, neutral thin line -->
-  <line x1="272" y1="325" x2="356" y2="325" stroke="#3E5A82" stroke-width="1.5"/>
-
-  <!-- ============ 2. THE AGENT — adapts HTML once, then hands to code ============ -->
-  <g>
-    <circle cx="470" cy="325" r="120" fill="url(#amberHaze)" filter="url(#soft)"/>
-    <!-- two samples it reads: source markup + target markup -->
-    <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="9.5">
-      <rect x="360" y="262" width="70" height="26" rx="5" fill="#0C1B30" stroke="#31507D" stroke-width="1"/>
-      <text x="370" y="279" fill="#7C93B6">source</text>
-      <rect x="360" y="362" width="70" height="26" rx="5" fill="#0C1B30" stroke="#31507D" stroke-width="1"/>
-      <text x="370" y="379" fill="#7C93B6">target</text>
-      <line x1="430" y1="275" x2="452" y2="312" stroke="#8A6D00" stroke-width="1.25"/>
-      <line x1="430" y1="375" x2="452" y2="338" stroke="#8A6D00" stroke-width="1.25"/>
-    </g>
-    <!-- the agent node: hexagon, amber-edged, an HTML-transform glyph inside -->
-    <g class="breathe">
-      <path d="M470 268 L512 294 L512 356 L470 382 L428 356 L428 294 Z" fill="#12233C" stroke="url(#amber)" stroke-width="2.5"/>
-      <path d="M470 268 L512 294 L512 356 L470 382 L428 356 L428 294 Z" fill="none" stroke="#FFCE00" stroke-opacity="0.25" stroke-width="6"/>
-      <!-- glyph: </>  becoming an arrow → -->
-      <text x="470" y="333" font-size="26" font-weight="700" fill="#FFCE00" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace">&lt;/&gt;</text>
-    </g>
-    <!-- what it emits: a small pattern token, amber -->
-    <rect x="520" y="312" width="26" height="26" rx="6" fill="#1A2233" stroke="#FFCE00" stroke-width="1.5"/>
-    <text x="533" y="330" font-size="13" fill="#FFCE00" text-anchor="middle" font-family="ui-monospace,Menlo,Consolas,monospace">✦</text>
-  </g>
-
-  <!-- ============ handoff: amber gives way to a BLUE deterministic rail ============ -->
-  <g>
-    <line x1="546" y1="325" x2="712" y2="325" stroke="url(#rail)" stroke-width="2.5"/>
-    <line x1="546" y1="325" x2="712" y2="325" stroke="#8FD0FF" stroke-width="2.5" class="flow" opacity="0.7"/>
-    <circle cx="558" cy="325" r="4.5" fill="#8FD0FF" class="pulse"/>
-    <text x="629" y="312" font-size="10.5" fill="#5B7BB5" text-anchor="middle" letter-spacing="1.5">DETERMINISTIC CODE</text>
-  </g>
-
-  <!-- ============ 3. CMS — a clean WordPress draft ============ -->
-  <g>
-    <rect x="716" y="238" width="176" height="174" rx="12" fill="#0C1B30" stroke="url(#edgeBlue)" stroke-width="1.75"/>
-    <rect x="716" y="238" width="176" height="30" rx="12" fill="#12233C"/>
-    <rect x="716" y="252" width="176" height="16" fill="#12233C"/>
-    <circle cx="734" cy="254" r="5" fill="#2E86FF"/>
-    <text x="748" y="258" font-size="11" fill="#7FA8E0" class="mono" font-family="ui-monospace,Menlo,Consolas,monospace">WordPress</text>
-    <!-- clean structured blocks -->
-    <rect x="734" y="286" width="120" height="9" rx="2" fill="#2E86FF" opacity="0.85"/>
-    <rect x="734" y="304" width="140" height="6" rx="2" fill="#3E6DA8"/>
-    <rect x="734" y="316" width="140" height="6" rx="2" fill="#3E6DA8"/>
-    <rect x="734" y="334" width="80" height="40" rx="4" fill="#173252" stroke="#2E5C9E" stroke-width="1"/>
-    <rect x="822" y="334" width="52" height="40" rx="4" fill="#173252" stroke="#2E5C9E" stroke-width="1"/>
-    <!-- DRAFT chip -->
-    <rect x="734" y="384" width="52" height="18" rx="9" fill="#173252" stroke="#2E5C9E" stroke-width="1"/>
-    <text x="760" y="397" font-size="10" fill="#7FA8E0" text-anchor="middle" letter-spacing="1">DRAFT</text>
-  </g>
-
-  <!-- CMS -> live, human presses publish (small green gate) -->
-  <line x1="892" y1="325" x2="904" y2="325" stroke="#2E5C9E" stroke-width="2"/>
-
-  <!-- ============ 4. LIVE — the published page in a browser ============ -->
-  <g>
-    <rect x="908" y="238" width="216" height="174" rx="12" fill="#0C1B30" stroke="#31507D" stroke-width="1.5"/>
-    <rect x="908" y="238" width="216" height="28" rx="12" fill="#12233C"/>
-    <rect x="908" y="252" width="216" height="14" fill="#12233C"/>
-    <circle cx="924" cy="252" r="3.5" fill="#3E6DA8"/><circle cx="936" cy="252" r="3.5" fill="#3E6DA8"/><circle cx="948" cy="252" r="3.5" fill="#3E6DA8"/>
-    <rect x="962" y="246" width="150" height="12" rx="6" fill="#0C1B30" stroke="#2E5C9E" stroke-width="1"/>
-    <g clip-path="url(#win)">
-      <rect x="908" y="266" width="216" height="134" fill="#0A1526"/>
-      <rect x="928" y="286" width="176" height="12" rx="3" fill="#2E86FF" opacity="0.9"/>
-      <rect x="928" y="308" width="120" height="7" rx="2" fill="#3E6DA8"/>
-      <rect x="928" y="322" width="176" height="46" rx="5" fill="#12233C"/>
-      <rect x="928" y="376" width="150" height="6" rx="2" fill="#28405f"/>
-    </g>
-  </g>
-  </g>
+  <text x="150" y="486" font-size="14.5" fill="#5E7398">source and target markup, read once</text>
+  <text x="1050" y="486" font-size="14.5" fill="#6E90C8" text-anchor="end">every article after, deterministic</text>
 </svg>
