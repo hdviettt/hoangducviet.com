@@ -102,8 +102,9 @@ content/
   RenderedVisual.tsx         — renders raw HTML in `language-render` code blocks
 
 widgets/
-  WidgetBlock.tsx, Counter.tsx, registry.ts, index.ts
+  WidgetBlock.tsx, Counter.tsx, Video.tsx, registry.ts, index.ts
                              — pluggable widgets injected via `language-widget:<name>` code fences
+  MediaCarousel.tsx          — full-bleed scroll-snap media strip (`widget:carousel`)
 
 providers/
   PostHogProvider.tsx        — analytics
@@ -125,6 +126,8 @@ Simple env-var comparison — no crypto, no DB lookup for sessions:
 
 1. **Markdown (Posts)** — `MarkdownContent.tsx` with `react-markdown` + `remark-gfm` + `remark-math` + `rehype-katex`. Heading anchors generated from text; `<img>` wrapped in `<figure>` with optional caption. Plain `<img>` with `loading="lazy"` is used (not `<Image>`) so author-uploaded images keep their natural aspect ratio.
 2. **Tiptap (Admin editor)** — markdown I/O via `tiptap-markdown`. Supports slash commands, image paste/drop, toolbar.
+3. **Widget fences** — a ```` ```widget:<name> ```` code fence carries a JSON body that becomes props. A bare JSON *array* is passed as `items`, so list-shaped widgets can be written without a wrapper object. Fences round-trip through the Tiptap editor byte-for-byte.
+   - `widget:carousel` — full-bleed scroll-snap strip of images/clips, one caption per slide, styled after deepmind.google. Each slide is a real `<figure>` in the SSR HTML, so captions stay crawlable. Clips autoplay muted and loop with no player chrome, and only while a slide is both centred and on screen. Set `ratio` to match the source assets (default `16 / 9`) or they letterbox. `/posts/<slug>.md` expands these fences into plain `![caption](src)` images for agent readers — see `src/lib/markdown-export.ts`.
 
 ## Media / Image Handling
 

@@ -1,3 +1,4 @@
+import { expandWidgetFences } from "@/lib/markdown-export";
 import { getPostBySlug, getSeriesForPost } from "@/lib/posts";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
@@ -41,7 +42,7 @@ export async function GET(
       canonical: `${BASE_URL}${canonicalPath}`,
     });
 
-    const body = `${head}\n\n${post.content ?? ""}\n`;
+    const body = `${head}\n\n${expandWidgetFences(post.content ?? "")}\n`;
 
     return new Response(body, {
       headers: {

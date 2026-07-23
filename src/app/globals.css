@@ -463,6 +463,187 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
   }
 }
 
+/* ================================
+   MEDIA CAROUSEL  (```widget:carousel```)
+   ================================ */
+
+/* Full-bleed strip, wider than the 1080px figure breakout: the neighbouring
+   slides have to be cut off by the viewport, because that peek is the only
+   affordance telling the reader there is more to the right. Width comes from
+   --mc-vw (documentElement.clientWidth, set by the component) so the OS
+   scrollbar doesn't push it off-centre; 100vw is only the pre-hydration
+   fallback. --mc-pad centres the first and last slide against scroll-snap. */
+.media-carousel {
+  --mc-gap: 1.5rem;
+  --mc-max: 1080px;
+  --mc-peek: 176px;
+  --mc-slide: min(var(--mc-max), calc(var(--mc-vw, 100vw) - var(--mc-peek) * 2));
+  --mc-pad: max(1.25rem, calc((var(--mc-vw, 100vw) - var(--mc-slide)) / 2));
+  width: var(--mc-vw, 100vw);
+  margin: 3rem 0;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 899px) {
+  .media-carousel {
+    --mc-gap: 0.75rem;
+    --mc-peek: 2.5rem;
+    margin: 2.25rem 0;
+    margin-left: 50%;
+  }
+}
+
+.media-carousel__track {
+  display: flex;
+  gap: var(--mc-gap);
+  padding-inline: var(--mc-pad);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.media-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.media-carousel__track:focus-visible {
+  outline: 2px solid hsl(var(--md-sys-color-primary));
+  outline-offset: 4px;
+  border-radius: var(--md-sys-shape-corner-medium);
+}
+
+/* Slides are <figure>s, so they inherit the article's figure breakout. Undo it
+   with enough specificity to beat both that rule and the mobile :has() pan. */
+.media-carousel .media-carousel__slide,
+.article-content .media-carousel figure.media-carousel__slide {
+  flex: 0 0 var(--mc-slide);
+  width: var(--mc-slide);
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  transform: none;
+  overflow: visible;
+  scroll-snap-align: center;
+  text-align: left;
+}
+
+/* One ratio for every slide: heights line up, and the scroll maths is exact
+   from first paint instead of jumping when each image decodes. */
+.media-carousel__frame {
+  position: relative;
+  aspect-ratio: var(--mc-ratio, 16 / 9);
+  overflow: hidden;
+  border-radius: var(--md-sys-shape-corner-large);
+  background: hsl(var(--md-sys-color-surface-container-high));
+}
+
+.media-carousel .media-carousel__frame > img,
+.media-carousel .media-carousel__frame > video,
+.article-content .media-carousel__frame > img,
+.article-content .media-carousel__frame > video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  border-radius: 0;
+  object-fit: contain;
+}
+
+.media-carousel__frame[data-fit="cover"] > img,
+.media-carousel__frame[data-fit="cover"] > video {
+  object-fit: cover;
+}
+
+/* Clips read as moving pictures, not players. Letting pointer events fall
+   through means a drag that starts on a clip still swipes the carousel. */
+.media-carousel__frame > video:not([controls]) {
+  pointer-events: none;
+  user-select: none;
+}
+
+.media-carousel__frame > video::-webkit-media-controls-start-playback-button {
+  display: none;
+}
+
+/* The caption lives inside the slide and travels with it — that is why a
+   half-visible neighbour shows a half-visible sentence on deepmind.google.
+   Body grey, the same token every other figcaption on the site uses: the
+   caption is a label, and an accent-coloured one reads as a link. */
+.media-carousel .media-carousel__caption,
+.article-content .media-carousel .media-carousel__caption {
+  margin: 1rem 0 0;
+  max-width: 46rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  text-align: left;
+  color: var(--article-text);
+}
+
+/* Controls sit flush with the active slide's left edge, not centred. */
+.media-carousel__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+  padding-inline: var(--mc-pad);
+}
+
+.media-carousel__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid hsl(var(--md-sys-color-outline-variant));
+  color: hsl(var(--md-sys-color-on-surface));
+  background: transparent;
+  transition:
+    background-color 150ms var(--md-sys-motion-easing-standard, ease),
+    opacity 150ms var(--md-sys-motion-easing-standard, ease);
+}
+
+.media-carousel__btn:hover:not(:disabled) {
+  background: hsl(var(--md-sys-color-surface-container));
+}
+
+.media-carousel__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* A hand-drawn scrollbar rather than dots: thumb width is the visible
+   fraction, so it reflects real scroll position between two snap points. */
+.media-carousel__rail {
+  position: relative;
+  flex: 0 1 220px;
+  height: 2px;
+  margin-left: 0.75rem;
+  border-radius: 9999px;
+  background: hsl(var(--md-sys-color-outline-variant));
+}
+
+.media-carousel__thumb {
+  position: absolute;
+  top: -1px;
+  height: 4px;
+  min-width: 24px;
+  border-radius: 9999px;
+  background: hsl(var(--md-sys-color-on-surface-variant));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-carousel__track {
+    scroll-behavior: auto;
+  }
+}
+
 .article-content hr {
   border: none;
   border-top: 1px solid var(--article-border);

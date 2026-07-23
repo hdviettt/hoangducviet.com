@@ -131,7 +131,13 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
             let widgetProps: Record<string, unknown> = {};
             if (raw) {
               try {
-                widgetProps = JSON.parse(raw);
+                const parsed = JSON.parse(raw);
+                // A bare array is the natural way to write a list-shaped
+                // widget (the carousel); spreading it would turn the entries
+                // into numeric props, so name it `items` instead.
+                widgetProps = Array.isArray(parsed)
+                  ? { items: parsed }
+                  : parsed;
               } catch {
                 // If not valid JSON, pass raw as "children" prop
                 widgetProps = { children: raw };
