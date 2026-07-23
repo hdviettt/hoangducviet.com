@@ -63,8 +63,7 @@ export default function MediaCarousel({
   const inViewRef = useRef(false);
 
   const [nav, setNav] = useState({
-    thumb: 1,
-    offset: 0,
+    progress: 1,
     atStart: true,
     atEnd: true,
     index: 0,
@@ -80,20 +79,21 @@ export default function MediaCarousel({
     return slide ? slide.offsetWidth + gap : el.clientWidth;
   }, []);
 
-  // The rail is a hand-drawn scrollbar: thumb width is the visible fraction of
-  // the track, position is progress through the scrollable range. Mapping to
-  // the *range* (not scrollWidth) makes the thumb land flush at both ends.
+  // The rail reads as a progress bar, not a scrollbar thumb: the fill is
+  // anchored left and its width is how much of the strip you have seen —
+  // (scrollLeft + clientWidth) / scrollWidth. That starts at the visible
+  // fraction rather than at zero and reaches the full rail at the last slide.
   const measure = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
     const max = scrollWidth - clientWidth;
-    const thumb = Math.min(1, clientWidth / Math.max(scrollWidth, 1));
-    const progress = max > 1 ? scrollLeft / max : 0;
     const step = stepSize(el);
     setNav({
-      thumb,
-      offset: progress * (1 - thumb),
+      progress: Math.min(
+        1,
+        (scrollLeft + clientWidth) / Math.max(scrollWidth, 1),
+      ),
       atStart: scrollLeft <= 2,
       atEnd: scrollLeft >= max - 2,
       index: step > 0 ? Math.min(count - 1, Math.round(scrollLeft / step)) : 0,
@@ -326,11 +326,8 @@ export default function MediaCarousel({
           </button>
           <div className="media-carousel__rail" aria-hidden="true">
             <span
-              className="media-carousel__thumb"
-              style={{
-                width: `${nav.thumb * 100}%`,
-                left: `${nav.offset * 100}%`,
-              }}
+              className="media-carousel__progress"
+              style={{ width: `${nav.progress * 100}%` }}
             />
           </div>
           <p className="sr-only" aria-live="polite">

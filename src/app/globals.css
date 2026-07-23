@@ -446,17 +446,24 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
 }
 
 /* Vector diagrams from /figures/ carry fine labels; on phones let them pan
-   horizontally rather than shrink to illegibility. Raster uploads just fit. */
+   horizontally rather than shrink to illegibility. Raster uploads just fit.
+   Carousel slides are excluded: they are figures holding the same /figures/
+   images, but a 680px min-width inside a 310px slide bursts the frame, and a
+   nested horizontal pan fights the strip's own horizontal snap. */
 @media (max-width: 899px) {
-  .article-content figure:has(img[src^="/figures/"]) {
+  .article-content figure:not(.media-carousel__slide):has(img[src^="/figures/"]) {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  .article-content figure:has(img[src^="/figures/"]) img {
+  .article-content
+    figure:not(.media-carousel__slide):has(img[src^="/figures/"])
+    img {
     min-width: 680px;
     max-width: none;
   }
-  .article-content figure:has(img[src^="/figures/"]) figcaption {
+  .article-content
+    figure:not(.media-carousel__slide):has(img[src^="/figures/"])
+    figcaption {
     position: sticky;
     left: 0;
     max-width: calc(100vw - 3rem);
@@ -541,10 +548,13 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
   background: hsl(var(--md-sys-color-surface-container-high));
 }
 
+/* Three classes deep on purpose: the article's own figure rules are two
+   classes plus an element, and a slide is a figure holding an img, so
+   anything less specific loses to them. */
 .media-carousel .media-carousel__frame > img,
 .media-carousel .media-carousel__frame > video,
-.article-content .media-carousel__frame > img,
-.article-content .media-carousel__frame > video {
+.article-content .media-carousel .media-carousel__frame > img,
+.article-content .media-carousel .media-carousel__frame > video {
   display: block;
   width: 100%;
   height: 100%;
@@ -618,24 +628,38 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
   cursor: default;
 }
 
-/* A hand-drawn scrollbar rather than dots: thumb width is the visible
-   fraction, so it reflects real scroll position between two snap points. */
+/* A progress bar rather than dots or a floating thumb: the fill is anchored
+   left and grows as you scroll, and it is exactly as thin as the rail it sits
+   in — a fill thicker than its own track reads as a bug. */
 .media-carousel__rail {
   position: relative;
   flex: 0 1 220px;
   height: 2px;
   margin-left: 0.75rem;
   border-radius: 9999px;
+  overflow: hidden;
   background: hsl(var(--md-sys-color-outline-variant));
 }
 
-.media-carousel__thumb {
+.media-carousel__progress {
   position: absolute;
-  top: -1px;
-  height: 4px;
-  min-width: 24px;
+  inset: 0 auto 0 0;
   border-radius: 9999px;
-  background: hsl(var(--md-sys-color-on-surface-variant));
+  background: hsl(var(--md-sys-color-on-surface));
+  transition: width 120ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-carousel__progress {
+    transition: none;
+  }
+}
+
+@media (max-width: 899px) {
+  /* The rail is the only progress cue on a phone, so let it use the width. */
+  .media-carousel__rail {
+    flex: 1 1 auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
