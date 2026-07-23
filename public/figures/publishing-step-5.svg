@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Step 5 of the publishing pipeline: Rewire the HTML" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs><style>.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style></defs>
+  <rect width="1200" height="720" fill="#F7F9FC"/>
+  <text x="1128" y="560" font-size="440" font-weight="800" fill="#EAEFF7" text-anchor="end" letter-spacing="-10">5</text>
+  <text x="72" y="96" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">STEP 5 OF 6 · REWIRE</text>
+  <line x1="72" y1="124" x2="1128" y2="124" stroke="#0A0A0A" stroke-width="1.5"/>
+  <text x="72" y="196" font-size="46" font-weight="700" fill="#0A0A0A" letter-spacing="-0.5">Rewire the HTML</text>
+  <text x="72" y="242" font-size="19" fill="#3D4149">Image sources point at their final URLs; captions are attached.</text>
+  <rect x="72" y="300" width="480" height="274" rx="10" fill="#FFFFFF" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="96" y="340" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1">IMAGE SOURCES</text>
+  <text x="96" y="384" class="mono" font-size="15" fill="#2B3A67"><tspan fill="#8A93A3">google doc url</tspan></text>
+  <text x="96" y="414" font-size="14" font-weight="400" fill="#6B7280">↓ pointed at</text>
+  <text x="96" y="444" class="mono" font-size="15" fill="#2B3A67"><tspan fill="#0038B8">final WP / CDN url</tspan></text>
+  <text x="96" y="500" font-size="14" font-weight="400" fill="#6B7280">captions from the doc, else alt text</text>
+  <rect x="576" y="300" width="480" height="274" rx="10" fill="#EEF2FA" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="600" y="340" font-size="12" font-weight="700" fill="#0038B8" letter-spacing="1">THE DEDUP FIX</text>
+  <text x="600" y="384" class="mono" font-size="14" fill="#2B3A67">main-keyword-2-benefits<tspan fill="#8A6D00" font-weight="700">-1</tspan>.webp</text>
+  <text x="600" y="414" font-size="14" font-weight="400" fill="#6B7280">↓ normalised back</text>
+  <text x="600" y="444" class="mono" font-size="14" fill="#2B3A67"><tspan fill="#0038B8" font-weight="700">main-keyword-2-benefits.webp</tspan></text>
+  <text x="600" y="500" font-size="14" font-weight="400" fill="#0038B8">so the URL is stable across republishes</text>
+  <line x1="72" y1="636" x2="1128" y2="636" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="72" y="676" font-size="15.5" fill="#3D4149"><tspan font-size="16" font-weight="700" fill="#0038B8">THE DETAIL THAT TOOK A REWRITE</tspan>   WordPress adds a -1 on re-upload; only filenames the pipeline itself chose get normalised back.</text>
+</svg>

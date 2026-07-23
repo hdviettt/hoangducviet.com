@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Step 6 of the publishing pipeline: Create the draft" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs><style>.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style></defs>
+  <rect width="1200" height="720" fill="#F7F9FC"/>
+  <text x="1128" y="560" font-size="440" font-weight="800" fill="#EAEFF7" text-anchor="end" letter-spacing="-10">6</text>
+  <text x="72" y="96" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">STEP 6 OF 6 · CREATE DRAFT</text>
+  <line x1="72" y1="124" x2="1128" y2="124" stroke="#0A0A0A" stroke-width="1.5"/>
+  <text x="72" y="196" font-size="46" font-weight="700" fill="#0A0A0A" letter-spacing="-0.5">Create the draft</text>
+  <text x="72" y="242" font-size="19" fill="#3D4149">The post lands in WordPress. Status: draft. Always.</text>
+  <rect x="72" y="300" width="984" height="150" rx="10" fill="#F1F7F2" stroke="#CBE3D0" stroke-width="1.25"/>
+  <text x="96" y="338" font-size="12" font-weight="700" fill="#04915D" letter-spacing="1">HARD-CODED WHERE THE API CALL IS MADE</text>
+  <text x="96" y="392" class="mono" font-size="17" fill="#2B3A67">post = <tspan fill="#7A1E1E">await</tspan> create_wordpress_post(</text>
+  <text x="120" y="424" class="mono" font-size="15" fill="#2B3A67">title, final_html, wp_url, wp_user, wp_pw,</text>
+  <text x="120" y="452" class="mono" font-size="15" fill="#2B3A67">status=<tspan fill="#04915D" font-weight="700">"draft"</tspan>, categories=cats, slug=(post_slug <tspan fill="#7A1E1E">or</tspan> None),</text>
+  <rect x="72" y="478" width="984" height="96" rx="10" fill="#FFFFFF" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="96" y="522" font-size="16" font-weight="700" fill="#0A0A0A">not requested in a prompt · not a default a clever instruction could bypass</text>
+  <text x="96" y="550" font-size="14" font-weight="400" fill="#6B7280">a literal in the call — a human opens every one of these and presses publish</text>
+  <line x1="72" y1="636" x2="1128" y2="636" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="72" y="676" font-size="15.5" fill="#3D4149"><tspan font-size="16" font-weight="700" fill="#04915D">THE LINE THAT EARNS CLIENT TRUST</tspan>   the pipeline runs inside client websites because it can never publish live on its own.</text>
+</svg>

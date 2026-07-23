@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Step 1 of the publishing pipeline: Read the doc" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <defs><style>.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style></defs>
+  <rect width="1200" height="720" fill="#F7F9FC"/>
+  <text x="1128" y="560" font-size="440" font-weight="800" fill="#EAEFF7" text-anchor="end" letter-spacing="-10">1</text>
+  <text x="72" y="96" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">STEP 1 OF 6 · READ THE DOC</text>
+  <line x1="72" y1="124" x2="1128" y2="124" stroke="#0A0A0A" stroke-width="1.5"/>
+  <text x="72" y="196" font-size="46" font-weight="700" fill="#0A0A0A" letter-spacing="-0.5">Read the doc</text>
+  <text x="72" y="242" font-size="19" fill="#3D4149">A connector fetches the document and writes its HTML straight to a file.</text>
+  <rect x="72" y="300" width="480" height="220" rx="10" fill="#FFFFFF" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="96" y="340" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1">GOOGLE DOC</text>
+  <text x="96" y="384" font-size="30" font-weight="700" fill="#0A0A0A">30 pages</text>
+  <text x="96" y="414" font-size="15" font-weight="400" fill="#6B7280">20 images, inline styles, house noise</text>
+  <text x="96" y="470" font-size="14" font-weight="400" fill="#6B7280">fetched by the gdocs connector</text>
+  <line x1="576" y1="410" x2="672" y2="410" stroke="#C8D0DC" stroke-width="2"/>
+  <path d="M672 410 l-11 -6 v12 z" fill="#C8D0DC"/>
+  <rect x="696" y="300" width="360" height="220" rx="10" fill="#EEF2FA" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="720" y="340" font-size="12" font-weight="700" fill="#0038B8" letter-spacing="1">WRITTEN TO DISK</text>
+  <text x="720" y="384" class="mono" font-size="16" fill="#2B3A67">$DATA_DIR/…/doc.html</text>
+  <text x="720" y="470" font-size="15" font-weight="700" fill="#0038B8">never enters a context window</text>
+  <line x1="72" y1="636" x2="1128" y2="636" stroke="#DDE3EC" stroke-width="1.25"/>
+  <text x="72" y="676" font-size="15.5" fill="#3D4149"><tspan font-size="16" font-weight="700" fill="#0038B8">WHY IT MATTERS</tspan>   there is no model downstream, so the thirty pages have nowhere to be tokenised.</text>
+</svg>
