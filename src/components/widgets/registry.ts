@@ -12,15 +12,9 @@ export const widgetRegistry: Record<string, WidgetInfo> = {
     icon: "+-",
     defaultProps: { label: "Counter", initial: 0, step: 1 },
   },
-  carousel: {
-    name: "Media carousel",
-    description: "Full-bleed swipeable strip of images/clips, one caption each",
-    icon: "<>",
-    defaultProps: {
-      items: [
-        { src: "", caption: "" },
-        { src: "", caption: "" },
-      ],
-    },
-  },
 };
+
+// Note: `carousel` is deliberately absent. It has its own editor node (see
+// admin/extensions/CarouselExtension) with a real slide UI, so routing it
+// through this raw-JSON picker as well would give authors two doors to the
+// same room — one of them much worse.

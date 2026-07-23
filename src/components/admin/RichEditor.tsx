@@ -25,6 +25,10 @@ import {
   preprocessVideoInMarkdown,
 } from "@/components/admin/extensions/VideoExtension";
 import {
+  CarouselEmbed,
+  preprocessCarouselInMarkdown,
+} from "@/components/admin/extensions/CarouselExtension";
+import {
   useEffect,
   useState,
   useCallback,
@@ -112,6 +116,17 @@ const slashItems: SlashItem[] = [
     icon: "◆",
     command: (editor) =>
       editor.chain().focus().setCodeBlock({ language: "render" }).run(),
+  },
+  {
+    title: "Carousel",
+    description: "Swipeable strip of images or clips",
+    icon: "▤",
+    command: (editor) =>
+      editor
+        .chain()
+        .focus()
+        .insertContent({ type: "carouselEmbed", attrs: { items: "[]" } })
+        .run(),
   },
   {
     title: "Widget",
@@ -507,6 +522,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       MathInline,
       MathBlock,
       VideoEmbed,
+      CarouselEmbed,
       Placeholder.configure({ placeholder: 'Start writing, or type "/" for commands...' }),
       Markdown.configure({
         html: true,
@@ -626,7 +642,11 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
     if (!editor || editor.isDestroyed) return;
     if (initialContent.current) {
       editor.commands.setContent(
-        preprocessMathInMarkdown(preprocessVideoInMarkdown(initialContent.current)),
+        preprocessMathInMarkdown(
+          preprocessVideoInMarkdown(
+            preprocessCarouselInMarkdown(initialContent.current),
+          ),
+        ),
         { emitUpdate: false },
       );
     }
