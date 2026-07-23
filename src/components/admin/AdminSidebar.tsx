@@ -6,31 +6,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// The rail speaks the public site's language: background, hairline edges,
-// 14px links that go medium when active, sentence case. No pills, no
-// uppercase-tracked section labels — neither exists on the reader-facing side.
+// Text, not chrome. The reader-facing nav is four words in a row with no
+// icons, no backgrounds and no chips — the current page is simply the one set
+// in medium. This rail does the same thing vertically: words at 15px, an
+// accent rule at the edge for the current page, and hairlines instead of
+// grey group headings. Icons survive only in the collapsed state, where a
+// 56px rail has room for nothing else.
 
 const navSections = [
-  {
-    label: "Content",
-    items: [
-      { href: "/admin", label: "Dashboard", icon: "dashboard", exact: true },
-      { href: "/admin/posts", label: "Posts", icon: "description" },
-      { href: "/admin/projects", label: "Series", icon: "folder" },
-      { href: "/admin/categories", label: "Categories", icon: "label" },
-    ],
-  },
-  {
-    label: "Assets",
-    items: [{ href: "/admin/media", label: "Media", icon: "image" }],
-  },
-  {
-    label: "System",
-    items: [
-      { href: "/admin/internal-links", label: "Internal links", icon: "link" },
-      { href: "/admin/settings", label: "Settings", icon: "settings" },
-    ],
-  },
+  [
+    { href: "/admin", label: "Dashboard", icon: "dashboard", exact: true },
+    { href: "/admin/posts", label: "Posts", icon: "description" },
+    { href: "/admin/projects", label: "Series", icon: "folder" },
+    { href: "/admin/categories", label: "Categories", icon: "label" },
+  ],
+  [{ href: "/admin/media", label: "Media", icon: "image" }],
+  [
+    { href: "/admin/internal-links", label: "Internal links", icon: "link" },
+    { href: "/admin/settings", label: "Settings", icon: "settings" },
+  ],
 ];
 
 export default function AdminSidebar() {
@@ -54,19 +48,10 @@ export default function AdminSidebar() {
     window.location.href = "/admin/login";
   };
 
-  const row = (active: boolean) =>
-    `flex items-center gap-3 h-9 rounded-lg text-[14px] leading-5 transition-colors duration-200 ease-md-standard ${
-      collapsed ? "justify-center" : "px-3"
-    } ${
-      active
-        ? "bg-md-surface-container text-md-on-surface font-medium"
-        : "text-md-on-surface-variant hover:bg-md-on-surface/5 hover:text-md-on-surface"
-    }`;
-
   return (
     <aside
       className={`relative bg-md-background border-r border-md-outline-variant h-screen flex flex-col shrink-0 transition-[width] duration-200 ease-md-standard ${
-        collapsed ? "w-14" : "w-60"
+        collapsed ? "w-14" : "w-[232px]"
       }`}
     >
       <button
@@ -82,77 +67,81 @@ export default function AdminSidebar() {
         />
       </button>
 
-      {/* Same wordmark, same 17px medium tracking-tight, as the reader's header */}
-      <div className="h-16 flex items-center px-3 shrink-0">
+      <div className="h-16 flex items-center shrink-0 px-5">
         {collapsed ? (
           <Link
             href="/"
             title="View site"
-            className="w-8 h-8 mx-auto inline-flex items-center justify-center rounded-lg text-md-on-surface hover:bg-md-on-surface/5 transition-colors duration-200 ease-md-standard"
+            className="mx-auto text-[15px] font-medium tracking-tight text-md-on-surface hover:text-md-primary transition-colors duration-200 ease-md-standard"
           >
-            <span className="text-[15px] font-medium tracking-tight">
-              {IDENTITY.name.charAt(0)}
-            </span>
+            {IDENTITY.name.charAt(0)}
           </Link>
         ) : (
-          <Link
-            href="/"
-            className="px-3 text-[17px] font-medium tracking-tight text-md-on-surface whitespace-nowrap hover:text-md-primary transition-colors duration-200 ease-md-standard"
-            title="View site"
-          >
-            {IDENTITY.name}
-          </Link>
+          <div className="min-w-0">
+            <Link
+              href="/"
+              title="View site"
+              className="block text-[17px] leading-6 font-medium tracking-tight text-md-on-surface whitespace-nowrap hover:text-md-primary transition-colors duration-200 ease-md-standard"
+            >
+              {IDENTITY.name}
+            </Link>
+          </div>
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto min-h-0 pb-2">
-        {navSections.map((section, i) => (
-          <div key={section.label} className="mb-1">
-            {collapsed ? (
-              i > 0 && (
-                <div className="border-t border-md-outline-variant mx-3 my-2" />
-              )
-            ) : (
-              <div className="text-[12px] leading-4 text-md-on-surface-variant px-3 mt-4 mb-1.5">
-                {section.label}
-              </div>
+      {/* overflow-x-hidden: the active rule sits at the rail's true left edge,
+          so the rows run the full width and must not be able to scroll. */}
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 pt-2">
+        {navSections.map((group, gi) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: fixed, ordered groups
+          <div key={gi}>
+            {gi > 0 && (
+              <div className="my-3 mx-5 border-t border-md-outline-variant" />
             )}
-            <div className="px-2 space-y-0.5">
-              {section.items.map((item) => {
-                const active = item.exact
-                  ? pathname === item.href
-                  : pathname.startsWith(item.href);
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    title={collapsed ? item.label : undefined}
-                    className={row(active)}
-                  >
-                    <Icon
-                      name={item.icon}
-                      size={20}
-                      className="shrink-0"
-                      filled={active}
-                    />
-                    {!collapsed && <span>{item.label}</span>}
-                  </Link>
-                );
-              })}
-            </div>
+            {group.map((item) => {
+              const active = item.exact
+                ? pathname === item.href
+                : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  title={collapsed ? item.label : undefined}
+                  className={`relative flex items-center h-9 text-[15px] leading-6 transition-colors duration-200 ease-md-standard ${
+                    collapsed ? "justify-center" : "px-5"
+                  } ${
+                    active
+                      ? "text-md-on-surface font-medium"
+                      : "text-md-on-surface-variant hover:text-md-on-surface"
+                  }`}
+                >
+                  {/* The whole marker for "you are here": a rule at the rail's
+                      edge. No fill, no pill, nothing the site does not own. */}
+                  {active && (
+                    <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-md-primary" />
+                  )}
+                  {collapsed ? (
+                    <Icon name={item.icon} size={20} filled={active} />
+                  ) : (
+                    <span className="truncate">{item.label}</span>
+                  )}
+                </Link>
+              );
+            })}
           </div>
         ))}
       </nav>
 
-      <div className="border-t border-md-outline-variant py-2 px-2 shrink-0">
+      <div className="shrink-0 border-t border-md-outline-variant py-3 px-5">
         <button
           type="button"
           onClick={handleLogout}
           title="Log out"
-          className={`w-full ${row(false)}`}
+          className={`flex items-center h-9 w-full text-[15px] leading-6 text-md-on-surface-variant hover:text-md-error transition-colors duration-200 ease-md-standard ${
+            collapsed ? "justify-center" : ""
+          }`}
         >
-          <Icon name="logout" size={20} className="shrink-0" />
-          {!collapsed && <span>Log out</span>}
+          {collapsed ? <Icon name="logout" size={20} /> : <span>Log out</span>}
         </button>
       </div>
     </aside>
