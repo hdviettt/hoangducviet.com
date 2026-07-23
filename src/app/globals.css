@@ -573,40 +573,30 @@ h6 { font-size: 14px; line-height: 20px; letter-spacing: 0.1px;  font-weight: 50
   pointer-events: none;
 }
 
-/* One fixed brand wash instead — same on every slide. A soft disc rising from
-   the bottom-right keeps it from reading as a flat gradient sweep; it is the
-   move deepmind.google uses on its own slide canvases. */
+/* One fixed brand wash instead — same on every slide. Deliberately calm: a
+   single diagonal sweep in one hue, no shapes and no second colour. The
+   diagrams these frames hold already spend blue, green and amber on meaning,
+   so a canvas with its own hues competes with the content it is holding. */
 .media-carousel__frame[data-mat="brand"] {
   /* Dark mode uses a much lighter primary (223 100% 76% against a near-black
      surface), so the same alpha would glare. Tuned per theme via these vars. */
-  --mat-disc: 0.22;
-  --mat-top: 0.34;
-  --mat-bottom: 0.3;
+  --mat-near: 0.11;
+  --mat-mid: 0.03;
+  --mat-far: 0.08;
   background:
-    radial-gradient(
-        closest-side circle at 50% 50%,
-        hsl(var(--md-sys-color-primary) / var(--mat-disc)),
-        hsl(var(--md-sys-color-primary) / var(--mat-disc)) 99%,
-        transparent
-      )
-      72% 112% / 58% 150% no-repeat,
-    radial-gradient(
-      125% 115% at 10% -10%,
-      hsl(var(--md-sys-color-primary) / var(--mat-top)),
-      transparent 62%
-    ),
-    radial-gradient(
-      115% 115% at 95% 105%,
-      hsl(var(--md-sys-color-tertiary) / var(--mat-bottom)),
-      transparent 58%
+    linear-gradient(
+      163deg,
+      hsl(var(--md-sys-color-primary) / var(--mat-near)) 0%,
+      hsl(var(--md-sys-color-primary) / var(--mat-mid)) 48%,
+      hsl(var(--md-sys-color-primary) / var(--mat-far)) 100%
     ),
     hsl(var(--md-sys-color-surface-container));
 }
 
 .dark .media-carousel__frame[data-mat="brand"] {
-  --mat-disc: 0.12;
-  --mat-top: 0.2;
-  --mat-bottom: 0.18;
+  --mat-near: 0.07;
+  --mat-mid: 0.02;
+  --mat-far: 0.05;
 }
 
 /* Three classes deep on purpose: the article's own figure rules are two

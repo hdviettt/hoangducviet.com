@@ -36,8 +36,9 @@ only thing telling you there is more to the right.
 
 These are the article diagrams, which are wider than 16:9. They letterbox
 instead of cropping, because cropping a diagram destroys it. The leftover
-canvas is a SEONGON wash with a soft disc rising through it, so it reads as a
-designed surface rather than a grey band.
+canvas is a single-hue SEONGON sweep — enough to read as a surface rather than
+a grey band, quiet enough not to argue with a diagram that already spends
+blue, green and amber on meaning.
 
 All three blocks below deliberately set \`ratio: "3 / 2"\` against 2.2:1
 diagrams, so the canvas is big enough to judge. In a real post you would match

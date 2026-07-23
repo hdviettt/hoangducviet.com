@@ -30,9 +30,9 @@ interface MediaCarouselProps {
   controls?: boolean;
   /**
    * What fills the canvas around media that does not match `ratio`.
-   * - `brand` (default): a SEONGON wash with a soft disc, the same on every
-   *   slide. Reads as a designed canvas rather than a grey band, and holds up
-   *   under the light technical diagrams most posts here carry.
+   * - `brand` (default): a quiet single-hue SEONGON sweep, the same on every
+   *   slide. Reads as a surface rather than a grey band without competing
+   *   with diagrams that already use colour to mean something.
    * - `ambient`: a blurred, scaled copy of the slide's own image, so the
    *   letterbox is an out-of-focus continuation that can never clash. Better
    *   for colourful or photographic sets; nearly invisible behind white
