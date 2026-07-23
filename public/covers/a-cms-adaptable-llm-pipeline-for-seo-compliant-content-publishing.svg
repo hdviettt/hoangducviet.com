@@ -1,74 +1,85 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
   <defs>
-    <radialGradient id="bg" cx="0.5" cy="0.44" r="0.95">
-      <stop offset="0" stop-color="#0E1A31"/><stop offset="0.6" stop-color="#080D18"/><stop offset="1" stop-color="#04060B"/>
-    </radialGradient>
-    <linearGradient id="scan" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#FFD84D" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#FFC400"/>
-      <stop offset="1" stop-color="#FFD84D" stop-opacity="0"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.55" stop-color="#F3F8FF"/>
+      <stop offset="1" stop-color="#EEFBF6"/>
     </linearGradient>
-    <filter id="soft" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="15"/></filter>
+    <linearGradient id="seon" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#004AEF"/>
+      <stop offset="0.52" stop-color="#0FD6F7"/>
+      <stop offset="1" stop-color="#07EF9C"/>
+    </linearGradient>
+    <linearGradient id="seonV" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#004AEF"/><stop offset="1" stop-color="#07EF9C"/>
+    </linearGradient>
+    <linearGradient id="imgg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#004AEF"/>
+      <stop offset="0.55" stop-color="#0FD6F7"/>
+      <stop offset="1" stop-color="#07EF9C"/>
+    </linearGradient>
+    <filter id="cardsh" x="-40%" y="-40%" width="180%" height="190%">
+      <feDropShadow dx="0" dy="20" stdDeviation="30" flood-color="#0A4B9E" flood-opacity="0.15"/>
+    </filter>
     <style>
-      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 20px; }
-      /* raw shows to the RIGHT of the pass; clean shows to the LEFT. Same boundary. */
-      #raw   { animation: rawc  6s cubic-bezier(.5,0,.2,1) infinite; }
-      #clean { animation: clnc  6s cubic-bezier(.5,0,.2,1) infinite; }
-      #pass  { animation: sweep 6s cubic-bezier(.5,0,.2,1) infinite; }
-      @keyframes rawc  { 0%,10%{clip-path: inset(0 0 0 0%)}   62%{clip-path: inset(0 0 0 100%)} 90%{clip-path: inset(0 0 0 100%)} 100%{clip-path: inset(0 0 0 0%)} }
-      @keyframes clnc  { 0%,10%{clip-path: inset(0 100% 0 0)} 62%{clip-path: inset(0 0% 0 0)}    90%{clip-path: inset(0 0% 0 0)}   100%{clip-path: inset(0 100% 0 0)} }
-      @keyframes sweep { 0%,10%{transform:translateX(0)}      62%{transform:translateX(878px)}   90%{transform:translateX(878px)}  100%{transform:translateX(0)} }
-      @media (prefers-reduced-motion: reduce) {
-        /* rest fully resolved: the clean house-style result, the pass finished
-           at the right. A mid-sweep still collides two different texts on one
-           line; the animation carries the transform, the still is the result. */
-        #raw   { animation: none; clip-path: inset(0 0 0 100%); }
-        #clean { animation: none; clip-path: inset(0 0 0 0); }
-        #pass  { animation: none; transform: translateX(878px); opacity: 0.5; }
+      /* one article rises off the stack and climbs — continuous publishing */
+      .rise { animation: rise 4.5s ease-out infinite; }
+      .rise2 { animation-delay: 2.25s; }
+      @keyframes rise {
+        0%   { opacity: 0; transform: translate(0,0) }
+        14%  { opacity: 0.55 }
+        100% { opacity: 0; transform: translate(96px,-96px) }
       }
+      @media (prefers-reduced-motion: reduce) { .rise { display: none } }
     </style>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <ellipse cx="600" cy="315" rx="420" ry="250" fill="#0B6BFF" fill-opacity="0.08" filter="url(#soft)"/>
+  <circle cx="180" cy="120" r="220" fill="#004AEF" opacity="0.04"/>
+  <circle cx="1050" cy="560" r="220" fill="#07EF9C" opacity="0.05"/>
 
-  <rect x="150" y="140" width="900" height="352" rx="16" fill="#0A1526" stroke="#1E3350" stroke-width="1.25"/>
+  <!-- kicker, upper-left in the open space -->
+  <text x="150" y="150" font-size="13" fill="#7C8CA6" letter-spacing="2">SEO CONTENT PUBLISHING</text>
+  <text x="150" y="196" font-size="30" font-weight="700" fill="#0A1B33" letter-spacing="-0.5">One document in,</text>
+  <text x="150" y="234" font-size="30" font-weight="700" fill="#0A1B33" letter-spacing="-0.5">a ranking article out.</text>
+  <rect x="150" y="262" width="54" height="4" rx="2" fill="url(#seon)"/>
 
-  <text x="182" y="120" font-size="12" fill="#5E7398" letter-spacing="2">GOOGLE DOC MARKUP</text>
-  <text x="1018" y="120" font-size="12" fill="#4E77B6" letter-spacing="2" text-anchor="end">THE SITE'S HOUSE STYLE</text>
-
-  <!-- ============ RAW (Google Docs noise), red inline-style clutter ============ -->
-  <g id="raw" class="mono">
-    <text x="182" y="200" fill="#C07E7E">&lt;p style="margin:0;line-height:1.38"&gt;</text>
-    <text x="182" y="242" fill="#C07E7E">  &lt;span style="fw:400"&gt;Benefits&lt;/span&gt;</text>
-    <text x="182" y="284" fill="#C07E7E">&lt;/p&gt;&lt;br&gt;</text>
-    <text x="182" y="326" fill="#C07E7E">&lt;p style="margin:0"&gt;Clean water&lt;/p&gt;</text>
-    <text x="182" y="368" fill="#C07E7E">&lt;img src="blob:https://docs..."&gt;</text>
-    <text x="182" y="410" fill="#C07E7E">&lt;table style="border:1px solid #000"&gt;</text>
-    <text x="182" y="452" fill="#8A6F6F">  &lt;tr&gt;&lt;td&gt;…&lt;/td&gt;&lt;/tr&gt;</text>
+  <!-- ============ SEONGON echo trail — the rising stack of published articles ============ -->
+  <g fill="none" stroke-width="2">
+    <rect x="612" y="286" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.20"/>
+    <rect x="632" y="266" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.32"/>
+    <rect x="652" y="246" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.5"/>
+    <rect x="672" y="226" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.72"/>
+    <!-- the rising ones, animated -->
+    <rect class="rise" x="692" y="206" width="440" height="286" rx="20" stroke="url(#seon)"/>
+    <rect class="rise rise2" x="692" y="206" width="440" height="286" rx="20" stroke="url(#seon)"/>
   </g>
 
-  <!-- ============ CLEAN (house style), blue ============ -->
-  <g id="clean" class="mono">
-    <text x="182" y="200"><tspan fill="#6E90C8">&lt;p style=</tspan><tspan fill="#5B9BFF">"text-align: justify;"</tspan><tspan fill="#6E90C8">&gt;</tspan></text>
-    <text x="182" y="242"><tspan fill="#9FC0EA">  Benefits</tspan></text>
-    <text x="182" y="284"><tspan fill="#6E90C8">&lt;/p&gt;</tspan></text>
-    <text x="182" y="326"><tspan fill="#6E90C8">&lt;h2 class=</tspan><tspan fill="#5B9BFF">"titletab"</tspan><tspan fill="#6E90C8">&gt;Clean water&lt;/h2&gt;</tspan></text>
-    <text x="182" y="368"><tspan fill="#6E90C8">&lt;img src=</tspan><tspan fill="#5B9BFF">"main-keyword-2-benefits.webp"</tspan><tspan fill="#6E90C8">&gt;</tspan></text>
-    <text x="182" y="410"><tspan fill="#6E90C8">&lt;table class=</tspan><tspan fill="#5B9BFF">"has-fixed-layout"</tspan><tspan fill="#6E90C8">&gt;</tspan></text>
-    <text x="182" y="452"><tspan fill="#6E90C8">  &lt;tr&gt;&lt;td&gt;…&lt;/td&gt;&lt;/tr&gt;</tspan></text>
+  <!-- ============ the published article, crisp and forward ============ -->
+  <g filter="url(#cardsh)">
+    <rect x="692" y="206" width="440" height="286" rx="20" fill="#FFFFFF" stroke="#E6ECF4" stroke-width="1"/>
+  </g>
+  <rect x="728" y="246" width="270" height="18" rx="6" fill="#004AEF"/>
+  <rect x="728" y="278" width="330" height="10" rx="5" fill="#CBD8EA"/>
+  <rect x="728" y="295" width="300" height="10" rx="5" fill="#CBD8EA"/>
+  <rect x="728" y="324" width="180" height="108" rx="12" fill="url(#imgg)"/>
+  <rect x="932" y="332" width="164" height="9" rx="4" fill="#D7E0EE"/>
+  <rect x="932" y="350" width="164" height="9" rx="4" fill="#D7E0EE"/>
+  <rect x="932" y="368" width="130" height="9" rx="4" fill="#D7E0EE"/>
+  <rect x="932" y="392" width="164" height="9" rx="4" fill="#E4EBF4"/>
+  <rect x="932" y="410" width="110" height="9" rx="4" fill="#E4EBF4"/>
+  <rect x="728" y="452" width="368" height="8" rx="4" fill="#E4EBF4"/>
+  <rect x="728" y="469" width="300" height="8" rx="4" fill="#E4EBF4"/>
+
+  <!-- rank-up chip: the SEO payoff, SEONGON green -->
+  <g transform="translate(1038 218)">
+    <rect x="0" y="0" width="66" height="38" rx="11" fill="#EAFBF3" stroke="#07EF9C" stroke-width="1.25"/>
+    <path d="M13 25 L23 14 L30 21 L44 8" fill="none" stroke="url(#seonV)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M38 8 L44 8 L44 14" fill="none" stroke="#07EF9C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 
-  <!-- ============ the agent's single pass ============ -->
-  <g id="pass">
-    <!-- a narrow mask riding just ahead of the line: clean code emerges from
-         behind it, so the seam where two texts would collide is never seen -->
-    <rect x="160" y="150" width="17" height="332" fill="#0A1526"/>
-    <rect x="166" y="150" width="20" height="332" fill="#FFC400" opacity="0.14" filter="url(#soft)"/>
-    <rect x="174.5" y="156" width="3" height="320" fill="url(#scan)"/>
-    <circle cx="176" cy="150" r="6" fill="#FFC400"/>
-    <circle cx="176" cy="150" r="6" fill="none" stroke="#FFE9A8" stroke-width="1" opacity="0.7"/>
-  </g>
-
-  <text x="600" y="546" font-size="15" fill="#C79A1E" text-anchor="middle">the agent works out the transform once — then code applies it to every article, with no model</text>
+  <!-- caption, clear bottom-left -->
+  <text x="150" y="470" font-size="16" fill="#46566E" width="380">A raw Google Doc becomes a formatted,</text>
+  <text x="150" y="496" font-size="16" fill="#46566E">image-optimised WordPress draft — with</text>
+  <text x="150" y="522" font-size="16" fill="#46566E">no model anywhere in the publishing path.</text>
 </svg>
