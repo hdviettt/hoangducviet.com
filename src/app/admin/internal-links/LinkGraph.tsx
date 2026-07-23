@@ -332,7 +332,7 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
       className="w-full rounded-xl border border-md-outline-variant relative overflow-hidden"
     >
       {/* Legend */}
-      <div className="absolute top-3 left-3 flex gap-4 md-label-small text-md-on-surface-variant z-10">
+      <div className="absolute top-3 left-3 flex gap-4 text-[12px] leading-4 text-md-on-surface-variant z-10">
         <span className="flex items-center gap-1.5">
           <span
             className="w-2.5 h-2.5 rounded-full"

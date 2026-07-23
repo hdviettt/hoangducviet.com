@@ -25,12 +25,12 @@ function VideoView({ node, deleteNode, selected }: any) {
           className="w-full h-auto max-h-[60vh] rounded-lg bg-black"
         />
       ) : (
-        <div className="rounded-lg border border-dashed border-md-outline-variant bg-md-surface-container p-6 text-center md-body-medium text-md-on-surface-variant">
+        <div className="rounded-lg border border-dashed border-md-outline-variant bg-md-surface-container p-6 text-center text-[15px] leading-[22px] text-md-on-surface-variant">
           No video source
         </div>
       )}
       {caption && (
-        <p className="text-center md-body-small text-md-on-surface-variant mt-2">
+        <p className="text-center text-[13px] leading-[18px] text-md-on-surface-variant mt-2">
           {caption}
         </p>
       )}

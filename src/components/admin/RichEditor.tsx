@@ -289,7 +289,7 @@ function SlashMenu({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Filter..."
-          className="w-full bg-transparent md-body-medium focus:outline-none"
+          className="w-full bg-transparent text-[15px] leading-[22px] focus:outline-none"
         />
       </div>
       {filtered.map((item, i) => (
@@ -297,25 +297,25 @@ function SlashMenu({
           key={item.title}
           type="button"
           onClick={() => execute(item)}
-          className={`w-full text-left px-3 py-2 flex items-center gap-3 md-body-medium transition-colors ${
+          className={`w-full text-left px-3 py-2 flex items-center gap-3 text-[15px] leading-[22px] transition-colors ${
             i === selected
               ? "bg-md-primary/10 text-md-primary"
               : "hover:bg-md-on-surface/8 text-md-on-surface"
           }`}
         >
-          <span className="w-6 text-center md-body-small text-md-on-surface-variant">
+          <span className="w-6 text-center text-[13px] leading-[18px] text-md-on-surface-variant">
             {item.icon}
           </span>
           <div>
             <div className="font-medium">{item.title}</div>
-            <div className="md-body-small text-md-on-surface-variant">
+            <div className="text-[13px] leading-[18px] text-md-on-surface-variant">
               {item.description}
             </div>
           </div>
         </button>
       ))}
       {filtered.length === 0 && (
-        <div className="px-3 py-4 md-body-medium text-md-on-surface-variant text-center">
+        <div className="px-3 py-4 text-[15px] leading-[22px] text-md-on-surface-variant text-center">
           No results
         </div>
       )}
@@ -341,7 +341,7 @@ function ToolbarButton({
       type="button"
       onClick={onClick}
       title={title}
-      className={`px-2 py-1 md-label-medium rounded-lg transition-colors ${
+      className={`px-2 py-1 text-[13px] leading-[18px] rounded-lg transition-colors ${
         active
           ? "bg-md-secondary-container text-md-on-secondary-container"
           : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
@@ -524,14 +524,14 @@ export default function RichEditor({
             markdown: {
               serialize(state: any, node: any) {
                 state.write(
-                  "![" +
+                "![" +
                     state.esc(node.attrs.alt || "") +
-                    "](" +
+                  "](" +
                     state.esc(node.attrs.src || "") +
                     (node.attrs.title
                       ? ' "' + node.attrs.title.replace(/"/g, '\\"') + '"'
                       : "") +
-                    ")",
+                  ")",
                 );
                 state.closeBlock(node);
               },
@@ -562,7 +562,7 @@ export default function RichEditor({
     editorProps: {
       attributes: {
         class:
-          "article-content prose-editor focus:outline-none min-h-[400px] px-4 py-3",
+        "article-content prose-editor focus:outline-none min-h-[400px] px-4 py-3",
       },
       handleKeyDown: (_view, event) => {
         if (event.key === "/" && !showSlash) {
@@ -705,7 +705,7 @@ export default function RichEditor({
       className="rounded-xl border border-md-outline-variant bg-md-surface relative flex flex-col h-full"
     >
       {/* Toolbar */}
-      <div className="flex items-center gap-0.5 px-2 py-1 border-b border-md-outline-variant bg-md-surface-container-low overflow-x-auto sticky top-0 z-10 shrink-0">
+      <div className="flex items-center gap-0.5 px-2 py-1 border-b border-md-outline-variant bg-transparent overflow-x-auto sticky top-0 z-10 shrink-0">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive("bold")}
@@ -916,7 +916,9 @@ export default function RichEditor({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
           <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small shrink-0">Insert image</span>
+              <span className="text-[15px] leading-[22px] font-medium shrink-0">
+                Insert image
+              </span>
               <input
                 type="text"
                 value={imagePickerSearch}
@@ -944,7 +946,7 @@ export default function RichEditor({
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {imagePickerLoading ? (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
                   Loading…
                 </div>
               ) : (
@@ -961,7 +963,7 @@ export default function RichEditor({
                     return true;
                   });
                   return images.length === 0 ? (
-                    <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                    <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
                       no images found. upload one above.
                     </div>
                   ) : (
@@ -994,7 +996,9 @@ export default function RichEditor({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
           <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-2xl max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small flex-1">Insert video</span>
+              <span className="text-[15px] leading-[22px] font-medium flex-1">
+                Insert video
+              </span>
               <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
                 {videoUploading ? "Uploading…" : "Upload MP4"}
                 <input
@@ -1014,13 +1018,13 @@ export default function RichEditor({
               </button>
             </div>
             {videoError && (
-              <div className="px-4 py-2 md-body-small text-md-error border-b border-md-outline-variant shrink-0">
+              <div className="px-4 py-2 text-[13px] leading-[18px] text-md-error border-b border-md-outline-variant shrink-0">
                 {videoError}
               </div>
             )}
             <div className="flex-1 overflow-y-auto p-4">
               {videoLoading ? (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
                   Loading…
                 </div>
               ) : (
@@ -1029,7 +1033,7 @@ export default function RichEditor({
                     i.mimeType?.startsWith("video/"),
                   );
                   return videos.length === 0 ? (
-                    <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                    <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
                       no videos yet. upload one above (max {MAX_VIDEO_MB}MB).
                     </div>
                   ) : (
@@ -1047,7 +1051,7 @@ export default function RichEditor({
                             preload="metadata"
                             className="w-28 h-16 object-cover rounded bg-black shrink-0"
                           />
-                          <span className="md-body-medium truncate">
+                          <span className="text-[15px] leading-[22px] truncate">
                             {item.originalName}
                           </span>
                         </button>
@@ -1066,7 +1070,9 @@ export default function RichEditor({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
           <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-lg max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small flex-1">Insert widget</span>
+              <span className="text-[15px] leading-[22px] font-medium flex-1">
+                Insert widget
+              </span>
               <button
                 type="button"
                 onClick={() => setShowWidgetPicker(false)}
@@ -1093,18 +1099,20 @@ export default function RichEditor({
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="md-body-medium text-md-on-surface-variant">
+                    <span className="text-[15px] leading-[22px] text-md-on-surface-variant">
                       {widget.icon}
                     </span>
-                    <span className="md-title-small">{widget.name}</span>
+                    <span className="text-[15px] leading-[22px] font-medium">
+                      {widget.name}
+                    </span>
                   </div>
-                  <p className="md-body-small text-md-on-surface-variant mt-1">
+                  <p className="text-[13px] leading-[18px] text-md-on-surface-variant mt-1">
                     {widget.description}
                   </p>
                 </button>
               ))}
               {Object.keys(widgetRegistry).length === 0 && (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
                   no widgets registered.
                 </div>
               )}

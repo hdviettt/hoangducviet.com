@@ -31,7 +31,7 @@ export default async function AdminPostsPage() {
             className="md-btn md-btn-filled md-btn-sm"
           >
             <span>New post</span>
-            <kbd className="md-label-small font-sans rounded bg-md-on-primary/20 px-1.5 py-0.5 leading-none">
+            <kbd className="text-[12px] leading-4 font-sans rounded bg-md-on-primary/20 px-1.5 py-0.5 leading-none">
               N
             </kbd>
           </Link>
@@ -51,7 +51,7 @@ export default async function AdminPostsPage() {
           hint={
             <>
               Press{" "}
-              <kbd className="font-sans rounded bg-md-on-surface/8 px-1.5 py-0.5 md-label-small">
+              <kbd className="font-sans rounded bg-md-on-surface/8 px-1.5 py-0.5 text-[12px] leading-4">
                 N
               </kbd>{" "}
               or click{" "}

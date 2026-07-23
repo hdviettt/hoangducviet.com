@@ -77,16 +77,16 @@ function StatTile({
   hint?: string;
 }) {
   return (
-    <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4">
+    <div className="rounded-2xl border border-md-outline-variant p-4">
       {/* Proportional figures on standalone values (tabular-nums only in tables/ticks) */}
       <div className="text-[28px] leading-none font-medium text-md-on-surface">
         {value}
       </div>
-      <div className="md-body-small text-md-on-surface-variant mt-1.5">
+      <div className="text-[13px] leading-[18px] text-md-on-surface-variant mt-1.5">
         {label}
       </div>
       {hint && (
-        <div className="md-label-small text-md-on-surface-variant/70 mt-0.5">
+        <div className="text-[12px] leading-4 text-md-on-surface-variant/70 mt-0.5">
           {hint}
         </div>
       )}
@@ -156,9 +156,11 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
   };
 
   return (
-    <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4">
+    <div className="rounded-2xl border border-md-outline-variant p-4">
       <div className="flex items-center justify-between gap-4 mb-1">
-        <h3 className="md-title-small text-md-on-surface">Traffic over time</h3>
+        <h3 className="text-[15px] leading-[22px] font-medium text-md-on-surface">
+          Traffic over time
+        </h3>
         <div className="flex items-center gap-4">
           {/* Legend — always present for >= 2 series; identity never colour-alone */}
           <div className="flex items-center gap-3">
@@ -168,7 +170,7 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
                   className="w-2.5 h-2.5 rounded-full"
                   style={{ background: s.color }}
                 />
-                <span className="md-label-small text-md-on-surface-variant">
+                <span className="text-[12px] leading-4 text-md-on-surface-variant">
                   {s.label}
                 </span>
               </span>
@@ -177,7 +179,7 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
           <button
             type="button"
             onClick={() => setShowTable((v) => !v)}
-            className="md-label-small text-md-on-surface-variant hover:text-md-primary transition-colors"
+            className="text-[12px] leading-4 text-md-on-surface-variant hover:text-md-primary transition-colors"
           >
             {showTable ? "chart" : "table"}
           </button>
@@ -187,8 +189,8 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
       {showTable ? (
         // Table-view twin — every value reachable without colour or hover.
         <div className="max-h-[220px] overflow-y-auto mt-3">
-          <table className="w-full md-body-small">
-            <thead className="sticky top-0 bg-md-surface-container-low">
+          <table className="w-full text-[13px] leading-[18px]">
+            <thead className="sticky top-0 bg-transparent">
               <tr className="text-md-on-surface-variant text-left">
                 <th className="font-medium py-1.5">Date</th>
                 <th className="font-medium py-1.5 text-right">Pageviews</th>
@@ -327,13 +329,13 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
                 ),
               }}
             >
-              <div className="md-label-small text-md-on-surface-variant mb-1">
+              <div className="text-[12px] leading-4 text-md-on-surface-variant mb-1">
                 {shortDate(active.date)}
               </div>
               {SERIES.map((s) => (
                 <div
                   key={s.key}
-                  className="flex items-center gap-2 md-body-small"
+                  className="flex items-center gap-2 text-[13px] leading-[18px]"
                 >
                   <span
                     className="w-2 h-2 rounded-full shrink-0"
@@ -360,12 +362,14 @@ function TopPages({
 }: { pages: Array<{ path: string; views: number }> }) {
   const max = Math.max(...pages.map((p) => p.views), 1);
   return (
-    <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4">
-      <h3 className="md-title-small text-md-on-surface mb-3">Top pages</h3>
+    <div className="rounded-2xl border border-md-outline-variant p-4">
+      <h3 className="text-[15px] leading-[22px] font-medium text-md-on-surface mb-3">
+        Top pages
+      </h3>
       <div className="space-y-1.5">
         {pages.map((p) => (
           <div key={p.path} className="group flex items-center gap-3">
-            <span className="md-body-small text-md-on-surface truncate w-1/2 shrink-0">
+            <span className="text-[13px] leading-[18px] text-md-on-surface truncate w-1/2 shrink-0">
               {p.path}
             </span>
             <div className="flex-1 h-2.5 rounded-full bg-md-surface-container overflow-hidden">
@@ -377,7 +381,7 @@ function TopPages({
                 }}
               />
             </div>
-            <span className="md-body-small tabular-nums text-md-on-surface-variant w-10 text-right shrink-0">
+            <span className="text-[13px] leading-[18px] tabular-nums text-md-on-surface-variant w-10 text-right shrink-0">
               {formatNumber(p.views)}
             </span>
           </div>
@@ -427,7 +431,7 @@ export default function AnalyticsDashboard() {
     <section>
       {/* One filter row above everything it scopes */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="md-label-medium text-md-on-surface-variant uppercase tracking-wider">
+        <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant">
           analytics
         </h2>
         <div className="inline-flex rounded-full border border-md-outline overflow-hidden">
@@ -436,7 +440,7 @@ export default function AnalyticsDashboard() {
               key={r}
               type="button"
               onClick={() => setRange(r)}
-              className={`px-4 h-9 md-label-medium transition-colors duration-200 ease-md-standard ${
+              className={`px-4 h-9 text-[13px] leading-[18px] transition-colors duration-200 ease-md-standard ${
                 range === r
                   ? "bg-md-secondary-container text-md-on-secondary-container"
                   : "text-md-on-surface hover:bg-md-on-surface/8"
@@ -449,13 +453,13 @@ export default function AnalyticsDashboard() {
       </div>
 
       {error && (
-        <div className="rounded-xl border border-md-error/40 bg-md-error/10 p-3 mb-4 md-body-medium text-md-error">
+        <div className="rounded-xl border border-md-error/40 bg-md-error/10 p-3 mb-4 text-[15px] leading-[22px] text-md-error">
           {error}
         </div>
       )}
 
       {!posthog?.configured && !loading ? (
-        <div className="rounded-xl border border-dashed border-md-outline-variant p-6 text-center md-body-medium text-md-on-surface-variant">
+        <div className="rounded-xl border border-dashed border-md-outline-variant p-6 text-center text-[15px] leading-[22px] text-md-on-surface-variant">
           PostHog not configured. Set <code>POSTHOG_PERSONAL_API_KEY</code> and{" "}
           <code>POSTHOG_PROJECT_ID</code> to enable.
         </div>
@@ -467,7 +471,7 @@ export default function AnalyticsDashboard() {
           }`}
         >
           {loading && !data ? (
-            <div className="h-[420px] rounded-xl border border-md-outline-variant bg-md-surface-container-low animate-pulse" />
+            <div className="h-[420px] rounded-2xl border border-md-outline-variant animate-pulse" />
           ) : (
             <>
               <div className="grid grid-cols-3 gap-3">
@@ -486,13 +490,13 @@ export default function AnalyticsDashboard() {
               {hasTraffic ? (
                 <TrendChart daily={daily} />
               ) : (
-                <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-8 text-center">
+                <div className="rounded-2xl border border-md-outline-variant p-8 text-center">
                   <Icon
                     name="show_chart"
                     size={32}
                     className="text-md-on-surface-variant/40"
                   />
-                  <p className="md-body-medium text-md-on-surface-variant mt-2">
+                  <p className="text-[15px] leading-[22px] text-md-on-surface-variant mt-2">
                     No traffic recorded in this range.
                   </p>
                 </div>
@@ -504,39 +508,39 @@ export default function AnalyticsDashboard() {
 
               {/* Edge — a compact strip, not a row of zeros */}
               {cloudflare?.configured && (
-                <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4">
-                  <h3 className="md-title-small text-md-on-surface mb-3">
+                <div className="rounded-2xl border border-md-outline-variant p-4">
+                  <h3 className="text-[15px] leading-[22px] font-medium text-md-on-surface mb-3">
                     Edge (Cloudflare)
                   </h3>
                   {cfRequests === 0 ? (
-                    <p className="md-body-small text-md-on-surface-variant">
+                    <p className="text-[13px] leading-[18px] text-md-on-surface-variant">
                       No edge data for this range.
                     </p>
                   ) : (
                     <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                       <div>
-                        <div className="md-title-medium text-md-on-surface">
+                        <div className="text-[17px] leading-6 font-medium tracking-tight text-md-on-surface">
                           {formatNumber(cfRequests)}
                         </div>
-                        <div className="md-label-small text-md-on-surface-variant">
+                        <div className="text-[12px] leading-4 text-md-on-surface-variant">
                           requests
                         </div>
                       </div>
                       <div>
-                        <div className="md-title-medium text-md-on-surface">
+                        <div className="text-[17px] leading-6 font-medium tracking-tight text-md-on-surface">
                           {formatBytes(cloudflare.bandwidth ?? 0)}
                         </div>
-                        <div className="md-label-small text-md-on-surface-variant">
+                        <div className="text-[12px] leading-4 text-md-on-surface-variant">
                           bandwidth
                         </div>
                       </div>
                       {/* A ratio against a limit — a meter, not a chart */}
                       <div className="flex-1 min-w-[160px]">
                         <div className="flex items-baseline justify-between mb-1">
-                          <span className="md-label-small text-md-on-surface-variant">
+                          <span className="text-[12px] leading-4 text-md-on-surface-variant">
                             cache hit rate
                           </span>
-                          <span className="md-label-small tabular-nums text-md-on-surface">
+                          <span className="text-[12px] leading-4 tabular-nums text-md-on-surface">
                             {cacheRate}%
                           </span>
                         </div>

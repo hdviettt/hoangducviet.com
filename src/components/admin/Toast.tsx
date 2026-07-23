@@ -42,7 +42,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className="relative overflow-hidden flex items-center gap-2.5 pl-3.5 pr-5 py-3 rounded-xl shadow-md-3 bg-md-surface-container-high text-md-on-surface md-body-medium animate-in slide-in-from-right fade-in-0 duration-200"
+            className="relative overflow-hidden flex items-center gap-2.5 pl-3.5 pr-5 py-3 rounded-xl shadow-md-3 bg-md-surface-container-high text-md-on-surface text-[15px] leading-[22px] animate-in slide-in-from-right fade-in-0 duration-200"
           >
             {t.type === "success" ? (
               <svg

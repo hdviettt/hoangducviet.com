@@ -267,13 +267,13 @@ export default function ProjectForm({
       {allPosts.length > 0 && (
         <div>
           <label className="md-field-label">related posts</label>
-          <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low max-h-48 overflow-y-auto divide-y divide-md-outline-variant">
+          <div className="rounded-2xl border border-md-outline-variant max-h-48 overflow-y-auto divide-y divide-md-outline-variant">
             {allPosts.map((post) => (
               <button
                 key={post.slug}
                 type="button"
                 onClick={() => togglePost(post.slug)}
-                className={`w-full text-left px-3 py-2 md-body-medium transition-colors ${
+                className={`w-full text-left px-3 py-2 text-[15px] leading-[22px] transition-colors ${
                   postSlugs.includes(post.slug)
                     ? "text-md-primary bg-md-primary/10"
                     : "text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-surface-container"

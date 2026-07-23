@@ -14,7 +14,7 @@ export default function DescriptionMeter({ value }: { value: string }) {
         ? "text-md-warning"
         : "text-md-on-surface-variant/80";
   return (
-    <div className="mt-1 flex items-center justify-between md-label-small">
+    <div className="mt-1 flex items-center justify-between text-[12px] leading-4">
       <span className={tone}>
         {chars}/{DESC_LIMIT} characters
         {chars > DESC_LIMIT && " — Google will cut this off"}

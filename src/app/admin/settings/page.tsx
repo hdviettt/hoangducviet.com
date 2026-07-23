@@ -68,7 +68,9 @@ export default function AdminSettingsPage() {
 
   if (loading)
     return (
-      <div className="md-body-medium text-md-on-surface-variant">Loading…</div>
+      <div className="text-[15px] leading-[22px] text-md-on-surface-variant">
+        Loading…
+      </div>
     );
 
   return (
@@ -77,7 +79,7 @@ export default function AdminSettingsPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <section className="rounded-xl border border-md-outline-variant p-5">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-4 pb-2 border-b border-md-outline-variant">
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4 pb-2 border-b border-md-outline-variant">
             Site
           </h2>
           <div className="space-y-3">
@@ -103,7 +105,7 @@ export default function AdminSettingsPage() {
         </section>
 
         <section className="rounded-xl border border-md-outline-variant p-5">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-4 pb-2 border-b border-md-outline-variant">
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4 pb-2 border-b border-md-outline-variant">
             Profile
           </h2>
           <div className="space-y-3">
@@ -135,7 +137,7 @@ export default function AdminSettingsPage() {
         </section>
 
         <section className="rounded-xl border border-md-outline-variant p-5">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-4 pb-2 border-b border-md-outline-variant">
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4 pb-2 border-b border-md-outline-variant">
             About page
           </h2>
           <div className="space-y-3">

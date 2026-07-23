@@ -269,13 +269,13 @@ export default function PostForm({
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="Post title…"
-            className="flex-1 bg-transparent md-title-large focus:outline-none placeholder:text-md-on-surface-variant/40"
+            className="flex-1 bg-transparent text-[22px] leading-7 font-medium tracking-tight focus:outline-none placeholder:text-md-on-surface-variant/40"
             required
           />
 
           {/* Save state — quiet, always visible */}
           <span
-            className={`shrink-0 md-label-small tabular-nums ${
+            className={`shrink-0 text-[12px] leading-4 tabular-nums ${
               saveState === "error"
                 ? "text-md-error"
                 : "text-md-on-surface-variant"
@@ -326,7 +326,7 @@ export default function PostForm({
         </div>
 
         {/* Writing status bar */}
-        <div className="shrink-0 px-8 py-2 flex items-center gap-4 md-label-small text-md-on-surface-variant border-t border-md-outline-variant">
+        <div className="shrink-0 px-8 py-2 flex items-center gap-4 text-[12px] leading-4 text-md-on-surface-variant border-t border-md-outline-variant">
           <span className="inline-flex items-center gap-1.5">
             <span
               className={`w-1.5 h-1.5 rounded-full ${
@@ -343,10 +343,10 @@ export default function PostForm({
 
       {/* Right metadata drawer */}
       {drawerOpen && (
-        <aside className="w-80 shrink-0 border-l border-md-outline-variant bg-md-surface-container-low overflow-y-auto">
+        <aside className="w-80 shrink-0 border-l border-md-outline-variant bg-transparent overflow-y-auto">
           <div className="p-5 space-y-6">
             <section>
-              <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
+              <h3 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-3 pb-2 border-b border-md-outline-variant">
                 metadata
               </h3>
               <div className="space-y-3">
@@ -360,7 +360,7 @@ export default function PostForm({
                     required
                   />
                   {savedSlugRef.current && slug !== savedSlugRef.current && (
-                    <p className="md-label-small text-md-on-surface-variant/80 mt-1">
+                    <p className="text-[12px] leading-4 text-md-on-surface-variant/80 mt-1">
                       press “save draft” to apply the new slug
                     </p>
                   )}
@@ -397,7 +397,7 @@ export default function PostForm({
             </section>
 
             <section>
-              <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
+              <h3 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-3 pb-2 border-b border-md-outline-variant">
                 thumbnail
               </h3>
               <MediaPicker value={thumbnail} onChange={setThumbnail} />
@@ -405,7 +405,7 @@ export default function PostForm({
 
             {allCategories.length > 0 && (
               <section>
-                <h3 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-3 pb-2 border-b border-md-outline-variant">
+                <h3 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-3 pb-2 border-b border-md-outline-variant">
                   categories
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -416,7 +416,7 @@ export default function PostForm({
                         key={cat.slug}
                         type="button"
                         onClick={() => toggleCategory(cat.slug)}
-                        className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border md-label-medium transition-all duration-200 ease-md-standard ${
+                        className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border text-[13px] leading-[18px] transition-all duration-200 ease-md-standard ${
                           selected
                             ? "bg-md-secondary-container text-md-on-secondary-container border-md-secondary-container"
                             : "bg-transparent text-md-on-surface-variant border-md-outline hover:bg-md-on-surface/8"
@@ -436,7 +436,7 @@ export default function PostForm({
                 href={`/posts/${savedSlugRef.current}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 md-label-large text-md-on-surface-variant hover:text-md-primary transition-colors"
+                className="inline-flex items-center gap-1.5 text-[14px] leading-5 text-md-on-surface-variant hover:text-md-primary transition-colors"
               >
                 view post
                 <Icon name="open_in_new" size={16} />

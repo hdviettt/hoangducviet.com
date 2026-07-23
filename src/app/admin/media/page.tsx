@@ -197,7 +197,9 @@ export default function AdminMediaPage() {
 
   if (loading)
     return (
-      <div className="md-body-medium text-md-on-surface-variant">Loading…</div>
+      <div className="text-[15px] leading-[22px] text-md-on-surface-variant">
+        Loading…
+      </div>
     );
 
   return (
@@ -233,7 +235,7 @@ export default function AdminMediaPage() {
             placeholder="Search media…"
             className="md-field-dense w-60"
           />
-          <div className="flex items-center gap-1 md-body-small text-md-on-surface-variant">
+          <div className="flex items-center gap-1 text-[13px] leading-[18px] text-md-on-surface-variant">
             <span>sort:</span>
             {(["date", "name", "size"] as SortKey[]).map((key) => (
               <button
@@ -255,7 +257,7 @@ export default function AdminMediaPage() {
             <button
               type="button"
               onClick={selectAll}
-              className="md-body-small text-md-on-surface-variant hover:text-md-on-surface transition-colors"
+              className="text-[13px] leading-[18px] text-md-on-surface-variant hover:text-md-on-surface transition-colors"
             >
               {selected.size === filtered.length
                 ? "Deselect all"
@@ -266,14 +268,14 @@ export default function AdminMediaPage() {
             <button
               type="button"
               onClick={handleBatchDelete}
-              className="md-body-small text-md-error hover:underline"
+              className="text-[13px] leading-[18px] text-md-error hover:underline"
             >
               delete {selected.size} selected
             </button>
           )}
         </div>
 
-        <div className="md-body-small text-md-on-surface-variant mt-3">
+        <div className="text-[13px] leading-[18px] text-md-on-surface-variant mt-3">
           {filtered.length} item{filtered.length !== 1 ? "s" : ""}
           {search && ` matching "${search}"`}
           {selected.size > 0 && ` · ${selected.size} selected`}
@@ -289,7 +291,7 @@ export default function AdminMediaPage() {
           return (
             <div
               key={item.id}
-              className={`bg-md-surface-container-low border rounded-xl overflow-hidden transition-colors ${
+              className={`bg-transparent border rounded-xl overflow-hidden transition-colors ${
                 isSelected
                   ? "border-md-primary ring-1 ring-md-primary"
                   : "border-md-outline-variant"
@@ -322,12 +324,12 @@ export default function AdminMediaPage() {
                     </div>
                   </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center md-label-small uppercase tracking-widest text-md-on-surface-variant">
+                  <div className="w-full h-full flex items-center justify-center text-[12px] leading-4 text-md-on-surface-variant">
                     {item.mimeType?.split("/")[1] || "file"}
                   </div>
                 )}
                 <div
-                  className={`absolute top-1.5 left-1.5 w-5 h-5 border rounded flex items-center justify-center md-body-small transition-colors ${
+                  className={`absolute top-1.5 left-1.5 w-5 h-5 border rounded flex items-center justify-center text-[13px] leading-[18px] transition-colors ${
                     isSelected
                       ? "bg-md-primary border-md-primary text-md-on-primary"
                       : "bg-md-background/80 border-md-outline-variant"
@@ -355,14 +357,14 @@ export default function AdminMediaPage() {
                     <button
                       type="button"
                       onClick={saveEdit}
-                      className="md-body-small text-md-primary hover:underline shrink-0"
+                      className="text-[13px] leading-[18px] text-md-primary hover:underline shrink-0"
                     >
                       ok
                     </button>
                   </div>
                 ) : (
                   <p
-                    className="md-body-small truncate cursor-pointer hover:text-md-primary transition-colors"
+                    className="text-[13px] leading-[18px] truncate cursor-pointer hover:text-md-primary transition-colors"
                     onClick={() => startEdit(item)}
                     title="Click to rename"
                   >
@@ -370,21 +372,21 @@ export default function AdminMediaPage() {
                   </p>
                 )}
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="md-label-small text-md-on-surface-variant">
+                  <span className="text-[12px] leading-4 text-md-on-surface-variant">
                     {formatSize(item.size)}
                   </span>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => copyPath(item.url)}
-                      className="md-body-small text-md-primary hover:underline"
+                      className="text-[13px] leading-[18px] text-md-primary hover:underline"
                     >
                       copy
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id, item.originalName)}
-                      className="md-body-small text-md-error hover:underline"
+                      className="text-[13px] leading-[18px] text-md-error hover:underline"
                     >
                       Delete
                     </button>
@@ -395,7 +397,7 @@ export default function AdminMediaPage() {
           );
         })}
         {filtered.length === 0 && (
-          <div className="col-span-full text-center py-10 md-body-medium text-md-on-surface-variant">
+          <div className="col-span-full text-center py-10 text-[15px] leading-[22px] text-md-on-surface-variant">
             {search ? `no results for "${search}"` : "no media yet."}
           </div>
         )}

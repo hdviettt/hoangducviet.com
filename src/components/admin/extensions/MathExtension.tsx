@@ -43,7 +43,7 @@ function MathInlineView({ node, updateAttributes, selected }: any) {
             }
           }}
           onBlur={save}
-          className="bg-md-surface-container border border-md-primary px-1.5 py-0.5 md-body-medium font-mono rounded-sm inline-block"
+          className="bg-md-surface-container border border-md-primary px-1.5 py-0.5 text-[15px] leading-[22px] font-mono rounded-sm inline-block"
           style={{ width: `${Math.max(4, latex.length + 2)}ch` }}
           placeholder="E=mc^2"
         />
@@ -114,7 +114,7 @@ function MathBlockView({ node, updateAttributes, selected }: any) {
             className="md-field font-mono"
             placeholder="\frac{a}{b} = c"
           />
-          <p className="md-body-small text-md-on-surface-variant mt-1.5">
+          <p className="text-[13px] leading-[18px] text-md-on-surface-variant mt-1.5">
             Enter to save · Shift+Enter for newline · Escape to cancel
           </p>
         </div>

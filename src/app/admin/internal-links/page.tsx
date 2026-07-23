@@ -235,7 +235,7 @@ export default async function InternalLinksPage() {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 relative overflow-hidden"
+            className="rounded-2xl border border-md-outline-variant p-5 relative overflow-hidden"
           >
             <Icon
               name={stat.icon}
@@ -248,7 +248,7 @@ export default async function InternalLinksPage() {
               >
                 {stat.value}
               </div>
-              <div className="md-label-medium text-md-on-surface-variant mt-2 uppercase tracking-wider">
+              <div className="text-[13px] leading-[18px] text-md-on-surface-variant mt-2">
                 {stat.label}
               </div>
             </div>
@@ -259,7 +259,7 @@ export default async function InternalLinksPage() {
       {/* Link graph */}
       {graphNodes.length > 0 && (
         <section className="mb-8">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-3 pb-2 border-b border-md-outline-variant">
             link graph
           </h2>
           <LinkGraph nodes={graphNodes} edges={graphEdges} />
@@ -269,17 +269,17 @@ export default async function InternalLinksPage() {
       {/* Orphan pages */}
       {orphanPages.length > 0 && (
         <section className="mb-8">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-3 pb-2 border-b border-md-outline-variant">
             orphan pages (no incoming links)
           </h2>
-          <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-md-surface-container-low overflow-hidden">
+          <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-transparent overflow-hidden">
             {orphanPages.map((page) => (
               <div
                 key={page.path}
                 className="flex items-center gap-3 px-4 py-3 row-hover"
               >
                 <span
-                  className={`md-label-small uppercase font-medium rounded px-1.5 py-0.5 ${
+                  className={`text-[12px] leading-4 uppercase font-medium rounded px-1.5 py-0.5 ${
                     page.type === "post"
                       ? "bg-md-primary-container text-md-on-primary-container"
                       : "bg-md-tertiary-container text-md-on-tertiary-container"
@@ -293,11 +293,11 @@ export default async function InternalLinksPage() {
                       ? `/admin/posts/${page.slug}/edit`
                       : `/admin/projects/${page.slug}/edit`
                   }
-                  className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
+                  className="text-[15px] leading-[22px] flex-1 truncate hover:text-md-primary transition-colors"
                 >
                   {page.title}
                 </Link>
-                <span className="md-body-small text-md-on-surface-variant">
+                <span className="text-[13px] leading-[18px] text-md-on-surface-variant">
                   {page.path}
                 </span>
               </div>
@@ -309,10 +309,10 @@ export default async function InternalLinksPage() {
       {/* Broken links */}
       {brokenLinks.length > 0 && (
         <section className="mb-8">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-3 pb-2 border-b border-md-outline-variant">
             broken links
           </h2>
-          <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-md-surface-container-low overflow-hidden">
+          <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant bg-transparent overflow-hidden">
             {brokenLinks.map((edge) => {
               const source = pages.get(edge.sourcePath);
               return (
@@ -326,14 +326,14 @@ export default async function InternalLinksPage() {
                         ? `/admin/posts/${source.slug}/edit`
                         : `/admin/projects/${source?.slug}/edit`
                     }
-                    className="md-body-medium hover:text-md-primary transition-colors truncate"
+                    className="text-[15px] leading-[22px] hover:text-md-primary transition-colors truncate"
                   >
                     {source?.title ?? edge.sourcePath}
                   </Link>
-                  <span className="text-md-on-surface-variant md-body-small">
+                  <span className="text-md-on-surface-variant text-[13px] leading-[18px]">
                     &rarr;
                   </span>
-                  <span className="md-body-medium text-md-error">
+                  <span className="text-[15px] leading-[22px] text-md-error">
                     {edge.targetPath}
                   </span>
                 </div>
@@ -345,7 +345,7 @@ export default async function InternalLinksPage() {
 
       {/* All pages table */}
       <section>
-        <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-md-outline-variant">
+        <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-3 pb-2 border-b border-md-outline-variant">
           all pages
         </h2>
         <LinkTable data={tableData} />

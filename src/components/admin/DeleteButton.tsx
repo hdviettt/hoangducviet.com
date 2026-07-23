@@ -29,7 +29,7 @@ export default function DeleteButton({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="md-label-medium text-md-on-surface-variant hover:text-md-error transition-colors"
+        className="text-[13px] leading-[18px] text-md-on-surface-variant hover:text-md-error transition-colors"
       >
         delete
       </button>

@@ -56,7 +56,7 @@ export default async function AdminDashboard() {
       <PageHeader
         title="Dashboard"
         action={
-          <span className="md-body-small text-md-on-surface-variant">
+          <span className="text-[13px] leading-[18px] text-md-on-surface-variant">
             {new Date().toLocaleDateString("en-US", {
               weekday: "long",
               month: "long",
@@ -71,17 +71,17 @@ export default async function AdminDashboard() {
 
       {/* Drafts & ideas — your backlog to develop and publish */}
       <div className="flex items-center justify-between mt-8 mb-3">
-        <h2 className="md-label-medium uppercase tracking-wider text-md-on-surface-variant">
+        <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant">
           drafts &amp; ideas{drafts.length > 0 ? ` · ${drafts.length}` : ""}
         </h2>
         <Link
           href="/admin/posts"
-          className="md-label-medium text-md-on-surface-variant hover:text-md-primary transition-colors"
+          className="text-[13px] leading-[18px] text-md-on-surface-variant hover:text-md-primary transition-colors"
         >
           all posts →
         </Link>
       </div>
-      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low overflow-hidden">
+      <div className="rounded-2xl border border-md-outline-variant overflow-hidden">
         {drafts.length === 0 ? (
           <EmptyState
             icon="lightbulb"
@@ -107,11 +107,11 @@ export default async function AdminDashboard() {
                   />
                   <Link
                     href={`/admin/posts/${d.slug}/edit`}
-                    className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
+                    className="text-[15px] leading-[22px] flex-1 truncate hover:text-md-primary transition-colors"
                   >
                     {d.title || "(untitled idea)"}
                   </Link>
-                  <span className="md-body-small text-md-on-surface-variant tabular-nums shrink-0">
+                  <span className="text-[13px] leading-[18px] text-md-on-surface-variant tabular-nums shrink-0">
                     {date}
                   </span>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -134,7 +134,7 @@ export default async function AdminDashboard() {
           <Link
             key={stat.label}
             href={stat.href}
-            className="group relative overflow-hidden rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 transition-shadow hover:shadow-md-1"
+            className="group relative overflow-hidden rounded-2xl border border-md-outline-variant p-5 transition-shadow hover:shadow-md-1"
           >
             <Icon
               name={stat.icon}
@@ -145,7 +145,7 @@ export default async function AdminDashboard() {
               <div className="text-[32px] leading-none font-medium text-md-primary tabular-nums">
                 {stat.count}
               </div>
-              <div className="md-label-medium text-md-on-surface-variant mt-2 uppercase tracking-wider">
+              <div className="text-[13px] leading-[18px] text-md-on-surface-variant mt-2">
                 {stat.label}
               </div>
             </div>

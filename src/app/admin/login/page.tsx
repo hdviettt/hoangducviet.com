@@ -35,8 +35,10 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-xs">
-      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low shadow-md-1 p-8">
-        <div className="md-body-medium text-md-primary mb-6">Admin login</div>
+      <div className="rounded-2xl border border-md-outline-variant shadow-md-1 p-8">
+        <div className="text-[15px] leading-[22px] text-md-primary mb-6">
+          Admin login
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="username" className="md-field-label">
@@ -64,7 +66,9 @@ export default function LoginPage() {
               required
             />
           </div>
-          {error && <p className="text-md-error md-body-small">{error}</p>}
+          {error && (
+            <p className="text-md-error text-[13px] leading-[18px]">{error}</p>
+          )}
           <button
             type="submit"
             disabled={loading}

@@ -125,7 +125,9 @@ function LibraryModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/40">
       <div className="bg-md-surface-container-high rounded-2xl shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
         <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-          <span className="md-title-small shrink-0">Add slides</span>
+          <span className="text-[15px] leading-[22px] font-medium shrink-0">
+            Add slides
+          </span>
           <input
             type="text"
             value={search}
@@ -148,7 +150,7 @@ function LibraryModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-md-on-surface-variant hover:text-md-on-surface md-title-medium leading-none shrink-0"
+            className="text-md-on-surface-variant hover:text-md-on-surface text-[17px] leading-6 font-medium tracking-tight leading-none shrink-0"
           >
             x
           </button>
@@ -156,11 +158,11 @@ function LibraryModal({
 
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
-            <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+            <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
               Loading…
             </div>
           ) : visible.length === 0 ? (
-            <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+            <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
               Nothing here yet. Upload above.
             </div>
           ) : (
@@ -179,7 +181,7 @@ function LibraryModal({
                     }`}
                   >
                     {isVideo(item.url) ? (
-                      <div className="w-full h-full flex items-center justify-center bg-md-surface-container-highest md-body-small text-md-on-surface-variant px-2 text-center break-all">
+                      <div className="w-full h-full flex items-center justify-center bg-md-surface-container-highest text-[13px] leading-[18px] text-md-on-surface-variant px-2 text-center break-all">
                         {item.originalName}
                       </div>
                     ) : (
@@ -190,7 +192,7 @@ function LibraryModal({
                       />
                     )}
                     {n >= 0 && (
-                      <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-md-primary text-md-on-primary md-label-small flex items-center justify-center">
+                      <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-md-primary text-md-on-primary text-[12px] leading-4 flex items-center justify-center">
                         {n + 1}
                       </span>
                     )}
@@ -202,7 +204,7 @@ function LibraryModal({
         </div>
 
         <div className="flex items-center justify-between gap-3 px-4 py-3 border-t border-md-outline-variant shrink-0">
-          <span className="md-body-small text-md-on-surface-variant">
+          <span className="text-[13px] leading-[18px] text-md-on-surface-variant">
             {picked.length
               ? `${picked.length} selected — they are added in click order`
               : "Click to select, in the order you want them"}
@@ -264,11 +266,11 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
         selected
           ? "border-md-primary ring-1 ring-md-primary"
           : "border-md-outline-variant"
-      } bg-md-surface-container-low overflow-hidden`}
+      } bg-transparent overflow-hidden`}
       contentEditable={false}
     >
       <div className="flex flex-wrap items-center gap-2 px-3 py-2 border-b border-md-outline-variant bg-md-surface-container">
-        <span className="md-label-large">
+        <span className="text-[14px] leading-5">
           Carousel · {slides.length} slide{slides.length === 1 ? "" : "s"}
         </span>
         <div className="flex-1" />
@@ -325,7 +327,7 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
         <button
           type="button"
           onClick={() => setLibrary(true)}
-          className="w-full py-10 md-body-medium text-md-on-surface-variant hover:text-md-primary"
+          className="w-full py-10 text-[15px] leading-[22px] text-md-on-surface-variant hover:text-md-primary"
         >
           + add slides
         </button>
@@ -352,7 +354,7 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
                 style={{ aspectRatio: ratio }}
               >
                 {isVideo(s.src) ? (
-                  <div className="absolute inset-0 flex items-center justify-center md-body-small text-md-on-surface-variant px-2 text-center break-all">
+                  <div className="absolute inset-0 flex items-center justify-center text-[13px] leading-[18px] text-md-on-surface-variant px-2 text-center break-all">
                     {s.src.split("/").pop()}
                   </div>
                 ) : (
@@ -363,7 +365,7 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
                     className="absolute inset-0 w-full h-full object-contain"
                   />
                 )}
-                <span className="absolute top-1 left-1 w-5 h-5 rounded-full bg-md-scrim/60 text-white md-label-small flex items-center justify-center">
+                <span className="absolute top-1 left-1 w-5 h-5 rounded-full bg-md-scrim/60 text-white text-[12px] leading-4 flex items-center justify-center">
                   {i + 1}
                 </span>
               </div>
@@ -413,7 +415,7 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
           <button
             type="button"
             onClick={() => setLibrary(true)}
-            className="w-32 shrink-0 rounded-lg border border-dashed border-md-outline-variant md-body-small text-md-on-surface-variant hover:border-md-primary hover:text-md-primary"
+            className="w-32 shrink-0 rounded-lg border border-dashed border-md-outline-variant text-[13px] leading-[18px] text-md-on-surface-variant hover:border-md-primary hover:text-md-primary"
           >
             + add
           </button>

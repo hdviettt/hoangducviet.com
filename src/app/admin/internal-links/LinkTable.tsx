@@ -48,7 +48,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
   ];
 
   return (
-    <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant overflow-hidden bg-md-surface-container-low">
+    <div className="rounded-xl border border-md-outline-variant divide-y divide-md-outline-variant overflow-hidden bg-transparent">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-2.5 bg-md-surface-container">
         {columns.map((col) => (
@@ -56,7 +56,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             key={col.key}
             type="button"
             onClick={() => toggleSort(col.key)}
-            className={`flex items-center gap-1 md-label-small text-md-on-surface-variant uppercase tracking-widest hover:text-md-on-surface transition-colors ${col.className}`}
+            className={`flex items-center gap-1 text-[13px] leading-[18px] text-md-on-surface-variant hover:text-md-on-surface transition-colors ${col.className}`}
           >
             {col.label}
             {sortKey === col.key && <Icon name="swap_vert" size={14} />}
@@ -73,7 +73,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             className="flex items-center gap-3 px-4 py-3 row-hover w-full text-left"
           >
             <span
-              className={`md-label-small uppercase font-medium rounded px-1.5 py-0.5 w-20 text-center ${
+              className={`text-[12px] leading-4 uppercase font-medium rounded px-1.5 py-0.5 w-20 text-center ${
                 row.type === "post"
                   ? "bg-md-primary-container text-md-on-primary-container"
                   : "bg-md-tertiary-container text-md-on-tertiary-container"
@@ -81,11 +81,11 @@ export default function LinkTable({ data }: { data: Row[] }) {
             >
               {row.type}
             </span>
-            <span className="md-body-medium flex-1 min-w-0 truncate">
+            <span className="text-[15px] leading-[22px] flex-1 min-w-0 truncate">
               {row.title}
             </span>
             <span
-              className={`md-body-medium w-24 text-right ${
+              className={`text-[15px] leading-[22px] w-24 text-right ${
                 row.incomingCount === 0
                   ? "text-md-tertiary"
                   : "text-md-on-surface-variant"
@@ -93,7 +93,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             >
               {row.incomingCount}
             </span>
-            <span className="md-body-medium text-md-on-surface-variant w-24 text-right">
+            <span className="text-[15px] leading-[22px] text-md-on-surface-variant w-24 text-right">
               {row.outgoingCount}
             </span>
           </button>
@@ -103,7 +103,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
             <div className="px-4 pb-3 pt-0 bg-md-surface-container/40 border-t border-md-outline-variant">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-3">
                 <div>
-                  <div className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-2">
+                  <div className="text-[13px] leading-[18px] text-md-on-surface-variant mb-2">
                     incoming ({row.incomingCount})
                   </div>
                   {row.incomingSources.length > 0 ? (
@@ -111,20 +111,20 @@ export default function LinkTable({ data }: { data: Row[] }) {
                       {row.incomingSources.map((src) => (
                         <li
                           key={src}
-                          className="md-body-small text-md-on-surface-variant"
+                          className="text-[13px] leading-[18px] text-md-on-surface-variant"
                         >
                           {src}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="md-body-small text-md-tertiary">
+                    <p className="text-[13px] leading-[18px] text-md-tertiary">
                       No incoming links
                     </p>
                   )}
                 </div>
                 <div>
-                  <div className="md-label-small text-md-on-surface-variant uppercase tracking-wider mb-2">
+                  <div className="text-[13px] leading-[18px] text-md-on-surface-variant mb-2">
                     outgoing ({row.outgoingCount})
                   </div>
                   {row.outgoingTargets.length > 0 ? (
@@ -132,14 +132,14 @@ export default function LinkTable({ data }: { data: Row[] }) {
                       {row.outgoingTargets.map((tgt) => (
                         <li
                           key={tgt}
-                          className="md-body-small text-md-on-surface-variant"
+                          className="text-[13px] leading-[18px] text-md-on-surface-variant"
                         >
                           {tgt}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="md-body-small text-md-on-surface-variant">
+                    <p className="text-[13px] leading-[18px] text-md-on-surface-variant">
                       no outgoing links
                     </p>
                   )}
@@ -151,7 +151,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
                     ? `/admin/posts/${row.slug}/edit`
                     : `/admin/projects/${row.slug}/edit`
                 }
-                className="md-body-small text-md-primary hover:underline"
+                className="text-[13px] leading-[18px] text-md-primary hover:underline"
               >
                 edit {row.type}
               </Link>
@@ -161,7 +161,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
       ))}
 
       {sorted.length === 0 && (
-        <div className="px-4 py-8 text-center md-body-medium text-md-on-surface-variant">
+        <div className="px-4 py-8 text-center text-[15px] leading-[22px] text-md-on-surface-variant">
           no published pages found.
         </div>
       )}

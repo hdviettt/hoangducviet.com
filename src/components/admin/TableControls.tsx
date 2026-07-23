@@ -258,7 +258,7 @@ export default function TableControls({
                 key={i}
                 type="button"
                 onClick={ctxAction(item.action!)}
-                className={`w-full text-left px-3.5 py-1.5 md-body-medium transition-colors ${
+                className={`w-full text-left px-3.5 py-1.5 text-[15px] leading-[22px] transition-colors ${
                   "destructive" in item && item.destructive
                     ? "text-md-error hover:bg-md-error/10"
                     : "text-md-on-surface hover:bg-md-on-surface/8"

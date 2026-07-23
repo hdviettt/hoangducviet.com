@@ -54,15 +54,17 @@ export default function AdminCategoriesPage() {
 
   if (loading)
     return (
-      <div className="md-body-medium text-md-on-surface-variant">Loading…</div>
+      <div className="text-[15px] leading-[22px] text-md-on-surface-variant">
+        Loading…
+      </div>
     );
 
   return (
     <div className="max-w-2xl">
       <PageHeader title="Categories" />
 
-      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 mb-8">
-        <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-4">
+      <div className="rounded-2xl border border-md-outline-variant p-5 mb-8">
+        <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4">
           New category
         </h2>
         <form onSubmit={handleCreate} className="flex gap-3 items-end">
@@ -102,15 +104,15 @@ export default function AdminCategoriesPage() {
 
       <div>
         <div className="flex items-center justify-between mb-3 pb-2 border-b border-md-outline-variant">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-widest">
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant">
             All categories
           </h2>
-          <span className="md-body-small text-md-on-surface-variant tabular-nums">
+          <span className="text-[13px] leading-[18px] text-md-on-surface-variant tabular-nums">
             {categories.length}
           </span>
         </div>
         {categories.length === 0 ? (
-          <p className="md-body-medium text-md-on-surface-variant py-4">
+          <p className="text-[15px] leading-[22px] text-md-on-surface-variant py-4">
             No categories yet.
           </p>
         ) : (
@@ -120,8 +122,8 @@ export default function AdminCategoriesPage() {
                 key={cat.slug}
                 className="group flex items-center gap-2 rounded-full border border-md-outline-variant px-3 py-1.5 hover:border-md-primary/50 transition-colors stagger-list"
               >
-                <span className="md-body-medium">{cat.title}</span>
-                <span className="md-body-small text-md-on-surface-variant">
+                <span className="text-[15px] leading-[22px]">{cat.title}</span>
+                <span className="text-[13px] leading-[18px] text-md-on-surface-variant">
                   {cat.slug}
                 </span>
                 <button

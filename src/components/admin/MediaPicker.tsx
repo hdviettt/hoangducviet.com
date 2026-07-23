@@ -93,7 +93,7 @@ export default function MediaPicker({
           </button>
         ) : (
           <div className="w-20 h-14 border border-dashed border-md-outline-variant rounded-lg flex items-center justify-center shrink-0">
-            <span className="md-body-small text-md-on-surface-variant">
+            <span className="text-[13px] leading-[18px] text-md-on-surface-variant">
               None
             </span>
           </div>
@@ -134,7 +134,7 @@ export default function MediaPicker({
               className="w-full h-auto rounded-2xl shadow-md-4 bg-md-surface-container"
             />
             <div className="mt-3 flex items-center justify-between gap-4">
-              <span className="md-body-small font-mono text-white/70 truncate">
+              <span className="text-[13px] leading-[18px] font-mono text-white/70 truncate">
                 {value}
               </span>
               <a
@@ -142,7 +142,7 @@ export default function MediaPicker({
                 target="_blank"
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="md-body-small text-white/90 underline shrink-0"
+                className="text-[13px] leading-[18px] text-white/90 underline shrink-0"
               >
                 open in new tab
               </a>
@@ -156,7 +156,9 @@ export default function MediaPicker({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/40">
           <div className="bg-md-surface-container-high rounded-2xl shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small shrink-0">Media library</span>
+              <span className="text-[15px] leading-[22px] font-medium shrink-0">
+                Media library
+              </span>
               <input
                 type="text"
                 value={search}
@@ -180,18 +182,18 @@ export default function MediaPicker({
                   setOpen(false);
                   setSearch("");
                 }}
-                className="text-md-on-surface-variant hover:text-md-on-surface md-title-medium leading-none shrink-0"
+                className="text-md-on-surface-variant hover:text-md-on-surface text-[17px] leading-6 font-medium tracking-tight leading-none shrink-0"
               >
                 x
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {loading ? (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
                   Loading…
                 </div>
               ) : images.length === 0 ? (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                <div className="text-[15px] leading-[22px] text-md-on-surface-variant text-center py-10">
                   no images yet. upload one above.
                 </div>
               ) : (
