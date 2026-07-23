@@ -341,10 +341,10 @@ function ToolbarButton({
       type="button"
       onClick={onClick}
       title={title}
-      className={`px-2 py-1 text-[13px] leading-[18px] rounded-lg transition-colors ${
+      className={`h-8 min-w-8 px-2 text-[13px] leading-[18px] rounded-lg transition-colors ${
         active
-          ? "bg-md-secondary-container text-md-on-secondary-container"
-          : "text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface"
+          ? "bg-md-surface-container text-md-on-surface font-medium"
+          : "text-md-on-surface-variant hover:bg-md-on-surface/5 hover:text-md-on-surface"
       }`}
     >
       {children}
@@ -700,12 +700,9 @@ export default function RichEditor({
   if (!editor) return null;
 
   return (
-    <div
-      ref={editorRef}
-      className="rounded-xl border border-md-outline-variant bg-md-surface relative flex flex-col h-full"
-    >
+    <div ref={editorRef} className="relative flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex items-center gap-0.5 px-2 py-1 border-b border-md-outline-variant bg-transparent overflow-x-auto sticky top-0 z-10 shrink-0">
+      <div className="flex items-center gap-0.5 pb-2 mb-4 border-b border-md-outline-variant bg-md-background overflow-x-auto sticky top-0 z-10 shrink-0">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive("bold")}

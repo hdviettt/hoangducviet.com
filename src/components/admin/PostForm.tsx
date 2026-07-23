@@ -240,23 +240,23 @@ export default function PostForm({
 
   const statusLine =
     saveState === "saving"
-      ? "saving…"
+      ? "Saving…"
       : saveState === "error"
-        ? "save failed"
+        ? "Save failed"
         : dirty && savedSlugRef.current
-          ? "unsaved changes"
+          ? "Unsaved changes"
           : lastSavedAt
-            ? `saved ${timeAgo(lastSavedAt)}`
+            ? `Saved ${timeAgo(lastSavedAt)}`
             : savedSlugRef.current
-              ? "saved"
-              : "not saved yet";
+              ? "Saved"
+              : "Not saved yet";
 
   return (
-    <div className="flex h-[calc(100vh-2.75rem)] overflow-hidden -my-8 -mx-8">
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden -mb-16 -mx-5 sm:-mx-8 lg:-mx-14 xl:-mx-20">
       {/* Editor pane */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <div className="shrink-0 bg-md-background border-b border-md-outline-variant px-8 py-3 flex items-center gap-3">
+        <div className="shrink-0 bg-md-background border-b border-md-outline-variant px-5 sm:px-8 lg:px-14 xl:px-20 py-3 flex items-center gap-3">
           <Link
             href="/admin/posts"
             title="Back to posts"
@@ -290,7 +290,7 @@ export default function PostForm({
             disabled={saveState === "saving"}
             className="md-btn md-btn-text md-btn-sm shrink-0"
           >
-            save draft
+            Save draft
           </button>
           <button
             type="button"
@@ -321,12 +321,12 @@ export default function PostForm({
         </div>
 
         {/* Editor */}
-        <div className="flex-1 min-h-0 overflow-hidden px-8 pt-6 pb-2">
+        <div className="flex-1 min-h-0 overflow-hidden px-5 sm:px-8 lg:px-14 xl:px-20 pt-6 pb-2">
           <RichEditor content={content} onChange={setContent} />
         </div>
 
         {/* Writing status bar */}
-        <div className="shrink-0 px-8 py-2 flex items-center gap-4 text-[12px] leading-4 text-md-on-surface-variant border-t border-md-outline-variant">
+        <div className="shrink-0 px-5 sm:px-8 lg:px-14 xl:px-20 py-2 flex items-center gap-4 text-[12px] leading-4 text-md-on-surface-variant border-t border-md-outline-variant">
           <span className="inline-flex items-center gap-1.5">
             <span
               className={`w-1.5 h-1.5 rounded-full ${

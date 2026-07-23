@@ -66,7 +66,7 @@ export default function IdeaCapture() {
           }
         }}
         placeholder="Capture an idea — Enter to save it as a draft"
-        className="flex-1 min-w-0 bg-transparent md-body-large focus:outline-none placeholder:text-md-on-surface-variant/60"
+        className="flex-1 min-w-0 bg-transparent text-[17px] leading-6 focus:outline-none placeholder:text-md-on-surface-variant/60"
       />
       <button
         type="button"
