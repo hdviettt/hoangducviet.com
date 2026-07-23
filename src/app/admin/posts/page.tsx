@@ -1,5 +1,6 @@
+import AdminRow, { adminDate } from "@/components/admin/AdminRow";
 import DeleteButton from "@/components/admin/DeleteButton";
-import EmptyState, { StatusPill } from "@/components/admin/EmptyState";
+import EmptyState from "@/components/admin/EmptyState";
 import NewPostShortcut from "@/components/admin/NewPostShortcut";
 import PageHeader from "@/components/admin/PageHeader";
 import StatusToggle from "@/components/admin/StatusToggle";
@@ -16,8 +17,10 @@ export default async function AdminPostsPage() {
     .from(posts)
     .orderBy(desc(posts.dateCreated));
 
+  const drafts = allPosts.filter((p) => p.status !== "published").length;
+
   return (
-    <div className="max-w-4xl">
+    <div className="max-w-[900px]">
       <NewPostShortcut href="/admin/posts/new" />
       <PageHeader
         title="Posts"
@@ -27,7 +30,7 @@ export default async function AdminPostsPage() {
             href="/admin/posts/new"
             className="md-btn md-btn-filled md-btn-sm"
           >
-            <span>+ new post</span>
+            <span>New post</span>
             <kbd className="md-label-small font-sans rounded bg-md-on-primary/20 px-1.5 py-0.5 leading-none">
               N
             </kbd>
@@ -35,79 +38,79 @@ export default async function AdminPostsPage() {
         }
       />
 
-      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low overflow-hidden">
-        <div className="flex items-center gap-4 px-4 py-2.5 border-b border-md-outline-variant bg-md-surface-container">
-          <div className="w-9 shrink-0" />
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest flex-1">
-            Title
-          </div>
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-24">
-            Status
-          </div>
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-24 text-right">
-            Date
-          </div>
-          <div className="w-10 shrink-0" />
-        </div>
-        {allPosts.length === 0 ? (
-          <EmptyState
-            title="No posts yet"
-            hint={
-              <>
-                press{" "}
-                <kbd className="font-sans rounded bg-md-on-surface/8 px-1.5 py-0.5 md-label-small">
-                  N
-                </kbd>{" "}
-                or click{" "}
-                <Link
-                  href="/admin/posts/new"
-                  className="text-md-primary hover:underline"
-                >
-                  + new post
-                </Link>
-              </>
-            }
-          />
-        ) : (
-          <div className="divide-y divide-md-outline-variant stagger-list">
-            {allPosts.map((post) => (
-              <div
-                key={post.slug}
-                className="group flex items-center gap-4 px-4 py-2.5 row-hover"
+      {drafts > 0 && (
+        <p className="-mt-4 mb-6 text-[14px] leading-5 text-md-on-surface-variant">
+          {drafts} of these {drafts === 1 ? "is a draft" : "are drafts"} — only
+          you can see {drafts === 1 ? "it" : "them"}.
+        </p>
+      )}
+
+      {allPosts.length === 0 ? (
+        <EmptyState
+          title="No posts yet"
+          hint={
+            <>
+              Press{" "}
+              <kbd className="font-sans rounded bg-md-on-surface/8 px-1.5 py-0.5 md-label-small">
+                N
+              </kbd>{" "}
+              or click{" "}
+              <Link
+                href="/admin/posts/new"
+                className="text-md-primary hover:underline"
               >
-                <StatusToggle
-                  slug={post.slug}
-                  status={post.status}
-                  apiPath="posts"
-                />
-                <Link
-                  href={`/admin/posts/${post.slug}/edit`}
-                  className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
-                >
-                  {post.title}
-                </Link>
-                <div className="w-24">
-                  <StatusPill status={post.status} />
-                </div>
-                <span className="md-body-small text-md-on-surface-variant w-24 text-right shrink-0 tabular-nums">
-                  {post.dateCreated?.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "2-digit",
-                    year: "2-digit",
-                  })}
-                </span>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <DeleteButton
-                    slug={post.slug}
-                    name={post.title}
-                    apiPath="posts"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                New post
+              </Link>
+            </>
+          }
+        />
+      ) : (
+        <div className="border-t border-md-outline-variant stagger-list">
+          {allPosts.map((post) => {
+            const isDraft = post.status !== "published";
+            return (
+              <AdminRow
+                key={post.slug}
+                href={`/admin/posts/${post.slug}/edit`}
+                title={post.title}
+                description={post.description}
+                thumbnail={post.thumbnail}
+                muted={isDraft}
+                meta={
+                  <>
+                    <span className="tabular-nums">
+                      {adminDate(post.dateCreated)}
+                    </span>
+                    {isDraft && (
+                      <span className="text-md-on-surface-variant">Draft</span>
+                    )}
+                    {!post.description && (
+                      <span className="text-md-warning">No description</span>
+                    )}
+                    {!post.thumbnail && (
+                      <span className="text-md-warning">No cover</span>
+                    )}
+                  </>
+                }
+                actions={
+                  <>
+                    <StatusToggle
+                      slug={post.slug}
+                      status={post.status}
+                      apiPath="posts"
+                    />
+                    <DeleteButton
+                      slug={post.slug}
+                      name={post.title}
+                      apiPath="posts"
+                    />
+                  </>
+                }
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
