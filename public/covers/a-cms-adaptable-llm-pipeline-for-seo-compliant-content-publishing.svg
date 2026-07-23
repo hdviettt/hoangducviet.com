@@ -1,85 +1,88 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="0.55" stop-color="#F3F8FF"/>
-      <stop offset="1" stop-color="#EEFBF6"/>
+    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.85">
+      <stop offset="0" stop-color="#0A56FF"/><stop offset="0.6" stop-color="#004AEF"/><stop offset="1" stop-color="#0038B8"/>
+    </radialGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0FD6F7"/><stop offset="0.55" stop-color="#07EF9C"/><stop offset="1" stop-color="#04C97E"/>
     </linearGradient>
-    <linearGradient id="seon" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004AEF"/>
-      <stop offset="0.52" stop-color="#0FD6F7"/>
-      <stop offset="1" stop-color="#07EF9C"/>
+    <linearGradient id="img" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0FD6F7"/><stop offset="1" stop-color="#07EF9C"/>
     </linearGradient>
-    <linearGradient id="seonV" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0" stop-color="#004AEF"/><stop offset="1" stop-color="#07EF9C"/>
-    </linearGradient>
-    <linearGradient id="imgg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#004AEF"/>
-      <stop offset="0.55" stop-color="#0FD6F7"/>
-      <stop offset="1" stop-color="#07EF9C"/>
-    </linearGradient>
-    <filter id="cardsh" x="-40%" y="-40%" width="180%" height="190%">
-      <feDropShadow dx="0" dy="20" stdDeviation="30" flood-color="#0A4B9E" flood-opacity="0.15"/>
-    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0 L0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/></pattern>
+    <filter id="sh" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="14" stdDeviation="22" flood-color="#00205F" flood-opacity="0.35"/></filter>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="0" stdDeviation="17" flood-color="#07EF9C" flood-opacity="0.4"/></filter>
     <style>
-      /* one article rises off the stack and climbs — continuous publishing */
-      .rise { animation: rise 4.5s ease-out infinite; }
-      .rise2 { animation-delay: 2.25s; }
-      @keyframes rise {
-        0%   { opacity: 0; transform: translate(0,0) }
-        14%  { opacity: 0.55 }
-        100% { opacity: 0; transform: translate(96px,-96px) }
-      }
-      @media (prefers-reduced-motion: reduce) { .rise { display: none } }
+      .flow { stroke-dasharray: 4 8; animation: dash 1.1s linear infinite; }
+      @keyframes dash { to { stroke-dashoffset: -24 } }
+      .pip { animation: pip 3s ease-in-out infinite; }
+      @keyframes pip { 0%{opacity:0;transform:translateX(0)} 12%{opacity:1} 88%{opacity:1} 100%{opacity:0;transform:translateX(120px)} }
+      .pip2 { animation-delay: 1.5s }
+      @media (prefers-reduced-motion: reduce){ .flow{animation:none} .pip{opacity:1;animation:none} }
     </style>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle cx="180" cy="120" r="220" fill="#004AEF" opacity="0.04"/>
-  <circle cx="1050" cy="560" r="220" fill="#07EF9C" opacity="0.05"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
 
-  <!-- kicker, upper-left in the open space -->
-  <text x="150" y="150" font-size="13" fill="#7C8CA6" letter-spacing="2">SEO CONTENT PUBLISHING</text>
-  <text x="150" y="196" font-size="30" font-weight="700" fill="#0A1B33" letter-spacing="-0.5">One document in,</text>
-  <text x="150" y="234" font-size="30" font-weight="700" fill="#0A1B33" letter-spacing="-0.5">a ranking article out.</text>
-  <rect x="150" y="262" width="54" height="4" rx="2" fill="url(#seon)"/>
-
-  <!-- ============ SEONGON echo trail — the rising stack of published articles ============ -->
-  <g fill="none" stroke-width="2">
-    <rect x="612" y="286" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.20"/>
-    <rect x="632" y="266" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.32"/>
-    <rect x="652" y="246" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.5"/>
-    <rect x="672" y="226" width="440" height="286" rx="20" stroke="url(#seon)" opacity="0.72"/>
-    <!-- the rising ones, animated -->
-    <rect class="rise" x="692" y="206" width="440" height="286" rx="20" stroke="url(#seon)"/>
-    <rect class="rise rise2" x="692" y="206" width="440" height="286" rx="20" stroke="url(#seon)"/>
+  <!-- ============ 1. CONTENT — a raw document ============ -->
+  <g filter="url(#sh)">
+    <rect x="150" y="205" width="228" height="220" rx="18" fill="#FFFFFF"/>
+  </g>
+  <g>
+    <rect x="182" y="240" width="120" height="12" rx="6" fill="#9AA9C4"/>
+    <rect x="182" y="266" width="164" height="8" rx="4" fill="#D6DEEC"/>
+    <rect x="182" y="284" width="164" height="8" rx="4" fill="#D6DEEC"/>
+    <rect x="182" y="302" width="120" height="8" rx="4" fill="#F0B4B4"/>
+    <rect x="182" y="320" width="150" height="8" rx="4" fill="#D6DEEC"/>
+    <rect x="182" y="338" width="164" height="8" rx="4" fill="#D6DEEC"/>
+    <rect x="182" y="356" width="96"  height="8" rx="4" fill="#F0B4B4"/>
+    <rect x="182" y="382" width="164" height="8" rx="4" fill="#EAEFF6"/>
   </g>
 
-  <!-- ============ the published article, crisp and forward ============ -->
-  <g filter="url(#cardsh)">
-    <rect x="692" y="206" width="440" height="286" rx="20" fill="#FFFFFF" stroke="#E6ECF4" stroke-width="1"/>
-  </g>
-  <rect x="728" y="246" width="270" height="18" rx="6" fill="#004AEF"/>
-  <rect x="728" y="278" width="330" height="10" rx="5" fill="#CBD8EA"/>
-  <rect x="728" y="295" width="300" height="10" rx="5" fill="#CBD8EA"/>
-  <rect x="728" y="324" width="180" height="108" rx="12" fill="url(#imgg)"/>
-  <rect x="932" y="332" width="164" height="9" rx="4" fill="#D7E0EE"/>
-  <rect x="932" y="350" width="164" height="9" rx="4" fill="#D7E0EE"/>
-  <rect x="932" y="368" width="130" height="9" rx="4" fill="#D7E0EE"/>
-  <rect x="932" y="392" width="164" height="9" rx="4" fill="#E4EBF4"/>
-  <rect x="932" y="410" width="110" height="9" rx="4" fill="#E4EBF4"/>
-  <rect x="728" y="452" width="368" height="8" rx="4" fill="#E4EBF4"/>
-  <rect x="728" y="469" width="300" height="8" rx="4" fill="#E4EBF4"/>
+  <!-- flow content -> agent -->
+  <line x1="384" y1="315" x2="470" y2="315" stroke="#BFE6FF" stroke-width="2" opacity="0.6"/>
+  <line x1="384" y1="315" x2="470" y2="315" stroke="#FFFFFF" stroke-width="2" class="flow"/>
+  <circle class="pip" cx="392" cy="315" r="4" fill="#FFFFFF"/>
 
-  <!-- rank-up chip: the SEO payoff, SEONGON green -->
-  <g transform="translate(1038 218)">
-    <rect x="0" y="0" width="66" height="38" rx="11" fill="#EAFBF3" stroke="#07EF9C" stroke-width="1.25"/>
-    <path d="M13 25 L23 14 L30 21 L44 8" fill="none" stroke="url(#seonV)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M38 8 L44 8 L44 14" fill="none" stroke="#07EF9C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- ============ 2. AGENT — the transform, brand gradient, elevated ============ -->
+  <g filter="url(#glow)">
+    <rect x="492" y="235" width="216" height="160" rx="22" fill="url(#node)"/>
+  </g>
+  <!-- a crisp white double-chevron: forward, transform -->
+  <g stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M572 288 L602 315 L572 342"/>
+    <path d="M614 288 L644 315 L614 342"/>
   </g>
 
-  <!-- caption, clear bottom-left -->
-  <text x="150" y="470" font-size="16" fill="#46566E" width="380">A raw Google Doc becomes a formatted,</text>
-  <text x="150" y="496" font-size="16" fill="#46566E">image-optimised WordPress draft — with</text>
-  <text x="150" y="522" font-size="16" fill="#46566E">no model anywhere in the publishing path.</text>
+  <!-- flow agent -> website -->
+  <line x1="708" y1="315" x2="794" y2="315" stroke="#BFE6FF" stroke-width="2" opacity="0.6"/>
+  <line x1="708" y1="315" x2="794" y2="315" stroke="#FFFFFF" stroke-width="2" class="flow"/>
+  <circle class="pip pip2" cx="716" cy="315" r="4" fill="#FFFFFF"/>
+
+  <!-- ============ 3. WEBSITE — the published page, ranking ============ -->
+  <g filter="url(#sh)">
+    <rect x="810" y="188" width="300" height="254" rx="18" fill="#FFFFFF"/>
+  </g>
+  <!-- browser chrome -->
+  <path d="M810 206 a18 18 0 0 1 18 -18 h264 a18 18 0 0 1 18 18 v14 h-300 z" fill="#EEF3FB"/>
+  <circle cx="832" cy="203" r="4" fill="#C4D0E4"/><circle cx="848" cy="203" r="4" fill="#C4D0E4"/><circle cx="864" cy="203" r="4" fill="#C4D0E4"/>
+  <rect x="892" y="196" width="196" height="14" rx="7" fill="#FFFFFF"/>
+  <!-- published article -->
+  <rect x="838" y="244" width="180" height="14" rx="7" fill="#004AEF"/>
+  <rect x="838" y="272" width="244" height="8" rx="4" fill="#D6DEEC"/>
+  <rect x="838" y="290" width="220" height="8" rx="4" fill="#D6DEEC"/>
+  <rect x="838" y="314" width="140" height="86" rx="10" fill="url(#img)"/>
+  <rect x="998" y="322" width="84" height="8" rx="4" fill="#DEE6F1"/>
+  <rect x="998" y="340" width="84" height="8" rx="4" fill="#DEE6F1"/>
+  <rect x="998" y="358" width="64" height="8" rx="4" fill="#DEE6F1"/>
+  <rect x="998" y="384" width="84" height="8" rx="4" fill="#EAEFF6"/>
+  <rect x="838" y="416" width="244" height="8" rx="4" fill="#EAEFF6"/>
+  <!-- rank-up badge, SEONGON green -->
+  <g transform="translate(1054 168)">
+    <circle cx="20" cy="20" r="24" fill="#07EF9C" filter="url(#glow)"/>
+    <circle cx="20" cy="20" r="22" fill="#07EF9C"/>
+    <path d="M10 26 L18 15 L24 21 L32 10" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M26 10 L32 10 L32 16" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 </svg>
