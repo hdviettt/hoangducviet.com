@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/admin/ConfirmModal";
 import PageHeader from "@/components/admin/PageHeader";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface MediaItem {
   id: number;
@@ -70,7 +70,8 @@ export default function AdminMediaPage() {
     const sorted = [...list].sort((a, b) => {
       let cmp = 0;
       if (sortKey === "date") {
-        cmp = new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime();
+        cmp =
+          new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime();
       } else if (sortKey === "name") {
         cmp = a.originalName.localeCompare(b.originalName);
       } else if (sortKey === "size") {
@@ -177,8 +178,7 @@ export default function AdminMediaPage() {
   const cancelEdit = () => setEditingId(null);
 
   // Copy path
-  const copyPath = (url: string) =>
-    navigator.clipboard.writeText(url);
+  const copyPath = (url: string) => navigator.clipboard.writeText(url);
 
   // Sort toggle
   const toggleSort = (key: SortKey) => {
@@ -197,7 +197,7 @@ export default function AdminMediaPage() {
 
   if (loading)
     return (
-      <div className="md-body-medium text-md-on-surface-variant">loading...</div>
+      <div className="md-body-medium text-md-on-surface-variant">Loading…</div>
     );
 
   return (
@@ -205,11 +205,15 @@ export default function AdminMediaPage() {
       {/* Sticky header + toolbar */}
       <div className="sticky top-[-32px] z-10 bg-md-background pb-3 -mx-8 px-8 -mt-8 pt-8">
         <PageHeader
-          title="media"
+          title="Media"
           count={filtered.length}
           action={
             <label className="md-btn md-btn-filled md-btn-sm cursor-pointer">
-              {uploading ? <span className="animate-pulse">uploading...</span> : "upload"}
+              {uploading ? (
+                <span className="animate-pulse">Uploading…</span>
+              ) : (
+                "upload"
+              )}
               <input
                 type="file"
                 multiple
@@ -226,7 +230,7 @@ export default function AdminMediaPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="search media..."
+            placeholder="Search media…"
             className="md-field-dense w-60"
           />
           <div className="flex items-center gap-1 md-body-small text-md-on-surface-variant">
@@ -253,7 +257,9 @@ export default function AdminMediaPage() {
               onClick={selectAll}
               className="md-body-small text-md-on-surface-variant hover:text-md-on-surface transition-colors"
             >
-              {selected.size === filtered.length ? "deselect all" : "select all"}
+              {selected.size === filtered.length
+                ? "Deselect all"
+                : "Select all"}
             </button>
           )}
           {selected.size > 0 && (
@@ -284,7 +290,9 @@ export default function AdminMediaPage() {
             <div
               key={item.id}
               className={`bg-md-surface-container-low border rounded-xl overflow-hidden transition-colors ${
-                isSelected ? "border-md-primary ring-1 ring-md-primary" : "border-md-outline-variant"
+                isSelected
+                  ? "border-md-primary ring-1 ring-md-primary"
+                  : "border-md-outline-variant"
               }`}
             >
               {/* Thumbnail + select checkbox */}
@@ -378,7 +386,7 @@ export default function AdminMediaPage() {
                       onClick={() => handleDelete(item.id, item.originalName)}
                       className="md-body-small text-md-error hover:underline"
                     >
-                      delete
+                      Delete
                     </button>
                   </div>
                 </div>

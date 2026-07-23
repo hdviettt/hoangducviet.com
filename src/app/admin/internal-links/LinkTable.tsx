@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useMemo } from "react";
 import { Icon } from "@/components/ui/Icon";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
 type Row = {
   type: "post" | "project";
@@ -69,9 +69,7 @@ export default function LinkTable({ data }: { data: Row[] }) {
         <div key={row.path}>
           <button
             type="button"
-            onClick={() =>
-              setExpanded(expanded === row.path ? null : row.path)
-            }
+            onClick={() => setExpanded(expanded === row.path ? null : row.path)}
             className="flex items-center gap-3 px-4 py-3 row-hover w-full text-left"
           >
             <span
@@ -83,7 +81,9 @@ export default function LinkTable({ data }: { data: Row[] }) {
             >
               {row.type}
             </span>
-            <span className="md-body-medium flex-1 min-w-0 truncate">{row.title}</span>
+            <span className="md-body-medium flex-1 min-w-0 truncate">
+              {row.title}
+            </span>
             <span
               className={`md-body-medium w-24 text-right ${
                 row.incomingCount === 0
@@ -109,13 +109,18 @@ export default function LinkTable({ data }: { data: Row[] }) {
                   {row.incomingSources.length > 0 ? (
                     <ul className="space-y-1">
                       {row.incomingSources.map((src) => (
-                        <li key={src} className="md-body-small text-md-on-surface-variant">
+                        <li
+                          key={src}
+                          className="md-body-small text-md-on-surface-variant"
+                        >
                           {src}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="md-body-small text-md-tertiary">no incoming links</p>
+                    <p className="md-body-small text-md-tertiary">
+                      No incoming links
+                    </p>
                   )}
                 </div>
                 <div>
@@ -125,7 +130,10 @@ export default function LinkTable({ data }: { data: Row[] }) {
                   {row.outgoingTargets.length > 0 ? (
                     <ul className="space-y-1">
                       {row.outgoingTargets.map((tgt) => (
-                        <li key={tgt} className="md-body-small text-md-on-surface-variant">
+                        <li
+                          key={tgt}
+                          className="md-body-small text-md-on-surface-variant"
+                        >
                           {tgt}
                         </li>
                       ))}

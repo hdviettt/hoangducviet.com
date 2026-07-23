@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type GraphNode = {
   id: string;
@@ -285,9 +285,7 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
     (e: React.MouseEvent<HTMLCanvasElement>) => {
       const { mx, my } = toCanvasCoords(e);
       if (dragRef.current) {
-        const node = nodesRef.current.find(
-          (n) => n.id === dragRef.current!.id,
-        );
+        const node = nodesRef.current.find((n) => n.id === dragRef.current!.id);
         if (node) {
           node.x = mx - dragRef.current.offsetX;
           node.y = my - dragRef.current.offsetY;
@@ -329,7 +327,10 @@ export default function LinkGraph({ nodes: rawNodes, edges: rawEdges }: Props) {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full rounded-xl border border-md-outline-variant relative overflow-hidden">
+    <div
+      ref={containerRef}
+      className="w-full rounded-xl border border-md-outline-variant relative overflow-hidden"
+    >
       {/* Legend */}
       <div className="absolute top-3 left-3 flex gap-4 md-label-small text-md-on-surface-variant z-10">
         <span className="flex items-center gap-1.5">

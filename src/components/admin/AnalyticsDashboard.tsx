@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { useEffect, useRef, useState } from "react";
 
 type Range = "7d" | "30d" | "90d";
 
@@ -82,7 +82,9 @@ function StatTile({
       <div className="text-[28px] leading-none font-medium text-md-on-surface">
         {value}
       </div>
-      <div className="md-body-small text-md-on-surface-variant mt-1.5">{label}</div>
+      <div className="md-body-small text-md-on-surface-variant mt-1.5">
+        {label}
+      </div>
       {hint && (
         <div className="md-label-small text-md-on-surface-variant/70 mt-0.5">
           {hint}
@@ -121,7 +123,8 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
   const rawMax = Math.max(...daily.flatMap((d) => [d.views, d.visitors]), 1);
   const max = niceMax(rawMax);
 
-  const x = (i: number) => (n <= 1 ? padL + plotW / 2 : padL + (i / (n - 1)) * plotW);
+  const x = (i: number) =>
+    n <= 1 ? padL + plotW / 2 : padL + (i / (n - 1)) * plotW;
   const y = (v: number) => padT + plotH - (v / max) * plotH;
 
   const path = (key: "views" | "visitors") =>
@@ -133,7 +136,10 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
   // Endpoint direct labels: nudge apart when the two series end close together,
   // so neither label is drawn on top of the other.
   const last = daily[n - 1];
-  const endOffsets: Record<"views" | "visitors", number> = { views: 4, visitors: 4 };
+  const endOffsets: Record<"views" | "visitors", number> = {
+    views: 4,
+    visitors: 4,
+  };
   if (last && Math.abs(y(last.views) - y(last.visitors)) < 12) {
     const viewsOnTop = y(last.views) <= y(last.visitors);
     endOffsets.views = viewsOnTop ? -2 : 12;
@@ -184,17 +190,21 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
           <table className="w-full md-body-small">
             <thead className="sticky top-0 bg-md-surface-container-low">
               <tr className="text-md-on-surface-variant text-left">
-                <th className="font-medium py-1.5">date</th>
-                <th className="font-medium py-1.5 text-right">pageviews</th>
-                <th className="font-medium py-1.5 text-right">visitors</th>
+                <th className="font-medium py-1.5">Date</th>
+                <th className="font-medium py-1.5 text-right">Pageviews</th>
+                <th className="font-medium py-1.5 text-right">Visitors</th>
               </tr>
             </thead>
             <tbody>
               {daily.map((d) => (
                 <tr key={d.date} className="border-t border-md-outline-variant">
-                  <td className="py-1.5 text-md-on-surface-variant">{shortDate(d.date)}</td>
+                  <td className="py-1.5 text-md-on-surface-variant">
+                    {shortDate(d.date)}
+                  </td>
                   <td className="py-1.5 text-right tabular-nums">{d.views}</td>
-                  <td className="py-1.5 text-right tabular-nums">{d.visitors}</td>
+                  <td className="py-1.5 text-right tabular-nums">
+                    {d.visitors}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -311,14 +321,20 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
             <div
               className="pointer-events-none absolute top-0 rounded-lg border border-md-outline-variant bg-md-surface-container-high shadow-md-3 px-3 py-2"
               style={{
-                left: Math.min(Math.max(x(hover!) - 60, 0), Math.max(w - 130, 0)),
+                left: Math.min(
+                  Math.max(x(hover!) - 60, 0),
+                  Math.max(w - 130, 0),
+                ),
               }}
             >
               <div className="md-label-small text-md-on-surface-variant mb-1">
                 {shortDate(active.date)}
               </div>
               {SERIES.map((s) => (
-                <div key={s.key} className="flex items-center gap-2 md-body-small">
+                <div
+                  key={s.key}
+                  className="flex items-center gap-2 md-body-small"
+                >
                   <span
                     className="w-2 h-2 rounded-full shrink-0"
                     style={{ background: s.color }}
@@ -339,7 +355,9 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
 
 // ---- Top pages ----------------------------------------------------------
 
-function TopPages({ pages }: { pages: Array<{ path: string; views: number }> }) {
+function TopPages({
+  pages,
+}: { pages: Array<{ path: string; views: number }> }) {
   const max = Math.max(...pages.map((p) => p.views), 1);
   return (
     <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-4">
@@ -453,10 +471,13 @@ export default function AnalyticsDashboard() {
           ) : (
             <>
               <div className="grid grid-cols-3 gap-3">
-                <StatTile label="pageviews" value={formatNumber(pageviews)} />
-                <StatTile label="unique visitors" value={formatNumber(visitors)} />
+                <StatTile label="Pageviews" value={formatNumber(pageviews)} />
                 <StatTile
-                  label="pages per visitor"
+                  label="Unique visitors"
+                  value={formatNumber(visitors)}
+                />
+                <StatTile
+                  label="Pages per visitor"
                   value={perVisitor}
                   hint={`last ${range}`}
                 />

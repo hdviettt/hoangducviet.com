@@ -1,13 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import DescriptionMeter from "@/components/admin/DescriptionMeter";
-import RichEditor from "@/components/admin/RichEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
+import RichEditor from "@/components/admin/RichEditor";
 import { useToast } from "@/components/admin/Toast";
 import { Icon } from "@/components/ui/Icon";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface PostFormProps {
   initialData?: {
@@ -40,7 +40,7 @@ function countWords(markdown: string): number {
 
 function timeAgo(ts: number): string {
   const s = Math.floor((Date.now() - ts) / 1000);
-  if (s < 5) return "just now";
+  if (s < 5) return "Just now";
   if (s < 60) return `${s}s ago`;
   const m = Math.floor(s / 60);
   if (m < 60) return `${m}m ago`;
@@ -58,18 +58,26 @@ export default function PostForm({
 
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
-  const [description, setDescription] = useState(initialData?.description ?? "");
+  const [description, setDescription] = useState(
+    initialData?.description ?? "",
+  );
   const [content, setContent] = useState(initialData?.content ?? "");
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
-  const [categories, setCategories] = useState<string[]>(initialData?.categories ?? []);
-  const [projectSlug, setProjectSlug] = useState(initialData?.projectSlug ?? "");
+  const [categories, setCategories] = useState<string[]>(
+    initialData?.categories ?? [],
+  );
+  const [projectSlug, setProjectSlug] = useState(
+    initialData?.projectSlug ?? "",
+  );
   const [drawerOpen, setDrawerOpen] = useState(true);
 
   // The slug as it exists on the server. Autosave never renames (a post that
   // belongs to a series is referenced by slug via FK) — only an explicit save
   // applies a slug change.
-  const savedSlugRef = useRef<string | null>(isEdit ? (initialData?.slug ?? null) : null);
+  const savedSlugRef = useRef<string | null>(
+    isEdit ? (initialData?.slug ?? null) : null,
+  );
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [lastSavedAt, setLastSavedAt] = useState<number | null>(null);
   const [dirty, setDirty] = useState(false);
@@ -77,7 +85,10 @@ export default function PostForm({
   const savingRef = useRef(false);
 
   const generateSlug = (text: string) =>
-    text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -86,7 +97,9 @@ export default function PostForm({
 
   const toggleCategory = (catSlug: string) => {
     setCategories((prev) =>
-      prev.includes(catSlug) ? prev.filter((c) => c !== catSlug) : [...prev, catSlug],
+      prev.includes(catSlug)
+        ? prev.filter((c) => c !== catSlug)
+        : [...prev, catSlug],
     );
   };
 
@@ -94,7 +107,8 @@ export default function PostForm({
     async (opts: { explicit?: boolean; nextStatus?: string } = {}) => {
       if (savingRef.current) return;
       const effectiveStatus = opts.nextStatus ?? status;
-      const finalSlug = slug || generateSlug(title) || `post-${Date.now().toString(36)}`;
+      const finalSlug =
+        slug || generateSlug(title) || `post-${Date.now().toString(36)}`;
       if (!title.trim()) {
         if (opts.explicit) toast("Give it a title first", "error");
         return;
@@ -124,7 +138,8 @@ export default function PostForm({
           },
         );
         if (!res.ok) {
-          const msg = (await res.json().catch(() => ({}))).error || "Failed to save";
+          const msg =
+            (await res.json().catch(() => ({}))).error || "Failed to save";
           setSaveState("error");
           if (opts.explicit) toast(msg, "error");
           return;
@@ -133,7 +148,11 @@ export default function PostForm({
         // Keep the URL in step with the stored slug without remounting the editor.
         if (post.slug !== savedSlugRef.current) {
           savedSlugRef.current = post.slug;
-          window.history.replaceState(null, "", `/admin/posts/${post.slug}/edit`);
+          window.history.replaceState(
+            null,
+            "",
+            `/admin/posts/${post.slug}/edit`,
+          );
         }
         if (opts.nextStatus) setStatus(opts.nextStatus);
         setSaveState("saved");
@@ -147,7 +166,18 @@ export default function PostForm({
         savingRef.current = false;
       }
     },
-    [title, slug, description, content, thumbnail, status, categories, projectSlug, toast, router],
+    [
+      title,
+      slug,
+      description,
+      content,
+      thumbnail,
+      status,
+      categories,
+      projectSlug,
+      toast,
+      router,
+    ],
   );
 
   // Mark dirty on any content/metadata change — but not on the initial mount,
@@ -238,7 +268,7 @@ export default function PostForm({
             type="text"
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="post title..."
+            placeholder="Post title…"
             className="flex-1 bg-transparent md-title-large focus:outline-none placeholder:text-md-on-surface-variant/40"
             required
           />
@@ -246,7 +276,9 @@ export default function PostForm({
           {/* Save state — quiet, always visible */}
           <span
             className={`shrink-0 md-label-small tabular-nums ${
-              saveState === "error" ? "text-md-error" : "text-md-on-surface-variant"
+              saveState === "error"
+                ? "text-md-error"
+                : "text-md-on-surface-variant"
             }`}
           >
             {statusLine}
@@ -263,14 +295,17 @@ export default function PostForm({
           <button
             type="button"
             onClick={() =>
-              save({ explicit: true, nextStatus: isPublished ? "draft" : "published" })
+              save({
+                explicit: true,
+                nextStatus: isPublished ? "draft" : "published",
+              })
             }
             disabled={saveState === "saving"}
             className={`md-btn md-btn-sm shrink-0 ${
               isPublished ? "md-btn-tonal" : "md-btn-filled"
             }`}
           >
-            {isPublished ? "unpublish" : "publish"}
+            {isPublished ? "Unpublish" : "Publish"}
           </button>
           <button
             type="button"
@@ -278,7 +313,10 @@ export default function PostForm({
             title={drawerOpen ? "Hide sidebar" : "Show sidebar"}
             className="p-1.5 rounded-lg text-md-on-surface-variant hover:text-md-on-surface transition-colors shrink-0"
           >
-            <Icon name={drawerOpen ? "right_panel_close" : "right_panel_open"} size={18} />
+            <Icon
+              name={drawerOpen ? "right_panel_close" : "right_panel_open"}
+              size={18}
+            />
           </button>
         </div>
 
@@ -313,7 +351,7 @@ export default function PostForm({
               </h3>
               <div className="space-y-3">
                 <div>
-                  <label className="md-field-label">slug</label>
+                  <label className="md-field-label">Slug</label>
                   <input
                     type="text"
                     value={slug}
@@ -328,7 +366,7 @@ export default function PostForm({
                   )}
                 </div>
                 <div>
-                  <label className="md-field-label">meta description</label>
+                  <label className="md-field-label">Meta description</label>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -340,13 +378,13 @@ export default function PostForm({
                 </div>
                 {allProjects.length > 0 && (
                   <div>
-                    <label className="md-field-label">series</label>
+                    <label className="md-field-label">Series</label>
                     <select
                       value={projectSlug}
                       onChange={(e) => setProjectSlug(e.target.value)}
                       className="md-field"
                     >
-                      <option value="">none</option>
+                      <option value="">None</option>
                       {allProjects.map((p) => (
                         <option key={p.slug} value={p.slug}>
                           {p.title}

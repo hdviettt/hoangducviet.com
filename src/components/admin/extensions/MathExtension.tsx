@@ -1,9 +1,9 @@
 "use client";
 
-import { Node, mergeAttributes, InputRule } from "@tiptap/core";
-import { ReactNodeViewRenderer, NodeViewWrapper } from "@tiptap/react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { InputRule, Node, mergeAttributes } from "@tiptap/core";
+import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import katex from "katex";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "katex/dist/katex.min.css";
 
 // --- Inline Math NodeView ---
@@ -169,11 +169,7 @@ export const MathInline = Node.create({
   },
 
   renderHTML({ node }) {
-    return [
-      "math-inline",
-      mergeAttributes(),
-      node.attrs.latex,
-    ];
+    return ["math-inline", mergeAttributes(), node.attrs.latex];
   },
 
   addNodeView() {
@@ -233,11 +229,7 @@ export const MathBlock = Node.create({
   },
 
   renderHTML({ node }) {
-    return [
-      "math-block",
-      mergeAttributes(),
-      node.attrs.latex,
-    ];
+    return ["math-block", mergeAttributes(), node.attrs.latex];
   },
 
   addNodeView() {
@@ -262,10 +254,7 @@ export const MathBlock = Node.create({
 // so Tiptap's parseHTML can pick them up on content load.
 
 function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 export function preprocessMathInMarkdown(markdown: string): string {

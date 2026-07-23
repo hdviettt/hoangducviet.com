@@ -20,31 +20,56 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-      if (!res.ok) { setError((await res.json()).error || "Login failed"); return; }
+      if (!res.ok) {
+        setError((await res.json()).error || "Login failed");
+        return;
+      }
       router.push("/admin");
       router.refresh();
-    } catch { setError("Network error"); }
-    finally { setLoading(false); }
+    } catch {
+      setError("Network error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="w-full max-w-xs">
       <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low shadow-md-1 p-8">
-        <div className="md-body-medium text-md-primary mb-6">admin login</div>
+        <div className="md-body-medium text-md-primary mb-6">Admin login</div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="username" className="md-field-label">username</label>
-            <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}
-              className="md-field" required />
+            <label htmlFor="username" className="md-field-label">
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="md-field"
+              required
+            />
           </div>
           <div>
-            <label htmlFor="password" className="md-field-label">password</label>
-            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              className="md-field" required />
+            <label htmlFor="password" className="md-field-label">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="md-field"
+              required
+            />
           </div>
           {error && <p className="text-md-error md-body-small">{error}</p>}
-          <button type="submit" disabled={loading}
-            className="md-btn md-btn-filled w-full">
+          <button
+            type="submit"
+            disabled={loading}
+            className="md-btn md-btn-filled w-full"
+          >
             {loading ? "..." : "login"}
           </button>
         </form>

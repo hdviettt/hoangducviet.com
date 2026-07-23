@@ -26,6 +26,11 @@
     --md-sys-color-on-tertiary: 0 0% 100%;
     --md-sys-color-tertiary-container: 280 45% 92%;
     --md-sys-color-on-tertiary-container: 280 40% 22%;
+    /* Two roles M3 defines that this palette was missing, so the admin had to
+       reach for raw hex: `warning` for "close to the edge, not an error yet"
+       (a meta description at 145 characters), and `scrim` for modal backdrops. */
+    --md-sys-color-warning: 33 100% 34%;
+    --md-sys-color-scrim: 0 0% 0%;
 
     --md-sys-color-error: 4 76% 49%;
     --md-sys-color-on-error: 0 0% 100%;
@@ -146,6 +151,8 @@
     --md-sys-color-on-tertiary: 280 50% 18%;
     --md-sys-color-tertiary-container: 280 30% 30%;
     --md-sys-color-on-tertiary-container: 280 45% 92%;
+    --md-sys-color-warning: 45 98% 70%;
+    --md-sys-color-scrim: 0 0% 0%;
 
     --md-sys-color-error: 4 100% 80%;
     --md-sys-color-on-error: 4 100% 16%;

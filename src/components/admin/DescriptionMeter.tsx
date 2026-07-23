@@ -11,7 +11,7 @@ export default function DescriptionMeter({ value }: { value: string }) {
     chars > DESC_LIMIT
       ? "text-md-error"
       : chars >= DESC_WARN
-        ? "text-[#B06000] dark:text-[#FDD663]"
+        ? "text-md-warning"
         : "text-md-on-surface-variant/80";
   return (
     <div className="mt-1 flex items-center justify-between md-label-small">

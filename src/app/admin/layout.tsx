@@ -1,5 +1,5 @@
-import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import AdminSidebar from "@/components/admin/AdminSidebar";
 import { ToastProvider } from "@/components/admin/Toast";
 
 export const metadata = {
@@ -17,7 +17,10 @@ export default function AdminLayout({
         <AdminSidebar />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <AdminHeader />
-          <main className="flex-1 py-8 px-8 overflow-y-auto page-transition">{children}</main>
+          {/* Same gutters and bottom air as the reader-facing <main>. */}
+          <main className="flex-1 overflow-y-auto page-transition px-5 sm:px-8 lg:px-14 xl:px-20 pb-16">
+            <div className="max-w-[1440px]">{children}</div>
+          </main>
         </div>
       </div>
     </ToastProvider>

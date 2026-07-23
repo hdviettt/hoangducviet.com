@@ -1,7 +1,7 @@
 "use client";
 
 import { Node, mergeAttributes } from "@tiptap/core";
-import { ReactNodeViewRenderer, NodeViewWrapper } from "@tiptap/react";
+import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 
 // --- In-editor video player NodeView ---
 

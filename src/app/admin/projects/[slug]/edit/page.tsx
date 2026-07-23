@@ -1,6 +1,6 @@
 import ProjectForm from "@/components/admin/ProjectForm";
 import { db } from "@/db";
-import { posts, seriesGroups, series, seriesPosts } from "@/db/schema";
+import { posts, series, seriesGroups, seriesPosts } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 

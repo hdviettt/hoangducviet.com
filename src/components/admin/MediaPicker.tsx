@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/admin/Toast";
+import { useCallback, useEffect, useState } from "react";
 
 interface MediaItem {
   id: number;
@@ -17,7 +17,11 @@ interface MediaPickerProps {
   label?: string;
 }
 
-export default function MediaPicker({ value, onChange, label }: MediaPickerProps) {
+export default function MediaPicker({
+  value,
+  onChange,
+  label,
+}: MediaPickerProps) {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(false);
@@ -62,16 +66,17 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
     if (!i.mimeType?.startsWith("image/")) return false;
     if (search) {
       const q = search.toLowerCase();
-      return i.originalName.toLowerCase().includes(q) || i.filename.toLowerCase().includes(q);
+      return (
+        i.originalName.toLowerCase().includes(q) ||
+        i.filename.toLowerCase().includes(q)
+      );
     }
     return true;
   });
 
   return (
     <div>
-      {label && (
-        <label className="md-field-label">{label}</label>
-      )}
+      {label && <label className="md-field-label">{label}</label>}
       <div className="flex items-center gap-2">
         {value ? (
           // object-contain, not cover: a 1200x630 cover cropped to a 80x56 box
@@ -81,14 +86,16 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
           <button
             type="button"
             onClick={() => setPreview(true)}
-            title="view full size"
+            title="View full size"
             className="relative w-28 h-20 border border-md-outline-variant bg-md-surface-container rounded-lg overflow-hidden shrink-0 hover:border-md-primary transition-colors"
           >
             <img src={value} alt="" className="w-full h-full object-contain" />
           </button>
         ) : (
           <div className="w-20 h-14 border border-dashed border-md-outline-variant rounded-lg flex items-center justify-center shrink-0">
-            <span className="md-body-small text-md-on-surface-variant">none</span>
+            <span className="md-body-small text-md-on-surface-variant">
+              None
+            </span>
           </div>
         )}
         <div className="flex gap-2">
@@ -97,7 +104,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
             onClick={() => setOpen(true)}
             className="md-btn md-btn-outlined md-btn-sm"
           >
-            choose
+            Choose
           </button>
           {value && (
             <button
@@ -105,7 +112,7 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
               onClick={() => onChange("")}
               className="md-btn md-btn-text md-btn-sm"
             >
-              remove
+              Remove
             </button>
           )}
         </div>
@@ -116,9 +123,9 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
       {preview && value && (
         <button
           type="button"
-          aria-label="close preview"
+          aria-label="Close preview"
           onClick={() => setPreview(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/70 p-6"
         >
           <div className="w-full max-w-4xl">
             <img
@@ -146,19 +153,19 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
 
       {/* Modal */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/40">
           <div className="bg-md-surface-container-high rounded-2xl shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small shrink-0">media library</span>
+              <span className="md-title-small shrink-0">Media library</span>
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="search..."
+                placeholder="Search…"
                 className="md-field-dense flex-1"
               />
               <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
-                {uploading ? "uploading..." : "upload new"}
+                {uploading ? "Uploading…" : "Upload new"}
                 <input
                   type="file"
                   accept="image/*"
@@ -169,7 +176,10 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
               </label>
               <button
                 type="button"
-                onClick={() => { setOpen(false); setSearch(""); }}
+                onClick={() => {
+                  setOpen(false);
+                  setSearch("");
+                }}
                 className="text-md-on-surface-variant hover:text-md-on-surface md-title-medium leading-none shrink-0"
               >
                 x
@@ -177,7 +187,9 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {loading ? (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">loading...</div>
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                  Loading…
+                </div>
               ) : images.length === 0 ? (
                 <div className="md-body-medium text-md-on-surface-variant text-center py-10">
                   no images yet. upload one above.
@@ -190,7 +202,10 @@ export default function MediaPicker({ value, onChange, label }: MediaPickerProps
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => { onChange(item.url); setOpen(false); }}
+                        onClick={() => {
+                          onChange(item.url);
+                          setOpen(false);
+                        }}
                         className={`aspect-square border rounded-xl overflow-hidden transition-all ${
                           isSelected
                             ? "border-md-primary ring-2 ring-md-primary"

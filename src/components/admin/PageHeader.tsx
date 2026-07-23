@@ -6,15 +6,17 @@ interface PageHeaderProps {
   action?: ReactNode;
 }
 
-// Shared admin page header: title + optional count chip + optional action.
-// Keeps every admin surface on the same M3 heading rhythm.
+// Same voice as a reader-facing page title — medium weight, tight tracking —
+// one step down the scale, because a working list is not a landing page.
 export default function PageHeader({ title, count, action }: PageHeaderProps) {
   return (
-    <div className="flex items-center justify-between gap-4 mb-6">
-      <div className="flex items-center gap-2.5 min-w-0">
-        <h1 className="md-title-large text-md-on-surface truncate">{title}</h1>
+    <div className="flex items-end justify-between gap-4 mb-8 pt-2">
+      <div className="flex items-baseline gap-3 min-w-0">
+        <h1 className="text-[28px] leading-9 md:text-[36px] md:leading-[44px] font-medium tracking-tight text-md-on-surface truncate">
+          {title}
+        </h1>
         {count !== undefined && (
-          <span className="md-label-medium text-md-on-surface-variant bg-md-surface-container-high rounded-full px-2 py-0.5 tabular-nums shrink-0">
+          <span className="text-[14px] leading-5 text-md-on-surface-variant tabular-nums shrink-0">
             {count}
           </span>
         )}

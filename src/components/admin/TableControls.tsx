@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { createPortal } from "react-dom";
 import type { Editor } from "@tiptap/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface Pos {
   top: number;
@@ -14,17 +14,25 @@ interface ContextMenuState {
   pos: Pos;
 }
 
-export default function TableControls({ editor, containerRef }: { editor: Editor; containerRef: React.RefObject<HTMLDivElement | null> }) {
+export default function TableControls({
+  editor,
+  containerRef,
+}: { editor: Editor; containerRef: React.RefObject<HTMLDivElement | null> }) {
   // Floating "+" buttons (viewport coordinates for fixed positioning)
   const [addColBtn, setAddColBtn] = useState<Pos | null>(null);
   const [addRowBtn, setAddRowBtn] = useState<Pos | null>(null);
-  const [hoveredTable, setHoveredTable] = useState<HTMLTableElement | null>(null);
+  const [hoveredTable, setHoveredTable] = useState<HTMLTableElement | null>(
+    null,
+  );
   const addColRef = useRef<HTMLButtonElement>(null);
   const addRowRef = useRef<HTMLButtonElement>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Context menu (viewport coordinates)
-  const [ctx, setCtx] = useState<ContextMenuState>({ open: false, pos: { top: 0, left: 0 } });
+  const [ctx, setCtx] = useState<ContextMenuState>({
+    open: false,
+    pos: { top: 0, left: 0 },
+  });
   const ctxRef = useRef<HTMLDivElement>(null);
 
   // Position buttons using viewport coordinates (for fixed positioning via portal)
@@ -126,14 +134,17 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
     };
 
     container.addEventListener("contextmenu", handleContextMenu);
-    return () => container.removeEventListener("contextmenu", handleContextMenu);
+    return () =>
+      container.removeEventListener("contextmenu", handleContextMenu);
   }, [containerRef]);
 
   // Close context menu on click outside or Escape
   useEffect(() => {
     if (!ctx.open) return;
     const close = () => setCtx((c) => ({ ...c, open: false }));
-    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
     document.addEventListener("click", close);
     document.addEventListener("keydown", handleKey);
     return () => {
@@ -151,16 +162,43 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
   };
 
   const contextMenuItems = [
-    { label: "Insert column before", action: () => editor.chain().focus().addColumnBefore().run() },
-    { label: "Insert column after", action: () => editor.chain().focus().addColumnAfter().run() },
-    { label: "Delete column", action: () => editor.chain().focus().deleteColumn().run(), destructive: true },
+    {
+      label: "Insert column before",
+      action: () => editor.chain().focus().addColumnBefore().run(),
+    },
+    {
+      label: "Insert column after",
+      action: () => editor.chain().focus().addColumnAfter().run(),
+    },
+    {
+      label: "Delete column",
+      action: () => editor.chain().focus().deleteColumn().run(),
+      destructive: true,
+    },
     { type: "separator" as const },
-    { label: "Insert row above", action: () => editor.chain().focus().addRowBefore().run() },
-    { label: "Insert row below", action: () => editor.chain().focus().addRowAfter().run() },
-    { label: "Delete row", action: () => editor.chain().focus().deleteRow().run(), destructive: true },
+    {
+      label: "Insert row above",
+      action: () => editor.chain().focus().addRowBefore().run(),
+    },
+    {
+      label: "Insert row below",
+      action: () => editor.chain().focus().addRowAfter().run(),
+    },
+    {
+      label: "Delete row",
+      action: () => editor.chain().focus().deleteRow().run(),
+      destructive: true,
+    },
     { type: "separator" as const },
-    { label: "Toggle header row", action: () => editor.chain().focus().toggleHeaderRow().run() },
-    { label: "Delete table", action: () => editor.chain().focus().deleteTable().run(), destructive: true },
+    {
+      label: "Toggle header row",
+      action: () => editor.chain().focus().toggleHeaderRow().run(),
+    },
+    {
+      label: "Delete table",
+      action: () => editor.chain().focus().deleteTable().run(),
+      destructive: true,
+    },
   ];
 
   // Render floating UI via portal to avoid overflow clipping
@@ -211,7 +249,10 @@ export default function TableControls({ editor, containerRef }: { editor: Editor
         >
           {contextMenuItems.map((item, i) =>
             "type" in item && item.type === "separator" ? (
-              <div key={i} className="border-t border-md-outline-variant my-1" />
+              <div
+                key={i}
+                className="border-t border-md-outline-variant my-1"
+              />
             ) : (
               <button
                 key={i}

@@ -122,20 +122,20 @@ function LibraryModal({
     );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/40">
       <div className="bg-md-surface-container-high rounded-2xl shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
         <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-          <span className="md-title-small shrink-0">add slides</span>
+          <span className="md-title-small shrink-0">Add slides</span>
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.stopPropagation()}
-            placeholder="search..."
+            placeholder="Search…"
             className="md-field-dense flex-1"
           />
           <label className="md-btn md-btn-outlined md-btn-sm cursor-pointer shrink-0">
-            {uploading ? "uploading..." : "upload"}
+            {uploading ? "Uploading…" : "Upload"}
             <input
               type="file"
               accept="image/*,video/*"
@@ -157,11 +157,11 @@ function LibraryModal({
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
             <div className="md-body-medium text-md-on-surface-variant text-center py-10">
-              loading...
+              Loading…
             </div>
           ) : visible.length === 0 ? (
             <div className="md-body-medium text-md-on-surface-variant text-center py-10">
-              nothing here yet. upload above.
+              Nothing here yet. Upload above.
             </div>
           ) : (
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
@@ -205,7 +205,7 @@ function LibraryModal({
           <span className="md-body-small text-md-on-surface-variant">
             {picked.length
               ? `${picked.length} selected — they are added in click order`
-              : "click to select, in the order you want them"}
+              : "Click to select, in the order you want them"}
           </span>
           <button
             type="button"
@@ -317,7 +317,7 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
           onClick={() => deleteNode()}
           className="md-btn md-btn-text md-btn-sm text-md-error"
         >
-          delete
+          Delete
         </button>
       </div>
 
@@ -363,7 +363,7 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
                     className="absolute inset-0 w-full h-full object-contain"
                   />
                 )}
-                <span className="absolute top-1 left-1 w-5 h-5 rounded-full bg-black/60 text-white md-label-small flex items-center justify-center">
+                <span className="absolute top-1 left-1 w-5 h-5 rounded-full bg-md-scrim/60 text-white md-label-small flex items-center justify-center">
                   {i + 1}
                 </span>
               </div>
@@ -371,7 +371,7 @@ function CarouselView({ node, updateAttributes, deleteNode, selected }: any) {
               <input
                 type="text"
                 value={s.caption || ""}
-                placeholder="caption"
+                placeholder="Caption"
                 onChange={(e) => patch(i, { caption: e.target.value })}
                 onKeyDown={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}

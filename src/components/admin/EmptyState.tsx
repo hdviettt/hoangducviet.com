@@ -44,7 +44,8 @@ export function StatusPill({ status }: { status: string }) {
           isPublished ? "bg-md-primary" : "bg-md-on-surface-variant"
         }`}
       />
-      {status}
+      {/* `status` is the stored value; only its presentation is capitalised. */}
+      {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
 }

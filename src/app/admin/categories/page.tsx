@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import ConfirmModal from "@/components/admin/ConfirmModal";
 import PageHeader from "@/components/admin/PageHeader";
+import { useEffect, useState } from "react";
 
-interface Category { slug: string; title: string; }
+interface Category {
+  slug: string;
+  title: string;
+}
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -22,7 +25,9 @@ export default function AdminCategoriesPage() {
     setLoading(false);
   };
 
-  useEffect(() => { fetchCategories(); }, []);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +36,11 @@ export default function AdminCategoriesPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: newSlug, title: newTitle }),
     });
-    if (res.ok) { setNewSlug(""); setNewTitle(""); fetchCategories(); }
+    if (res.ok) {
+      setNewSlug("");
+      setNewTitle("");
+      fetchCategories();
+    }
   };
 
   const handleDelete = (slug: string) => {
@@ -43,37 +52,67 @@ export default function AdminCategoriesPage() {
     setConfirmOpen(true);
   };
 
-  if (loading) return <div className="md-body-medium text-md-on-surface-variant">loading...</div>;
+  if (loading)
+    return (
+      <div className="md-body-medium text-md-on-surface-variant">Loading…</div>
+    );
 
   return (
     <div className="max-w-2xl">
-      <PageHeader title="categories" />
+      <PageHeader title="Categories" />
 
       <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 mb-8">
-        <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-4">new category</h2>
+        <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-widest mb-4">
+          New category
+        </h2>
         <form onSubmit={handleCreate} className="flex gap-3 items-end">
           <div className="flex-1">
-            <label className="md-field-label">title</label>
-            <input type="text" value={newTitle}
-              onChange={(e) => { setNewTitle(e.target.value); setNewSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")); }}
-              className="md-field" required />
+            <label className="md-field-label">Title</label>
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => {
+                setNewTitle(e.target.value);
+                setNewSlug(
+                  e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-|-$/g, ""),
+                );
+              }}
+              className="md-field"
+              required
+            />
           </div>
           <div className="flex-1">
-            <label className="md-field-label">slug</label>
-            <input type="text" value={newSlug} onChange={(e) => setNewSlug(e.target.value)}
-              className="md-field" required />
+            <label className="md-field-label">Slug</label>
+            <input
+              type="text"
+              value={newSlug}
+              onChange={(e) => setNewSlug(e.target.value)}
+              className="md-field"
+              required
+            />
           </div>
-          <button type="submit" className="md-btn md-btn-filled">add</button>
+          <button type="submit" className="md-btn md-btn-filled">
+            Add
+          </button>
         </form>
       </div>
 
       <div>
         <div className="flex items-center justify-between mb-3 pb-2 border-b border-md-outline-variant">
-          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-widest">all categories</h2>
-          <span className="md-body-small text-md-on-surface-variant tabular-nums">{categories.length}</span>
+          <h2 className="md-label-small text-md-on-surface-variant uppercase tracking-widest">
+            All categories
+          </h2>
+          <span className="md-body-small text-md-on-surface-variant tabular-nums">
+            {categories.length}
+          </span>
         </div>
         {categories.length === 0 ? (
-          <p className="md-body-medium text-md-on-surface-variant py-4">no categories yet.</p>
+          <p className="md-body-medium text-md-on-surface-variant py-4">
+            No categories yet.
+          </p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
@@ -82,7 +121,9 @@ export default function AdminCategoriesPage() {
                 className="group flex items-center gap-2 rounded-full border border-md-outline-variant px-3 py-1.5 hover:border-md-primary/50 transition-colors stagger-list"
               >
                 <span className="md-body-medium">{cat.title}</span>
-                <span className="md-body-small text-md-on-surface-variant">{cat.slug}</span>
+                <span className="md-body-small text-md-on-surface-variant">
+                  {cat.slug}
+                </span>
                 <button
                   type="button"
                   onClick={() => handleDelete(cat.slug)}

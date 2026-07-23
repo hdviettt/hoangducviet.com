@@ -1,14 +1,14 @@
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import DeleteButton from "@/components/admin/DeleteButton";
+import EmptyState from "@/components/admin/EmptyState";
+import IdeaCapture from "@/components/admin/IdeaCapture";
+import PageHeader from "@/components/admin/PageHeader";
+import StatusToggle from "@/components/admin/StatusToggle";
+import { Icon } from "@/components/ui/Icon";
 import { db } from "@/db";
 import { media, posts, series } from "@/db/schema";
-import { count, desc, eq, sql } from "drizzle-orm";
-import { Icon } from "@/components/ui/Icon";
+import { count, eq, sql } from "drizzle-orm";
 import Link from "next/link";
-import StatusToggle from "@/components/admin/StatusToggle";
-import DeleteButton from "@/components/admin/DeleteButton";
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
-import EmptyState from "@/components/admin/EmptyState";
-import PageHeader from "@/components/admin/PageHeader";
-import IdeaCapture from "@/components/admin/IdeaCapture";
 
 export const dynamic = "force-dynamic";
 
@@ -31,18 +31,37 @@ export default async function AdminDashboard() {
   ]);
 
   const stats = [
-    { label: "posts", count: postCount[0].value, href: "/admin/posts", icon: "description" },
-    { label: "series", count: seriesCount[0].value, href: "/admin/projects", icon: "folder" },
-    { label: "media", count: mediaCount[0].value, href: "/admin/media", icon: "image" },
+    {
+      label: "posts",
+      count: postCount[0].value,
+      href: "/admin/posts",
+      icon: "description",
+    },
+    {
+      label: "series",
+      count: seriesCount[0].value,
+      href: "/admin/projects",
+      icon: "folder",
+    },
+    {
+      label: "media",
+      count: mediaCount[0].value,
+      href: "/admin/media",
+      icon: "image",
+    },
   ];
 
   return (
     <div className="max-w-4xl">
       <PageHeader
-        title="dashboard"
+        title="Dashboard"
         action={
           <span className="md-body-small text-md-on-surface-variant">
-            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+            })}
           </span>
         }
       />
@@ -66,7 +85,7 @@ export default async function AdminDashboard() {
         {drafts.length === 0 ? (
           <EmptyState
             icon="lightbulb"
-            title="no drafts yet"
+            title="No drafts yet"
             hint="Capture an idea above to start one."
           />
         ) : (
@@ -81,7 +100,11 @@ export default async function AdminDashboard() {
                   key={d.slug}
                   className="group flex items-center gap-3 px-3 py-2.5 row-hover"
                 >
-                  <StatusToggle slug={d.slug} status={d.status} apiPath="posts" />
+                  <StatusToggle
+                    slug={d.slug}
+                    status={d.status}
+                    apiPath="posts"
+                  />
                   <Link
                     href={`/admin/posts/${d.slug}/edit`}
                     className="md-body-medium flex-1 truncate hover:text-md-primary transition-colors"
@@ -92,7 +115,11 @@ export default async function AdminDashboard() {
                     {date}
                   </span>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <DeleteButton slug={d.slug} name={d.title || "this idea"} apiPath="posts" />
+                    <DeleteButton
+                      slug={d.slug}
+                      name={d.title || "this idea"}
+                      apiPath="posts"
+                    />
                   </div>
                 </div>
               );

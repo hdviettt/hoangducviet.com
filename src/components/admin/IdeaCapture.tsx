@@ -1,7 +1,7 @@
 "use client";
 
-import { Icon } from "@/components/ui/Icon";
 import { useToast } from "@/components/admin/Toast";
+import { Icon } from "@/components/ui/Icon";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -16,7 +16,10 @@ export default function IdeaCapture() {
   const [justAdded, setJustAdded] = useState(false);
 
   const slugify = (t: string) =>
-    t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    t
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
 
   const capture = async () => {
     const title = value.trim();
@@ -48,7 +51,11 @@ export default function IdeaCapture() {
 
   return (
     <div className="flex items-center gap-2 rounded-2xl border border-md-outline-variant bg-md-surface-container-low pl-3.5 pr-2 py-2 focus-within:border-md-primary transition-colors">
-      <Icon name="lightbulb" size={20} className="shrink-0 text-md-on-surface-variant" />
+      <Icon
+        name="lightbulb"
+        size={20}
+        className="shrink-0 text-md-on-surface-variant"
+      />
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -67,7 +74,7 @@ export default function IdeaCapture() {
         disabled={!value.trim() || saving}
         className="md-btn md-btn-filled md-btn-sm shrink-0 disabled:opacity-40"
       >
-        {saving ? "…" : justAdded ? "added ✓" : "capture"}
+        {saving ? "…" : justAdded ? "Added ✓" : "Capture"}
       </button>
     </div>
   );

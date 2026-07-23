@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/admin/ConfirmModal";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface DeleteButtonProps {
   slug: string;
@@ -10,7 +10,11 @@ interface DeleteButtonProps {
   apiPath: "posts" | "projects" | "work";
 }
 
-export default function DeleteButton({ slug, name, apiPath }: DeleteButtonProps) {
+export default function DeleteButton({
+  slug,
+  name,
+  apiPath,
+}: DeleteButtonProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 

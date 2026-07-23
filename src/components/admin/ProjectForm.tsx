@@ -1,11 +1,11 @@
 "use client";
 
+import DescriptionMeter from "@/components/admin/DescriptionMeter";
+import MediaPicker from "@/components/admin/MediaPicker";
+import RichEditor from "@/components/admin/RichEditor";
+import { useToast } from "@/components/admin/Toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import DescriptionMeter from "@/components/admin/DescriptionMeter";
-import RichEditor from "@/components/admin/RichEditor";
-import MediaPicker from "@/components/admin/MediaPicker";
-import { useToast } from "@/components/admin/Toast";
 
 interface ProjectGroup {
   slug: string;
@@ -145,9 +145,7 @@ export default function ProjectForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="md-field-label">
-            title
-          </label>
+          <label className="md-field-label">title</label>
           <input
             type="text"
             value={title}
@@ -157,9 +155,7 @@ export default function ProjectForm({
           />
         </div>
         <div>
-          <label className="md-field-label">
-            slug
-          </label>
+          <label className="md-field-label">slug</label>
           <input
             type="text"
             value={slug}
@@ -171,9 +167,7 @@ export default function ProjectForm({
       </div>
 
       <div>
-        <label className="md-field-label">
-          project url
-        </label>
+        <label className="md-field-label">project url</label>
         <input
           type="url"
           value={url}
@@ -201,32 +195,36 @@ export default function ProjectForm({
         <label className="md-field-label">
           content <span>(shown on project page)</span>
         </label>
-        <RichEditor content={description} onChange={setDescription} outputFormat="html" />
+        <RichEditor
+          content={description}
+          onChange={setDescription}
+          outputFormat="html"
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <MediaPicker value={thumbnail} onChange={setThumbnail} label="thumbnail" />
+          <MediaPicker
+            value={thumbnail}
+            onChange={setThumbnail}
+            label="Thumbnail"
+          />
         </div>
         <div>
-          <label className="md-field-label">
-            status
-          </label>
+          <label className="md-field-label">status</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="md-field"
           >
-            <option value="draft">draft</option>
-            <option value="published">published</option>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
           </select>
         </div>
       </div>
 
       <div>
-        <label className="md-field-label">
-          group
-        </label>
+        <label className="md-field-label">group</label>
         <div className="flex gap-2">
           <select
             value={groupSlug}
@@ -268,9 +266,7 @@ export default function ProjectForm({
 
       {allPosts.length > 0 && (
         <div>
-          <label className="md-field-label">
-            related posts
-          </label>
+          <label className="md-field-label">related posts</label>
           <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low max-h-48 overflow-y-auto divide-y divide-md-outline-variant">
             {allPosts.map((post) => (
               <button
@@ -296,7 +292,7 @@ export default function ProjectForm({
           disabled={saving}
           className="md-btn md-btn-filled"
         >
-          {saving ? "saving..." : isEdit ? "update project" : "create project"}
+          {saving ? "saving..." : isEdit ? "Update series" : "Create series"}
         </button>
         <button
           type="button"

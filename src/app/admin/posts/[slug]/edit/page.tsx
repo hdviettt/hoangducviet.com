@@ -1,6 +1,12 @@
 import PostForm from "@/components/admin/PostForm";
 import { db } from "@/db";
-import { postCategories, posts, postsCategories, series, seriesPosts } from "@/db/schema";
+import {
+  postCategories,
+  posts,
+  postsCategories,
+  series,
+  seriesPosts,
+} from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
@@ -9,17 +15,25 @@ interface Params {
 }
 
 export default async function EditPostPage({ params }: Params) {
-  const [postResult, categories, postCats, allProjects, postProject] = await Promise.all([
-    db.select().from(posts).where(eq(posts.slug, params.slug)).limit(1),
-    db.select().from(postCategories),
-    db
-      .select({ categorySlug: postsCategories.categorySlug })
-      .from(postsCategories)
-      .innerJoin(posts, eq(postsCategories.postId, posts.id))
-      .where(eq(posts.slug, params.slug)),
-    db.select({ slug: series.slug, title: series.title }).from(series).orderBy(desc(series.dateCreated)),
-    db.select({ projectSlug: seriesPosts.seriesSlug }).from(seriesPosts).where(eq(seriesPosts.postSlug, params.slug)).limit(1),
-  ]);
+  const [postResult, categories, postCats, allProjects, postProject] =
+    await Promise.all([
+      db.select().from(posts).where(eq(posts.slug, params.slug)).limit(1),
+      db.select().from(postCategories),
+      db
+        .select({ categorySlug: postsCategories.categorySlug })
+        .from(postsCategories)
+        .innerJoin(posts, eq(postsCategories.postId, posts.id))
+        .where(eq(posts.slug, params.slug)),
+      db
+        .select({ slug: series.slug, title: series.title })
+        .from(series)
+        .orderBy(desc(series.dateCreated)),
+      db
+        .select({ projectSlug: seriesPosts.seriesSlug })
+        .from(seriesPosts)
+        .where(eq(seriesPosts.postSlug, params.slug))
+        .limit(1),
+    ]);
 
   if (!postResult.length) {
     notFound();

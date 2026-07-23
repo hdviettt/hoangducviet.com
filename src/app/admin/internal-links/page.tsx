@@ -1,11 +1,11 @@
+import PageHeader from "@/components/admin/PageHeader";
+import { Icon } from "@/components/ui/Icon";
 import { db } from "@/db";
 import { posts, series, seriesPosts } from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
-import { Icon } from "@/components/ui/Icon";
+import { asc, eq } from "drizzle-orm";
 import Link from "next/link";
-import LinkTable from "./LinkTable";
 import LinkGraph from "./LinkGraph";
-import PageHeader from "@/components/admin/PageHeader";
+import LinkTable from "./LinkTable";
 
 export const dynamic = "force-dynamic";
 
@@ -94,14 +94,22 @@ export default async function InternalLinksPage() {
     if (!post.content) continue;
     const links = extractLinksFromMarkdown(post.content);
     for (const target of links) {
-      edges.push({ sourcePath: `/posts/${post.slug}`, targetPath: target, linkType: "content" });
+      edges.push({
+        sourcePath: `/posts/${post.slug}`,
+        targetPath: target,
+        linkType: "content",
+      });
     }
   }
   for (const project of allProjects) {
     if (!project.description) continue;
     const links = extractLinksFromHtml(project.description);
     for (const target of links) {
-      edges.push({ sourcePath: `/series/${project.slug}`, targetPath: target, linkType: "content" });
+      edges.push({
+        sourcePath: `/series/${project.slug}`,
+        targetPath: target,
+        linkType: "content",
+      });
     }
   }
 
@@ -111,8 +119,16 @@ export default async function InternalLinksPage() {
   for (const rel of allProjectPosts) {
     const seriesPath = `/series/${rel.seriesSlug}`;
     const postPath = `/series/${rel.seriesSlug}/${rel.postSlug}`;
-    edges.push({ sourcePath: seriesPath, targetPath: postPath, linkType: "series-post" });
-    edges.push({ sourcePath: postPath, targetPath: seriesPath, linkType: "series-post" });
+    edges.push({
+      sourcePath: seriesPath,
+      targetPath: postPath,
+      linkType: "series-post",
+    });
+    edges.push({
+      sourcePath: postPath,
+      targetPath: seriesPath,
+      linkType: "series-post",
+    });
   }
 
   // 3. Adjacent post navigation (prev/next links)
@@ -120,10 +136,18 @@ export default async function InternalLinksPage() {
   for (let i = 0; i < allPosts.length; i++) {
     const current = `/posts/${allPosts[i].slug}`;
     if (i > 0) {
-      edges.push({ sourcePath: current, targetPath: `/posts/${allPosts[i - 1].slug}`, linkType: "navigation" });
+      edges.push({
+        sourcePath: current,
+        targetPath: `/posts/${allPosts[i - 1].slug}`,
+        linkType: "navigation",
+      });
     }
     if (i < allPosts.length - 1) {
-      edges.push({ sourcePath: current, targetPath: `/posts/${allPosts[i + 1].slug}`, linkType: "navigation" });
+      edges.push({
+        sourcePath: current,
+        targetPath: `/posts/${allPosts[i + 1].slug}`,
+        linkType: "navigation",
+      });
     }
   }
 
@@ -178,18 +202,29 @@ export default async function InternalLinksPage() {
 
   return (
     <div className="max-w-5xl">
-      <PageHeader title="internal links" count={pages.size} />
+      <PageHeader title="Internal links" count={pages.size} />
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
         {[
-          { label: "pages", value: pages.size, icon: "description", color: "text-md-primary" },
-          { label: "internal links", value: totalLinks, icon: "link", color: "text-md-primary" },
+          {
+            label: "pages",
+            value: pages.size,
+            icon: "description",
+            color: "text-md-primary",
+          },
+          {
+            label: "internal links",
+            value: totalLinks,
+            icon: "link",
+            color: "text-md-primary",
+          },
           {
             label: "orphan pages",
             value: orphanPages.length,
             icon: "link_off",
-            color: orphanPages.length > 0 ? "text-md-tertiary" : "text-md-primary",
+            color:
+              orphanPages.length > 0 ? "text-md-tertiary" : "text-md-primary",
           },
           {
             label: "broken links",
@@ -198,15 +233,24 @@ export default async function InternalLinksPage() {
             color: brokenLinks.length > 0 ? "text-md-error" : "text-md-primary",
           },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 relative overflow-hidden">
+          <div
+            key={stat.label}
+            className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-5 relative overflow-hidden"
+          >
             <Icon
               name={stat.icon}
               size={48}
               className="absolute right-4 bottom-3 text-md-outline-variant"
             />
             <div className="relative">
-              <div className={`text-3xl font-medium tabular-nums leading-none ${stat.color}`}>{stat.value}</div>
-              <div className="md-label-medium text-md-on-surface-variant mt-2 uppercase tracking-wider">{stat.label}</div>
+              <div
+                className={`text-3xl font-medium tabular-nums leading-none ${stat.color}`}
+              >
+                {stat.value}
+              </div>
+              <div className="md-label-medium text-md-on-surface-variant mt-2 uppercase tracking-wider">
+                {stat.label}
+              </div>
             </div>
           </div>
         ))}
@@ -286,7 +330,9 @@ export default async function InternalLinksPage() {
                   >
                     {source?.title ?? edge.sourcePath}
                   </Link>
-                  <span className="text-md-on-surface-variant md-body-small">&rarr;</span>
+                  <span className="text-md-on-surface-variant md-body-small">
+                    &rarr;
+                  </span>
                   <span className="md-body-medium text-md-error">
                     {edge.targetPath}
                   </span>

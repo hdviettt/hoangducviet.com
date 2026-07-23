@@ -1,9 +1,9 @@
 import DeleteButton from "@/components/admin/DeleteButton";
-import StatusToggle from "@/components/admin/StatusToggle";
 import EmptyState, { StatusPill } from "@/components/admin/EmptyState";
 import PageHeader from "@/components/admin/PageHeader";
+import StatusToggle from "@/components/admin/StatusToggle";
 import { db } from "@/db";
-import { seriesGroups, series } from "@/db/schema";
+import { series, seriesGroups } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 
@@ -26,7 +26,7 @@ export default async function AdminProjectsPage() {
   return (
     <div className="max-w-4xl">
       <PageHeader
-        title="projects"
+        title="Series"
         count={allProjects.length}
         action={
           <Link
@@ -41,17 +41,28 @@ export default async function AdminProjectsPage() {
       <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low overflow-hidden">
         <div className="flex items-center gap-4 px-4 py-2.5 border-b border-md-outline-variant bg-md-surface-container">
           <div className="w-9 shrink-0" />
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest flex-1">title</div>
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-20">group</div>
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-24">status</div>
-          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-24 text-right">date</div>
+          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest flex-1">
+            Title
+          </div>
+          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-20">
+            Group
+          </div>
+          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-24">
+            Status
+          </div>
+          <div className="md-label-small text-md-on-surface-variant uppercase tracking-widest w-24 text-right">
+            Date
+          </div>
           <div className="w-10 shrink-0" />
         </div>
         {allProjects.length === 0 ? (
           <EmptyState
-            title="no projects yet"
+            title="No series yet"
             hint={
-              <Link href="/admin/projects/new" className="text-md-primary hover:underline">
+              <Link
+                href="/admin/projects/new"
+                className="text-md-primary hover:underline"
+              >
                 + new project
               </Link>
             }
@@ -63,7 +74,11 @@ export default async function AdminProjectsPage() {
                 key={project.slug}
                 className="group flex items-center gap-4 px-4 py-2.5 row-hover"
               >
-                <StatusToggle slug={project.slug} status={project.status} apiPath="projects" />
+                <StatusToggle
+                  slug={project.slug}
+                  status={project.status}
+                  apiPath="projects"
+                />
                 <Link
                   href={`/admin/projects/${project.slug}/edit`}
                   className="md-body-medium flex-1 hover:text-md-primary transition-colors truncate"
@@ -81,10 +96,18 @@ export default async function AdminProjectsPage() {
                   <StatusPill status={project.status} />
                 </div>
                 <span className="md-body-small text-md-on-surface-variant w-24 text-right shrink-0 tabular-nums">
-                  {project.dateCreated?.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "2-digit" })}
+                  {project.dateCreated?.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "2-digit",
+                    year: "2-digit",
+                  })}
                 </span>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <DeleteButton slug={project.slug} name={project.title} apiPath="projects" />
+                  <DeleteButton
+                    slug={project.slug}
+                    name={project.title}
+                    apiPath="projects"
+                  />
                 </div>
               </div>
             ))}

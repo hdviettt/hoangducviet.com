@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface StatusToggleProps {
   slug: string;
@@ -9,7 +9,11 @@ interface StatusToggleProps {
   apiPath: "posts" | "projects" | "work";
 }
 
-export default function StatusToggle({ slug, status, apiPath }: StatusToggleProps) {
+export default function StatusToggle({
+  slug,
+  status,
+  apiPath,
+}: StatusToggleProps) {
   const [current, setCurrent] = useState(status);
   const [loading, setLoading] = useState(false);
   const router = useRouter();

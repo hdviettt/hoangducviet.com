@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
 import type { Editor } from "@tiptap/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // ---- Tier Definitions ----
 
@@ -23,7 +23,8 @@ const PARTICLE_COLORS = [
 
 function getTier(streak: number) {
   for (let i = STREAK_TIERS.length - 1; i >= 0; i--) {
-    if (streak >= STREAK_TIERS[i].min) return { tier: STREAK_TIERS[i], index: i };
+    if (streak >= STREAK_TIERS[i].min)
+      return { tier: STREAK_TIERS[i], index: i };
   }
   return null;
 }
@@ -103,7 +104,10 @@ interface StreakEffectsProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function StreakEffects({ editor, containerRef }: StreakEffectsProps) {
+export default function StreakEffects({
+  editor,
+  containerRef,
+}: StreakEffectsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animFrameRef = useRef<number>(0);
@@ -116,39 +120,42 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
   const [tierLabel, setTierLabel] = useState("");
   const [tierChanged, setTierChanged] = useState(false);
 
-  const spawnParticles = useCallback((count: number, colorIndex: number) => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
+  const spawnParticles = useCallback(
+    (count: number, colorIndex: number) => {
+      const canvas = canvasRef.current;
+      const container = containerRef.current;
+      if (!canvas || !container) return;
 
-    const { from } = editor.state.selection;
-    const coords = editor.view.coordsAtPos(from);
-    const containerRect = container.getBoundingClientRect();
+      const { from } = editor.state.selection;
+      const coords = editor.view.coordsAtPos(from);
+      const containerRect = container.getBoundingClientRect();
 
-    const cx = coords.left - containerRect.left;
-    const cy = coords.top - containerRect.top + container.scrollTop;
+      const cx = coords.left - containerRect.left;
+      const cy = coords.top - containerRect.top + container.scrollTop;
 
-    const colors = PARTICLE_COLORS[colorIndex] || PARTICLE_COLORS[0];
+      const colors = PARTICLE_COLORS[colorIndex] || PARTICLE_COLORS[0];
 
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 1 + Math.random() * 3;
-      particlesRef.current.push({
-        x: cx,
-        y: cy,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 1.5,
-        life: 1,
-        maxLife: 0.4 + Math.random() * 0.4,
-        size: 2 + Math.random() * 3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-      });
-    }
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 3;
+        particlesRef.current.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 1.5,
+          life: 1,
+          maxLife: 0.4 + Math.random() * 0.4,
+          size: 2 + Math.random() * 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+      }
 
-    if (particlesRef.current.length > 50) {
-      particlesRef.current = particlesRef.current.slice(-50);
-    }
-  }, [editor, containerRef]);
+      if (particlesRef.current.length > 50) {
+        particlesRef.current = particlesRef.current.slice(-50);
+      }
+    },
+    [editor, containerRef],
+  );
 
   const handleKeystroke = useCallback(() => {
     if (pauseTimerRef.current) {
@@ -213,7 +220,9 @@ export default function StreakEffects({ editor, containerRef }: StreakEffectsPro
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      const dt = lastTimeRef.current ? (time - lastTimeRef.current) / 1000 : 0.016;
+      const dt = lastTimeRef.current
+        ? (time - lastTimeRef.current) / 1000
+        : 0.016;
       lastTimeRef.current = time;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);

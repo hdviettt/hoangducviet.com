@@ -1,41 +1,40 @@
 "use client";
 
-import { useEditor, EditorContent, type Editor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
-import Placeholder from "@tiptap/extension-placeholder";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { Table } from "@tiptap/extension-table";
-import { TableRow } from "@tiptap/extension-table-row";
-import { TableCell } from "@tiptap/extension-table-cell";
-import { TableHeader } from "@tiptap/extension-table-header";
-import { Markdown } from "tiptap-markdown";
-import { common, createLowlight } from "lowlight";
-import TableControls from "@/components/admin/TableControls";
 import StreakEffects from "@/components/admin/StreakEffects";
-import { widgetRegistry } from "@/components/widgets/registry";
+import TableControls from "@/components/admin/TableControls";
 import {
-  MathInline,
+  CarouselEmbed,
+  preprocessCarouselInMarkdown,
+} from "@/components/admin/extensions/CarouselExtension";
+import {
   MathBlock,
+  MathInline,
   preprocessMathInMarkdown,
 } from "@/components/admin/extensions/MathExtension";
 import {
   VideoEmbed,
   preprocessVideoInMarkdown,
 } from "@/components/admin/extensions/VideoExtension";
+import { widgetRegistry } from "@/components/widgets/registry";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import { Table } from "@tiptap/extension-table";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableRow } from "@tiptap/extension-table-row";
+import { type Editor, EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { common, createLowlight } from "lowlight";
 import {
-  CarouselEmbed,
-  preprocessCarouselInMarkdown,
-} from "@/components/admin/extensions/CarouselExtension";
-import {
-  useEffect,
-  useState,
-  useCallback,
-  useRef,
   type KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
-
+import { Markdown } from "tiptap-markdown";
 
 const lowlight = createLowlight(common);
 
@@ -108,7 +107,11 @@ const slashItems: SlashItem[] = [
     description: "Insert a table",
     icon: "⊞",
     command: (editor) =>
-      editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+      editor
+        .chain()
+        .focus()
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .run(),
   },
   {
     title: "Visual Embed",
@@ -357,7 +360,11 @@ interface RichEditorProps {
   outputFormat?: "markdown" | "html";
 }
 
-export default function RichEditor({ content, onChange, outputFormat = "markdown" }: RichEditorProps) {
+export default function RichEditor({
+  content,
+  onChange,
+  outputFormat = "markdown",
+}: RichEditorProps) {
   const [showSlash, setShowSlash] = useState(false);
   const [slashPos, setSlashPos] = useState({ top: 0, left: 0 });
   const editorRef = useRef<HTMLDivElement>(null);
@@ -365,14 +372,30 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
 
   // Image picker modal state
   const [showImagePicker, setShowImagePicker] = useState(false);
-  const [imagePickerItems, setImagePickerItems] = useState<Array<{ id: number; filename: string; originalName: string; mimeType: string | null; url: string }>>([]);
+  const [imagePickerItems, setImagePickerItems] = useState<
+    Array<{
+      id: number;
+      filename: string;
+      originalName: string;
+      mimeType: string | null;
+      url: string;
+    }>
+  >([]);
   const [imagePickerLoading, setImagePickerLoading] = useState(false);
   const [imagePickerSearch, setImagePickerSearch] = useState("");
   const [imagePickerUploading, setImagePickerUploading] = useState(false);
 
   // Video picker modal state
   const [showVideoPicker, setShowVideoPicker] = useState(false);
-  const [videoItems, setVideoItems] = useState<Array<{ id: number; filename: string; originalName: string; mimeType: string | null; url: string }>>([]);
+  const [videoItems, setVideoItems] = useState<
+    Array<{
+      id: number;
+      filename: string;
+      originalName: string;
+      mimeType: string | null;
+      url: string;
+    }>
+  >([]);
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoUploading, setVideoUploading] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
@@ -397,21 +420,24 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
     setImagePickerLoading(false);
   }, []);
 
-  const handleImagePickerUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setImagePickerUploading(true);
-    const url = await uploadImage(file);
-    if (url) {
-      setShowImagePicker(false);
-      // Insert after a tick so editor regains focus
-      setTimeout(() => {
-        editorInstance.current?.chain().focus().setImage({ src: url }).run();
-      }, 10);
-    }
-    setImagePickerUploading(false);
-    e.target.value = "";
-  }, []);
+  const handleImagePickerUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setImagePickerUploading(true);
+      const url = await uploadImage(file);
+      if (url) {
+        setShowImagePicker(false);
+        // Insert after a tick so editor regains focus
+        setTimeout(() => {
+          editorInstance.current?.chain().focus().setImage({ src: url }).run();
+        }, 10);
+      }
+      setImagePickerUploading(false);
+      e.target.value = "";
+    },
+    [],
+  );
 
   const selectImageFromPicker = useCallback((url: string) => {
     setShowImagePicker(false);
@@ -523,7 +549,9 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       MathBlock,
       VideoEmbed,
       CarouselEmbed,
-      Placeholder.configure({ placeholder: 'Start writing, or type "/" for commands...' }),
+      Placeholder.configure({
+        placeholder: 'Start writing, or type "/" for commands...',
+      }),
       Markdown.configure({
         html: true,
         transformPastedText: true,
@@ -533,7 +561,8 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
     content: "",
     editorProps: {
       attributes: {
-        class: "article-content prose-editor focus:outline-none min-h-[400px] px-4 py-3",
+        class:
+          "article-content prose-editor focus:outline-none min-h-[400px] px-4 py-3",
       },
       handleKeyDown: (_view, event) => {
         if (event.key === "/" && !showSlash) {
@@ -603,12 +632,18 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         for (const file of files) {
           if (file.type.startsWith("image/")) {
             event.preventDefault();
-            const pos = view.posAtCoords({ left: event.clientX, top: event.clientY })?.pos;
+            const pos = view.posAtCoords({
+              left: event.clientX,
+              top: event.clientY,
+            })?.pos;
             uploadImage(file).then((url) => {
               if (url) {
                 const { schema } = view.state;
                 const node = schema.nodes.image.create({ src: url });
-                const tr = view.state.tr.insert(pos ?? view.state.selection.from, node);
+                const tr = view.state.tr.insert(
+                  pos ?? view.state.selection.from,
+                  node,
+                );
                 view.dispatch(tr);
               }
             });
@@ -619,17 +654,15 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
       },
     },
     onUpdate: ({ editor }) => {
-      const value = outputFormat === "html"
-        ? editor.getHTML()
-        : ((editor.storage as any).markdown?.getMarkdown?.() ?? "");
+      const value =
+        outputFormat === "html"
+          ? editor.getHTML()
+          : ((editor.storage as any).markdown?.getMarkdown?.() ?? "");
       onChange(value);
       // Close slash menu if user typed something else
       if (showSlash) {
         const { from } = editor.state.selection;
-        const text = editor.state.doc.textBetween(
-          Math.max(0, from - 20),
-          from,
-        );
+        const text = editor.state.doc.textBetween(Math.max(0, from - 20), from);
         if (!text.includes("/")) {
           setShowSlash(false);
         }
@@ -667,7 +700,10 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
   if (!editor) return null;
 
   return (
-    <div ref={editorRef} className="rounded-xl border border-md-outline-variant bg-md-surface relative flex flex-col h-full">
+    <div
+      ref={editorRef}
+      className="rounded-xl border border-md-outline-variant bg-md-surface relative flex flex-col h-full"
+    >
       {/* Toolbar */}
       <div className="flex items-center gap-0.5 px-2 py-1 border-b border-md-outline-variant bg-md-surface-container-low overflow-x-auto sticky top-0 z-10 shrink-0">
         <ToolbarButton
@@ -780,16 +816,10 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
         >
           {"\u{1F517}"}
         </ToolbarButton>
-        <ToolbarButton
-          onClick={openImagePicker}
-          title="Insert image"
-        >
+        <ToolbarButton onClick={openImagePicker} title="Insert image">
           IMG
         </ToolbarButton>
-        <ToolbarButton
-          onClick={openVideoPicker}
-          title="Insert video"
-        >
+        <ToolbarButton onClick={openVideoPicker} title="Insert video">
           {"▶"}
         </ToolbarButton>
 
@@ -849,7 +879,6 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
             </ToolbarButton>
           </>
         )}
-
       </div>
 
       {/* Editor Content */}
@@ -864,27 +893,39 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
 
         {/* Slash Command Menu */}
         {showSlash && (
-          <div style={{ position: "absolute", top: slashPos.top, left: slashPos.left }}>
-            <SlashMenu editor={editor} onClose={() => setShowSlash(false)} onImagePicker={openImagePicker} onVideoPicker={openVideoPicker} onWidgetPicker={openWidgetPicker} />
+          <div
+            style={{
+              position: "absolute",
+              top: slashPos.top,
+              left: slashPos.left,
+            }}
+          >
+            <SlashMenu
+              editor={editor}
+              onClose={() => setShowSlash(false)}
+              onImagePicker={openImagePicker}
+              onVideoPicker={openVideoPicker}
+              onWidgetPicker={openWidgetPicker}
+            />
           </div>
         )}
       </div>
 
       {/* Image Picker Modal */}
       {showImagePicker && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
           <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small shrink-0">insert image</span>
+              <span className="md-title-small shrink-0">Insert image</span>
               <input
                 type="text"
                 value={imagePickerSearch}
                 onChange={(e) => setImagePickerSearch(e.target.value)}
-                placeholder="search..."
+                placeholder="Search…"
                 className="md-field-dense flex-1"
               />
               <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
-                {imagePickerUploading ? "uploading..." : "upload new"}
+                {imagePickerUploading ? "Uploading…" : "Upload new"}
                 <input
                   type="file"
                   accept="image/*"
@@ -903,39 +944,46 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {imagePickerLoading ? (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">loading...</div>
-              ) : (() => {
-                const images = imagePickerItems.filter((i) => {
-                  if (!i.mimeType?.startsWith("image/")) return false;
-                  if (imagePickerSearch) {
-                    const q = imagePickerSearch.toLowerCase();
-                    return i.originalName.toLowerCase().includes(q) || i.filename.toLowerCase().includes(q);
-                  }
-                  return true;
-                });
-                return images.length === 0 ? (
-                  <div className="md-body-medium text-md-on-surface-variant text-center py-10">
-                    no images found. upload one above.
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                    {images.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => selectImageFromPicker(item.url)}
-                        className="aspect-square rounded-lg border border-md-outline-variant overflow-hidden hover:border-md-primary transition-colors"
-                      >
-                        <img
-                          src={item.url}
-                          alt={item.originalName}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                );
-              })()}
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                  Loading…
+                </div>
+              ) : (
+                (() => {
+                  const images = imagePickerItems.filter((i) => {
+                    if (!i.mimeType?.startsWith("image/")) return false;
+                    if (imagePickerSearch) {
+                      const q = imagePickerSearch.toLowerCase();
+                      return (
+                        i.originalName.toLowerCase().includes(q) ||
+                        i.filename.toLowerCase().includes(q)
+                      );
+                    }
+                    return true;
+                  });
+                  return images.length === 0 ? (
+                    <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                      no images found. upload one above.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                      {images.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => selectImageFromPicker(item.url)}
+                          className="aspect-square rounded-lg border border-md-outline-variant overflow-hidden hover:border-md-primary transition-colors"
+                        >
+                          <img
+                            src={item.url}
+                            alt={item.originalName}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })()
+              )}
             </div>
           </div>
         </div>
@@ -943,12 +991,12 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
 
       {/* Video Picker Modal */}
       {showVideoPicker && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
           <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-2xl max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small flex-1">insert video</span>
+              <span className="md-title-small flex-1">Insert video</span>
               <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
-                {videoUploading ? "uploading..." : "upload mp4"}
+                {videoUploading ? "Uploading…" : "Upload MP4"}
                 <input
                   type="file"
                   accept="video/*"
@@ -972,34 +1020,42 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
             )}
             <div className="flex-1 overflow-y-auto p-4">
               {videoLoading ? (
-                <div className="md-body-medium text-md-on-surface-variant text-center py-10">loading...</div>
-              ) : (() => {
-                const videos = videoItems.filter((i) => i.mimeType?.startsWith("video/"));
-                return videos.length === 0 ? (
-                  <div className="md-body-medium text-md-on-surface-variant text-center py-10">
-                    no videos yet. upload one above (max {MAX_VIDEO_MB}MB).
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {videos.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => insertVideo(item.url)}
-                        className="w-full flex items-center gap-3 p-2 rounded-lg border border-md-outline-variant hover:border-md-primary text-left transition-colors"
-                      >
-                        <video
-                          src={item.url}
-                          muted
-                          preload="metadata"
-                          className="w-28 h-16 object-cover rounded bg-black shrink-0"
-                        />
-                        <span className="md-body-medium truncate">{item.originalName}</span>
-                      </button>
-                    ))}
-                  </div>
-                );
-              })()}
+                <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                  Loading…
+                </div>
+              ) : (
+                (() => {
+                  const videos = videoItems.filter((i) =>
+                    i.mimeType?.startsWith("video/"),
+                  );
+                  return videos.length === 0 ? (
+                    <div className="md-body-medium text-md-on-surface-variant text-center py-10">
+                      no videos yet. upload one above (max {MAX_VIDEO_MB}MB).
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {videos.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => insertVideo(item.url)}
+                          className="w-full flex items-center gap-3 p-2 rounded-lg border border-md-outline-variant hover:border-md-primary text-left transition-colors"
+                        >
+                          <video
+                            src={item.url}
+                            muted
+                            preload="metadata"
+                            className="w-28 h-16 object-cover rounded bg-black shrink-0"
+                          />
+                          <span className="md-body-medium truncate">
+                            {item.originalName}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })()
+              )}
             </div>
           </div>
         </div>
@@ -1007,10 +1063,10 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
 
       {/* Widget Picker Modal */}
       {showWidgetPicker && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
           <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-lg max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
-              <span className="md-title-small flex-1">insert widget</span>
+              <span className="md-title-small flex-1">Insert widget</span>
               <button
                 type="button"
                 onClick={() => setShowWidgetPicker(false)}
@@ -1055,9 +1111,7 @@ export default function RichEditor({ content, onChange, outputFormat = "markdown
             </div>
             {selectedWidget && (
               <div className="border-t border-md-outline-variant p-4 space-y-3 shrink-0">
-                <label className="md-field-label">
-                  props (JSON)
-                </label>
+                <label className="md-field-label">props (JSON)</label>
                 <textarea
                   value={widgetPropsText}
                   onChange={(e) => setWidgetPropsText(e.target.value)}
