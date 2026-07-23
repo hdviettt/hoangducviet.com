@@ -1,70 +1,74 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
   <defs>
     <radialGradient id="bg" cx="0.5" cy="0.44" r="0.95">
-      <stop offset="0" stop-color="#0E1A31"/><stop offset="0.58" stop-color="#080D18"/><stop offset="1" stop-color="#04060B"/>
+      <stop offset="0" stop-color="#0E1A31"/><stop offset="0.6" stop-color="#080D18"/><stop offset="1" stop-color="#04060B"/>
     </radialGradient>
-    <linearGradient id="paneA" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#111F36" stop-opacity="0.85"/><stop offset="1" stop-color="#0B1730" stop-opacity="0.85"/>
-    </linearGradient>
-    <linearGradient id="paneR" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0A2447"/><stop offset="1" stop-color="#081E3C"/>
-    </linearGradient>
-    <linearGradient id="amberEdge" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="scan" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#FFD84D" stop-opacity="0"/>
       <stop offset="0.5" stop-color="#FFC400"/>
       <stop offset="1" stop-color="#FFD84D" stop-opacity="0"/>
     </linearGradient>
-    <filter id="soft" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="26"/></filter>
+    <filter id="soft" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="15"/></filter>
+    <style>
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 20px; }
+      /* raw shows to the RIGHT of the pass; clean shows to the LEFT. Same boundary. */
+      #raw   { animation: rawc  6s cubic-bezier(.5,0,.2,1) infinite; }
+      #clean { animation: clnc  6s cubic-bezier(.5,0,.2,1) infinite; }
+      #pass  { animation: sweep 6s cubic-bezier(.5,0,.2,1) infinite; }
+      @keyframes rawc  { 0%,10%{clip-path: inset(0 0 0 0%)}   62%{clip-path: inset(0 0 0 100%)} 90%{clip-path: inset(0 0 0 100%)} 100%{clip-path: inset(0 0 0 0%)} }
+      @keyframes clnc  { 0%,10%{clip-path: inset(0 100% 0 0)} 62%{clip-path: inset(0 0% 0 0)}    90%{clip-path: inset(0 0% 0 0)}   100%{clip-path: inset(0 100% 0 0)} }
+      @keyframes sweep { 0%,10%{transform:translateX(0)}      62%{transform:translateX(878px)}   90%{transform:translateX(878px)}  100%{transform:translateX(0)} }
+      @media (prefers-reduced-motion: reduce) {
+        /* rest fully resolved: the clean house-style result, the pass finished
+           at the right. A mid-sweep still collides two different texts on one
+           line; the animation carries the transform, the still is the result. */
+        #raw   { animation: none; clip-path: inset(0 0 0 100%); }
+        #clean { animation: none; clip-path: inset(0 0 0 0); }
+        #pass  { animation: none; transform: translateX(878px); opacity: 0.5; }
+      }
+    </style>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <ellipse cx="600" cy="315" rx="380" ry="240" fill="#0B6BFF" fill-opacity="0.09" filter="url(#soft)"/>
+  <ellipse cx="600" cy="315" rx="420" ry="250" fill="#0B6BFF" fill-opacity="0.08" filter="url(#soft)"/>
 
-  <g transform="translate(600 315) scale(1.02)">
-    <!-- centre the stack around (0,0); skewY gives depth -->
-    <g transform="translate(-300 -150) skewY(16)">
-      <!-- back pane: target markup, faintest -->
-      <g transform="translate(70 -34)">
-        <rect x="0" y="0" width="286" height="250" rx="9" fill="url(#paneA)" stroke="#2B476E" stroke-width="0"/>
-        <rect x="0" y="0" width="286" height="250" rx="9" fill="none" stroke="#2B476E" stroke-width="1.5"/>
-        <g stroke="#2E5C9E" stroke-width="2" stroke-linecap="round" opacity="0.42">
-          <line x1="30" y1="48" x2="196" y2="48"/><line x1="30" y1="74" x2="150" y2="74"/>
-          <line x1="30" y1="100" x2="224" y2="100"/><line x1="30" y1="126" x2="140" y2="126"/>
-          <line x1="30" y1="152" x2="200" y2="152"/><line x1="30" y1="178" x2="168" y2="178"/>
-        </g>
-      </g>
-      <!-- front pane: source markup -->
-      <g transform="translate(0 34)">
-        <rect x="0" y="0" width="286" height="250" rx="9" fill="url(#paneA)" stroke="#375782" stroke-width="1.75"/>
-        <g stroke="#3E6DA8" stroke-width="2" stroke-linecap="round" opacity="0.62">
-          <line x1="30" y1="48" x2="176" y2="48"/><line x1="30" y1="74" x2="214" y2="74"/>
-          <line x1="30" y1="100" x2="146" y2="100"/><line x1="30" y1="126" x2="196" y2="126"/>
-          <line x1="30" y1="152" x2="172" y2="152"/><line x1="30" y1="178" x2="120" y2="178"/>
-        </g>
-      </g>
-    </g>
+  <rect x="150" y="140" width="900" height="352" rx="16" fill="#0A1526" stroke="#1E3350" stroke-width="1.25"/>
 
-    <!-- the single amber seam: one bright vertical edge where the two are reconciled -->
-    <g transform="translate(0 0)">
-      <rect x="-6" y="-150" width="12" height="300" fill="#FFC400" opacity="0.12" filter="url(#soft)"/>
-      <rect x="-1.5" y="-140" width="3" height="280" fill="url(#amberEdge)"/>
-    </g>
+  <text x="182" y="120" font-size="12" fill="#5E7398" letter-spacing="2">GOOGLE DOC MARKUP</text>
+  <text x="1018" y="120" font-size="12" fill="#4E77B6" letter-spacing="2" text-anchor="end">THE SITE'S HOUSE STYLE</text>
 
-    <!-- the result pane: crisp blue, forward, emerging past the seam -->
-    <g transform="translate(16 -120) skewY(16)">
-      <rect x="0" y="0" width="286" height="250" rx="9" fill="#0A1F3D" stroke="#2E86FF" stroke-width="2"/>
-      <g stroke-linecap="round">
-        <line x1="30" y1="48" x2="196" y2="48" stroke="#2E86FF" stroke-width="7"/>
-        <line x1="30" y1="76" x2="236" y2="76" stroke="#3E6DA8" stroke-width="3"/>
-        <line x1="30" y1="96" x2="236" y2="96" stroke="#3E6DA8" stroke-width="3"/>
-        <line x1="30" y1="116" x2="210" y2="116" stroke="#3E6DA8" stroke-width="3"/>
-        <line x1="30" y1="150" x2="196" y2="150" stroke="#28405f" stroke-width="3"/>
-        <line x1="30" y1="170" x2="236" y2="170" stroke="#28405f" stroke-width="3"/>
-        <line x1="30" y1="190" x2="168" y2="190" stroke="#28405f" stroke-width="3"/>
-      </g>
-    </g>
+  <!-- ============ RAW (Google Docs noise), red inline-style clutter ============ -->
+  <g id="raw" class="mono">
+    <text x="182" y="200" fill="#C07E7E">&lt;p style="margin:0;line-height:1.38"&gt;</text>
+    <text x="182" y="242" fill="#C07E7E">  &lt;span style="fw:400"&gt;Benefits&lt;/span&gt;</text>
+    <text x="182" y="284" fill="#C07E7E">&lt;/p&gt;&lt;br&gt;</text>
+    <text x="182" y="326" fill="#C07E7E">&lt;p style="margin:0"&gt;Clean water&lt;/p&gt;</text>
+    <text x="182" y="368" fill="#C07E7E">&lt;img src="blob:https://docs..."&gt;</text>
+    <text x="182" y="410" fill="#C07E7E">&lt;table style="border:1px solid #000"&gt;</text>
+    <text x="182" y="452" fill="#8A6F6F">  &lt;tr&gt;&lt;td&gt;…&lt;/td&gt;&lt;/tr&gt;</text>
   </g>
 
-  <text x="150" y="486" font-size="14.5" fill="#5E7398">source and target markup, read once</text>
-  <text x="1050" y="486" font-size="14.5" fill="#6E90C8" text-anchor="end">every article after, deterministic</text>
+  <!-- ============ CLEAN (house style), blue ============ -->
+  <g id="clean" class="mono">
+    <text x="182" y="200"><tspan fill="#6E90C8">&lt;p style=</tspan><tspan fill="#5B9BFF">"text-align: justify;"</tspan><tspan fill="#6E90C8">&gt;</tspan></text>
+    <text x="182" y="242"><tspan fill="#9FC0EA">  Benefits</tspan></text>
+    <text x="182" y="284"><tspan fill="#6E90C8">&lt;/p&gt;</tspan></text>
+    <text x="182" y="326"><tspan fill="#6E90C8">&lt;h2 class=</tspan><tspan fill="#5B9BFF">"titletab"</tspan><tspan fill="#6E90C8">&gt;Clean water&lt;/h2&gt;</tspan></text>
+    <text x="182" y="368"><tspan fill="#6E90C8">&lt;img src=</tspan><tspan fill="#5B9BFF">"main-keyword-2-benefits.webp"</tspan><tspan fill="#6E90C8">&gt;</tspan></text>
+    <text x="182" y="410"><tspan fill="#6E90C8">&lt;table class=</tspan><tspan fill="#5B9BFF">"has-fixed-layout"</tspan><tspan fill="#6E90C8">&gt;</tspan></text>
+    <text x="182" y="452"><tspan fill="#6E90C8">  &lt;tr&gt;&lt;td&gt;…&lt;/td&gt;&lt;/tr&gt;</tspan></text>
+  </g>
+
+  <!-- ============ the agent's single pass ============ -->
+  <g id="pass">
+    <!-- a narrow mask riding just ahead of the line: clean code emerges from
+         behind it, so the seam where two texts would collide is never seen -->
+    <rect x="160" y="150" width="17" height="332" fill="#0A1526"/>
+    <rect x="166" y="150" width="20" height="332" fill="#FFC400" opacity="0.14" filter="url(#soft)"/>
+    <rect x="174.5" y="156" width="3" height="320" fill="url(#scan)"/>
+    <circle cx="176" cy="150" r="6" fill="#FFC400"/>
+    <circle cx="176" cy="150" r="6" fill="none" stroke="#FFE9A8" stroke-width="1" opacity="0.7"/>
+  </g>
+
+  <text x="600" y="546" font-size="15" fill="#C79A1E" text-anchor="middle">the agent works out the transform once — then code applies it to every article, with no model</text>
 </svg>
