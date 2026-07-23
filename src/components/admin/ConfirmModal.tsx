@@ -48,7 +48,7 @@ export default function ConfirmModal({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/40 animate-in fade-in-0 duration-150">
-      <div className="bg-md-surface-container-high rounded-[28px] shadow-md-3 p-6 w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-150">
+      <div className="bg-md-surface-container-high rounded-[28px] ring-1 ring-md-outline-variant p-6 w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-150">
         {title && (
           <h3 className="text-[24px] leading-8 font-medium tracking-tight mb-3">
             {title}

@@ -131,7 +131,7 @@ export default function MediaPicker({
             <img
               src={value}
               alt=""
-              className="w-full h-auto rounded-2xl shadow-md-4 bg-md-surface-container"
+              className="w-full h-auto rounded-2xl ring-1 ring-md-outline-variant bg-md-surface-container"
             />
             <div className="mt-3 flex items-center justify-between gap-4">
               <span className="text-[13px] leading-[18px] font-mono text-white/70 truncate">
@@ -154,7 +154,7 @@ export default function MediaPicker({
       {/* Modal */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/40">
-          <div className="bg-md-surface-container-high rounded-2xl shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
+          <div className="bg-md-surface-container-high rounded-2xl ring-1 ring-md-outline-variant w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
               <span className="text-[15px] leading-[22px] font-medium shrink-0">
                 Media library

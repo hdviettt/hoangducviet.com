@@ -244,7 +244,7 @@ export default function TableControls({
       {ctx.open && (
         <div
           ref={ctxRef}
-          className="fixed z-[9999] bg-md-surface-container-high border border-md-outline-variant rounded-xl py-1.5 min-w-[184px] shadow-md-3"
+          className="fixed z-[9999] bg-md-surface-container-high border border-md-outline-variant rounded-xl py-1.5 min-w-[184px] ring-1 ring-md-outline-variant"
           style={{ top: ctx.pos.top, left: ctx.pos.left }}
         >
           {contextMenuItems.map((item, i) =>

@@ -281,7 +281,7 @@ function SlashMenu({
   };
 
   return (
-    <div className="absolute z-50 rounded-xl bg-md-surface-container-high border border-md-outline-variant shadow-md-3 w-64 max-h-72 overflow-y-auto">
+    <div className="absolute z-50 rounded-xl bg-md-surface-container-high border border-md-outline-variant ring-1 ring-md-outline-variant w-64 max-h-72 overflow-y-auto">
       <div className="p-2 border-b border-md-outline-variant">
         <input
           ref={inputRef}
@@ -524,14 +524,14 @@ export default function RichEditor({
             markdown: {
               serialize(state: any, node: any) {
                 state.write(
-                "![" +
+                  "![" +
                     state.esc(node.attrs.alt || "") +
-                  "](" +
+                    "](" +
                     state.esc(node.attrs.src || "") +
                     (node.attrs.title
                       ? ' "' + node.attrs.title.replace(/"/g, '\\"') + '"'
                       : "") +
-                  ")",
+                    ")",
                 );
                 state.closeBlock(node);
               },
@@ -562,7 +562,7 @@ export default function RichEditor({
     editorProps: {
       attributes: {
         class:
-        "article-content prose-editor focus:outline-none min-h-[400px] px-4 py-3",
+          "article-content prose-editor focus:outline-none min-h-[400px] px-4 py-3",
       },
       handleKeyDown: (_view, event) => {
         if (event.key === "/" && !showSlash) {
@@ -914,7 +914,7 @@ export default function RichEditor({
       {/* Image Picker Modal */}
       {showImagePicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
-          <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col">
+          <div className="rounded-xl bg-md-surface-container-high ring-1 ring-md-outline-variant w-full max-w-3xl max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
               <span className="text-[15px] leading-[22px] font-medium shrink-0">
                 Insert image
@@ -994,7 +994,7 @@ export default function RichEditor({
       {/* Video Picker Modal */}
       {showVideoPicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
-          <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-2xl max-h-[80vh] flex flex-col">
+          <div className="rounded-xl bg-md-surface-container-high ring-1 ring-md-outline-variant w-full max-w-2xl max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
               <span className="text-[15px] leading-[22px] font-medium flex-1">
                 Insert video
@@ -1068,7 +1068,7 @@ export default function RichEditor({
       {/* Widget Picker Modal */}
       {showWidgetPicker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/60">
-          <div className="rounded-xl bg-md-surface-container-high shadow-md-3 w-full max-w-lg max-h-[80vh] flex flex-col">
+          <div className="rounded-xl bg-md-surface-container-high ring-1 ring-md-outline-variant w-full max-w-lg max-h-[80vh] flex flex-col">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
               <span className="text-[15px] leading-[22px] font-medium flex-1">
                 Insert widget

@@ -123,7 +123,7 @@ function LibraryModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-md-scrim/40">
-      <div className="bg-md-surface-container-high rounded-2xl shadow-md-3 w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
+      <div className="bg-md-surface-container-high rounded-2xl ring-1 ring-md-outline-variant w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden">
         <div className="flex items-center gap-3 px-4 py-3 border-b border-md-outline-variant shrink-0">
           <span className="text-[15px] leading-[22px] font-medium shrink-0">
             Add slides

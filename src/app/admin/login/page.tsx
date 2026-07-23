@@ -35,7 +35,7 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-xs">
-      <div className="rounded-2xl border border-md-outline-variant shadow-md-1 p-8">
+      <div className="rounded-2xl border border-md-outline-variant ring-1 ring-md-outline-variant p-8">
         <div className="text-[15px] leading-[22px] text-md-primary mb-6">
           Admin login
         </div>

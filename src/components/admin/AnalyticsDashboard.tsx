@@ -321,7 +321,7 @@ function TrendChart({ daily }: { daily: DailyPoint[] }) {
           {/* Tooltip — enhances, never gates (values also in table view) */}
           {active && (
             <div
-              className="pointer-events-none absolute top-0 rounded-lg border border-md-outline-variant bg-md-surface-container-high shadow-md-3 px-3 py-2"
+              className="pointer-events-none absolute top-0 rounded-lg border border-md-outline-variant bg-md-surface-container-high ring-1 ring-md-outline-variant px-3 py-2"
               style={{
                 left: Math.min(
                   Math.max(x(hover!) - 60, 0),
