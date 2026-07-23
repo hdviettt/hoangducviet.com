@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" role="img" aria-label="Five HTML layers: the model's proposal is discarded on paragraph, span and anchor, and kept alongside the detector's on wrapper and table" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="660" fill="#F7F9FC"/>
+
+  <text x="64" y="82" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">ONE SCAN, FIVE LAYERS, TWO DIFFERENT VERDICTS</text>
+
+  <line x1="64" y1="112" x2="1136" y2="112" stroke="#0A0A0A" stroke-width="1.5"/>
+  <text x="64"  y="140" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">LAYER</text>
+  <text x="300" y="140" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">MODEL PROPOSED</text>
+  <text x="470" y="140" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">DETECTOR PRODUCED</text>
+  <text x="672" y="140" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">STORED</text>
+  <line x1="64" y1="160" x2="1136" y2="160" stroke="#DDE3EC" stroke-width="1.25"/>
+
+  <!-- ============ GROUP A — replaced ============ -->
+  <rect x="64" y="180" width="3.5" height="186" fill="#004AEF"/>
+
+  <!-- row: Paragraph -->
+  <text x="92"  y="212" font-size="19" font-weight="700" fill="#0A0A0A">Paragraph</text>
+  <g opacity="0.4">
+    <rect x="300" y="196" width="118" height="22" rx="4" fill="none" stroke="#D9A400" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <line x1="306" y1="215" x2="412" y2="199" stroke="#D9A400" stroke-width="1.5"/>
+  </g>
+  <rect x="470" y="196" width="118" height="22" rx="4" fill="#004AEF"/>
+  <text x="672" y="212" font-size="15" font-weight="700" fill="#0038B8">Detector only</text>
+
+  <!-- row: Span -->
+  <text x="92"  y="272" font-size="19" font-weight="700" fill="#0A0A0A">Span</text>
+  <g opacity="0.4">
+    <rect x="300" y="256" width="118" height="22" rx="4" fill="none" stroke="#D9A400" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <line x1="306" y1="275" x2="412" y2="259" stroke="#D9A400" stroke-width="1.5"/>
+  </g>
+  <rect x="470" y="256" width="118" height="22" rx="4" fill="#004AEF"/>
+  <text x="672" y="272" font-size="15" font-weight="700" fill="#0038B8">Detector only</text>
+
+  <!-- row: Anchor -->
+  <text x="92"  y="332" font-size="19" font-weight="700" fill="#0A0A0A">Anchor</text>
+  <g opacity="0.4">
+    <rect x="300" y="316" width="118" height="22" rx="4" fill="none" stroke="#D9A400" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <line x1="306" y1="335" x2="412" y2="319" stroke="#D9A400" stroke-width="1.5"/>
+  </g>
+  <rect x="470" y="316" width="118" height="22" rx="4" fill="#004AEF"/>
+  <text x="672" y="332" font-size="15" font-weight="700" fill="#0038B8">Detector only</text>
+
+  <!-- group reason -->
+  <line x1="836" y1="188" x2="836" y2="358" stroke="#C8D0DC" stroke-width="1.25"/>
+  <text x="862" y="228" font-size="13" font-weight="700" fill="#0038B8" letter-spacing="0.6">REPLACED</text>
+  <text x="862" y="256" font-size="14.5" fill="#3D4149">Structure here is regular enough that a</text>
+  <text x="862" y="277" font-size="14.5" fill="#3D4149">detector derives the rule from the target</text>
+  <text x="862" y="298" font-size="14.5" fill="#3D4149">markup — and derives the same rule on</text>
+  <text x="862" y="319" font-size="14.5" fill="#3D4149">every run. The model was often right,</text>
+  <text x="862" y="340" font-size="14.5" fill="#3D4149">but it was not identical twice.</text>
+
+  <line x1="64" y1="386" x2="1136" y2="386" stroke="#DDE3EC" stroke-width="1.25"/>
+
+  <!-- ============ GROUP B — appended ============ -->
+  <rect x="64" y="406" width="3.5" height="126" fill="#D9A400"/>
+
+  <!-- row: Wrapper -->
+  <text x="92"  y="438" font-size="19" font-weight="700" fill="#0A0A0A">Wrapper</text>
+  <rect x="300" y="422" width="118" height="22" rx="4" fill="#D9A400"/>
+  <rect x="470" y="422" width="118" height="22" rx="4" fill="#004AEF"/>
+  <text x="672" y="438" font-size="15" font-weight="700" fill="#8A6D00">Both</text>
+
+  <!-- row: Table -->
+  <text x="92"  y="498" font-size="19" font-weight="700" fill="#0A0A0A">Table</text>
+  <rect x="300" y="482" width="118" height="22" rx="4" fill="#D9A400"/>
+  <rect x="470" y="482" width="118" height="22" rx="4" fill="#004AEF"/>
+  <text x="672" y="498" font-size="15" font-weight="700" fill="#8A6D00">Both</text>
+
+  <line x1="836" y1="414" x2="836" y2="524" stroke="#C8D0DC" stroke-width="1.25"/>
+  <text x="862" y="440" font-size="13" font-weight="700" fill="#8A6D00" letter-spacing="0.6">APPENDED</text>
+  <text x="862" y="468" font-size="14.5" fill="#3D4149">A detector finds the shapes it has rules</text>
+  <text x="862" y="489" font-size="14.5" fill="#3D4149">for. It cannot infer layout intent from a</text>
+  <text x="862" y="510" font-size="14.5" fill="#3D4149">structure nobody wrote a rule for. The</text>
+  <text x="862" y="531" font-size="14.5" fill="#3D4149">model can, so its proposal keeps a seat.</text>
+
+  <line x1="64" y1="566" x2="1136" y2="566" stroke="#0A0A0A" stroke-width="1.5"/>
+
+  <text x="64" y="598" font-size="15.5" font-weight="700" fill="#0A0A0A">The rule is not “code beats the model”. It is “code wins where code has evidence”.</text>
+  <text x="64" y="622" font-size="14" fill="#6B7280">When the target article contains no paragraph tags at all, the detector has nothing to read and the model’s proposal stands.</text>
+
+  <!-- legend -->
+  <rect x="880" y="586" width="13" height="13" rx="3" fill="#D9A400"/>
+  <text x="901" y="597" font-size="13" fill="#6B7280">model</text>
+  <rect x="972" y="586" width="13" height="13" rx="3" fill="#004AEF"/>
+  <text x="993" y="597" font-size="13" fill="#6B7280">deterministic code</text>
+</svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" role="img" aria-label="An image filename across three publishes: WordPress appends a dedup suffix on republish, and the pipeline normalises it back to the original name" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="540" fill="#F7F9FC"/>
+
+  <text x="64" y="82" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">WHAT HAPPENS TO ONE IMAGE URL WHEN YOU PUBLISH THE SAME DOC TWICE</text>
+  <line x1="64" y1="112" x2="1136" y2="112" stroke="#0A0A0A" stroke-width="1.5"/>
+
+  <!-- column heads -->
+  <g font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">
+    <text x="64"  y="152">FIRST PUBLISH</text>
+    <text x="452" y="152">REPUBLISH — WHAT WORDPRESS DOES</text>
+    <text x="852" y="152">REPUBLISH — WHAT WE STORE</text>
+  </g>
+  <line x1="64" y1="170" x2="1136" y2="170" stroke="#DDE3EC" stroke-width="1.25"/>
+
+  <!-- state 1 -->
+  <rect x="64" y="200" width="3.5" height="86" fill="#004AEF"/>
+  <text x="92" y="228" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">main-keyword-2-</text>
+  <text x="92" y="252" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">benefits.webp</text>
+  <text x="92" y="280" font-size="13.5" fill="#6B7280">the name we determined</text>
+
+  <!-- arrow 1 -->
+  <line x1="360" y1="238" x2="424" y2="238" stroke="#C8D0DC" stroke-width="1.75"/>
+  <path d="M424 238 l-9 -5 v10 z" fill="#C8D0DC"/>
+
+  <!-- state 2 -->
+  <rect x="452" y="200" width="3.5" height="86" fill="#D9A400"/>
+  <text x="480" y="228" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">main-keyword-2-</text>
+  <text x="480" y="252" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">benefits<tspan fill="#8A6D00" font-weight="700">-1</tspan>.webp</text>
+  <text x="480" y="280" font-size="13.5" fill="#8A6D00">a file with that name already exists, so WP dedups</text>
+
+  <!-- arrow 2 -->
+  <line x1="762" y1="238" x2="826" y2="238" stroke="#C8D0DC" stroke-width="1.75"/>
+  <path d="M826 238 l-9 -5 v10 z" fill="#C8D0DC"/>
+
+  <!-- state 3 -->
+  <rect x="852" y="200" width="3.5" height="86" fill="#004AEF"/>
+  <text x="880" y="228" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">main-keyword-2-</text>
+  <text x="880" y="252" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">benefits.webp</text>
+  <text x="880" y="280" font-size="13.5" fill="#0038B8">normalised back — the URL never moved</text>
+
+  <line x1="64" y1="326" x2="1136" y2="326" stroke="#DDE3EC" stroke-width="1.25"/>
+
+  <!-- the guard -->
+  <text x="64" y="362" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">THE CLAUSE THAT MAKES IT A FIX AND NOT A BUG</text>
+  <rect x="64" y="378" width="3.5" height="58" fill="#04B876"/>
+  <text x="92" y="402" font-size="15" fill="#3D4149">The rewrite only touches filenames the pipeline itself chose. A client’s own upload that</text>
+  <text x="92" y="424" font-size="15" fill="#3D4149">happens to end in <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">-1</tspan> is left exactly where it is.</text>
+
+  <line x1="64" y1="466" x2="1136" y2="466" stroke="#0A0A0A" stroke-width="1.5"/>
+  <text x="64" y="494" font-size="14" fill="#6B7280">The count of renamed images is returned in every run result. Nobody asked for that number — it exists because the first</text>
+  <text x="64" y="514" font-size="14" fill="#6B7280">time this went wrong, the only way to find it was diffing two published articles by hand.</text>
+</svg>
