@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Step 4 of the publishing pipeline: Upload — all or nothing" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Step 4 of the publishing pipeline: Upload - all or nothing" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
   <defs><style>.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style></defs>
   <rect width="1200" height="720" fill="#F7F9FC"/>
   <text x="1128" y="560" font-size="440" font-weight="800" fill="#EAEFF7" text-anchor="end" letter-spacing="-10">4</text>
   <text x="72" y="96" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">STEP 4 OF 6 · UPLOAD</text>
   <line x1="72" y1="124" x2="1128" y2="124" stroke="#0A0A0A" stroke-width="1.5"/>
-  <text x="72" y="196" font-size="46" font-weight="700" fill="#0A0A0A" letter-spacing="-0.5">Upload — all or nothing</text>
+  <text x="72" y="196" font-size="46" font-weight="700" fill="#0A0A0A" letter-spacing="-0.5">Upload - all or nothing</text>
   <text x="72" y="242" font-size="19" fill="#3D4149">Images go into the client's media library through a dumb connector.</text>
   <rect x="72" y="300" width="984" height="150" rx="10" fill="#F1F7F2" stroke="#CBE3D0" stroke-width="1.25"/>
   <text x="96" y="338" font-size="12" font-weight="700" fill="#04915D" letter-spacing="1">THE ONE GUARD</text>
@@ -17,5 +17,5 @@
   <text x="600" y="522" font-size="17" font-weight="700" fill="#0A0A0A">some succeeded</text>
   <text x="600" y="548" font-size="14" font-weight="400" fill="#6B7280">→ it proceeds with those</text>
   <line x1="72" y1="636" x2="1128" y2="636" stroke="#DDE3EC" stroke-width="1.25"/>
-  <text x="72" y="676" font-size="15.5" fill="#3D4149"><tspan font-size="16" font-weight="700" fill="#04915D">WHY THE GUARD</tspan>   a half-illustrated draft inside a client's CMS is worse than no draft — someone has to notice it.</text>
+  <text x="72" y="676" font-size="15.5" fill="#3D4149"><tspan font-size="16" font-weight="700" fill="#04915D">WHY THE GUARD</tspan>   a half-illustrated draft inside a client's CMS is worse than no draft - someone has to notice it.</text>
 </svg>

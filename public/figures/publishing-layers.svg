@@ -44,7 +44,7 @@
   <!-- group tag -->
   <rect x="238" y="410" width="132" height="24" rx="12" fill="#E3ECFD"/>
   <text x="256" y="427" font-size="12.5" font-weight="700" fill="#0038B8" letter-spacing="0.5">REPLACED</text>
-  <text x="386" y="427" font-size="14" fill="#6B7280">structure is regular — the detector derives the rule, and derives the same rule every run</text>
+  <text x="386" y="427" font-size="14" fill="#6B7280">structure is regular - the detector derives the rule, and derives the same rule every run</text>
 
   <line x1="64" y1="456" x2="1136" y2="456" stroke="#DDE3EC" stroke-width="1.25"/>
 
@@ -72,8 +72,8 @@
   <!-- group tag -->
   <rect x="238" y="632" width="132" height="24" rx="12" fill="#FBF0D0"/>
   <text x="256" y="649" font-size="12.5" font-weight="700" fill="#8A6D00" letter-spacing="0.5">APPENDED</text>
-  <text x="386" y="649" font-size="14" fill="#6B7280">layout intent the detector cannot infer — so the model’s proposal keeps a seat next to it</text>
+  <text x="386" y="649" font-size="14" fill="#6B7280">layout intent the detector cannot infer - so the model’s proposal keeps a seat next to it</text>
 
   <line x1="64" y1="676" x2="1136" y2="676" stroke="#0A0A0A" stroke-width="1.5"/>
-  <text x="64" y="704" font-size="15.5" font-weight="700" fill="#0A0A0A">The rule is not “code beats the model.” It is “code wins where code has evidence” — and where it has none, the model’s proposal stands.</text>
+  <text x="64" y="704" font-size="15.5" font-weight="700" fill="#0A0A0A">The rule is not “code beats the model.” It is “code wins where code has evidence” - and where it has none, the model’s proposal stands.</text>
 </svg>

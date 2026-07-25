@@ -58,5 +58,5 @@
 
   <line x1="64" y1="566" x2="1136" y2="566" stroke="#0A0A0A" stroke-width="1.5"/>
   <text x="64" y="598" font-size="15.5" font-weight="700" fill="#0A0A0A">The two lines answer different questions. Markup conventions vary per website; nothing varies per article.</text>
-  <text x="64" y="622" font-size="14" fill="#6B7280">SEO is built on consistency, so a step that is slightly different every run is not a quirk there — it is a defect that surfaces months later.</text>
+  <text x="64" y="622" font-size="14" fill="#6B7280">SEO is built on consistency, so a step that is slightly different every run is not a quirk there - it is a defect that surfaces months later.</text>
 </svg>

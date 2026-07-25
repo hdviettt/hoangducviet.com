@@ -13,7 +13,7 @@
   <text x="120" y="452" class="mono" font-size="15" fill="#2B3A67">status=<tspan fill="#04915D" font-weight="700">"draft"</tspan>, categories=cats, slug=(post_slug <tspan fill="#7A1E1E">or</tspan> None),</text>
   <rect x="72" y="478" width="984" height="96" rx="10" fill="#FFFFFF" stroke="#DDE3EC" stroke-width="1.25"/>
   <text x="96" y="522" font-size="16" font-weight="700" fill="#0A0A0A">not requested in a prompt · not a default a clever instruction could bypass</text>
-  <text x="96" y="550" font-size="14" font-weight="400" fill="#6B7280">a literal in the call — a human opens every one of these and presses publish</text>
+  <text x="96" y="550" font-size="14" font-weight="400" fill="#6B7280">a literal in the call - a human opens every one of these and presses publish</text>
   <line x1="72" y1="636" x2="1128" y2="636" stroke="#DDE3EC" stroke-width="1.25"/>
   <text x="72" y="676" font-size="15.5" fill="#3D4149"><tspan font-size="16" font-weight="700" fill="#04915D">THE LINE THAT EARNS CLIENT TRUST</tspan>   the pipeline runs inside client websites because it can never publish live on its own.</text>
 </svg>

@@ -7,8 +7,8 @@
   <!-- column heads -->
   <g font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1">
     <text x="64"  y="152">FIRST PUBLISH</text>
-    <text x="452" y="152">REPUBLISH — WHAT WORDPRESS DOES</text>
-    <text x="852" y="152">REPUBLISH — WHAT WE STORE</text>
+    <text x="452" y="152">REPUBLISH - WHAT WORDPRESS DOES</text>
+    <text x="852" y="152">REPUBLISH - WHAT WE STORE</text>
   </g>
   <line x1="64" y1="170" x2="1136" y2="170" stroke="#DDE3EC" stroke-width="1.25"/>
 
@@ -36,7 +36,7 @@
   <rect x="852" y="200" width="3.5" height="86" fill="#004AEF"/>
   <text x="880" y="228" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">main-keyword-2-</text>
   <text x="880" y="252" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">benefits.webp</text>
-  <text x="880" y="280" font-size="13.5" fill="#0038B8">normalised back — the URL never moved</text>
+  <text x="880" y="280" font-size="13.5" fill="#0038B8">normalised back - the URL never moved</text>
 
   <line x1="64" y1="326" x2="1136" y2="326" stroke="#DDE3EC" stroke-width="1.25"/>
 
@@ -47,6 +47,6 @@
   <text x="92" y="424" font-size="15" fill="#3D4149">happens to end in <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2B3A67">-1</tspan> is left exactly where it is.</text>
 
   <line x1="64" y1="466" x2="1136" y2="466" stroke="#0A0A0A" stroke-width="1.5"/>
-  <text x="64" y="494" font-size="14" fill="#6B7280">The count of renamed images is returned in every run result. Nobody asked for that number — it exists because the first</text>
+  <text x="64" y="494" font-size="14" fill="#6B7280">The count of renamed images is returned in every run result. Nobody asked for that number - it exists because the first</text>
   <text x="64" y="514" font-size="14" fill="#6B7280">time this went wrong, the only way to find it was diffing two published articles by hand.</text>
 </svg>
