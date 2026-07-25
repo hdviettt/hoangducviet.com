@@ -1,28 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Step 3 of the publishing pipeline: Process the images" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
-  <defs><style>.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style></defs>
-  <rect width="1200" height="720" fill="#F7F9FC"/>
-  <text x="1128" y="560" font-size="440" font-weight="800" fill="#EAEFF7" text-anchor="end" letter-spacing="-10">3</text>
-  <text x="72" y="96" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1.5">STEP 3 OF 6 · PROCESS IMAGES</text>
-  <line x1="72" y1="124" x2="1128" y2="124" stroke="#0A0A0A" stroke-width="1.5"/>
-  <text x="72" y="196" font-size="46" font-weight="700" fill="#0A0A0A" letter-spacing="-0.5">Process the images</text>
-  <text x="72" y="242" font-size="19" fill="#3D4149">Downloaded, resized, converted, and renamed to the site's convention.</text>
-  <rect x="72" y="300" width="984" height="150" rx="10" fill="#FFFFFF" stroke="#DDE3EC" stroke-width="1.25"/>
-  <text x="96" y="338" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1">ONE IMAGE, FOUR THINGS DONE TO IT</text>
-  <circle cx="105" cy="392" r="5" fill="#004AEF"/>
-  <text x="122" y="398" font-size="17" font-weight="700" fill="#0A0A0A">resize</text>
-  <text x="122" y="424" font-size="13.5" font-weight="400" fill="#6B7280">800px, ratio kept</text>
-  <circle cx="341" cy="392" r="5" fill="#004AEF"/>
-  <text x="358" y="398" font-size="17" font-weight="700" fill="#0A0A0A">convert</text>
-  <text x="358" y="424" font-size="13.5" font-weight="400" fill="#6B7280">WebP, set quality</text>
-  <circle cx="577" cy="392" r="5" fill="#004AEF"/>
-  <text x="594" y="398" font-size="17" font-weight="700" fill="#0A0A0A">rename</text>
-  <text x="594" y="424" font-size="13.5" font-weight="400" fill="#6B7280">keyword + heading</text>
-  <circle cx="813" cy="392" r="5" fill="#004AEF"/>
-  <text x="830" y="398" font-size="17" font-weight="700" fill="#0A0A0A">caption</text>
-  <text x="830" y="424" font-size="13.5" font-weight="400" fill="#6B7280">doc or alt text</text>
-  <rect x="72" y="478" width="984" height="96" rx="10" fill="#EEF2FA" stroke="#DDE3EC" stroke-width="1.25"/>
-  <text x="96" y="512" font-size="12" font-weight="700" fill="#0038B8" letter-spacing="1">THE FILENAME A CRAWLER CAN READ</text>
-  <text x="96" y="550" class="mono" font-size="18" fill="#2B3A67">image47.png  <tspan fill="#8A93A3">→</tspan>  <tspan fill="#0038B8" font-weight="700">main-keyword-2-benefits-of-x-3.webp</tspan></text>
-  <line x1="72" y1="636" x2="1128" y2="636" stroke="#DDE3EC" stroke-width="1.25"/>
-  <text x="72" y="676" font-size="15.5" fill="#3D4149"><tspan font-size="16" font-weight="700" fill="#0038B8">THE STRONG MODE</tspan>   filename = main keyword + the nearest heading + an index, so it describes the section.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Process the images" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+<rect width="1200" height="720" fill="#F7F9FC"/>
+<text x="64" y="64" font-size="12.5" font-weight="700" fill="#8A93A3" letter-spacing="1.6">STEP 3 OF 6  ·  PROCESS THE IMAGES</text>
+<line x1="64" y1="86" x2="1136" y2="86" stroke="#0A0A0A" stroke-width="1.5"/>
+<text x="64" y="146" font-size="42" font-weight="800" fill="#0A0A0A">Process the images</text>
+<text x="64" y="182" font-size="17" font-weight="400" fill="#6B7280">Resized, converted, and renamed to something a crawler can read.</text>
+<defs><linearGradient id="img3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2CB6F5"/><stop offset="1" stop-color="#07EF9C"/></linearGradient><marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L8 4.5 L0 9 Z" fill="#B7C0CE"/></marker></defs><rect x="64" y="236" width="1072" height="360" rx="14" fill="#FFFFFF" stroke="#E1E7F0" stroke-width="1"/><rect x="100" y="276" width="180" height="135" rx="10" fill="url(#img3)"/><text x="190" y="352" font-size="15" font-weight="800" fill="#FFFFFF" text-anchor="middle">IMG</text><text x="320" y="296" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="1">FILENAME</text><rect x="320" y="312" width="340" height="40" rx="8" fill="#FFF3F3" stroke="#F3C7C7" stroke-width="1.1"/><text x="338" y="337" font-size="15" font-weight="600" fill="#B4342E" font-family="ui-monospace, Consolas, monospace">image47.png</text><path d="M680 332 h40" stroke="#B7C0CE" stroke-width="2.5" marker-end="url(#ah3)"/><rect x="740" y="312" width="396" height="40" rx="8" fill="#F0FDF8" stroke="#BCEBD6" stroke-width="1.1"/><text x="758" y="337" font-size="14" font-weight="600" fill="#0E9469" font-family="ui-monospace, Consolas, monospace">quy-trinh-dang-bai_kts1.webp</text><text x="320" y="404" font-size="12" font-weight="700" fill="#8A93A3" letter-spacing="0.8">FOUR NAMING MODES, CONFIGURED PER SITE</text><rect x="320" y="428" width="144" height="26" rx="13" fill="#EAF0FF"/><text x="392.2" y="445" font-size="12" font-weight="600" fill="#0038B8" text-anchor="middle">keep source name</text><rect x="476" y="428" width="122" height="26" rx="13" fill="#EAF0FF"/><text x="537.5" y="445" font-size="12" font-weight="600" fill="#0038B8" text-anchor="middle">from alt text</text><rect x="611" y="428" width="152" height="26" rx="13" fill="#EAF0FF"/><text x="686.4999999999999" y="445" font-size="12" font-weight="600" fill="#0038B8" text-anchor="middle">from main keyword</text><rect x="774" y="428" width="211" height="26" rx="13" fill="#0038B8"/><text x="879.8999999999999" y="445" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle">keyword + nearest heading</text><rect x="100" y="440" width="180" height="120" rx="10" fill="#F4F7FC" stroke="#E1E7F0" stroke-width="1"/><text x="190" y="484" font-size="12.5" font-weight="600" fill="#3D4149" text-anchor="middle">resized</text><text x="190" y="508" font-size="12.5" font-weight="600" fill="#3D4149" text-anchor="middle">converted</text><text x="190" y="532" font-size="12.5" font-weight="600" fill="#0038B8" text-anchor="middle">renamed</text><text x="320" y="502" font-size="14.5" font-weight="400" fill="#6B7280">The mode clients ask for builds a filename a crawler reads as a</text><text x="320" y="524" font-size="14.5" font-weight="400" fill="#6B7280">description of the section - not “image47”.</text>
+<line x1="64" y1="650" x2="1136" y2="650" stroke="#E1E7F0" stroke-width="1.5"/>
+<text x="64" y="684" font-size="13" font-weight="800" fill="#0038B8" letter-spacing="0.5">WHY IT MATTERS</text>
+<text x="225.6" y="684" font-size="14.5" font-weight="400" fill="#6B7280">the filename becomes SEO signal instead of noise - and it is deterministic.</text>
 </svg>
