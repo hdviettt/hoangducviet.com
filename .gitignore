@@ -49,3 +49,4 @@ public/uploads/
 # Local content dumps from scripts/pull-series.cjs and rewrites awaiting push.
 # The .cjs scripts in scripts/ are committed; the dumped/rewritten markdown is not.
 /scripts/series/
+public/figures/_*.svg
