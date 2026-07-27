@@ -5,6 +5,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export interface CarouselItem {
   /** Image or video URL. */
   src?: string;
+  /**
+   * Optional dark-theme twin of `src` (images only). When set, the slide
+   * stacks both and CSS swaps them on the blog's class-based dark mode, so a
+   * light-baked diagram doesn't glare on a dark page. Ignored for videos.
+   */
+  srcDark?: string;
   /** Poster frame for videos. */
   poster?: string;
   /** Sentence under the slide. Travels with the slide, like deepmind.google. */
@@ -291,6 +297,27 @@ export default function MediaCarousel({
                 >
                   <source src={item.src} />
                 </video>
+              ) : item.srcDark ? (
+                // A light and a dark bake of the same diagram, stacked; CSS
+                // shows exactly one per theme. The dark twin is decorative
+                // (same information), so it carries no alt.
+                <>
+                  <img
+                    className="fig-light"
+                    src={item.src}
+                    alt={item.alt ?? item.caption ?? ""}
+                    loading={i < 2 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                  <img
+                    className="fig-dark"
+                    src={item.srcDark}
+                    alt=""
+                    aria-hidden="true"
+                    loading={i < 2 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                </>
               ) : (
                 <img
                   src={item.src}

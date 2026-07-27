@@ -918,6 +918,31 @@ h6 {
   display: none;
 }
 
+/* Theme-aware figures — the diagram set is baked twice (light and a `-dark`
+   twin, via concepts/flow.py with FIG_THEME=dark). The img renderer and the
+   carousel each stack both variants; these rules swap them on the blog's
+   class-based dark mode so a light diagram never glares on a dark page. */
+.fig-dark {
+  display: none;
+}
+.dark .fig-light {
+  display: none;
+}
+.dark .fig-dark {
+  display: block;
+}
+/* Carousel slides pin their img to display:block at (0,3,1); out-specify it so
+   the swap still wins inside a slide frame. */
+.article-content .media-carousel .media-carousel__frame > img.fig-dark {
+  display: none;
+}
+.dark .article-content .media-carousel .media-carousel__frame > img.fig-light {
+  display: none;
+}
+.dark .article-content .media-carousel .media-carousel__frame > img.fig-dark {
+  display: block;
+}
+
 /* The caption lives inside the slide and travels with it — that is why a
    half-visible neighbour shows a half-visible sentence on deepmind.google.
    Body grey, the same token every other figcaption on the site uses: the

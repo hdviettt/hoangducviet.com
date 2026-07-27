@@ -155,16 +155,49 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
           // Plain <img> with auto sizing so the browser respects the source
           // image's intrinsic aspect ratio. Hardcoding 800×600 via Next/Image
           // warped vertical screenshots and panoramic captures.
+          const s = src || "";
+          // The diagram set is baked in light + dark twins named
+          // `<fig>-dark.webp` (see concepts/flow.py, FIG_THEME=dark). A figure
+          // that matches gets both variants stacked so CSS can swap them per
+          // theme; screenshots and photos stay a single image.
+          const themed =
+            s.startsWith("/figures/fig-") &&
+            s.endsWith(".webp") &&
+            !s.endsWith("-dark.webp");
+          const darkSrc = themed ? s.replace(/\.webp$/, "-dark.webp") : null;
+          const imgClass =
+            "w-full h-auto rounded-[var(--md-sys-shape-corner-large-increased)]";
           return (
             <figure className="my-6">
-              {/* biome-ignore lint/a11y/useAltText: alt is passed as prop */}
-              <img
-                src={src || ""}
-                alt={alt || ""}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-auto rounded-[var(--md-sys-shape-corner-large-increased)]"
-              />
+              {darkSrc ? (
+                // Same diagram, two bakes; CSS shows exactly one per theme. The
+                // dark twin repeats the information, so it carries no alt.
+                <>
+                  <img
+                    src={s}
+                    alt={alt || ""}
+                    loading="lazy"
+                    decoding="async"
+                    className={`fig-light ${imgClass}`}
+                  />
+                  <img
+                    src={darkSrc}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                    className={`fig-dark ${imgClass}`}
+                  />
+                </>
+              ) : (
+                <img
+                  src={s}
+                  alt={alt || ""}
+                  loading="lazy"
+                  decoding="async"
+                  className={imgClass}
+                />
+              )}
               {alt && (
                 <figcaption
                   className="text-center text-sm mt-3"
