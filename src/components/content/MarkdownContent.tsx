@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import RenderedVisual from "./RenderedVisual";
 import WidgetBlock from "../widgets/WidgetBlock";
+import CodeBlock from "./CodeBlock";
+import RenderedVisual from "./RenderedVisual";
 
 interface MarkdownContentProps {
   content: string;
@@ -30,9 +31,7 @@ const breakCellText = (node: ReactNode, keyPrefix = "c"): ReactNode => {
   if (typeof node === "string" && BR_SPLIT.test(node)) {
     const parts = node.split(new RegExp(BR_SPLIT.source, "gi"));
     return parts.flatMap((part, i) =>
-      i === 0
-        ? [part]
-        : [<br key={`${keyPrefix}-br-${i}`} />, part],
+      i === 0 ? [part] : [<br key={`${keyPrefix}-br-${i}`} />, part],
     );
   }
   if (Array.isArray(node)) {
@@ -107,10 +106,7 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
           const kids = (node?.children || []).filter(
             (c: any) => !(c.type === "text" && !String(c.value).trim()),
           );
-          if (
-            kids.length > 0 &&
-            kids.every((c: any) => c.tagName === "img")
-          ) {
+          if (kids.length > 0 && kids.every((c: any) => c.tagName === "img")) {
             return <>{children}</>;
           }
           return <p {...props}>{children}</p>;
@@ -144,6 +140,14 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
               }
             }
             return <WidgetBlock name={widgetName} props={widgetProps} />;
+          }
+          // Real fenced code block → highlighted CodeBlock with header + copy/download
+          const raw = String(codeEl?.props?.children ?? "").replace(/\n$/, "");
+          const language = className.startsWith("language-")
+            ? className.slice("language-".length)
+            : "";
+          if (raw) {
+            return <CodeBlock code={raw} language={language} />;
           }
           return <pre {...props}>{children}</pre>;
         },
