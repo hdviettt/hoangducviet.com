@@ -9,14 +9,28 @@ interface VideoProps {
   caption?: string;
   /** Optional poster image shown before playback. */
   poster?: string;
+  /**
+   * Escape hatch for long clips that need scrubbing. Off by default: a demo
+   * clip should read as a moving picture, not a video player — exactly like
+   * the clips inside the carousel.
+   */
+  controls?: boolean;
 }
 
-// Self-hosted video player used inside posts via the `widget:video` fence.
-// Autoplays (muted) once it scrolls into view and pauses when it leaves —
-// browsers only allow autoplay while muted, so the reader taps the volume
-// control to hear it. Respects prefers-reduced-motion. preload="metadata"
-// keeps bandwidth low until the clip is near the viewport.
-export default function Video({ src, caption, poster }: VideoProps) {
+// Self-hosted clip used inside posts via the `widget:video` fence. By default
+// it behaves like a GIF, and like the carousel's clips: muted, looping, no
+// player chrome, non-interactive, and playing only while it is on screen.
+// Browsers only allow muted autoplay, so there is no sound and nothing to
+// unmute — pass `controls: true` in the fence when a clip genuinely needs a
+// real player to pause or scrub. Respects prefers-reduced-motion by staying on
+// the poster frame. preload="metadata" keeps bandwidth low until it is near
+// the viewport.
+export default function Video({
+  src,
+  caption,
+  poster,
+  controls = false,
+}: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -39,7 +53,7 @@ export default function Video({ src, caption, poster }: VideoProps) {
             el.play().catch(() => {
               /* autoplay may be blocked — ignore */
             });
-          } else {
+          } else if (!el.paused) {
             el.pause();
           }
         }
@@ -55,14 +69,21 @@ export default function Video({ src, caption, poster }: VideoProps) {
 
   return (
     <figure className="my-6 not-prose">
-      {/* biome-ignore lint/a11y/useMediaCaption: author-supplied clips have no track file */}
       <video
         ref={ref}
-        controls
         muted
+        loop
         playsInline
+        controls={controls || undefined}
+        disablePictureInPicture
+        controlsList="nodownload noplaybackrate noremoteplayback"
         preload="metadata"
         poster={poster || undefined}
+        tabIndex={controls ? undefined : -1}
+        aria-hidden={!controls && !caption ? true : undefined}
+        // A default clip is a moving picture, not a control surface: swallow
+        // pointer events so there is nothing to click, right-click or long-press.
+        style={controls ? undefined : { pointerEvents: "none" }}
         className="w-full h-auto max-h-[75vh] rounded-lg bg-black"
       >
         <source src={src} />
