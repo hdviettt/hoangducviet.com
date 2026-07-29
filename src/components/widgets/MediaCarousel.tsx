@@ -6,13 +6,16 @@ export interface CarouselItem {
   /** Image or video URL. */
   src?: string;
   /**
-   * Optional dark-theme twin of `src` (images only). When set, the slide
-   * stacks both and CSS swaps them on the blog's class-based dark mode, so a
-   * light-baked diagram doesn't glare on a dark page. Ignored for videos.
+   * Optional dark-theme twin of `src`. When set, the slide stacks a light and a
+   * dark bake and CSS swaps them on the blog's class-based dark mode, so a
+   * light diagram — or clip — doesn't glare on a dark page. Works for images
+   * and videos alike.
    */
   srcDark?: string;
   /** Poster frame for videos. */
   poster?: string;
+  /** Dark-theme poster twin, shown by the dark clip when `srcDark` is a video. */
+  posterDark?: string;
   /** Sentence under the slide. Travels with the slide, like deepmind.google. */
   caption?: string;
   /** Alt text; falls back to the caption. */
@@ -278,7 +281,44 @@ export default function MediaCarousel({
                   decoding="async"
                 />
               )}
-              {isVideo(item) ? (
+              {isVideo(item) && item.srcDark ? (
+                // A light and a dark bake of the same clip, stacked; CSS shows
+                // exactly one per theme, mirroring the image figures below. Both
+                // are muted/looping; the playback observer runs whichever is the
+                // laid-out (visible-theme) element.
+                <>
+                  <video
+                    className="fig-light"
+                    muted
+                    loop
+                    playsInline
+                    controls={controls || undefined}
+                    disablePictureInPicture
+                    controlsList="nodownload noplaybackrate noremoteplayback"
+                    preload={i < 2 ? "metadata" : "none"}
+                    poster={item.poster || undefined}
+                    tabIndex={-1}
+                    aria-hidden={item.caption ? undefined : true}
+                  >
+                    <source src={item.src} />
+                  </video>
+                  <video
+                    className="fig-dark"
+                    muted
+                    loop
+                    playsInline
+                    controls={controls || undefined}
+                    disablePictureInPicture
+                    controlsList="nodownload noplaybackrate noremoteplayback"
+                    preload={i < 2 ? "metadata" : "none"}
+                    poster={item.posterDark || item.poster || undefined}
+                    tabIndex={-1}
+                    aria-hidden
+                  >
+                    <source src={item.srcDark} />
+                  </video>
+                </>
+              ) : isVideo(item) ? (
                 // No controls by default: a demo clip should read as a moving
                 // picture, not a video player. Nothing appears on hover, there
                 // is nothing to pause or scrub, and pointer events fall through

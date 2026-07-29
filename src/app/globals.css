@@ -942,6 +942,17 @@ h6 {
 .dark .article-content .media-carousel .media-carousel__frame > img.fig-dark {
   display: block;
 }
+/* Same swap for clip twins — the frame > video rule pins display:block at a
+   higher specificity than a bare .fig-dark, so out-specify it here too. */
+.article-content .media-carousel .media-carousel__frame > video.fig-dark {
+  display: none;
+}
+.dark .article-content .media-carousel .media-carousel__frame > video.fig-light {
+  display: none;
+}
+.dark .article-content .media-carousel .media-carousel__frame > video.fig-dark {
+  display: block;
+}
 
 /* The caption lives inside the slide and travels with it — that is why a
    half-visible neighbour shows a half-visible sentence on deepmind.google.
