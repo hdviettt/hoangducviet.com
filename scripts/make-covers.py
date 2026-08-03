@@ -109,20 +109,59 @@ def wrap(body: str) -> str:
     </filter>
   </defs>
   <style>
-    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
-       then it rests. Reduced motion paints the finished frame, which is also
-       what the og:image renderer captures. */
-    .c {{ opacity: 0; animation: fill 14s ease-in-out infinite; }}
-    @keyframes fill {{ 0% {{ opacity: 0 }} 22%, 88% {{ opacity: var(--o, 1) }} 100% {{ opacity: 0 }} }}
+    /* 14s loop. Each class is a different kind of arrival, because the figures
+       are about different kinds of event: text is typed, a result appears, a
+       panel expands and pushes what is under it away, a curve is drawn.
+       `transform-box: fill-box` is what makes transform-origin mean the shape's
+       own box rather than the whole canvas.
+
+       Every animation rests on the finished figure, and reduced motion paints
+       that frame directly. The og:image renderer runs with reduced motion
+       forced, so the still it captures is always the completed drawing. */
+    .c, .type, .pop, .rise, .expandy {{ transform-box: fill-box; }}
+
+    .c {{ opacity: 0; animation: fade 14s ease-in-out infinite; }}
+    @keyframes fade {{ 0% {{ opacity: 0 }} 20%, 88% {{ opacity: var(--o, 1) }} 100% {{ opacity: 0 }} }}
+
+    /* a caret running left to right */
+    .type {{ opacity: 0; transform-origin: left center;
+             animation: type 14s cubic-bezier(0.25, 0.9, 0.3, 1) infinite; }}
+    @keyframes type {{ 0% {{ opacity: 0; transform: scaleX(0) }}
+                      6% {{ opacity: var(--o, 1); transform: scaleX(0) }}
+                      22%, 88% {{ opacity: var(--o, 1); transform: scaleX(1) }}
+                      100% {{ opacity: 0; transform: scaleX(1) }} }}
+
+    /* lands with a little overshoot, the way a result appears */
+    .pop {{ opacity: 0; transform-origin: center;
+            animation: pop 14s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }}
+    @keyframes pop {{ 0% {{ opacity: 0; transform: scale(0.6) }}
+                     18%, 88% {{ opacity: var(--o, 1); transform: scale(1) }}
+                     100% {{ opacity: 0; transform: scale(0.6) }} }}
+
+    .rise {{ opacity: 0; animation: rise 14s cubic-bezier(0.2, 0.9, 0.3, 1) infinite; }}
+    @keyframes rise {{ 0% {{ opacity: 0; transform: translateY(22px) }}
+                      20%, 88% {{ opacity: var(--o, 1); transform: translateY(0) }}
+                      100% {{ opacity: 0; transform: translateY(22px) }} }}
+
+    /* a panel opening downward, which is what pushes the links off the frame */
+    .expandy {{ opacity: 0; transform-origin: top center;
+                animation: expandy 14s cubic-bezier(0.2, 0.9, 0.25, 1) infinite; }}
+    @keyframes expandy {{ 0% {{ opacity: 0; transform: scaleY(0) }}
+                         6% {{ opacity: var(--o, 1); transform: scaleY(0) }}
+                         24%, 88% {{ opacity: var(--o, 1); transform: scaleY(1) }}
+                         100% {{ opacity: 0; transform: scaleY(0) }} }}
+
     .draw {{ stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
              animation: draw 14s ease-in-out infinite; }}
     @keyframes draw {{ 0% {{ stroke-dashoffset: var(--len, 2000) }}
                       26%, 88% {{ stroke-dashoffset: 0 }}
                       100% {{ stroke-dashoffset: var(--len, 2000) }} }}
+
     .mark {{ opacity: 0; animation: mark 14s ease infinite; }}
-    @keyframes mark {{ 0%, 34% {{ opacity: 0 }} 46%, 86% {{ opacity: 1 }} 96%, 100% {{ opacity: 0 }} }}
+    @keyframes mark {{ 0%, 40% {{ opacity: 0 }} 52%, 86% {{ opacity: 1 }} 96%, 100% {{ opacity: 0 }} }}
+
     @media (prefers-reduced-motion: reduce) {{
-      .c {{ opacity: var(--o, 1); animation: none }}
+      .c, .type, .pop, .rise, .expandy {{ opacity: var(--o, 1); transform: none; animation: none }}
       .draw {{ stroke-dashoffset: 0; animation: none }}
       .mark {{ opacity: 1; animation: none }}
     }}
@@ -146,33 +185,38 @@ def lifted(marks: str) -> str:
 # Rounded corners are unavailable on a projected quadrilateral, so these are
 # plain polygons; at this scale nobody reads the corner.
 
-def slab(p, u0, v0, u1, v1, fill=None, o=1.0, delay=0.0, stroke=None):
+def slab(p, u0, v0, u1, v1, fill=None, o=1.0, delay=0.0, stroke=None, cls="c"):
     f = fill or BLUE
     extra = f' stroke="{stroke}" stroke-width="1.2"' if stroke else ""
-    return (f'<polygon class="c" points="{p.quad(u0, v0, u1, v1)}" fill="{f}"{extra} '
+    return (f'<polygon class="{cls}" points="{p.quad(u0, v0, u1, v1)}" fill="{f}"{extra} '
             f'style="--o:{o};animation-delay:{delay:.2f}s"/>')
 
 
-def textline(p, u0, u1, v, h=0.055, o=0.22, delay=0.0, fill=None):
+def textline(p, u0, u1, v, h=0.055, o=0.22, delay=0.0, fill=None, cls="c"):
     """A line of body text, the way a wireframe draws one."""
-    return slab(p, u0, v - h / 2, u1, v + h / 2, fill or MUTED, o, delay)
+    return slab(p, u0, v - h / 2, u1, v + h / 2, fill or MUTED, o, delay, cls=cls)
 
 
 def searchbox(p, u0, u1, v, query=0.42, delay=0.0):
     """The box itself: a field, the typed query, and the button."""
     out = [slab(p, u0, v - 0.075, u1, v + 0.075, "#ffffff", 1, delay, RULE)]
-    out.append(textline(p, u0 + 0.03, u0 + 0.03 + query, v, 0.05, 0.9, delay + 0.1, BLUE))
-    out.append(slab(p, u1 - 0.075, v - 0.048, u1 - 0.02, v + 0.048, BLUE, 0.95, delay + 0.15))
+    # The query is typed, not faded in. It is the first thing that happens.
+    out.append(textline(p, u0 + 0.03, u0 + 0.03 + query, v, 0.05, 0.9, delay + 0.1, BLUE, "type"))
+    out.append(slab(p, u1 - 0.075, v - 0.048, u1 - 0.02, v + 0.048, BLUE, 0.95, delay + 0.15, cls="pop"))
     return "".join(out)
 
 
 def result(p, u0, v, w=0.62, delay=0.0, title_o=0.95):
-    """One organic result: url, blue title, two lines of snippet."""
+    """One organic result: url, blue title, two lines of snippet.
+
+    The whole block rises together, because a result appears as a unit rather
+    than assembling itself line by line.
+    """
     return "".join([
-        textline(p, u0, u0 + w * 0.34, v, 0.035, 0.35, delay),
-        textline(p, u0, u0 + w, v + 0.055, 0.052, title_o, delay + 0.04, BLUE),
-        textline(p, u0, u0 + w * 0.96, v + 0.115, 0.033, 0.20, delay + 0.08),
-        textline(p, u0, u0 + w * 0.72, v + 0.158, 0.033, 0.20, delay + 0.10),
+        textline(p, u0, u0 + w * 0.34, v, 0.035, 0.35, delay, cls="rise"),
+        textline(p, u0, u0 + w, v + 0.055, 0.052, title_o, delay + 0.02, BLUE, "rise"),
+        textline(p, u0, u0 + w * 0.96, v + 0.115, 0.033, 0.20, delay + 0.04, cls="rise"),
+        textline(p, u0, u0 + w * 0.72, v + 0.158, 0.033, 0.20, delay + 0.06, cls="rise"),
     ])
 
 
@@ -192,7 +236,7 @@ def crawling() -> str:
             x, y = p(u, v)
             rad = 9.5 - ring * 1.35
             o = 0.9 - ring * 0.15
-            out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="{rad:.1f}" fill="{BLUE}" '
+            out.append(f'<circle class="pop" cx="{x:.1f}" cy="{y:.1f}" r="{rad:.1f}" fill="{BLUE}" '
                        f'style="--o:{o:.2f};animation-delay:{ring * 0.5 + k * 0.02:.2f}s"/>')
             if ring:
                 px, py = p(seed[0] + (r - 0.115) * math.cos(a), seed[1] + (r - 0.115) * math.sin(a) * 1.02)
@@ -297,7 +341,7 @@ def pagerank() -> str:
                    f'stroke="{BLUE}" stroke-width="1.1" style="--o:0.26;animation-delay:{i * 0.05:.2f}s"/>')
     for i, (u, v, r) in enumerate(nodes):
         x, y = p(u, v)
-        out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="{7 + r * 22:.1f}" fill="{BLUE}" '
+        out.append(f'<circle class="pop" cx="{x:.1f}" cy="{y:.1f}" r="{7 + r * 22:.1f}" fill="{BLUE}" '
                    f'style="--o:{0.32 + r * 0.55:.2f};animation-delay:{0.3 + i * 0.06:.2f}s"/>')
     nx, ny = p(0.50, 0.46)
     return wrap(lifted("".join(out))
@@ -310,11 +354,11 @@ def ai_overviews() -> str:
     p = Plane(516, 314, 690, 470, 1, 1)
     out = [slab(p, 0.02, 0.02, 0.98, 0.98, "#ffffff", 1, 0, RULE)]
     out.append(searchbox(p, 0.08, 0.92, 0.13, 0.50, 0.1))
-    out.append(slab(p, 0.06, 0.24, 0.94, 0.56, ACCENT, 0.10, 0.35))
+    out.append(slab(p, 0.06, 0.24, 0.94, 0.56, ACCENT, 0.10, 0.35, cls="expandy"))
     for i, w in enumerate([0.74, 0.80, 0.66, 0.44]):
-        out.append(textline(p, 0.10, 0.10 + w, 0.30 + i * 0.055, 0.036, 0.42, 0.45 + i * 0.06, BLUE))
+        out.append(textline(p, 0.10, 0.10 + w, 0.30 + i * 0.055, 0.036, 0.42, 0.45 + i * 0.06, BLUE, "type"))
     for k in range(4):
-        out.append(slab(p, 0.10 + k * 0.075, 0.505, 0.155 + k * 0.075, 0.535, BLUE, 0.55, 0.75 + k * 0.05))
+        out.append(slab(p, 0.10 + k * 0.075, 0.505, 0.155 + k * 0.075, 0.535, BLUE, 0.55, 0.75 + k * 0.05, cls="pop"))
     for i in range(2):
         out.append(result(p, 0.08, 0.63 + i * 0.20, 0.62, 0.95 + i * 0.1, 0.45))
     nx, ny = p(0.94, 0.40)
@@ -353,17 +397,17 @@ def ai_mode() -> str:
     chips = [(0.09, 0.24), (0.35, 0.20), (0.60, 0.26), (0.09, 0.19), (0.31, 0.23), (0.57, 0.21)]
     for k, (u, w) in enumerate(chips):
         v = 0.29 if k < 3 else 0.375
-        out.append(slab(p, u, v - 0.032, u + w, v + 0.032, BLUE, 0.13, 0.4 + k * 0.06))
-        out.append(textline(p, u + 0.02, u + w - 0.03, v, 0.03, 0.45, 0.45 + k * 0.06, BLUE))
+        out.append(slab(p, u, v - 0.032, u + w, v + 0.032, BLUE, 0.13, 0.4 + k * 0.06, cls="pop"))
+        out.append(textline(p, u + 0.02, u + w - 0.03, v, 0.03, 0.45, 0.45 + k * 0.06, BLUE, "pop"))
     for k, (u, w) in enumerate(chips):
         v = 0.29 if k < 3 else 0.375
         sx, sy = p(u + w / 2, v + 0.04)
         ex, ey = p(0.5, 0.52)
         out.append(f'<line class="c" x1="{sx:.1f}" y1="{sy:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" '
                    f'stroke="{BLUE}" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/>')
-    out.append(slab(p, 0.06, 0.55, 0.94, 0.93, ACCENT, 0.10, 0.95))
+    out.append(slab(p, 0.06, 0.55, 0.94, 0.93, ACCENT, 0.10, 0.95, cls="expandy"))
     for i, w in enumerate([0.78, 0.82, 0.70, 0.76, 0.50]):
-        out.append(textline(p, 0.10, 0.10 + w, 0.61 + i * 0.062, 0.036, 0.40, 1.05 + i * 0.05, BLUE))
+        out.append(textline(p, 0.10, 0.10 + w, 0.61 + i * 0.062, 0.036, 0.40, 1.05 + i * 0.05, BLUE, "type"))
     nx, ny = p(0.83, 0.33)
     return wrap(lifted("".join(out))
                 + note(nx + 30, ny, ["six searches the user", "never typed"]))
@@ -408,7 +452,7 @@ def chinese_wisdom() -> str:
             embedded = (r, c) == (1, 2)
             out.append(slab(p, u, v, u + 0.13, v + 0.13,
                             ACCENT if embedded else BLUE,
-                            0.9 if embedded else 0.20, 0.55 + (r * 4 + c) * 0.04))
+                            0.9 if embedded else 0.20, 0.55 + (r * 4 + c) * 0.04, cls="pop"))
     out.append(slab(p, 1.18, 0.84, 1.84, 0.90, BLUE, 0.14, 0.95))
     nx, ny = p(1.62, 0.45)
     return wrap(lifted("".join(out))
@@ -435,12 +479,12 @@ def vibe_code_rush() -> str:
     for k, (u, label) in enumerate(ships):
         late = k >= 3
         top = 0.74 - h
-        out.append(slab(p, u, top, u + w, 0.74, "#ffffff", 1, k * 0.13, RULE))
+        out.append(slab(p, u, top, u + w, 0.74, "#ffffff", 1, k * 0.13, RULE, cls="rise"))
         out.append(slab(p, u, top, u + w, top + 0.052, ACCENT if late else BLUE,
-                        0.9, k * 0.13 + 0.04))
+                        0.9, k * 0.13 + 0.04, cls="rise"))
         for i, ww in enumerate([0.72, 0.86, 0.54, 0.80, 0.46]):
             out.append(textline(p, u + 0.014, u + 0.014 + (w - 0.028) * ww,
-                                top + 0.11 + i * 0.062, 0.030, 0.22, k * 0.13 + 0.07 + i * 0.02))
+                                top + 0.11 + i * 0.062, 0.030, 0.22, k * 0.13 + 0.07 + i * 0.02, cls="rise"))
         tick_x, tick_y = p(u + w / 2, 0.74)
         out.append(f'<line x1="{tick_x:.1f}" y1="{tick_y:.1f}" x2="{tick_x:.1f}" '
                    f'y2="{tick_y + 8:.1f}" stroke="{MUTED}" stroke-width="1.1"/>')
@@ -468,11 +512,11 @@ def keyword_clustering() -> str:
             if not (0.03 < u < 0.97 and 0.03 < v < 0.97):
                 continue
             x, y = p(u, v)
-            out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{BLUE}" '
+            out.append(f'<circle class="pop" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{BLUE}" '
                        f'style="--o:{0.45 + 0.1 * (ci % 3):.2f};animation-delay:{ci * 0.12 + k * 0.01:.2f}s"/>')
     for u, v in [(0.10, 0.52), (0.46, 0.46), (0.90, 0.28), (0.20, 0.88), (0.88, 0.84), (0.50, 0.06)]:
         x, y = p(u, v)
-        out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{ACCENT}" '
+        out.append(f'<circle class="pop" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{ACCENT}" '
                    f'style="--o:0.9;animation-delay:1.3s"/>')
     nx, ny = p(0.90, 0.28)
     return wrap(lifted("".join(out))
@@ -526,18 +570,18 @@ def cms_pipeline() -> str:
     out = []
     out.append(slab(p, 0.05, 0.06, 0.92, 0.94, "#ffffff", 1, 0, RULE))
     for i, w in enumerate([0.62, 0.70, 0.55, 0.68, 0.44, 0.66, 0.38]):
-        out.append(textline(p, 0.12, 0.12 + w * 0.9, 0.17 + i * 0.105, 0.045, 0.24, 0.1 + i * 0.04))
+        out.append(textline(p, 0.12, 0.12 + w * 0.9, 0.17 + i * 0.105, 0.045, 0.24, 0.1 + i * 0.04, cls="type"))
     out.append(slab(p, 1.06, 0.06, 1.93, 0.94, "#ffffff", 1, 0.5, RULE))
     checks = [True, True, False, True, True, False, True]
     for i, ok in enumerate(checks):
         v = 0.17 + i * 0.105
         col = ACCENT if ok else BLUE
-        out.append(slab(p, 1.13, v - 0.03, 1.19, v + 0.03, col, 0.9 if ok else 0.22, 0.6 + i * 0.05))
-        out.append(textline(p, 1.23, 1.23 + (0.5 if ok else 0.34), v, 0.04, 0.22, 0.62 + i * 0.05))
+        out.append(slab(p, 1.13, v - 0.03, 1.19, v + 0.03, col, 0.9 if ok else 0.22, 0.6 + i * 0.05, cls="pop"))
+        out.append(textline(p, 1.23, 1.23 + (0.5 if ok else 0.34), v, 0.04, 0.22, 0.62 + i * 0.05, cls="type"))
     out.append(slab(p, 2.07, 0.06, 2.94, 0.94, "#ffffff", 1, 1.1, RULE))
-    out.append(textline(p, 2.14, 2.72, 0.16, 0.055, 0.9, 1.2, BLUE))
+    out.append(textline(p, 2.14, 2.72, 0.16, 0.055, 0.9, 1.2, BLUE, "rise"))
     for i, w in enumerate([0.68, 0.74, 0.60, 0.70, 0.46]):
-        out.append(textline(p, 2.14, 2.14 + w, 0.28 + i * 0.088, 0.04, 0.22, 1.25 + i * 0.04))
+        out.append(textline(p, 2.14, 2.14 + w, 0.28 + i * 0.088, 0.04, 0.22, 1.25 + i * 0.04, cls="rise"))
     nx, ny = p(1.93, 0.485)
     return wrap(lifted("".join(out))
                 + note(nx + 26, ny, ["two rules it failed,", "so it went back"])
