@@ -14,10 +14,10 @@ const path = require("node:path");
 const { Pool } = require("pg");
 
 const SLUG = "i-wrote-a-transformer-by-hand";
-const TITLE = "I wrote a transformer by hand to replace a model I downloaded";
+const TITLE = "I tried to train a cross-encoder from scratch and it sucked";
 // Under 160 characters, because past that Google truncates it mid-sentence.
 const DESCRIPTION =
-  "I rebuilt my search engine's cross-encoder from scratch and measured it. It lost, and my evaluation turned out to be measuring keyword overlap.";
+  "I rebuilt my search engine's cross-encoder from scratch. It barely beat counting keywords, and my evaluation turned out to be measuring keyword overlap.";
 const THUMBNAIL = "/covers/i-wrote-a-transformer-by-hand.svg";
 const SOURCE = path.join(
   __dirname,
