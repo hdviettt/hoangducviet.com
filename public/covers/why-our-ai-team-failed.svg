@@ -1,110 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#FFFCF0"/>
-      <stop offset="1" stop-color="#FFF6D9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 11s loop: the AI bot joins a two-person team (green spark of hope).
-         Then, instead of the team shrinking, MORE people keep joining and
-         the money stack keeps climbing — until the yellow warning pops.
-         Yellow-led palette: the warning-sign cover of the set. */
-      .bot, .hope, .p3, .p4, .p5, .m3, .m4, .m5, .m6, .warn { opacity: 0; transform-box: fill-box; transform-origin: center; }
-      .bot { animation: bt 11s ease-out infinite; }
-      @keyframes bt { 0%, 6% { opacity: 0; transform: translateY(10px) scale(0.85); } 10% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .hope { animation: hp 11s ease-out infinite; }
-      @keyframes hp { 0%, 10% { opacity: 0; transform: scale(0.4); } 14% { opacity: 1; transform: scale(1.1); } 18% { opacity: 1; transform: scale(1); } 24% { opacity: 0; transform: scale(0.6); } 100% { opacity: 0; } }
-      .p3 { animation: pp3 11s ease-out infinite; }
-      .p4 { animation: pp4 11s ease-out infinite; }
-      .p5 { animation: pp5 11s ease-out infinite; }
-      @keyframes pp3 { 0%, 20% { opacity: 0; transform: translateY(10px) scale(0.85); } 24% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      @keyframes pp4 { 0%, 30% { opacity: 0; transform: translateY(10px) scale(0.85); } 34% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      @keyframes pp5 { 0%, 40% { opacity: 0; transform: translateY(10px) scale(0.85); } 44% { opacity: 1; transform: translateY(0) scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .m3 { animation: mm3 11s ease-out infinite; }
-      .m4 { animation: mm4 11s ease-out infinite; }
-      .m5 { animation: mm5 11s ease-out infinite; }
-      .m6 { animation: mm6 11s ease-out infinite; }
-      @keyframes mm3 { 0%, 24% { opacity: 0; transform: translateY(8px); } 28% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      @keyframes mm4 { 0%, 34% { opacity: 0; transform: translateY(8px); } 38% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      @keyframes mm5 { 0%, 44% { opacity: 0; transform: translateY(8px); } 48% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      @keyframes mm6 { 0%, 50% { opacity: 0; transform: translateY(8px); } 54% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .warn { animation: wr 11s ease-out infinite; }
-      @keyframes wr { 0%, 56% { opacity: 0; transform: scale(0.4); } 61% { opacity: 1; transform: scale(1.15); } 66% { transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .drift1 { animation: d1 20s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 26s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(20px, -14px); } }
-      @keyframes d2 { to { transform: translate(-16px, 12px); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .bot, .p3, .p4, .p5, .m3, .m4, .m5, .m6, .warn { opacity: 1; }
-        .hope { opacity: 0; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="230" cy="480" r="200" fill="#FFE58A" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1010" cy="150" r="190" fill="#B8C9FF" fill-opacity="0.45" filter="url(#soft)"/>
-
-  <!-- the team card, echoed -->
-  <rect x="352" y="172" width="560" height="350" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.16" stroke-width="2.5"/>
-  <rect x="336" y="156" width="560" height="350" rx="24" fill="none" stroke="url(#brand)" stroke-opacity="0.32" stroke-width="2.5"/>
-  <rect x="320" y="140" width="560" height="350" rx="24" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
-  <line x1="360" y1="340" x2="840" y2="340" stroke="#E1E6EC" stroke-width="2"/>
-
-  <!-- the team it started with -->
-  <circle cx="390" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.9"/>
-  <rect x="364" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.9"/>
-  <circle cx="466" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.7"/>
-  <rect x="440" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.7"/>
-
-  <!-- the bot that was going to fix everything -->
-  <g class="bot">
-    <line x1="542" y1="238" x2="542" y2="228" stroke="#0fd6f7" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="542" cy="224" r="4" fill="#0fd6f7"/>
-    <rect x="524" y="244" width="36" height="32" rx="9" fill="url(#brand)"/>
-    <circle cx="534" cy="258" r="3.5" fill="#FFFFFF"/>
-    <circle cx="550" cy="258" r="3.5" fill="#FFFFFF"/>
-    <rect x="516" y="286" width="52" height="40" rx="15" fill="url(#brand)"/>
-  </g>
-  <g class="hope">
-    <path d="M 588 196 Q 593.6 213.6 610 218.5 Q 593.6 223.4 588 241 Q 582.4 223.4 566 218.5 Q 582.4 213.6 588 196 Z" fill="#07ef9c"/>
-  </g>
-
-  <!-- ...and the people who kept arriving anyway -->
-  <g class="p3">
-    <circle cx="618" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.8"/>
-    <rect x="592" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.8"/>
-  </g>
-  <g class="p4">
-    <circle cx="694" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.65"/>
-    <rect x="668" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.65"/>
-  </g>
-  <g class="p5">
-    <circle cx="770" cy="262" r="15" fill="#7E9BF7" fill-opacity="0.5"/>
-    <rect x="744" y="286" width="52" height="40" rx="15" fill="#7E9BF7" fill-opacity="0.5"/>
-  </g>
-
-  <!-- the money stack that kept climbing -->
-  <rect x="806" y="452" width="52" height="16" rx="8" fill="#7E9BF7" fill-opacity="0.8"/>
-  <rect x="806" y="432" width="52" height="16" rx="8" fill="#86F7CC"/>
-  <g class="m3"><rect x="806" y="412" width="52" height="16" rx="8" fill="#7E9BF7" fill-opacity="0.8"/></g>
-  <g class="m4"><rect x="806" y="392" width="52" height="16" rx="8" fill="#86F7CC"/></g>
-  <g class="m5"><rect x="806" y="372" width="52" height="16" rx="8" fill="#7E9BF7" fill-opacity="0.8"/></g>
-  <g class="m6">
-    <rect x="806" y="352" width="52" height="16" rx="8" fill="#FFD84D"/>
-    <text x="832" y="345" font-size="22" font-weight="700" fill="#B98A00" text-anchor="middle">$</text>
-  </g>
-
-  <!-- the verdict -->
-  <g class="warn">
-    <path d="M 880 268 Q 887 288.4 907 294 Q 887 299.6 880 320 Q 873 299.6 853 294 Q 873 288.4 880 268 Z" fill="#ffce00"/>
-  </g>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><polygon class="c" points="205.0,158.8 466.2,158.8 466.7,197.4 207.6,197.4" fill="#004aef" style="--o:0.7;animation-delay:0.00s"/><polygon class="c" points="466.2,158.8 827.0,158.8 824.4,197.4 466.7,197.4" fill="#004aef" style="--o:0.08;animation-delay:0.00s"/><text x="192.3" y="183.2" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">a blueprint for the org</text><polygon class="c" points="210.0,232.5 393.6,232.5 394.6,269.9 212.5,269.9" fill="#004aef" style="--o:0.7;animation-delay:0.10s"/><polygon class="c" points="393.6,232.5 822.0,232.5 819.5,269.9 394.6,269.9" fill="#004aef" style="--o:0.08;animation-delay:0.10s"/><text x="197.2" y="256.3" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">infrastructure that fits</text><polygon class="c" points="214.8,303.8 359.4,303.8 360.6,340.0 217.2,340.0" fill="#004aef" style="--o:0.7;animation-delay:0.20s"/><polygon class="c" points="359.4,303.8 817.2,303.8 814.8,340.0 360.6,340.0" fill="#004aef" style="--o:0.08;animation-delay:0.20s"/><text x="202.0" y="327.0" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">documented competencies</text><polygon class="c" points="219.4,372.9 545.7,372.9 545.4,408.0 221.8,408.0" fill="#004aef" style="--o:0.7;animation-delay:0.30s"/><polygon class="c" points="545.7,372.9 812.6,372.9 810.2,408.0 545.4,408.0" fill="#004aef" style="--o:0.08;animation-delay:0.30s"/><text x="206.6" y="395.6" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">individual capability</text><polygon class="c" points="224.0,440.0 329.1,440.0 330.6,474.0 226.3,474.0" fill="#004aef" style="--o:0.7;animation-delay:0.40s"/><polygon class="c" points="329.1,440.0 808.0,440.0 805.7,474.0 330.6,474.0" fill="#004aef" style="--o:0.08;animation-delay:0.40s"/><text x="211.1" y="462.0" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">middle management</text><line x1="828.2" y1="140.8" x2="804.7" y2="489.5" stroke="#c2410c" stroke-width="1.6"/></g><g class="mark"><line x1="808.7" y1="315.2" x2="850.7" y2="315.2" stroke="#c2410c" stroke-width="1.2"/><text x="860.7" y="309.2" font-size="17" fill="#c2410c">where each of them</text><text x="860.7" y="331.2" font-size="17" fill="#c2410c">needed to be</text></g><text x="330.0" y="566.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">five things I owned</text>
 </svg>

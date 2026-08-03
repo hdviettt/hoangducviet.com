@@ -357,6 +357,230 @@ def measuring() -> str:
                 + text(None, 480, 566, "nDCG@10 across fifty labelled queries", 14, MUTED, "start"))
 
 
+# ------------------------------------------------- the standalone essays
+
+def chinese_wisdom() -> str:
+    """Where the AI lives. A separate destination nobody visits, against a
+    function embedded in the surface people are already inside all day."""
+    p = Plane(516, 320, 660, 430, 2, 8)
+    out = []
+    for i in range(8):
+        o = 0.16 + 0.04 * (i % 3)
+        out.append(f'<polygon class="c" points="{p.quad(0.04, i + 0.18, 0.42, i + 0.82)}" '
+                   f'fill="{BLUE}" style="--o:{o:.2f};animation-delay:{i * 0.05:.2f}s"/>')
+    out.append(f'<polygon class="c" points="{p.quad(1.10, 0.18, 1.96, 7.82)}" fill="{BLUE}" '
+               f'style="--o:0.12;animation-delay:0.5s"/>')
+    for i in range(8):
+        out.append(f'<polygon class="c" points="{p.quad(1.20, i + 0.28, 1.86, i + 0.72)}" '
+                   f'fill="{BLUE}" style="--o:0.78;animation-delay:{0.7 + i * 0.05:.2f}s"/>')
+    nx, ny = p(1.96, 4)
+    return wrap(lifted("".join(out))
+                + note(nx + 34, ny, ["one surface people are", "already inside all day"])
+                + text(None, 196, 96, "a place to go", 14, MUTED, "start")
+                + text(None, 560, 96, "somewhere they already are", 14, MUTED, "start"))
+
+
+def vibe_code_rush() -> str:
+    """How fast a product now gets built, using the post's own four numbers."""
+    p = Plane(516, 322, 620, 420, 1, 4)
+    rows = [("first product", 30 * 24, "30 days"), ("second", 15 * 24, "15 days"),
+            ("later ones", 4, "4 hours"), ("now", 1, "1 hour")]
+    top = rows[0][1]
+    out = []
+    for i, (name, hours, label) in enumerate(rows):
+        w = max(0.012, hours / top)
+        last = i == len(rows) - 1
+        out.append(f'<polygon class="c" points="{p.quad(0, i + 0.22, w, i + 0.78)}" '
+                   f'fill="{WARM if last else BLUE}" style="--o:{1 if last else 0.85};'
+                   f'animation-delay:{i * 0.12:.2f}s"/>')
+        lx, ly = p(0, i + 0.5)
+        out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
+        vx, vy = p(w, i + 0.5)
+        out.append(text(None, vx + 12, vy + 5, label, 14, INK, "start", "500"))
+    nx, ny = p(0.02, 3.5)
+    return wrap(lifted("".join(out))
+                + note(nx + 150, ny, ["from a month", "to an hour"])
+                + text(None, 300, 566, "time to ship one product, same builder", 14, MUTED, "start"))
+
+
+def keyword_clustering() -> str:
+    """HDBSCAN over embedded keywords: dense groups, and the outliers it refuses
+    to force into one."""
+    p = Plane(516, 318, 640, 450, 1, 1)
+    centres = [(0.24, 0.30, 22), (0.58, 0.22, 17), (0.76, 0.55, 20), (0.34, 0.68, 18), (0.62, 0.80, 12)]
+    out = []
+    n = 0
+    for ci, (cu, cv, count) in enumerate(centres):
+        for k in range(count):
+            a = 2.399963 * n
+            r = 0.052 * math.sqrt(k + 1) / math.sqrt(count) * 2.4
+            u, v = cu + r * math.cos(a), cv + r * math.sin(a)
+            n += 1
+            if not (0.03 < u < 0.97 and 0.03 < v < 0.97):
+                continue
+            x, y = p(u, v)
+            out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{BLUE}" '
+                       f'style="--o:{0.45 + 0.1 * (ci % 3):.2f};animation-delay:{ci * 0.12 + k * 0.01:.2f}s"/>')
+    for u, v in [(0.10, 0.52), (0.46, 0.46), (0.90, 0.28), (0.20, 0.88), (0.88, 0.84), (0.50, 0.06)]:
+        x, y = p(u, v)
+        out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{WARM}" '
+                   f'style="--o:0.9;animation-delay:1.3s"/>')
+    nx, ny = p(0.90, 0.28)
+    return wrap(lifted("".join(out))
+                + note(nx + 30, ny, ["outliers, left out", "rather than forced in"])
+                + text(None, 180, 96, "keywords, embedded and grouped", 14, MUTED, "start"))
+
+
+def team_failed() -> str:
+    """Five things owned, five things short of where they needed to be."""
+    p = Plane(516, 322, 600, 420, 1, 5)
+    rows = [("a blueprint for the org", 0.42), ("infrastructure that fits", 0.30),
+            ("documented competencies", 0.24), ("individual capability", 0.55),
+            ("middle management", 0.18)]
+    out = []
+    for i, (name, v) in enumerate(rows):
+        out.append(f'<polygon class="c" points="{p.quad(0, i + 0.24, v, i + 0.76)}" '
+                   f'fill="{BLUE}" style="--o:0.7;animation-delay:{i * 0.1:.2f}s"/>')
+        out.append(f'<polygon class="c" points="{p.quad(v, i + 0.24, 1.0, i + 0.76)}" '
+                   f'fill="{BLUE}" style="--o:0.08;animation-delay:{i * 0.1:.2f}s"/>')
+        lx, ly = p(0, i + 0.5)
+        out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
+    x0, y0 = p(1.0, 0)
+    x1, y1 = p(1.0, 5)
+    out.append(f'<line x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" '
+               f'stroke="{WARM}" stroke-width="1.6"/>')
+    return wrap(lifted("".join(out))
+                + note(x1 + 46, (y0 + y1) / 2, ["where each of them", "needed to be"])
+                + text(None, 330, 566, "five things I owned", 14, MUTED, "start"))
+
+
+def blueprint() -> str:
+    """55 agents mapped across operations, and the reality check two months on."""
+    p = Plane(516, 318, 620, 440, 11, 5)
+    out = []
+    survived = {0, 1, 2, 5, 6, 11, 12, 13, 17, 22, 23, 24, 28, 33, 34, 39, 44, 45, 50}
+    for k in range(55):
+        r, c = divmod(k, 11)
+        alive = k in survived
+        out.append(f'<polygon class="c" points="{p.quad(c + 0.16, r + 0.16, c + 0.84, r + 0.84)}" '
+                   f'fill="{BLUE}" style="--o:{0.9 if alive else 0.13};'
+                   f'animation-delay:{k * 0.018:.2f}s"/>')
+    nx, ny = p(11, 2.5)
+    return wrap(lifted("".join(out))
+                + note(nx + 30, ny, ["what was still running", "two months later"])
+                + text(None, 240, 100, "55 agents mapped across operations", 14, MUTED, "start"))
+
+
+def cms_pipeline() -> str:
+    """One model call, and how much of its answer survives the rules."""
+    p = Plane(516, 320, 620, 420, 1, 3)
+    rows = [("what the model wrote", 1.0, 0.30), ("what passed the rules", 0.62, 0.62),
+            ("what got published", 0.48, 1.0)]
+    out = []
+    for i, (name, w, o) in enumerate(rows):
+        last = i == len(rows) - 1
+        out.append(f'<polygon class="c" points="{p.quad(0, i + 0.22, w, i + 0.78)}" '
+                   f'fill="{WARM if last else BLUE}" style="--o:{o};animation-delay:{i * 0.14:.2f}s"/>')
+        lx, ly = p(0, i + 0.5)
+        out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
+    nx, ny = p(0.48, 2.5)
+    return wrap(lifted("".join(out))
+                + note(nx + 40, ny, ["one call, and the half", "of it worth keeping"])
+                + text(None, 330, 566, "a single generation, then the checks", 14, MUTED, "start"))
+
+
+def agent_platform() -> str:
+    """Procedures are the asset. One tree of them, read by every agent."""
+    p = Plane(516, 318, 620, 450, 1, 1)
+    out = []
+    proc = [(0.5, 0.10), (0.30, 0.26), (0.70, 0.26), (0.20, 0.42), (0.40, 0.42), (0.60, 0.42), (0.82, 0.42)]
+    links = [(0, 1), (0, 2), (1, 3), (1, 4), (2, 5), (2, 6)]
+    for i, (a, b) in enumerate(links):
+        x0, y0 = p(*proc[a])
+        x1, y1 = p(*proc[b])
+        out.append(f'<line class="c" x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" '
+                   f'stroke="{BLUE}" stroke-width="1.3" style="--o:0.3;animation-delay:{i * 0.06:.2f}s"/>')
+    for i, (u, v) in enumerate(proc):
+        x, y = p(u, v)
+        out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="{13 if i == 0 else 9}" '
+                   f'fill="{BLUE}" style="--o:{0.95 if i == 0 else 0.7};animation-delay:{i * 0.06:.2f}s"/>')
+    for k in range(9):
+        u = 0.10 + k * 0.10
+        x, y = p(u, 0.86)
+        out.append(f'<polygon class="c" points="{p.quad(u - 0.033, 0.78, u + 0.033, 0.92)}" '
+                   f'fill="{BLUE}" style="--o:0.5;animation-delay:{0.6 + k * 0.05:.2f}s"/>')
+        for src in (3, 4, 5, 6):
+            if k % 4 != (src - 3):
+                continue
+            sx, sy = p(*proc[src])
+            out.append(f'<line class="c" x1="{sx:.1f}" y1="{sy:.1f}" x2="{x:.1f}" y2="{y - 16:.1f}" '
+                       f'stroke="{BLUE}" stroke-width="1" style="--o:0.16;animation-delay:0.9s"/>')
+    nx, ny = p(0.5, 0.10)
+    return wrap(lifted("".join(out))
+                + note(nx + 40, ny, ["the procedure, written", "once, in a file"])
+                + text(None, 180, 566, "nine agents, one set of procedures", 14, MUTED, "start"))
+
+
+def seo_history() -> str:
+    """Four eras of how the words got written."""
+    p = Plane(516, 322, 640, 400, 4, 1)
+    eras = [("by hand", 0.12), ("by template", 0.30), ("by model", 0.72), ("by model, checked", 0.95)]
+    out = []
+    for i, (name, v) in enumerate(eras):
+        last = i == len(eras) - 1
+        out.append(f'<polygon class="c" points="{p.quad(i + 0.18, 1 - v, i + 0.82, 1.0)}" '
+                   f'fill="{WARM if last else BLUE}" style="--o:{1 if last else 0.35 + i * 0.2:.2f};'
+                   f'animation-delay:{i * 0.13:.2f}s"/>')
+        lx, ly = p(i + 0.5, 1.0)
+        out.append(text(None, lx, ly + 26, name, 14, MUTED))
+    x0, y0 = p(0, 1.0)
+    x1, y1 = p(4, 1.0)
+    out.insert(0, f'<line x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" stroke="{RULE}"/>')
+    nx, ny = p(3.82, 0.05)
+    return wrap(lifted("".join(out))
+                + note(nx + 30, ny, ["volume was never", "the hard part"])
+                + text(None, 190, 100, "words published per week", 14, MUTED, "start"))
+
+
+def less_agentic() -> str:
+    """Freedom against reliability. The useful place is not the far end."""
+    p = Plane(516, 320, 620, 420, 1, 1)
+    pts = [(x / 40, 1 - (0.15 + 1.55 * (x / 40) * math.exp(-2.6 * (x / 40)))) for x in range(41)]
+    out = [f'<path class="draw" d="{p.path(pts)}" fill="none" stroke="{BLUE}" stroke-width="2.6" '
+           f'style="--len:900"/>']
+    x0, y0 = p(0, 1)
+    x1, y1 = p(1, 1)
+    xt, yt = p(0, 0)
+    out.insert(0, f'<line x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" stroke="{RULE}"/>'
+                  f'<line x1="{x0:.1f}" y1="{y0:.1f}" x2="{xt:.1f}" y2="{yt:.1f}" stroke="{RULE}"/>')
+    peak = min(pts, key=lambda q: q[1])
+    px, py = p(*peak)
+    out.append(f'<circle class="c" cx="{px:.1f}" cy="{py:.1f}" r="7" fill="{WARM}" style="--o:1"/>')
+    return wrap(lifted("".join(out))
+                + note(px + 52, py - 6, ["as much freedom as", "it can be trusted with"])
+                + text(None, 190, 100, "how well it works in production", 14, MUTED, "start")
+                + text(None, 790, 566, "how much the agent decides", 14, MUTED, "start"))
+
+
+def series_search_engine() -> str:
+    """The whole series in one picture: what each stage hands the next."""
+    p = Plane(516, 320, 660, 430, 6, 1)
+    stages = [("crawl", 1.00), ("index", 0.86), ("BM25", 0.55), ("PageRank", 0.38),
+              ("rerank", 0.16), ("answer", 0.05)]
+    out = []
+    for i, (name, h) in enumerate(stages):
+        last = i == len(stages) - 1
+        out.append(f'<polygon class="c" points="{p.quad(i + 0.14, 0.5 - h / 2, i + 0.86, 0.5 + h / 2)}" '
+                   f'fill="{WARM if last else BLUE}" style="--o:{1 if last else 0.30 + i * 0.11:.2f};'
+                   f'animation-delay:{i * 0.11:.2f}s"/>')
+        lx, ly = p(i + 0.5, 1.0)
+        out.append(text(None, lx, ly + 30, name, 14, MUTED))
+    nx, ny = p(6, 0.5)
+    return wrap(lifted("".join(out))
+                + note(nx + 26, ny, ["each stage is slower", "and sees fewer"])
+                + text(None, 190, 96, "documents reaching each stage", 14, MUTED, "start"))
+
+
 COVERS = {
     "web-crawling-in-search-engines": crawling,
     "designing-the-web-crawler": crawler_design,
@@ -367,6 +591,16 @@ COVERS = {
     "neural-reranking-with-bert": reranking,
     "ai-mode": ai_mode,
     "measuring-search-quality": measuring,
+    "the-chinese-ai-wisdom": chinese_wisdom,
+    "liu-xiaopai-and-chinese-vibe-code-rush": vibe_code_rush,
+    "agentic-keyword-clustering": keyword_clustering,
+    "why-our-ai-team-failed": team_failed,
+    "an-artifact-driven-ai-initiative-blueprint": blueprint,
+    "a-cms-adaptable-llm-pipeline-for-seo-compliant-content-publishing": cms_pipeline,
+    "an-agent-platform-on-the-claude-agent-sdk": agent_platform,
+    "a-brief-history-of-seo-content-writing-with-ai": seo_history,
+    "the-less-agentic-agents-are-in-production-the-better": less_agentic,
+    "building-a-mini-search-engine": series_search_engine,
 }
 
 

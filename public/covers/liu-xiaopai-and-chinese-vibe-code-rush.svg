@@ -1,119 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#E9FBFE"/>
-      <stop offset="1" stop-color="#F8FEFF"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 11s loop: a one-line vibe ("make me an app") goes into the dark
-         editor, the AI types the actual code line by line, and shipped apps
-         pop out the other side earning their $ badges. Cyan-led palette,
-         and the set's one dark focal surface. */
-      .l1 { animation: t1 11s ease-out infinite; }
-      .l2 { animation: t2 11s ease-out infinite; }
-      .l3 { animation: t3 11s ease-out infinite; }
-      .l4 { animation: t4 11s ease-out infinite; }
-      .l5 { animation: t5 11s ease-out infinite; }
-      .l6 { animation: t6 11s ease-out infinite; }
-      .l7 { animation: t7 11s ease-out infinite; }
-      @keyframes t1 { 0%, 10% { width: 0; } 14% { width: 150px; } 96% { width: 150px; } 100% { width: 0; } }
-      @keyframes t2 { 0%, 15% { width: 0; } 19% { width: 240px; } 96% { width: 240px; } 100% { width: 0; } }
-      @keyframes t3 { 0%, 20% { width: 0; } 24% { width: 200px; } 96% { width: 200px; } 100% { width: 0; } }
-      @keyframes t4 { 0%, 25% { width: 0; } 29% { width: 264px; } 96% { width: 264px; } 100% { width: 0; } }
-      @keyframes t5 { 0%, 30% { width: 0; } 34% { width: 180px; } 96% { width: 180px; } 100% { width: 0; } }
-      @keyframes t6 { 0%, 35% { width: 0; } 39% { width: 250px; } 96% { width: 250px; } 100% { width: 0; } }
-      @keyframes t7 { 0%, 40% { width: 0; } 44% { width: 130px; } 96% { width: 130px; } 100% { width: 0; } }
-      .cursor { animation: blink 1.1s steps(1) infinite; }
-      @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-      .prompt { opacity: 0; transform-box: fill-box; transform-origin: center; animation: pr 11s ease-out infinite; }
-      @keyframes pr { 0%, 2% { opacity: 0; transform: translateY(8px); } 6% { opacity: 1; transform: translateY(0); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .app1, .app2, .d1, .d2 { opacity: 0; transform-box: fill-box; transform-origin: center; }
-      .app1 { animation: a1 11s ease-out infinite; }
-      .app2 { animation: a2 11s ease-out infinite; }
-      @keyframes a1 { 0%, 48% { opacity: 0; transform: scale(0.85); } 53% { opacity: 1; transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      @keyframes a2 { 0%, 58% { opacity: 0; transform: scale(0.85); } 63% { opacity: 1; transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .d1 { animation: dd1 11s ease-out infinite; }
-      .d2 { animation: dd2 11s ease-out infinite; }
-      @keyframes dd1 { 0%, 53% { opacity: 0; transform: scale(0.5); } 57% { opacity: 1; transform: scale(1.1); } 61% { transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      @keyframes dd2 { 0%, 63% { opacity: 0; transform: scale(0.5); } 67% { opacity: 1; transform: scale(1.1); } 71% { transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .drift1 { animation: dr1 20s ease-in-out infinite alternate; }
-      .drift2 { animation: dr2 26s ease-in-out infinite alternate; }
-      @keyframes dr1 { to { transform: translate(18px, -12px); } }
-      @keyframes dr2 { to { transform: translate(-14px, 12px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .l1 { width: 150px; } .l2 { width: 240px; } .l3 { width: 200px; }
-        .l4 { width: 264px; } .l5 { width: 180px; } .l6 { width: 250px; } .l7 { width: 130px; }
-        .prompt, .app1, .app2, .d1, .d2 { opacity: 1; }
-        .cursor { opacity: 0; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="250" cy="470" r="200" fill="#9FEFFC" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="990" cy="150" r="190" fill="#86F7CC" fill-opacity="0.45" filter="url(#soft)"/>
-
-  <!-- the vibe: one casual line in, no spec, no ticket -->
-  <g class="prompt">
-    <rect x="300" y="96" width="252" height="52" rx="26" fill="#FFFFFF" stroke="#D7E6EB" stroke-width="1.5"/>
-    <circle cx="332" cy="122" r="10" fill="url(#brand)"/>
-    <text x="354" y="131" font-size="26" font-weight="500" fill="#3A3F4B">帮我做个 App</text>
-    <path d="M 566 122 L 592 122 M 583 113 L 593 122 L 583 131" fill="none" stroke="#0fd6f7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-
-  <!-- dark editor, echoed -->
-  <rect x="322" y="216" width="400" height="300" rx="20" fill="none" stroke="url(#brand)" stroke-opacity="0.16" stroke-width="2.5"/>
-  <rect x="306" y="200" width="400" height="300" rx="20" fill="none" stroke="url(#brand)" stroke-opacity="0.32" stroke-width="2.5"/>
-  <rect x="290" y="184" width="400" height="300" rx="20" fill="#12161F"/>
-  <circle cx="318" cy="208" r="5" fill="#0fd6f7"/>
-  <circle cx="336" cy="208" r="5" fill="#07ef9c"/>
-  <circle cx="354" cy="208" r="5" fill="#ffce00"/>
-
-  <!-- the AI typing the actual code -->
-  <rect class="l1" x="322" y="240" height="12" rx="6" fill="#0fd6f7" fill-opacity="0.9"/>
-  <rect class="l2" x="346" y="266" height="12" rx="6" fill="#7E9BF7" fill-opacity="0.85"/>
-  <rect class="l3" x="346" y="292" height="12" rx="6" fill="#3f4a5c"/>
-  <rect class="l4" x="370" y="318" height="12" rx="6" fill="#2fe9a5" fill-opacity="0.85"/>
-  <rect class="l5" x="370" y="344" height="12" rx="6" fill="#ffce00" fill-opacity="0.8"/>
-  <rect class="l6" x="346" y="370" height="12" rx="6" fill="#7E9BF7" fill-opacity="0.7"/>
-  <rect class="l7" x="322" y="396" height="12" rx="6" fill="#0fd6f7" fill-opacity="0.7"/>
-  <rect class="cursor" x="322" y="424" width="14" height="18" rx="3" fill="#EAF6FF"/>
-
-  <!-- shipped apps, earning -->
-  <g class="app1">
-    <rect x="710" y="210" width="168" height="118" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#D7E6EB" stroke-width="1.5"/>
-    <circle cx="730" cy="230" r="5" fill="#0fd6f7" fill-opacity="0.8"/>
-    <rect x="724" y="248" width="140" height="10" rx="5" fill="#7E9BF7" fill-opacity="0.7"/>
-    <rect x="724" y="268" width="108" height="10" rx="5" fill="#7E9BF7" fill-opacity="0.45"/>
-    <rect x="724" y="292" width="76" height="20" rx="10" fill="url(#brand)" fill-opacity="0.85"/>
-  </g>
-  <g class="d1">
-    <circle cx="878" cy="216" r="17" fill="#07ef9c"/>
-    <text x="878" y="225" font-size="24" font-weight="700" fill="#063" text-anchor="middle">$</text>
-  </g>
-  <g class="app2">
-    <rect x="710" y="368" width="168" height="118" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#D7E6EB" stroke-width="1.5"/>
-    <circle cx="730" cy="388" r="5" fill="#07ef9c" fill-opacity="0.8"/>
-    <rect x="724" y="406" width="140" height="10" rx="5" fill="#7E9BF7" fill-opacity="0.7"/>
-    <rect x="724" y="426" width="96" height="10" rx="5" fill="#7E9BF7" fill-opacity="0.45"/>
-    <rect x="724" y="450" width="76" height="20" rx="10" fill="url(#brand)" fill-opacity="0.85"/>
-  </g>
-  <g class="d2">
-    <circle cx="878" cy="374" r="17" fill="#07ef9c"/>
-    <text x="878" y="383" font-size="24" font-weight="700" fill="#063" text-anchor="middle">$</text>
-  </g>
-
-  <g class="sparkle">
-    <path d="M 268 220 Q 274.4 240.4 294 246 Q 274.4 251.6 268 272 Q 261.6 251.6 242 246 Q 261.6 240.4 268 220 Z" fill="#ffce00"/>
-  </g>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><polygon class="c" points="194.8,161.5 837.2,161.5 833.6,213.2 198.4,213.2" fill="#004aef" style="--o:0.85;animation-delay:0.00s"/><text x="182.6" y="192.5" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">first product</text><text x="847.4" y="192.5" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">30 days</text><polygon class="c" points="201.2,253.0 516.0,253.0 516.0,302.8 204.7,302.8" fill="#004aef" style="--o:0.85;animation-delay:0.12s"/><text x="188.9" y="283.0" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">second</text><text x="528.0" y="283.0" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">15 days</text><polygon class="c" points="207.3,341.1 214.7,341.1 218.0,388.9 210.7,388.9" fill="#004aef" style="--o:0.85;animation-delay:0.24s"/><text x="195.0" y="370.1" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">later ones</text><text x="228.4" y="370.1" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">4 hours</text><polygon class="c" points="213.2,425.7 220.5,425.7 223.6,471.7 216.4,471.7" fill="#c2410c" style="--o:1;animation-delay:0.36s"/><text x="200.8" y="453.8" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">now</text><text x="234.1" y="453.8" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">1 hour</text></g><g class="mark"><line x1="334.9" y1="448.8" x2="376.9" y2="448.8" stroke="#c2410c" stroke-width="1.2"/><text x="386.9" y="442.8" font-size="17" fill="#c2410c">from a month</text><text x="386.9" y="464.8" font-size="17" fill="#c2410c">to an hour</text></g><text x="300.0" y="566.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">time to ship one product, same builder</text>
 </svg>

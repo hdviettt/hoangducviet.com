@@ -1,91 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#EBFDF4"/>
-      <stop offset="1" stop-color="#F9FFFC"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 12s loop: 融 — "to blend in". AI chips fly into the character and
-         vanish; with each one absorbed, the glyph fills a step further with
-         the brand gradient. China's wisdom: AI you stop noticing.
-         Green-led palette, type-as-illustration. */
-      .glyph { animation: fillup 12s ease-in-out infinite; }
-      @keyframes fillup {
-        0%, 14% { fill-opacity: 0.06; }
-        26% { fill-opacity: 0.06; } 30% { fill-opacity: 0.34; }
-        42% { fill-opacity: 0.34; } 46% { fill-opacity: 0.62; }
-        58% { fill-opacity: 0.62; } 62% { fill-opacity: 0.9; }
-        94% { fill-opacity: 0.9; }
-        99%, 100% { fill-opacity: 0.06; }
-      }
-      .k1, .k2, .k3 { opacity: 0; transform-box: fill-box; transform-origin: center; }
-      .k1 { animation: fly1 12s ease-in-out infinite; }
-      .k2 { animation: fly2 12s ease-in-out infinite; }
-      .k3 { animation: fly3 12s ease-in-out infinite; }
-      @keyframes fly1 { 0%, 12% { opacity: 0; transform: translate(0, 0) scale(1); } 16% { opacity: 1; } 26% { opacity: 1; transform: translate(250px, 180px) scale(0.85); } 30% { opacity: 0; transform: translate(260px, 190px) scale(0.5); } 100% { opacity: 0; transform: translate(0, 0); } }
-      @keyframes fly2 { 0%, 28% { opacity: 0; transform: translate(0, 0) scale(1); } 32% { opacity: 1; } 42% { opacity: 1; transform: translate(-220px, 160px) scale(0.85); } 46% { opacity: 0; transform: translate(-230px, 170px) scale(0.5); } 100% { opacity: 0; transform: translate(0, 0); } }
-      @keyframes fly3 { 0%, 44% { opacity: 0; transform: translate(0, 0) scale(1); } 48% { opacity: 1; } 58% { opacity: 1; transform: translate(230px, -80px) scale(0.85); } 62% { opacity: 0; transform: translate(240px, -90px) scale(0.5); } 100% { opacity: 0; transform: translate(0, 0); } }
-      .star { opacity: 0; transform-box: fill-box; transform-origin: center; animation: st 12s ease-out infinite; }
-      @keyframes st { 0%, 62% { opacity: 0; transform: scale(0.4); } 67% { opacity: 1; transform: scale(1.12); } 72% { transform: scale(1); } 94% { opacity: 1; } 99%, 100% { opacity: 0; } }
-      .tiles { animation: br 12s ease-in-out infinite; }
-      @keyframes br { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.75; } }
-      .drift1 { animation: d1 20s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 26s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(18px, -12px); } }
-      @keyframes d2 { to { transform: translate(-14px, 12px); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .glyph { fill-opacity: 0.9; }
-        .star { opacity: 1; }
-        .k1, .k2, .k3 { opacity: 0; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="250" cy="160" r="200" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift2" cx="990" cy="480" r="200" fill="#9FEFFC" fill-opacity="0.45" filter="url(#soft)"/>
-
-  <!-- the existing patterns AI melts into: a quiet app grid -->
-  <g class="tiles">
-    <rect x="736" y="120" width="64" height="64" rx="16" fill="#FFFFFF" stroke="#CBEFDC" stroke-width="2"/>
-    <rect x="816" y="120" width="64" height="64" rx="16" fill="#FFFFFF" stroke="#CBEFDC" stroke-width="2"/>
-    <rect x="736" y="200" width="64" height="64" rx="16" fill="#FFFFFF" stroke="#CBEFDC" stroke-width="2"/>
-    <rect x="816" y="200" width="64" height="64" rx="16" fill="#FFFFFF" stroke="#CBEFDC" stroke-width="2"/>
-    <circle cx="768" cy="152" r="9" fill="#07ef9c" fill-opacity="0.5"/>
-    <rect x="836" y="144" width="24" height="7" rx="3.5" fill="#0fd6f7" fill-opacity="0.5"/>
-    <rect x="836" y="157" width="17" height="7" rx="3.5" fill="#0fd6f7" fill-opacity="0.35"/>
-    <circle cx="768" cy="232" r="9" fill="#7E9BF7" fill-opacity="0.5"/>
-    <rect x="836" y="224" width="24" height="7" rx="3.5" fill="#07ef9c" fill-opacity="0.5"/>
-    <rect x="836" y="237" width="17" height="7" rx="3.5" fill="#07ef9c" fill-opacity="0.35"/>
-  </g>
-
-  <!-- 融 — fills in as AI is absorbed; echo outlines carry the signature -->
-  <text x="545" y="472" font-size="400" font-weight="700" text-anchor="middle" fill="none" stroke="url(#brand)" stroke-opacity="0.14" stroke-width="3" transform="translate(26, 26)">融</text>
-  <text class="glyph" x="545" y="472" font-size="400" font-weight="700" text-anchor="middle" fill="url(#brand)" fill-opacity="0.06" stroke="url(#brand)" stroke-width="3.5" stroke-opacity="0.85">融</text>
-
-  <!-- AI chips flying in, absorbed one by one -->
-  <g class="k1">
-    <rect x="300" y="168" width="38" height="38" rx="11" fill="url(#brand)"/>
-    <path d="M 319 176 Q 321.4 183.4 328 185.5 Q 321.4 187.6 319 195 Q 316.6 187.6 310 185.5 Q 316.6 183.4 319 176 Z" fill="#FFFFFF"/>
-  </g>
-  <g class="k2">
-    <rect x="856" y="330" width="38" height="38" rx="11" fill="url(#brand)"/>
-    <path d="M 875 338 Q 877.4 345.4 884 347.5 Q 877.4 349.6 875 357 Q 872.6 349.6 866 347.5 Q 872.6 345.4 875 338 Z" fill="#FFFFFF"/>
-  </g>
-  <g class="k3">
-    <rect x="316" y="486" width="38" height="38" rx="11" fill="url(#brand)"/>
-    <path d="M 335 494 Q 337.4 501.4 344 503.5 Q 337.4 505.6 335 513 Q 332.6 505.6 326 503.5 Q 332.6 501.4 335 494 Z" fill="#FFFFFF"/>
-  </g>
-
-  <g class="star">
-    <path d="M 762 356 Q 768.4 376.4 788 382 Q 768.4 387.6 762 408 Q 755.6 387.6 736 382 Q 755.6 376.4 762 356 Z" fill="#ffce00"/>
-  </g>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><polygon class="c" points="186.6,143.0 317.0,143.0 318.3,173.6 188.8,173.6" fill="#004aef" style="--o:0.16;animation-delay:0.00s"/><polygon class="c" points="190.0,190.7 319.0,190.7 320.3,220.7 192.1,220.7" fill="#004aef" style="--o:0.20;animation-delay:0.05s"/><polygon class="c" points="193.3,237.4 321.0,237.4 322.3,266.8 195.4,266.8" fill="#004aef" style="--o:0.24;animation-delay:0.10s"/><polygon class="c" points="196.6,283.2 323.0,283.2 324.3,312.0 198.6,312.0" fill="#004aef" style="--o:0.16;animation-delay:0.15s"/><polygon class="c" points="199.8,328.0 324.9,328.0 326.2,356.2 201.8,356.2" fill="#004aef" style="--o:0.20;animation-delay:0.20s"/><polygon class="c" points="202.9,372.0 326.8,372.0 328.0,399.6 204.9,399.6" fill="#004aef" style="--o:0.24;animation-delay:0.25s"/><polygon class="c" points="206.0,415.1 328.7,415.1 329.9,442.2 207.9,442.2" fill="#004aef" style="--o:0.16;animation-delay:0.30s"/><polygon class="c" points="209.0,457.3 330.5,457.3 331.7,483.9 210.9,483.9" fill="#004aef" style="--o:0.20;animation-delay:0.35s"/><polygon class="c" points="550.3,143.0 845.4,143.0 821.1,483.9 547.8,483.9" fill="#004aef" style="--o:0.12;animation-delay:0.5s"/><polygon class="c" points="584.6,147.8 810.8,147.8 809.4,168.9 584.2,168.9" fill="#004aef" style="--o:0.78;animation-delay:0.70s"/><polygon class="c" points="583.8,195.4 807.8,195.4 806.4,216.0 583.5,216.0" fill="#004aef" style="--o:0.78;animation-delay:0.75s"/><polygon class="c" points="583.2,242.0 804.8,242.0 803.5,262.2 582.9,262.2" fill="#004aef" style="--o:0.78;animation-delay:0.80s"/><polygon class="c" points="582.5,287.7 801.9,287.7 800.6,307.5 582.2,307.5" fill="#004aef" style="--o:0.78;animation-delay:0.85s"/><polygon class="c" points="581.8,332.4 799.0,332.4 797.8,351.9 581.5,351.9" fill="#004aef" style="--o:0.78;animation-delay:0.90s"/><polygon class="c" points="581.2,376.3 796.2,376.3 795.0,395.3 580.9,395.3" fill="#004aef" style="--o:0.78;animation-delay:0.95s"/><polygon class="c" points="580.5,419.3 793.5,419.3 792.3,438.0 580.2,438.0" fill="#004aef" style="--o:0.78;animation-delay:1.00s"/><polygon class="c" points="579.9,461.5 790.8,461.5 789.6,479.8 579.6,479.8" fill="#004aef" style="--o:0.78;animation-delay:1.05s"/></g><g class="mark"><line x1="824.8" y1="320.0" x2="866.8" y2="320.0" stroke="#c2410c" stroke-width="1.2"/><text x="876.8" y="314.0" font-size="17" fill="#c2410c">one surface people are</text><text x="876.8" y="336.0" font-size="17" fill="#c2410c">already inside all day</text></g><text x="196.0" y="96.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">a place to go</text><text x="560.0" y="96.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">somewhere they already are</text>
 </svg>
