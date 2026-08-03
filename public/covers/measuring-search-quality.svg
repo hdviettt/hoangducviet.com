@@ -1,177 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <clipPath id="sheet">
-      <rect x="470" y="150" width="560" height="330" rx="24"/>
-    </clipPath>
-    <style>
-      /* 12s loop: a ranked list is measured, each row scores itself, and the
-         one that was fourth turns out to be first. Measuring changes the order. */
-
-      /* the measuring pass sweeps the sheet */
-      .scan { opacity: 0; animation: scan 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes scan {
-        0%, 6%   { opacity: 0; transform: translateY(0); }
-        12%      { opacity: 1; }
-        46%      { opacity: 1; transform: translateY(264px); }
-        54%      { opacity: 0; transform: translateY(264px); }
-        100%     { opacity: 0; transform: translateY(264px); }
-      }
-
-      /* each row scores as the pass reaches it */
-      .sc { width: 0px; }
-      .sc1 { animation: s1 12s ease-out infinite; animation-delay: 1.7s; }
-      .sc2 { animation: s2 12s ease-out infinite; animation-delay: 2.4s; }
-      .sc3 { animation: s3 12s ease-out infinite; animation-delay: 3.1s; }
-      .sc4 { animation: s4 12s ease-out infinite; animation-delay: 3.8s; }
-      @keyframes s1 { 0%,2%{width:0px} 12%{width:96px} 88%{width:96px} 96%,100%{width:0px} }
-      @keyframes s2 { 0%,2%{width:0px} 12%{width:58px} 88%{width:58px} 96%,100%{width:0px} }
-      @keyframes s3 { 0%,2%{width:0px} 12%{width:74px} 88%{width:74px} 96%,100%{width:0px} }
-      @keyframes s4 { 0%,2%{width:0px} 12%{width:186px} 88%{width:186px} 96%,100%{width:0px} }
-
-      /* the reorder: the bottom row rises to the top, the top row steps down */
-      .rowD { animation: rise 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes rise {
-        0%, 56% { transform: translateY(0); }
-        66%     { transform: translateY(-264px); }
-        90%     { transform: translateY(-264px); }
-        98%,100%{ transform: translateY(0); }
-      }
-      .rowA { animation: step 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes step {
-        0%, 56% { transform: translateY(0); }
-        66%     { transform: translateY(88px); }
-        90%     { transform: translateY(88px); }
-        98%,100%{ transform: translateY(0); }
-      }
-      .rowB { animation: stepB 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes stepB {
-        0%, 56% { transform: translateY(0); }
-        66%     { transform: translateY(88px); }
-        90%     { transform: translateY(88px); }
-        98%,100%{ transform: translateY(0); }
-      }
-      .rowC { animation: stepC 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes stepC {
-        0%, 56% { transform: translateY(0); }
-        66%     { transform: translateY(88px); }
-        90%     { transform: translateY(88px); }
-        98%,100%{ transform: translateY(0); }
-      }
-
-      /* the winner lights up once it has been measured */
-      .win { opacity: 0; animation: win 12s ease-out infinite; }
-      @keyframes win {
-        0%, 58% { opacity: 0; }
-        68%     { opacity: 1; }
-        90%     { opacity: 1; }
-        97%,100%{ opacity: 0; }
-      }
-
-      /* the score readout fills as the pass completes */
-      .gauge { stroke-dasharray: 300; stroke-dashoffset: 300; animation: fill 12s ease-out infinite; animation-delay: 1.4s; }
-      @keyframes fill {
-        0%, 2%  { stroke-dashoffset: 300; }
-        34%     { stroke-dashoffset: 78; }
-        86%     { stroke-dashoffset: 78; }
-        95%,100%{ stroke-dashoffset: 300; }
-      }
-
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .float { animation: fl 12s ease-in-out infinite alternate; }
-      @keyframes fl { to { transform: translateY(-8px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .scan { opacity: 0; }
-        .sc1 { width: 96px; } .sc2 { width: 58px; } .sc3 { width: 74px; } .sc4 { width: 186px; }
-        .rowD { transform: translateY(-264px); }
-        .rowA, .rowB, .rowC { transform: translateY(88px); }
-        .win { opacity: 1; }
-        .gauge { stroke-dashoffset: 78; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="250" cy="180" r="220" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
-  <circle class="drift2" cx="960" cy="500" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-
-  <!-- the measure: an arc that fills to the score. Sits centre-left so the
-       square feed crop keeps it, and above the numeral so they do not stack. -->
-  <g class="float">
-    <circle cx="372" cy="248" r="104" fill="#FFFFFF" fill-opacity="0.62"/>
-    <path d="M 302 248 A 70 70 0 1 1 442 248" fill="none" stroke="#C7D6FB" stroke-width="14" stroke-linecap="round"/>
-    <path class="gauge" d="M 302 248 A 70 70 0 1 1 442 248" fill="none" stroke="url(#brand)" stroke-width="14" stroke-linecap="round"/>
-    <text x="372" y="260" text-anchor="middle" font-size="46" font-weight="700" fill="#0F2A4C">0.74</text>
-    <text x="372" y="302" text-anchor="middle" font-size="19" font-weight="600" fill="#5B7290" letter-spacing="2">nDCG</text>
-  </g>
-
-  <!-- echo outlines: the system fingerprint -->
-  <rect x="452" y="168" width="560" height="330" rx="24" fill="none" stroke="#7E9BF7" stroke-opacity="0.16" stroke-width="2"/>
-  <rect x="461" y="159" width="560" height="330" rx="24" fill="none" stroke="#7E9BF7" stroke-opacity="0.26" stroke-width="2"/>
-
-  <!-- the ranked sheet -->
-  <rect x="470" y="150" width="560" height="330" rx="24" fill="#FFFFFF" fill-opacity="0.95"/>
-
-  <g clip-path="url(#sheet)">
-    <g class="rowA">
-      <rect x="502" y="182" width="496" height="64" rx="14" fill="#F4F7FE"/>
-      <rect x="524" y="200" width="150" height="11" rx="5.5" fill="#2E62F1" fill-opacity="0.75"/>
-      <rect x="524" y="221" width="104" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.5"/>
-      <rect class="sc sc1" x="790" y="207" height="14" rx="7" fill="#7E9BF7" fill-opacity="0.75"/>
-    </g>
-    <g class="rowB">
-      <rect x="502" y="270" width="496" height="64" rx="14" fill="#F4F7FE"/>
-      <rect x="524" y="288" width="128" height="11" rx="5.5" fill="#2E62F1" fill-opacity="0.75"/>
-      <rect x="524" y="309" width="88" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.5"/>
-      <rect class="sc sc2" x="790" y="295" height="14" rx="7" fill="#7E9BF7" fill-opacity="0.75"/>
-    </g>
-    <g class="rowC">
-      <rect x="502" y="358" width="496" height="64" rx="14" fill="#F4F7FE"/>
-      <rect x="524" y="376" width="166" height="11" rx="5.5" fill="#2E62F1" fill-opacity="0.75"/>
-      <rect x="524" y="397" width="96" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.5"/>
-      <rect class="sc sc3" x="790" y="383" height="14" rx="7" fill="#7E9BF7" fill-opacity="0.75"/>
-    </g>
-
-    <!-- the row that measurement promotes -->
-    <g class="rowD">
-      <rect x="502" y="446" width="496" height="64" rx="14" fill="#F4F7FE"/>
-      <rect class="win" x="502" y="446" width="496" height="64" rx="14" fill="url(#brand)"/>
-      <rect x="524" y="464" width="140" height="11" rx="5.5" fill="#2E62F1" fill-opacity="0.75"/>
-      <rect x="524" y="485" width="98" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.5"/>
-      <g class="win">
-        <rect x="524" y="464" width="140" height="11" rx="5.5" fill="#FFFFFF" fill-opacity="0.95"/>
-        <rect x="524" y="485" width="98" height="9" rx="4.5" fill="#FFFFFF" fill-opacity="0.7"/>
-      </g>
-      <rect class="sc sc4" x="790" y="471" height="14" rx="7" fill="url(#brand)"/>
-    </g>
-
-    <!-- the measuring pass -->
-    <g class="scan">
-      <rect x="470" y="176" width="560" height="3" fill="url(#brand)" fill-opacity="0.85"/>
-      <rect x="470" y="179" width="560" height="26" fill="url(#brand)" fill-opacity="0.08"/>
-    </g>
-  </g>
-
-  <g class="sparkle">
-    <path d="M 1074 214 Q 1082.8 241.6 1110 250 Q 1082.8 258.4 1074 286 Q 1065.2 258.4 1038 250 Q 1065.2 241.6 1074 214 Z" fill="#ffce00"/>
-  </g>
-
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#004aef" fill-opacity="0.12" letter-spacing="-12">09</text>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><polygon class="c" points="183.6,149.2 821.8,149.2 819.3,187.3 186.3,187.3" fill="#004aef" style="--o:0.9;animation-delay:0.00s"/><text x="170.9" y="173.3" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">stopword heavy</text><text x="832.6" y="173.3" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">0.960</text><polygon class="c" points="188.1,212.4 723.9,212.4 722.2,249.5 190.8,249.5" fill="#004aef" style="--o:0.9;animation-delay:0.09s"/><text x="175.5" y="236.1" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">multi-term</text><text x="735.0" y="236.1" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">0.817</text><polygon class="c" points="192.5,274.0 679.7,274.0 678.4,310.1 195.1,310.1" fill="#004aef" style="--o:0.9;animation-delay:0.18s"/><text x="179.8" y="297.1" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">entity</text><text x="691.0" y="297.1" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">0.753</text><polygon class="c" points="196.9,333.9 657.7,333.9 656.6,369.0 199.4,369.0" fill="#004aef" style="--o:0.9;animation-delay:0.27s"/><text x="184.1" y="356.5" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">informational</text><text x="669.1" y="356.5" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">0.722</text><polygon class="c" points="201.0,392.2 604.2,392.2 603.5,426.4 203.5,426.4" fill="#c2410c" style="--o:0.55;animation-delay:0.36s"/><text x="188.3" y="414.4" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">navigational</text><text x="615.8" y="414.4" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">0.640</text><polygon class="c" points="205.1,449.0 591.9,449.0 591.3,482.4 207.5,482.4" fill="#c2410c" style="--o:0.55;animation-delay:0.45s"/><text x="192.3" y="470.7" text-anchor="end" font-size="14" fill="#5f656d" font-weight="400">misspelled</text><text x="603.6" y="470.7" text-anchor="start" font-size="14" fill="#1f2124" font-weight="500">0.622</text></g><g class="mark"><line x1="653.8" y1="409.4" x2="695.8" y2="409.4" stroke="#c2410c" stroke-width="1.2"/><text x="705.8" y="403.4" font-size="17" fill="#c2410c">a name it cannot</text><text x="705.8" y="425.4" font-size="17" fill="#c2410c">match on words</text></g><text x="480.0" y="566.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">nDCG@10 across fifty labelled queries</text>
 </svg>

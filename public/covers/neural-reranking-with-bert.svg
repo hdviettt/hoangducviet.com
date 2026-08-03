@@ -1,112 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 12s loop: candidates thread through the model and come out in a
-         different order — the top pick earns the gradient. */
-      .c1, .c2, .c3, .c4 { stroke-dasharray: 560; stroke-dashoffset: 560; }
-      .c1 { animation: thread 12s ease-in-out infinite; animation-delay: 0.0s; }
-      .c2 { animation: thread 12s ease-in-out infinite; animation-delay: 0.5s; }
-      .c3 { animation: thread 12s ease-in-out infinite; animation-delay: 1.0s; }
-      .c4 { animation: thread 12s ease-in-out infinite; animation-delay: 1.5s; }
-      @keyframes thread {
-        0%, 12% { stroke-dashoffset: 560; }
-        34% { stroke-dashoffset: 0; }
-        84% { stroke-dashoffset: 0; }
-        92%, 100% { stroke-dashoffset: 560; }
-      }
-      .model { animation: hum 2.4s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes hum { from { transform: scale(1); } to { transform: scale(1.035); } }
-      .o1, .o2, .o3, .o4 { opacity: 0; transform-box: fill-box; transform-origin: center; }
-      .o1 { animation: outp 12s ease-out infinite; animation-delay: 3.6s; }
-      .o2 { animation: outp 12s ease-out infinite; animation-delay: 4.0s; }
-      .o3 { animation: outp 12s ease-out infinite; animation-delay: 4.4s; }
-      .o4 { animation: outp 12s ease-out infinite; animation-delay: 4.8s; }
-      @keyframes outp {
-        0%, 4% { opacity: 0; transform: translateX(-14px); }
-        10% { opacity: 1; transform: translateX(0); }
-        62% { opacity: 1; }
-        66%, 100% { opacity: 0; }
-      }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .c1, .c2, .c3, .c4 { stroke-dashoffset: 0; }
-        .o1, .o2, .o3, .o4 { opacity: 1; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="170" r="210" fill="#C7D6FB" fill-opacity="0.7" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-
-  <!-- crossing threads: order in ≠ order out -->
-  <path class="c1" d="M 496 166 C 640 166, 640 246, 790 246" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-  <path class="c2" d="M 496 246 C 640 246, 640 166, 790 166" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-  <path class="c3" d="M 496 326 C 640 326, 640 406, 790 406" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-  <path class="c4" d="M 496 406 C 640 406, 640 326, 790 326" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-
-  <!-- candidates in retrieval order -->
-  <g>
-    <rect x="400" y="140" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="416" y="158" width="56" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
-    <rect x="400" y="220" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="416" y="238" width="48" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
-    <rect x="400" y="300" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="416" y="318" width="52" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
-    <rect x="400" y="380" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="416" y="398" width="44" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
-  </g>
-
-  <!-- the cross-encoder, humming; echoes trail behind -->
-  <rect x="576" y="234" width="120" height="200" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.18" stroke-width="2.5"/>
-  <rect x="598" y="218" width="120" height="200" rx="28" fill="none" stroke="url(#brand)" stroke-opacity="0.34" stroke-width="2.5"/>
-  <g class="model">
-    <rect x="620" y="202" width="120" height="200" rx="28" fill="url(#brand)"/>
-    <circle cx="656" cy="250" r="7" fill="#FFFFFF" fill-opacity="0.9"/>
-    <circle cx="704" cy="250" r="7" fill="#FFFFFF" fill-opacity="0.9"/>
-    <circle cx="656" cy="302" r="7" fill="#FFFFFF" fill-opacity="0.7"/>
-    <circle cx="704" cy="302" r="7" fill="#FFFFFF" fill-opacity="0.7"/>
-    <circle cx="656" cy="354" r="7" fill="#FFFFFF" fill-opacity="0.5"/>
-    <circle cx="704" cy="354" r="7" fill="#FFFFFF" fill-opacity="0.5"/>
-  </g>
-
-  <!-- reranked output -->
-  <g class="o1">
-    <rect x="790" y="140" width="96" height="52" rx="12" fill="url(#brand)"/>
-    <rect x="806" y="158" width="48" height="8" rx="4" fill="#FFFFFF" fill-opacity="0.92"/>
-  </g>
-  <g class="o2">
-    <rect x="790" y="220" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="806" y="238" width="56" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
-  </g>
-  <g class="o3">
-    <rect x="790" y="300" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="806" y="318" width="44" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
-  </g>
-  <g class="o4">
-    <rect x="790" y="380" width="96" height="52" rx="12" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="806" y="398" width="52" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.8"/>
-  </g>
-
-  <g class="sparkle">
-    <path d="M 1010 130 Q 1018.8 157.6 1046 166 Q 1018.8 174.4 1010 202 Q 1001.2 174.4 974 166 Q 1001.2 157.6 1010 130 Z" fill="#ffce00"/>
-  </g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#2E62F1" fill-opacity="0.12" letter-spacing="-12">07</text>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><path class="draw" d="M259.7 139.5 L434.5 139.5 L595.4 260.1 L765.6 260.1" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.9" style="--len:800;animation-delay:0.00s"/><circle class="c" cx="259.7" cy="139.5" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.00s"/><circle class="c" cx="765.6" cy="260.1" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.00s"/><path class="draw" d="M262.0 180.4 L435.2 180.4 L597.5 139.5 L772.3 139.5" fill="none" stroke="#c2410c" stroke-width="2.2" opacity="0.4" style="--len:800;animation-delay:0.06s"/><circle class="c" cx="262.0" cy="180.4" r="5" fill="#c2410c" style="--o:0.40;animation-delay:0.06s"/><circle class="c" cx="772.3" cy="139.5" r="5" fill="#c2410c" style="--o:0.40;animation-delay:0.06s"/><path class="draw" d="M264.2 220.6 L435.9 220.6 L593.4 374.5 L759.3 374.5" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.9" style="--len:800;animation-delay:0.12s"/><circle class="c" cx="264.2" cy="220.6" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.12s"/><circle class="c" cx="759.3" cy="374.5" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.12s"/><path class="draw" d="M266.4 260.1 L436.6 260.1 L596.8 180.4 L770.0 180.4" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.4" style="--len:800;animation-delay:0.18s"/><circle class="c" cx="266.4" cy="260.1" r="5" fill="#004aef" style="--o:0.40;animation-delay:0.18s"/><circle class="c" cx="770.0" cy="180.4" r="5" fill="#004aef" style="--o:0.40;animation-delay:0.18s"/><path class="draw" d="M268.5 298.9 L437.3 298.9 L592.1 447.6 L755.2 447.6" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.9" style="--len:800;animation-delay:0.24s"/><circle class="c" cx="268.5" cy="298.9" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.24s"/><circle class="c" cx="755.2" cy="447.6" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.24s"/><path class="draw" d="M270.7 337.0 L437.9 337.0 L596.1 220.6 L767.8 220.6" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.9" style="--len:800;animation-delay:0.30s"/><circle class="c" cx="270.7" cy="337.0" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.30s"/><circle class="c" cx="767.8" cy="220.6" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.30s"/><path class="draw" d="M272.7 374.5 L438.6 374.5 L591.5 483.2 L753.2 483.2" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.9" style="--len:800;animation-delay:0.36s"/><circle class="c" cx="272.7" cy="374.5" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.36s"/><circle class="c" cx="753.2" cy="483.2" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.36s"/><path class="draw" d="M274.8 411.3 L439.2 411.3 L594.7 298.9 L763.5 298.9" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.9" style="--len:800;animation-delay:0.42s"/><circle class="c" cx="274.8" cy="411.3" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.42s"/><circle class="c" cx="763.5" cy="298.9" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.42s"/><path class="draw" d="M276.8 447.6 L439.9 447.6 L592.8 411.3 L757.2 411.3" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.4" style="--len:800;animation-delay:0.48s"/><circle class="c" cx="276.8" cy="447.6" r="5" fill="#004aef" style="--o:0.40;animation-delay:0.48s"/><circle class="c" cx="757.2" cy="411.3" r="5" fill="#004aef" style="--o:0.40;animation-delay:0.48s"/><path class="draw" d="M278.8 483.2 L440.5 483.2 L594.1 337.0 L761.3 337.0" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.9" style="--len:800;animation-delay:0.54s"/><circle class="c" cx="278.8" cy="483.2" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.54s"/><circle class="c" cx="761.3" cy="337.0" r="5" fill="#004aef" style="--o:0.90;animation-delay:0.54s"/></g><g class="mark"><line x1="764.3" y1="139.5" x2="806.3" y2="139.5" stroke="#c2410c" stroke-width="1.2"/><text x="816.3" y="133.5" font-size="17" fill="#c2410c">the cross-encoder</text><text x="816.3" y="155.5" font-size="17" fill="#c2410c">moved this to first</text></g><text x="190.0" y="96.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">BM25 order</text><text x="790.0" y="96.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">after reranking</text>
 </svg>

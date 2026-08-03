@@ -1,102 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 11s loop: three equal documents get scored — the bars stretch to
-         their BM25 weights and the winner takes the gradient. */
-      .w1 { animation: score1 11s ease-in-out infinite; }
-      .w2 { animation: score2 11s ease-in-out infinite; }
-      .w3 { animation: score3 11s ease-in-out infinite; }
-      @keyframes score1 {
-        0%, 18% { width: 170px; } 40% { width: 330px; }
-        88% { width: 330px; } 95%, 100% { width: 170px; }
-      }
-      @keyframes score2 {
-        0%, 22% { width: 170px; } 44% { width: 250px; }
-        88% { width: 250px; } 95%, 100% { width: 170px; }
-      }
-      @keyframes score3 {
-        0%, 26% { width: 170px; } 40% { width: 128px; }
-        88% { width: 128px; } 95%, 100% { width: 170px; }
-      }
-      .winbar { opacity: 0; animation: score1 11s ease-in-out infinite, crown 11s ease-out infinite; }
-      @keyframes crown {
-        0%, 46% { opacity: 0; }
-        54% { opacity: 1; }
-        88% { opacity: 1; }
-        95%, 100% { opacity: 0; }
-      }
-      .b1, .b2, .b3 { opacity: 0; transform-box: fill-box; transform-origin: center; }
-      .b1 { animation: badge 11s ease-out infinite; animation-delay: 0.2s; }
-      .b2 { animation: badge 11s ease-out infinite; animation-delay: 0.5s; }
-      .b3 { animation: badge 11s ease-out infinite; animation-delay: 0.8s; }
-      @keyframes badge {
-        0%, 56% { opacity: 0; transform: scale(0.5); }
-        62% { opacity: 1; transform: scale(1.1); }
-        65% { transform: scale(1); }
-        86% { opacity: 1; }
-        93%, 100% { opacity: 0; }
-      }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .w1 { width: 330px; } .w2 { width: 250px; } .w3 { width: 128px; }
-        .winbar, .b1, .b2, .b3 { opacity: 1; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="250" cy="170" r="210" fill="#86F7CC" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="490" r="220" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
-
-  <!-- query chip feeding the scorer -->
-  <rect x="300" y="120" width="150" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.95" stroke="#FFFFFF" stroke-width="2"/>
-  <circle cx="330" cy="142" r="10" fill="none" stroke="#004aef" stroke-width="2.5"/>
-  <line x1="338" y1="150" x2="345" y2="157" stroke="#004aef" stroke-width="2.5" stroke-linecap="round"/>
-  <rect x="360" y="137" width="66" height="10" rx="5" fill="#2E62F1" fill-opacity="0.8"/>
-
-  <!-- the three documents, scored -->
-  <g>
-    <rect class="w1" x="300" y="220" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-    <rect class="winbar" x="300" y="220" height="64" rx="32" fill="url(#brand)"/>
-    <g class="b1">
-      <circle cx="700" cy="252" r="22" fill="#ffce00"/>
-      <rect x="688" y="248" width="24" height="8" rx="4" fill="#FFFFFF"/>
-    </g>
-  </g>
-  <g>
-    <rect class="w2" x="300" y="330" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-    <g class="b2">
-      <circle cx="620" cy="362" r="19" fill="none" stroke="url(#brand)" stroke-width="2.5"/>
-      <rect x="608" y="358" width="24" height="8" rx="4" fill="#0AA6C4"/>
-    </g>
-  </g>
-  <g>
-    <rect class="w3" x="300" y="440" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.92" stroke="#FFFFFF" stroke-width="2"/>
-    <g class="b3">
-      <circle cx="498" cy="472" r="19" fill="none" stroke="url(#brand)" stroke-width="2.5"/>
-      <rect x="486" y="468" width="24" height="8" rx="4" fill="#04B876"/>
-    </g>
-  </g>
-
-  <g class="sparkle">
-    <path d="M 1030 130 Q 1038.8 157.6 1066 166 Q 1038.8 174.4 1030 202 Q 1021.2 174.4 994 166 Q 1021.2 157.6 1030 130 Z" fill="#ffce00"/>
-  </g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#03895A" fill-opacity="0.12" letter-spacing="-12">04</text>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><line x1="217.7" y1="489.5" x2="814.3" y2="489.5" stroke="#dfe4ec"/><line x1="217.7" y1="489.5" x2="193.4" y2="140.8" stroke="#dfe4ec"/><path class="draw" d="M217.7 489.5 L226.5 435.3 L237.1 405.1 L248.6 385.9 L260.6 372.6 L272.8 362.9 L285.2 355.4 L297.8 349.5 L310.4 344.7 L323.1 340.8 L335.8 337.5 L348.6 334.7 L361.4 332.2 L374.2 330.1 L387.0 328.2 L399.9 326.6 L412.7 325.1 L425.6 323.8 L438.5 322.6 L451.4 321.5 L464.3 320.5 L477.2 319.6 L490.1 318.8 L503.1 318.0 L516.0 317.3 L528.9 316.7 L541.9 316.1 L554.8 315.5 L567.7 315.0 L580.7 314.5 L593.6 314.0 L606.6 313.6 L619.5 313.2 L632.5 312.8 L645.4 312.4 L658.4 312.1 L671.4 311.7 L684.3 311.4 L697.3 311.1 L710.2 310.8 L723.2 310.6 L736.2 310.3 L749.1 310.1 L762.1 309.8 L775.1 309.6 L788.0 309.4 L801.0 309.2 L814.0 309.0 L826.9 308.8" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.4" style="--len:900;animation-delay:0.00s"/><text x="840.9" y="312.8" text-anchor="start" font-size="13" fill="#5f656d" font-weight="400">k1 = 0.6</text><path class="draw" d="M217.7 489.5 L227.2 445.9 L237.8 414.6 L249.0 391.0 L260.6 372.6 L272.6 357.9 L284.7 345.8 L297.1 335.7 L309.6 327.1 L322.2 319.8 L334.8 313.4 L347.5 307.8 L360.3 302.9 L373.2 298.5 L386.0 294.6 L398.9 291.1 L411.9 287.9 L424.8 285.0 L437.8 282.3 L450.8 279.9 L463.8 277.6 L476.8 275.6 L489.9 273.6 L502.9 271.9 L516.0 270.2 L529.1 268.7 L542.2 267.2 L555.2 265.8 L568.3 264.6 L581.4 263.4 L594.5 262.2 L607.7 261.2 L620.8 260.2 L633.9 259.2 L647.0 258.3 L660.1 257.4 L673.3 256.6 L686.4 255.8 L699.6 255.1 L712.7 254.3 L725.8 253.7 L739.0 253.0 L752.1 252.4 L765.3 251.8 L778.4 251.2 L791.6 250.7 L804.8 250.1 L817.9 249.6 L831.1 249.1" fill="none" stroke="#004aef" stroke-width="2.6" opacity="1.0" style="--len:900;animation-delay:0.25s"/><text x="845.1" y="253.1" text-anchor="start" font-size="13" fill="#5f656d" font-weight="400">k1 = 1.2</text><path class="draw" d="M217.7 489.5 L227.6 452.7 L238.2 421.8 L249.2 395.4 L260.6 372.6 L272.3 352.8 L284.2 335.4 L296.3 319.9 L308.6 306.1 L321.0 293.7 L333.6 282.6 L346.2 272.4 L359.0 263.2 L371.8 254.7 L384.7 247.0 L397.6 239.8 L410.6 233.2 L423.7 227.1 L436.7 221.4 L449.9 216.1 L463.0 211.1 L476.2 206.4 L489.5 202.1 L502.7 197.9 L516.0 194.1 L529.3 190.4 L542.6 187.0 L556.0 183.7 L569.3 180.6 L582.7 177.6 L596.1 174.8 L609.5 172.2 L622.9 169.6 L636.3 167.2 L649.7 164.9 L663.2 162.7 L676.6 160.6 L690.1 158.5 L703.6 156.6 L717.0 154.7 L730.5 152.9 L744.0 151.2 L757.5 149.6 L771.0 148.0 L784.5 146.4 L798.0 145.0 L811.6 143.5 L825.1 142.1 L838.6 140.8" fill="none" stroke="#004aef" stroke-width="1.6" opacity="0.4" style="--len:900;animation-delay:0.50s"/><text x="852.6" y="144.8" text-anchor="start" font-size="13" fill="#5f656d" font-weight="400">k1 = 2.4</text></g><g class="mark"><line x1="735.8" y1="179.7" x2="777.8" y2="179.7" stroke="#c2410c" stroke-width="1.2"/><text x="787.8" y="173.7" font-size="17" fill="#c2410c">the tenth occurrence</text><text x="787.8" y="195.7" font-size="17" fill="#c2410c">is worth almost nothing</text></g><text x="196.0" y="104.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">score contribution</text><text x="806.0" y="566.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">times the word appears</text>
 </svg>

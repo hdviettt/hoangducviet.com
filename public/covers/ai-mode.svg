@@ -1,120 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 12s loop: you ask; the index is consulted; the answer writes itself.
-         Search becomes a conversation. */
-      .q { opacity: 0; transform-box: fill-box; transform-origin: 20% 80%; }
-      .q { animation: ask 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes ask {
-        0%, 5% { opacity: 0; transform: scale(0.7); }
-        11% { opacity: 1; transform: scale(1); }
-        90% { opacity: 1; }
-        96%, 100% { opacity: 0; }
-      }
-      .s1, .s2, .s3 { opacity: 0; }
-      .s1 { animation: consult 12s ease-out infinite; animation-delay: 1.6s; }
-      .s2 { animation: consult 12s ease-out infinite; animation-delay: 2.1s; }
-      .s3 { animation: consult 12s ease-out infinite; animation-delay: 2.6s; }
-      @keyframes consult {
-        0%, 4% { opacity: 0; transform: translate(60px, -30px); }
-        11% { opacity: 1; transform: translate(0, 0); }
-        76% { opacity: 1; }
-        82%, 100% { opacity: 0; }
-      }
-      .f1, .f2, .f3 { stroke-dasharray: 240; stroke-dashoffset: 240; }
-      .f1 { animation: feed 12s ease-in infinite; animation-delay: 2.8s; }
-      .f2 { animation: feed 12s ease-in infinite; animation-delay: 3.2s; }
-      .f3 { animation: feed 12s ease-in infinite; animation-delay: 3.6s; }
-      @keyframes feed {
-        0%, 3% { stroke-dashoffset: 240; }
-        14% { stroke-dashoffset: 0; }
-        68% { stroke-dashoffset: 0; }
-        74%, 100% { stroke-dashoffset: 240; }
-      }
-      .ans { opacity: 0; transform-box: fill-box; transform-origin: 80% 20%; animation: answer 12s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
-      @keyframes answer {
-        0%, 40% { opacity: 0; transform: scale(0.7); }
-        47% { opacity: 1; transform: scale(1); }
-        90% { opacity: 1; }
-        96%, 100% { opacity: 0; }
-      }
-      .w1a { animation: writeln1 12s ease-out infinite; }
-      .w2a { animation: writeln2 12s ease-out infinite; }
-      @keyframes writeln1 {
-        0%, 48% { width: 0px; } 58% { width: 240px; }
-        90% { width: 240px; } 96%, 100% { width: 0px; }
-      }
-      @keyframes writeln2 {
-        0%, 54% { width: 0px; } 64% { width: 180px; }
-        90% { width: 180px; } 96%, 100% { width: 0px; }
-      }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .q, .s1, .s2, .s3, .ans { opacity: 1; }
-        .f1, .f2, .f3 { stroke-dashoffset: 0; }
-        .w1a { width: 240px; } .w2a { width: 180px; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="470" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-  <circle class="drift2" cx="990" cy="160" r="220" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
-
-  <!-- the question -->
-  <g class="q">
-    <path d="M310 140 h300 a20 20 0 0 1 20 20 v70 a20 20 0 0 1 -20 20 h-240 l-38 34 v-34 h-22 a20 20 0 0 1 -20 -20 v-70 a20 20 0 0 1 20 -20 z" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="340" y="174" width="200" height="10" rx="5" fill="#2E62F1" fill-opacity="0.8"/>
-    <rect x="340" y="196" width="150" height="10" rx="5" fill="#7E9BF7" fill-opacity="0.6"/>
-  </g>
-
-  <!-- the index consulted: pages slide in and feed the answer -->
-  <line class="f1" x1="924" y1="204" x2="800" y2="330" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-  <line class="f2" x1="1024" y1="274" x2="880" y2="352" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-  <line class="f3" x1="974" y1="354" x2="900" y2="390" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-  <g class="s1">
-    <rect x="884" y="150" width="80" height="54" rx="10" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="898" y="166" width="44" height="6" rx="3" fill="#7E9BF7" fill-opacity="0.8"/>
-    <rect x="898" y="179" width="34" height="6" rx="3" fill="#7E9BF7" fill-opacity="0.55"/>
-  </g>
-  <g class="s2">
-    <rect x="984" y="220" width="80" height="54" rx="10" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="998" y="236" width="44" height="6" rx="3" fill="#7E9BF7" fill-opacity="0.8"/>
-    <rect x="998" y="249" width="34" height="6" rx="3" fill="#7E9BF7" fill-opacity="0.55"/>
-  </g>
-  <g class="s3">
-    <rect x="934" y="300" width="80" height="54" rx="10" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="948" y="316" width="44" height="6" rx="3" fill="#7E9BF7" fill-opacity="0.8"/>
-    <rect x="948" y="329" width="34" height="6" rx="3" fill="#7E9BF7" fill-opacity="0.55"/>
-  </g>
-
-  <!-- the answer, synthesized -->
-  <g class="ans">
-    <path d="M560 330 h320 a20 20 0 0 1 20 20 v84 a20 20 0 0 1 -20 20 h-22 v34 l-38 -34 h-260 a20 20 0 0 1 -20 -20 v-84 a20 20 0 0 1 20 -20 z" fill="url(#brand)"/>
-    <path d="M 604 358 Q 609.5 375.4 627 381 Q 609.5 386.6 604 404 Q 598.5 386.6 581 381 Q 598.5 375.4 604 358 Z" fill="#FFFFFF"/>
-    <rect class="w1a" x="644" y="364" height="11" rx="5.5" fill="#FFFFFF" fill-opacity="0.95"/>
-    <rect class="w2a" x="644" y="390" height="11" rx="5.5" fill="#FFFFFF" fill-opacity="0.75"/>
-  </g>
-
-  <g class="sparkle">
-    <path d="M 470 460 Q 478.8 487.6 506 496 Q 478.8 504.4 470 532 Q 461.2 504.4 434 496 Q 461.2 487.6 470 460 Z" fill="#ffce00"/>
-  </g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#03895A" fill-opacity="0.12" letter-spacing="-12">08</text>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><path class="draw" d="M516.0 149.6 L516.0 205.2 L289.8 259.5 L292.8 320.0" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.00s"/><path class="draw" d="M295.8 378.9 L298.3 429.2 L516.0 464.4 L516.0 485.2" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.50s"/><circle class="c" cx="272.7" cy="349.6" r="6" fill="#004aef" style="--o:0.80;animation-delay:0.35s"/><circle class="c" cx="294.3" cy="349.6" r="6" fill="#004aef" style="--o:0.60;animation-delay:0.35s"/><circle class="c" cx="315.8" cy="349.6" r="6" fill="#004aef" style="--o:0.40;animation-delay:0.35s"/><path class="draw" d="M516.0 149.6 L516.0 205.2 L396.6 259.5 L398.2 320.0" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.07s"/><path class="draw" d="M399.8 378.9 L401.1 429.2 L516.0 464.4 L516.0 485.2" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.57s"/><circle class="c" cx="377.4" cy="349.6" r="6" fill="#004aef" style="--o:0.80;animation-delay:0.42s"/><circle class="c" cx="399.0" cy="349.6" r="6" fill="#004aef" style="--o:0.60;animation-delay:0.42s"/><circle class="c" cx="420.5" cy="349.6" r="6" fill="#004aef" style="--o:0.40;animation-delay:0.42s"/><path class="draw" d="M516.0 149.6 L516.0 205.2 L516.0 259.5 L516.0 320.0" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.14s"/><path class="draw" d="M516.0 378.9 L516.0 429.2 L516.0 464.4 L516.0 485.2" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.64s"/><circle class="c" cx="494.4" cy="349.6" r="6" fill="#004aef" style="--o:0.80;animation-delay:0.49s"/><circle class="c" cx="516.0" cy="349.6" r="6" fill="#004aef" style="--o:0.60;animation-delay:0.49s"/><circle class="c" cx="537.6" cy="349.6" r="6" fill="#004aef" style="--o:0.40;animation-delay:0.49s"/><path class="draw" d="M516.0 149.6 L516.0 205.2 L635.4 259.5 L633.8 320.0" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.21s"/><path class="draw" d="M632.2 378.9 L630.9 429.2 L516.0 464.4 L516.0 485.2" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.71s"/><circle class="c" cx="611.5" cy="349.6" r="6" fill="#004aef" style="--o:0.80;animation-delay:0.56s"/><circle class="c" cx="633.0" cy="349.6" r="6" fill="#004aef" style="--o:0.60;animation-delay:0.56s"/><circle class="c" cx="654.6" cy="349.6" r="6" fill="#004aef" style="--o:0.40;animation-delay:0.56s"/><path class="draw" d="M516.0 149.6 L516.0 205.2 L742.2 259.5 L739.2 320.0" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.28s"/><path class="draw" d="M736.2 378.9 L733.7 429.2 L516.0 464.4 L516.0 485.2" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.45" style="--len:400;animation-delay:0.78s"/><circle class="c" cx="716.2" cy="349.6" r="6" fill="#004aef" style="--o:0.80;animation-delay:0.63s"/><circle class="c" cx="737.7" cy="349.6" r="6" fill="#004aef" style="--o:0.60;animation-delay:0.63s"/><circle class="c" cx="759.3" cy="349.6" r="6" fill="#004aef" style="--o:0.40;animation-delay:0.63s"/><circle class="c" cx="516.0" cy="149.6" r="13" fill="#004aef" style="--o:0.95;animation-delay:0.1s"/><circle class="c" cx="516.0" cy="485.2" r="15" fill="#004aef" style="--o:1.0;animation-delay:0.1s"/></g><g class="mark"><line x1="735.7" y1="349.6" x2="777.7" y2="349.6" stroke="#c2410c" stroke-width="1.2"/><text x="787.7" y="343.6" font-size="17" fill="#c2410c">five searches the user</text><text x="787.7" y="365.6" font-size="17" fill="#c2410c">never typed</text></g><text x="176.0" y="108.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">one question</text><text x="176.0" y="560.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">one answer</text>
 </svg>

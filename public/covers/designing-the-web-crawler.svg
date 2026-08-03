@@ -1,85 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 12s loop: a page rides the pipeline — queue, fetch, parse — and the
-         links it yields cycle back to the queue. */
-      .doc {
-        offset-path: path('M 480 250 L 700 250 L 920 250 C 920 430, 480 430, 480 250');
-        offset-rotate: 0deg;
-        animation: ride 12s ease-in-out infinite;
-      }
-      @keyframes ride {
-        0%, 8% { offset-distance: 0%; }
-        24% { offset-distance: 18%; }
-        34% { offset-distance: 18%; }
-        50% { offset-distance: 36%; }
-        60% { offset-distance: 36%; }
-        96%, 100% { offset-distance: 100%; }
-      }
-      .s1 { animation: st1 12s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      .s2 { animation: st2 12s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      .s3 { animation: st3 12s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes st1 { 0%, 4% { transform: scale(1); } 8% { transform: scale(1.06); } 14%, 100% { transform: scale(1); } }
-      @keyframes st2 { 0%, 26% { transform: scale(1); } 30% { transform: scale(1.06); } 36%, 100% { transform: scale(1); } }
-      @keyframes st3 { 0%, 52% { transform: scale(1); } 56% { transform: scale(1.06); } 62%, 100% { transform: scale(1); } }
-      .ret { stroke-dasharray: 10 8; animation: retmarch 4s linear infinite; }
-      @keyframes retmarch { to { stroke-dashoffset: -72; } }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="170" r="210" fill="#9FEFFC" fill-opacity="0.55" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="490" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-
-  <!-- pipeline stages -->
-  <line x1="555" y1="250" x2="625" y2="250" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="3"/>
-  <line x1="775" y1="250" x2="845" y2="250" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="3"/>
-  <path class="ret" d="M 920 295 C 920 430, 480 430, 480 295" fill="none" stroke="url(#brand)" stroke-opacity="0.55" stroke-width="2.5"/>
-
-  <g class="s1">
-    <rect x="405" y="205" width="150" height="90" rx="24" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="433" y="233" width="94" height="10" rx="5" fill="#7E9BF7" fill-opacity="0.85"/>
-    <rect x="433" y="253" width="70" height="10" rx="5" fill="#7E9BF7" fill-opacity="0.55"/>
-  </g>
-  <g class="s2">
-    <rect x="625" y="205" width="150" height="90" rx="24" fill="none" stroke="url(#brand)" stroke-width="3"/>
-    <rect x="653" y="233" width="94" height="24" rx="12" fill="url(#brand)" fill-opacity="0.85"/>
-  </g>
-  <g class="s3">
-    <rect x="845" y="205" width="150" height="90" rx="24" fill="#FFFFFF" fill-opacity="0.94" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="873" y="228" width="94" height="9" rx="4.5" fill="#04B876" fill-opacity="0.8"/>
-    <rect x="873" y="245" width="76" height="9" rx="4.5" fill="#04B876" fill-opacity="0.6"/>
-    <rect x="873" y="262" width="60" height="9" rx="4.5" fill="#04B876" fill-opacity="0.45"/>
-  </g>
-
-  <!-- the page riding through -->
-  <g class="doc">
-    <rect x="-22" y="-28" width="44" height="56" rx="10" fill="url(#brand)"/>
-    <rect x="-12" y="-16" width="24" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.9"/>
-    <rect x="-12" y="-5" width="18" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.7"/>
-    <rect x="-12" y="6" width="21" height="5" rx="2.5" fill="#FFFFFF" fill-opacity="0.55"/>
-  </g>
-
-  <g class="sparkle">
-    <path d="M 1030 130 Q 1038.8 157.6 1066 166 Q 1038.8 174.4 1030 202 Q 1021.2 174.4 994 166 Q 1021.2 157.6 1030 130 Z" fill="#ffce00"/>
-  </g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#0fd6f7" fill-opacity="0.13" letter-spacing="-12">02</text>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><line x1="196.5" y1="463.3" x2="835.5" y2="463.3" stroke="#dfe4ec" stroke-width="1"/><line x1="191.3" y1="393.8" x2="840.7" y2="393.8" stroke="#dfe4ec" stroke-width="1"/><line x1="186.0" y1="322.0" x2="846.0" y2="322.0" stroke="#dfe4ec" stroke-width="1"/><line x1="180.5" y1="247.8" x2="851.5" y2="247.8" stroke="#dfe4ec" stroke-width="1"/><line x1="174.8" y1="171.1" x2="857.2" y2="171.1" stroke="#dfe4ec" stroke-width="1"/><polygon class="c" points="179.8,146.0 223.3,146.0 226.4,196.0 183.4,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.00s"/><polygon class="c" points="351.3,146.0 394.8,146.0 396.1,196.0 353.1,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.27s"/><polygon class="c" points="522.9,146.0 566.3,146.0 565.8,196.0 522.8,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.54s"/><polygon class="c" points="694.4,146.0 737.8,146.0 735.4,196.0 692.5,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.81s"/><polygon class="c" points="241.7,223.6 284.4,223.6 286.8,271.8 244.6,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.14s"/><polygon class="c" points="410.3,223.6 453.0,223.6 453.7,271.8 411.4,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.41s"/><polygon class="c" points="579.0,223.6 621.7,223.6 620.6,271.8 578.3,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.68s"/><polygon class="c" points="747.6,223.6 790.3,223.6 787.4,271.8 745.2,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.95s"/><polygon class="c" points="301.5,298.5 343.5,298.5 345.3,345.2 303.7,345.2" fill="#004aef" style="--o:0.82;animation-delay:0.28s"/><polygon class="c" points="467.3,298.5 509.4,298.5 509.4,345.2 467.9,345.2" fill="#004aef" style="--o:0.82;animation-delay:0.55s"/><polygon class="c" points="633.2,298.5 675.2,298.5 673.6,345.2 632.0,345.2" fill="#004aef" style="--o:0.82;animation-delay:0.82s"/><polygon class="c" points="799.1,298.5 841.1,298.5 837.7,345.2 796.1,345.2" fill="#004aef" style="--o:0.82;animation-delay:1.09s"/><polygon class="c" points="196.2,371.1 237.5,371.1 240.4,416.3 199.5,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.15s"/><polygon class="c" points="359.3,371.1 400.7,371.1 401.9,416.3 361.0,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.42s"/><polygon class="c" points="522.5,371.1 563.9,371.1 563.4,416.3 522.5,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.69s"/><polygon class="c" points="685.7,371.1 727.0,371.1 724.9,416.3 684.0,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.96s"/><polygon class="c" points="254.8,441.3 295.5,441.3 297.7,485.1 257.4,485.1" fill="#004aef" style="--o:0.82;animation-delay:0.29s"/><polygon class="c" points="415.4,441.3 456.1,441.3 456.7,485.1 416.4,485.1" fill="#004aef" style="--o:0.82;animation-delay:0.56s"/><polygon class="c" points="575.9,441.3 616.6,441.3 615.6,485.1 575.3,485.1" fill="#004aef" style="--o:0.82;animation-delay:0.83s"/><polygon class="c" points="736.5,441.3 777.2,441.3 774.6,485.1 734.3,485.1" fill="#004aef" style="--o:0.82;animation-delay:1.10s"/></g><g class="mark"><line x1="839.5" y1="247.8" x2="881.5" y2="247.8" stroke="#c2410c" stroke-width="1.2"/><text x="891.5" y="241.8" font-size="17" fill="#c2410c">one request per host,</text><text x="891.5" y="263.8" font-size="17" fill="#c2410c">then wait</text></g><text x="190.0" y="100.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">five hosts, twelve slots</text>
 </svg>

@@ -1,117 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* 12s loop: the crawler walks seed -> A -> B -> C and home; each link
-         draws just ahead of it; each page lights up as it's visited. */
-      .crawler {
-        offset-path: path('M 330 300 L 620 170 L 890 310 L 620 470 L 330 300');
-        offset-rotate: 0deg;
-        animation: walk 12s ease-in-out infinite;
-      }
-      @keyframes walk {
-        0%, 6% { offset-distance: 0%; }
-        22% { offset-distance: 25%; }
-        30% { offset-distance: 25%; }
-        46% { offset-distance: 50%; }
-        54% { offset-distance: 50%; }
-        70% { offset-distance: 75%; }
-        78% { offset-distance: 75%; }
-        94%, 100% { offset-distance: 100%; }
-      }
-      .l1, .l2, .l3, .l4 { stroke-dasharray: 340; stroke-dashoffset: 340; }
-      .l1 { animation: draw 12s linear infinite; }
-      .l2 { animation: draw 12s linear infinite; animation-delay: 2.88s; }
-      .l3 { animation: draw 12s linear infinite; animation-delay: 5.76s; }
-      .l4 { animation: draw 12s linear infinite; animation-delay: 8.64s; }
-      @keyframes draw {
-        0%, 2% { stroke-dashoffset: 340; }
-        20% { stroke-dashoffset: 0; }
-        88% { stroke-dashoffset: 0; }
-        95%, 100% { stroke-dashoffset: 340; }
-      }
-      .pA, .pB, .pC { opacity: 0.35; }
-      .pA { animation: visit 12s ease-out infinite; }
-      .pB { animation: visit 12s ease-out infinite; animation-delay: 2.88s; }
-      .pC { animation: visit 12s ease-out infinite; animation-delay: 5.76s; }
-      @keyframes visit {
-        0%, 20% { opacity: 0.35; }
-        26% { opacity: 1; }
-        90% { opacity: 1; }
-        97%, 100% { opacity: 0.35; }
-      }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .l1, .l2, .l3, .l4 { stroke-dashoffset: 0; }
-        .pA, .pB, .pC { opacity: 1; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="230" cy="150" r="200" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
-  <circle class="drift2" cx="1010" cy="500" r="220" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-
-  <!-- links (draw in as the crawler approaches) -->
-  <line class="l1" x1="330" y1="300" x2="620" y2="170" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="2.5"/>
-  <line class="l2" x1="620" y1="170" x2="890" y2="310" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="2.5"/>
-  <line class="l3" x1="890" y1="310" x2="620" y2="470" stroke="url(#brand)" stroke-opacity="0.6" stroke-width="2.5"/>
-  <line class="l4" x1="620" y1="470" x2="330" y2="300" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2.5" stroke-dasharray="340"/>
-
-  <!-- seed page -->
-  <g>
-    <rect x="256" y="252" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="278" y="274" width="76" height="10" rx="5" fill="url(#brand)"/>
-    <rect x="278" y="296" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
-    <rect x="278" y="313" width="88" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
-  </g>
-  <!-- page A -->
-  <g class="pA">
-    <rect x="546" y="122" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="568" y="144" width="64" height="10" rx="5" fill="#0fd6f7"/>
-    <rect x="568" y="166" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
-    <rect x="568" y="183" width="84" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
-  </g>
-  <!-- page B -->
-  <g class="pB">
-    <rect x="816" y="262" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="838" y="284" width="70" height="10" rx="5" fill="#07ef9c"/>
-    <rect x="838" y="306" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
-    <rect x="838" y="323" width="90" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
-  </g>
-  <!-- page C -->
-  <g class="pC">
-    <rect x="546" y="422" width="148" height="96" rx="16" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="568" y="444" width="58" height="10" rx="5" fill="#ffce00"/>
-    <rect x="568" y="466" width="104" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.7"/>
-    <rect x="568" y="483" width="80" height="8" rx="4" fill="#7E9BF7" fill-opacity="0.5"/>
-  </g>
-
-  <!-- the crawler: gradient dot with echo ring, walking the graph -->
-  <g class="crawler">
-    <circle r="26" fill="none" stroke="url(#brand)" stroke-opacity="0.35" stroke-width="2.5"/>
-    <circle r="17" fill="url(#brand)"/>
-    <circle cx="-5" cy="-5" r="5" fill="#FFFFFF" fill-opacity="0.85"/>
-  </g>
-
-  <g class="sparkle">
-    <path d="M 1024 130 Q 1032.8 157.6 1060 166 Q 1032.8 174.4 1024 202 Q 1015.2 174.4 988 166 Q 1015.2 157.6 1024 130 Z" fill="#ffce00"/>
-  </g>
-  <text x="60" y="580" font-size="360" font-weight="700" fill="#004aef" fill-opacity="0.1" letter-spacing="-12">01</text>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><circle class="c" cx="516.0" cy="318.0" r="9.5" fill="#004aef" style="--o:0.90;animation-delay:0.00s"/><circle class="c" cx="569.5" cy="346.0" r="8.2" fill="#004aef" style="--o:0.75;animation-delay:0.50s"/><line class="c" x1="513.6" y1="316.7" x2="569.5" y2="346.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:0.50s"/><circle class="c" cx="503.8" cy="360.6" r="8.2" fill="#004aef" style="--o:0.75;animation-delay:0.52s"/><line class="c" x1="516.6" y1="316.0" x2="503.8" y2="360.6" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:0.50s"/><circle class="c" cx="450.0" cy="332.8" r="8.2" fill="#004aef" style="--o:0.75;animation-delay:0.54s"/><line class="c" x1="519.0" y1="317.3" x2="450.0" y2="332.8" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:0.50s"/><circle class="c" cx="461.8" cy="289.7" r="8.2" fill="#004aef" style="--o:0.75;animation-delay:0.56s"/><line class="c" x1="518.4" y1="319.3" x2="461.8" y2="289.7" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:0.50s"/><circle class="c" cx="528.5" cy="274.5" r="8.2" fill="#004aef" style="--o:0.75;animation-delay:0.58s"/><line class="c" x1="515.4" y1="320.0" x2="528.5" y2="274.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:0.50s"/><circle class="c" cx="582.4" cy="303.1" r="8.2" fill="#004aef" style="--o:0.75;animation-delay:0.60s"/><line class="c" x1="513.0" y1="318.7" x2="582.4" y2="303.1" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:0.50s"/><circle class="c" cx="540.5" cy="406.3" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.00s"/><line class="c" x1="528.4" y1="362.6" x2="540.5" y2="406.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="471.6" cy="403.3" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.02s"/><line class="c" x1="493.6" y1="361.1" x2="471.6" y2="403.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="412.3" cy="381.1" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.04s"/><line class="c" x1="463.8" y1="349.8" x2="412.3" y2="381.1" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="375.8" cy="344.1" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.06s"/><line class="c" x1="445.7" y1="331.1" x2="375.8" y2="344.1" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="370.9" cy="300.5" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.08s"/><line class="c" x1="443.6" y1="309.3" x2="370.9" y2="300.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="399.6" cy="260.1" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.10s"/><line class="c" x1="458.2" y1="289.3" x2="399.6" y2="260.1" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="455.9" cy="232.6" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.12s"/><line class="c" x1="486.2" y1="275.7" x2="455.9" y2="232.6" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="526.6" cy="224.9" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.14s"/><line class="c" x1="521.3" y1="271.9" x2="526.6" y2="224.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="594.8" cy="238.9" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.16s"/><line class="c" x1="555.1" y1="278.8" x2="594.8" y2="238.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="644.1" cy="271.0" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.18s"/><line class="c" x1="579.7" y1="294.6" x2="644.1" y2="271.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="663.2" cy="313.4" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.20s"/><line class="c" x1="589.5" y1="315.7" x2="663.2" y2="313.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="648.4" cy="356.1" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.22s"/><line class="c" x1="582.5" y1="337.1" x2="648.4" y2="356.1" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="604.1" cy="389.4" r="6.8" fill="#004aef" style="--o:0.60;animation-delay:1.24s"/><line class="c" x1="560.4" y1="354.0" x2="604.1" y2="389.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.00s"/><circle class="c" cx="405.9" cy="434.9" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.50s"/><line class="c" x1="441.4" y1="397.2" x2="405.9" y2="434.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="356.4" cy="411.4" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.52s"/><line class="c" x1="408.1" y1="381.2" x2="356.4" y2="411.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="319.1" cy="380.2" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.54s"/><line class="c" x1="383.2" y1="359.9" x2="319.1" y2="380.2" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="297.1" cy="343.4" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.56s"/><line class="c" x1="368.7" y1="335.1" x2="297.1" y2="343.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="292.4" cy="304.0" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.58s"/><line class="c" x1="366.0" y1="308.6" x2="292.4" y2="304.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="306.0" cy="265.0" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.60s"/><line class="c" x1="375.6" y1="282.5" x2="306.0" y2="265.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="337.2" cy="229.7" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.62s"/><line class="c" x1="396.7" y1="259.1" x2="337.2" y2="229.7" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="383.7" cy="201.3" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.64s"/><line class="c" x1="427.9" y1="240.3" x2="383.7" y2="201.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="441.7" cy="182.3" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.66s"/><line class="c" x1="466.6" y1="227.8" x2="441.7" y2="182.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="506.3" cy="174.5" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.68s"/><line class="c" x1="509.6" y1="222.7" x2="506.3" y2="174.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="571.7" cy="178.8" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.70s"/><line class="c" x1="553.0" y1="225.5" x2="571.7" y2="178.8" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="632.2" cy="194.6" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.72s"/><line class="c" x1="593.3" y1="235.9" x2="632.2" y2="194.6" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="682.6" cy="220.5" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.74s"/><line class="c" x1="627.0" y1="253.0" x2="682.6" y2="220.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="718.5" cy="254.0" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.76s"/><line class="c" x1="651.4" y1="275.3" x2="718.5" y2="254.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="737.5" cy="292.3" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.78s"/><line class="c" x1="664.4" y1="300.8" x2="737.5" y2="292.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="738.2" cy="332.0" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.80s"/><line class="c" x1="665.3" y1="327.4" x2="738.2" y2="332.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="721.1" cy="369.8" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.82s"/><line class="c" x1="654.2" y1="352.9" x2="721.1" y2="369.8" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="687.9" cy="402.9" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.84s"/><line class="c" x1="632.2" y1="375.4" x2="687.9" y2="402.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="641.7" cy="428.9" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.86s"/><line class="c" x1="601.1" y1="393.1" x2="641.7" y2="428.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="586.0" cy="445.9" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.88s"/><line class="c" x1="563.5" y1="404.7" x2="586.0" y2="445.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="525.1" cy="452.8" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.90s"/><line class="c" x1="522.2" y1="409.4" x2="525.1" y2="452.8" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="463.6" cy="449.0" r="5.4" fill="#004aef" style="--o:0.45;animation-delay:1.92s"/><line class="c" x1="480.4" y1="406.8" x2="463.6" y2="449.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:1.50s"/><circle class="c" cx="236.5" cy="379.7" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.00s"/><line class="c" x1="304.2" y1="364.8" x2="236.5" y2="379.7" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="219.5" cy="342.5" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.02s"/><line class="c" x1="291.7" y1="336.5" x2="219.5" y2="342.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="215.1" cy="303.5" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.04s"/><line class="c" x1="288.9" y1="307.1" x2="215.1" y2="303.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="224.0" cy="264.5" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.06s"/><line class="c" x1="296.1" y1="277.7" x2="224.0" y2="264.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="246.1" cy="227.3" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.08s"/><line class="c" x1="313.1" y1="249.8" x2="246.1" y2="227.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="280.6" cy="193.5" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.10s"/><line class="c" x1="339.4" y1="224.6" x2="280.6" y2="193.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="326.3" cy="164.8" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.12s"/><line class="c" x1="373.9" y1="203.3" x2="326.3" y2="164.8" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="381.0" cy="142.9" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.14s"/><line class="c" x1="415.0" y1="187.0" x2="381.0" y2="142.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="442.4" cy="128.7" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.16s"/><line class="c" x1="461.0" y1="176.5" x2="442.4" y2="128.7" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="507.4" cy="123.1" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.18s"/><line class="c" x1="509.6" y1="172.3" x2="507.4" y2="123.1" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="572.8" cy="126.4" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.20s"/><line class="c" x1="558.4" y1="174.8" x2="572.8" y2="126.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="635.4" cy="138.4" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.22s"/><line class="c" x1="605.3" y1="183.6" x2="635.4" y2="138.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="692.2" cy="158.4" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.24s"/><line class="c" x1="647.9" y1="198.5" x2="692.2" y2="158.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="740.4" cy="185.4" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.26s"/><line class="c" x1="684.3" y1="218.6" x2="740.4" y2="185.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="778.0" cy="218.0" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.28s"/><line class="c" x1="712.8" y1="242.9" x2="778.0" y2="218.0" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="803.5" cy="254.5" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.30s"/><line class="c" x1="732.4" y1="270.2" x2="803.5" y2="254.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="815.8" cy="293.2" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.32s"/><line class="c" x1="742.2" y1="299.3" x2="815.8" y2="293.2" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="814.9" cy="332.4" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.34s"/><line class="c" x1="742.0" y1="328.9" x2="814.9" y2="332.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="801.1" cy="370.2" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.36s"/><line class="c" x1="732.0" y1="357.5" x2="801.1" y2="370.2" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="775.3" cy="405.2" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.38s"/><line class="c" x1="712.8" y1="384.2" x2="775.3" y2="405.2" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="738.9" cy="435.9" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.40s"/><line class="c" x1="685.5" y1="407.7" x2="738.9" y2="435.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="693.5" cy="461.3" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.42s"/><line class="c" x1="651.1" y1="427.1" x2="693.5" y2="461.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="641.1" cy="480.3" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.44s"/><line class="c" x1="611.3" y1="441.7" x2="641.1" y2="480.3" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="583.8" cy="492.5" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.46s"/><line class="c" x1="567.7" y1="451.0" x2="583.8" y2="492.5" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="523.9" cy="497.2" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.48s"/><line class="c" x1="522.0" y1="454.7" x2="523.9" y2="497.2" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="463.7" cy="494.4" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.50s"/><line class="c" x1="476.1" y1="452.6" x2="463.7" y2="494.4" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="405.5" cy="484.2" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.52s"/><line class="c" x1="431.8" y1="444.7" x2="405.5" y2="484.2" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="351.6" cy="466.9" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.54s"/><line class="c" x1="390.8" y1="431.4" x2="351.6" y2="466.9" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="304.2" cy="443.1" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.56s"/><line class="c" x1="354.9" y1="413.2" x2="304.2" y2="443.1" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/><circle class="c" cx="265.2" cy="413.7" r="4.1" fill="#004aef" style="--o:0.30;animation-delay:2.58s"/><line class="c" x1="325.6" y1="390.7" x2="265.2" y2="413.7" stroke="#004aef" stroke-width="1" style="--o:0.2;animation-delay:2.00s"/></g><g class="mark"><line x1="800.8" y1="318.0" x2="842.8" y2="318.0" stroke="#c2410c" stroke-width="1.2"/><text x="852.8" y="312.0" font-size="17" fill="#c2410c">the frontier, five</text><text x="852.8" y="334.0" font-size="17" fill="#c2410c">hops from the seed</text></g><text x="200.0" y="96.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">pages discovered</text>
 </svg>
