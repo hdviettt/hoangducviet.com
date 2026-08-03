@@ -40,10 +40,10 @@
   <line x1="249.7" y1="553.7" x2="250.2" y2="560.5" stroke="#5f656d" stroke-width="1.2"/><text x="250.9" y="571.5" text-anchor="middle" font-size="13" fill="#5f656d">[CLS]</text><line x1="402.2" y1="553.7" x2="402.4" y2="560.5" stroke="#5f656d" stroke-width="1.2"/><text x="402.7" y="571.5" text-anchor="middle" font-size="13" fill="#5f656d">[SEP]</text><line x1="794.3" y1="553.7" x2="793.8" y2="560.5" stroke="#5f656d" stroke-width="1.2"/><text x="793.1" y="571.5" text-anchor="middle" font-size="13" fill="#5f656d">[SEP]</text>
 
   <g class="mark">
-    <polygon points="400.2,54.4 814.4,54.4 804.0,220.6 404.5,220.6" fill="none" stroke="#c2410c" stroke-width="1.8" stroke-linejoin="round"/>
-    <line x1="814.4" y1="137.5" x2="856.4" y2="137.5" stroke="#c2410c" stroke-width="1.2"/>
-    <text x="866.4" y="132.5" font-size="17" fill="#c2410c">query attending</text>
-    <text x="866.4" y="154.5" font-size="17" fill="#c2410c">to document</text>
+    <polygon points="400.2,54.4 814.4,54.4 804.0,220.6 404.5,220.6" fill="none" stroke="#04815a" stroke-width="1.8" stroke-linejoin="round"/>
+    <line x1="814.4" y1="137.5" x2="856.4" y2="137.5" stroke="#04815a" stroke-width="1.4"/>
+    <text x="866.4" y="132.5" font-size="17" fill="#04815a">query attending</text>
+    <text x="866.4" y="154.5" font-size="17" fill="#04815a">to document</text>
   </g>
 
   <text x="204.6" y="30.8" font-size="14" fill="#5f656d">attends to</text>

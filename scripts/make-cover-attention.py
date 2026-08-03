@@ -37,7 +37,10 @@ TILT = math.radians(34)      # how far the plane leans away from the viewer
 DIST = 3000.0                # camera distance; smaller exaggerates the convergence
 CX, CY = 522.0, 318.0        # where the centre of the plane lands on the canvas
 
-MUTED, RULE, BLUE, WARM = "#5f656d", "#dfe4ec", "#004aef", "#c2410c"
+MUTED, RULE, BLUE = "#5f656d", "#dfe4ec", "#004aef"
+# SEONGON Future Green fills; its darker step carries text and hairlines,
+# because 1.52:1 on white is not a contrast you can read.
+ACCENT, ACCENT_TEXT = "#07ef9c", "#04815a"
 SPAN = (N - 1) * STEP
 
 
@@ -155,10 +158,10 @@ OUT.write_text(f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630
   {ticks}
 
   <g class="mark">
-    <polygon points="{block}" fill="none" stroke="{WARM}" stroke-width="1.8" stroke-linejoin="round"/>
-    <line x1="{lead_x:.1f}" y1="{lead_y:.1f}" x2="{lead_x + 42:.1f}" y2="{lead_y:.1f}" stroke="{WARM}" stroke-width="1.2"/>
-    <text x="{lead_x + 52:.1f}" y="{lead_y - 5:.1f}" font-size="17" fill="{WARM}">query attending</text>
-    <text x="{lead_x + 52:.1f}" y="{lead_y + 17:.1f}" font-size="17" fill="{WARM}">to document</text>
+    <polygon points="{block}" fill="none" stroke="{ACCENT_TEXT}" stroke-width="1.8" stroke-linejoin="round"/>
+    <line x1="{lead_x:.1f}" y1="{lead_y:.1f}" x2="{lead_x + 42:.1f}" y2="{lead_y:.1f}" stroke="{ACCENT_TEXT}" stroke-width="1.4"/>
+    <text x="{lead_x + 52:.1f}" y="{lead_y - 5:.1f}" font-size="17" fill="{ACCENT_TEXT}">query attending</text>
+    <text x="{lead_x + 52:.1f}" y="{lead_y + 17:.1f}" font-size="17" fill="{ACCENT_TEXT}">to document</text>
   </g>
 
   <text x="{top_l[0]:.1f}" y="{top_l[1] - 14:.1f}" font-size="14" fill="{MUTED}">attends to</text>

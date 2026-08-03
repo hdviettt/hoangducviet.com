@@ -1,109 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#F2F6FF"/>
-      <stop offset="1" stop-color="#F3FEF9"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
     </linearGradient>
-    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#004aef"/>
-      <stop offset="1" stop-color="#07ef9c"/>
-    </linearGradient>
-    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
     </filter>
-    <style>
-      /* One 9s loop: type the query, press search, results arrive, hold, reset. */
-      .caret { animation: caret 1s steps(2, jump-none) infinite; }
-      @keyframes caret { 50% { opacity: 0; } }
-      .query { animation: query 9s ease-out infinite; }
-      @keyframes query {
-        0%, 4% { width: 0px; }
-        16% { width: 224px; }
-        90% { width: 224px; }
-        96%, 100% { width: 0px; }
-      }
-      .press { animation: press 9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes press {
-        0%, 16% { transform: scale(1); }
-        19% { transform: scale(1.18); }
-        22%, 100% { transform: scale(1); }
-      }
-      .r1, .r2, .r3 { opacity: 0; }
-      .r1 { animation: rise 9s ease-out infinite; }
-      .r2 { animation: rise 9s ease-out infinite; animation-delay: 0.45s; }
-      .r3 { animation: rise 9s ease-out infinite; animation-delay: 0.9s; }
-      @keyframes rise {
-        0%, 24% { opacity: 0; transform: translateY(18px); }
-        31% { opacity: 1; transform: translateY(0); }
-        88% { opacity: 1; transform: translateY(0); }
-        94%, 100% { opacity: 0; transform: translateY(18px); }
-      }
-      .glint { animation: glint 9s ease-in-out infinite; }
-      @keyframes glint {
-        0%, 34% { opacity: 0.75; }
-        40% { opacity: 1; }
-        46%, 100% { opacity: 0.75; }
-      }
-      .drift1 { animation: d1 18s ease-in-out infinite alternate; }
-      .drift2 { animation: d2 24s ease-in-out infinite alternate; }
-      @keyframes d1 { to { transform: translate(22px, -16px); } }
-      @keyframes d2 { to { transform: translate(-18px, 14px); } }
-      .sparkle { animation: sk 6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
-      @keyframes sk { from { transform: scale(0.94); } to { transform: scale(1.08); } }
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .query { width: 224px; }
-        .r1, .r2, .r3 { opacity: 1; }
-      }
-    </style>
   </defs>
-
+  <style>
+    /* 14s loop: the figure resolves on a sweep, the one annotation arrives,
+       then it rests. Reduced motion paints the finished frame, which is also
+       what the og:image renderer captures. */
+    .c { opacity: 0; animation: fill 14s ease-in-out infinite; }
+    @keyframes fill { 0% { opacity: 0 } 22%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 34% { opacity: 0 } 46%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) {
+      .c { opacity: var(--o, 1); animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle class="drift1" cx="240" cy="150" r="210" fill="#7E9BF7" fill-opacity="0.45" filter="url(#soft)"/>
-  <circle class="drift2" cx="1000" cy="500" r="230" fill="#86F7CC" fill-opacity="0.5" filter="url(#soft)"/>
-
-  <!-- ===== the search bar ===== -->
-  <rect x="240" y="128" width="640" height="96" rx="48" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
-  <!-- typed query (grows) + caret -->
-  <rect class="query" x="312" y="164" height="24" rx="12" fill="url(#brand)"/>
-  <rect class="caret" x="540" y="156" width="3" height="40" rx="1.5" fill="#004aef"/>
-  <!-- search button -->
-  <g class="press">
-    <circle cx="820" cy="176" r="34" fill="url(#brand)"/>
-    <circle cx="812" cy="168" r="11" fill="none" stroke="#FFFFFF" stroke-width="3.5"/>
-    <line x1="820" y1="176" x2="832" y2="188" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
-  </g>
-
-  <!-- ===== results arriving ===== -->
-  <g class="r1">
-    <rect x="240" y="268" width="640" height="92" rx="20" fill="#FFFFFF" fill-opacity="0.96" stroke="#FFFFFF" stroke-width="2"/>
-    <rect class="glint" x="264" y="292" width="8" height="44" rx="4" fill="url(#brand)"/>
-    <rect x="292" y="292" width="300" height="12" rx="6" fill="#2E62F1" fill-opacity="0.85"/>
-    <rect x="292" y="316" width="480" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.6"/>
-    <rect x="292" y="333" width="420" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.45"/>
-  </g>
-  <g class="r2">
-    <rect x="240" y="380" width="640" height="92" rx="20" fill="#FFFFFF" fill-opacity="0.93" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="264" y="404" width="8" height="44" rx="4" fill="#0fd6f7"/>
-    <rect x="292" y="404" width="260" height="12" rx="6" fill="#2E62F1" fill-opacity="0.75"/>
-    <rect x="292" y="428" width="440" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.5"/>
-    <rect x="292" y="445" width="380" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.4"/>
-  </g>
-  <g class="r3">
-    <rect x="240" y="492" width="640" height="92" rx="20" fill="#FFFFFF" fill-opacity="0.9" stroke="#FFFFFF" stroke-width="2"/>
-    <rect x="264" y="516" width="8" height="44" rx="4" fill="#07ef9c"/>
-    <rect x="292" y="516" width="280" height="12" rx="6" fill="#2E62F1" fill-opacity="0.7"/>
-    <rect x="292" y="540" width="400" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.45"/>
-    <rect x="292" y="557" width="340" height="9" rx="4.5" fill="#7E9BF7" fill-opacity="0.35"/>
-  </g>
-
-  <!-- SEONGON echo mark, quietly on the empty right -->
-  <g>
-    <rect x="964" y="216" width="150" height="150" rx="34" fill="none" stroke="url(#brand)" stroke-opacity="0.16" stroke-width="2.5"/>
-    <rect x="988" y="198" width="150" height="150" rx="34" fill="none" stroke="url(#brand)" stroke-opacity="0.3" stroke-width="2.5"/>
-    <rect x="1012" y="180" width="150" height="150" rx="34" fill="none" stroke="url(#brand)" stroke-opacity="0.5" stroke-width="2.5"/>
-  </g>
-  <g class="sparkle">
-    <path d="M 1030 404 Q 1039.2 432.8 1068 442 Q 1039.2 451.2 1030 480 Q 1020.8 451.2 992 442 Q 1020.8 432.8 1030 404 Z" fill="#ffce00"/>
-  </g>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g filter="url(#lift)"><polygon class="c" points="188.3,134.3 270.8,134.3 289.7,491.4 213.5,491.4" fill="#004aef" style="--o:0.30;animation-delay:0.00s"/><text x="251.6" y="521.4" text-anchor="middle" font-size="14" fill="#5f656d" font-weight="400">crawl</text><polygon class="c" points="304.1,161.2 386.1,161.2 394.8,468.2 318.2,468.2" fill="#004aef" style="--o:0.41;animation-delay:0.11s"/><text x="357.4" y="521.4" text-anchor="middle" font-size="14" fill="#5f656d" font-weight="400">index</text><polygon class="c" points="419.3,219.8 500.3,219.8 500.9,415.9 423.4,415.9" fill="#004aef" style="--o:0.52;animation-delay:0.22s"/><text x="463.1" y="521.4" text-anchor="middle" font-size="14" fill="#5f656d" font-weight="400">BM25</text><polygon class="c" points="531.6,251.2 612.1,251.2 609.2,386.7 531.2,386.7" fill="#004aef" style="--o:0.63;animation-delay:0.33s"/><text x="568.9" y="521.4" text-anchor="middle" font-size="14" fill="#5f656d" font-weight="400">PageRank</text><polygon class="c" points="642.2,291.3 721.9,291.3 719.3,348.3 640.6,348.3" fill="#004aef" style="--o:0.74;animation-delay:0.44s"/><text x="674.6" y="521.4" text-anchor="middle" font-size="14" fill="#5f656d" font-weight="400">rerank</text><polygon class="c" points="751.9,311.1 831.2,311.1 830.0,328.9 750.9,328.9" fill="#07ef9c" style="--o:1.00;animation-delay:0.55s"/><text x="780.4" y="521.4" text-anchor="middle" font-size="14" fill="#5f656d" font-weight="400">answer</text></g><g class="mark"><line x1="830.0" y1="320.0" x2="872.0" y2="320.0" stroke="#04815a" stroke-width="1.4"/><text x="882.0" y="314.0" font-size="17" fill="#04815a">each stage is slower</text><text x="882.0" y="336.0" font-size="17" fill="#04815a">and sees fewer</text></g><text x="190.0" y="96.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">documents reaching each stage</text>
 </svg>

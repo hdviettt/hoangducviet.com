@@ -30,7 +30,13 @@ from pathlib import Path
 OUT = Path(__file__).resolve().parents[1] / "public" / "covers"
 
 W, H = 1200, 630
-BLUE, WARM = "#004aef", "#c2410c"
+BLUE = "#004aef"            # SEONGON Prosperous Blue
+# SEONGON Future Green. At 1.52:1 on white it can fill a shape and nothing else,
+# so text and hairlines use a darker step of the same hue at 4.89:1. The two
+# brand colours sit 4.29:1 apart in luminance, which is what keeps them
+# separable for a colour-blind reader even though both are cool.
+ACCENT = "#07ef9c"
+ACCENT_TEXT = "#04815a"
 INK, MUTED, RULE = "#1f2124", "#5f656d", "#dfe4ec"
 FONT = ("-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif")
 
@@ -79,10 +85,10 @@ def text(p: Plane | None, u, v, s, size=13, fill=MUTED, anchor="middle", weight=
 def note(x: float, y: float, lines: list[str]) -> str:
     """The one warm annotation. Flat, not on the plane, so it sits in front."""
     out = [f'<line x1="{x - 42:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{y:.1f}" '
-           f'stroke="{WARM}" stroke-width="1.2"/>']
+           f'stroke="{ACCENT_TEXT}" stroke-width="1.4"/>']
     for i, ln in enumerate(lines):
         out.append(f'<text x="{x + 10:.1f}" y="{y + 5 + i * 22 - (len(lines) - 1) * 11:.1f}" '
-                   f'font-size="17" fill="{WARM}">{ln}</text>')
+                   f'font-size="17" fill="{ACCENT_TEXT}">{ln}</text>')
     return '<g class="mark">' + "".join(out) + "</g>"
 
 
@@ -294,9 +300,9 @@ def reranking() -> str:
     out = []
     for before, a in enumerate(after):
         o = 0.9 if abs(a - before) >= 3 else 0.4
-        col = WARM if (before, a) == (1, 0) else BLUE
+        col = ACCENT_TEXT if (before, a) == (1, 0) else BLUE
         out.append(f'<path class="draw" d="{p.path([(0.06, before + 0.5), (0.36, before + 0.5), (0.64, a + 0.5), (0.94, a + 0.5)])}" '
-                   f'fill="none" stroke="{col}" stroke-width="{2.2 if col == WARM else 1.6}" '
+                   f'fill="none" stroke="{col}" stroke-width="{2.2 if col == ACCENT_TEXT else 1.6}" '
                    f'opacity="{o}" style="--len:800;animation-delay:{before * 0.06:.2f}s"/>')
         for u, row in ((0.06, before), (0.94, a)):
             x, y = p(u, row + 0.5)
@@ -345,7 +351,7 @@ def measuring() -> str:
     for i, (name, val) in enumerate(rows):
         weak = val < 0.7
         out.append(f'<polygon class="c" points="{p.quad(0.0, i + 0.2, val, i + 0.8)}" '
-                   f'fill="{WARM if weak else BLUE}" style="--o:{0.55 if weak else 0.9};'
+                   f'fill="{ACCENT if weak else BLUE}" style="--o:{0.55 if weak else 0.9};'
                    f'animation-delay:{i * 0.09:.2f}s"/>')
         lx, ly = p(0, i + 0.5)
         out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
@@ -391,7 +397,7 @@ def vibe_code_rush() -> str:
         w = max(0.012, hours / top)
         last = i == len(rows) - 1
         out.append(f'<polygon class="c" points="{p.quad(0, i + 0.22, w, i + 0.78)}" '
-                   f'fill="{WARM if last else BLUE}" style="--o:{1 if last else 0.85};'
+                   f'fill="{ACCENT if last else BLUE}" style="--o:{1 if last else 0.85};'
                    f'animation-delay:{i * 0.12:.2f}s"/>')
         lx, ly = p(0, i + 0.5)
         out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
@@ -423,7 +429,7 @@ def keyword_clustering() -> str:
                        f'style="--o:{0.45 + 0.1 * (ci % 3):.2f};animation-delay:{ci * 0.12 + k * 0.01:.2f}s"/>')
     for u, v in [(0.10, 0.52), (0.46, 0.46), (0.90, 0.28), (0.20, 0.88), (0.88, 0.84), (0.50, 0.06)]:
         x, y = p(u, v)
-        out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{WARM}" '
+        out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{ACCENT}" '
                    f'style="--o:0.9;animation-delay:1.3s"/>')
     nx, ny = p(0.90, 0.28)
     return wrap(lifted("".join(out))
@@ -448,7 +454,7 @@ def team_failed() -> str:
     x0, y0 = p(1.0, 0)
     x1, y1 = p(1.0, 5)
     out.append(f'<line x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" '
-               f'stroke="{WARM}" stroke-width="1.6"/>')
+               f'stroke="{ACCENT_TEXT}" stroke-width="1.6"/>')
     return wrap(lifted("".join(out))
                 + note(x1 + 46, (y0 + y1) / 2, ["where each of them", "needed to be"])
                 + text(None, 330, 566, "five things I owned", 14, MUTED, "start"))
@@ -480,7 +486,7 @@ def cms_pipeline() -> str:
     for i, (name, w, o) in enumerate(rows):
         last = i == len(rows) - 1
         out.append(f'<polygon class="c" points="{p.quad(0, i + 0.22, w, i + 0.78)}" '
-                   f'fill="{WARM if last else BLUE}" style="--o:{o};animation-delay:{i * 0.14:.2f}s"/>')
+                   f'fill="{ACCENT if last else BLUE}" style="--o:{o};animation-delay:{i * 0.14:.2f}s"/>')
         lx, ly = p(0, i + 0.5)
         out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
     nx, ny = p(0.48, 2.5)
@@ -529,7 +535,7 @@ def seo_history() -> str:
     for i, (name, v) in enumerate(eras):
         last = i == len(eras) - 1
         out.append(f'<polygon class="c" points="{p.quad(i + 0.18, 1 - v, i + 0.82, 1.0)}" '
-                   f'fill="{WARM if last else BLUE}" style="--o:{1 if last else 0.35 + i * 0.2:.2f};'
+                   f'fill="{ACCENT if last else BLUE}" style="--o:{1 if last else 0.35 + i * 0.2:.2f};'
                    f'animation-delay:{i * 0.13:.2f}s"/>')
         lx, ly = p(i + 0.5, 1.0)
         out.append(text(None, lx, ly + 26, name, 14, MUTED))
@@ -555,7 +561,7 @@ def less_agentic() -> str:
                   f'<line x1="{x0:.1f}" y1="{y0:.1f}" x2="{xt:.1f}" y2="{yt:.1f}" stroke="{RULE}"/>')
     peak = min(pts, key=lambda q: q[1])
     px, py = p(*peak)
-    out.append(f'<circle class="c" cx="{px:.1f}" cy="{py:.1f}" r="7" fill="{WARM}" style="--o:1"/>')
+    out.append(f'<circle class="c" cx="{px:.1f}" cy="{py:.1f}" r="7" fill="{ACCENT}" style="--o:1"/>')
     return wrap(lifted("".join(out))
                 + note(px + 52, py - 6, ["as much freedom as", "it can be trusted with"])
                 + text(None, 190, 100, "how well it works in production", 14, MUTED, "start")
@@ -571,7 +577,7 @@ def series_search_engine() -> str:
     for i, (name, h) in enumerate(stages):
         last = i == len(stages) - 1
         out.append(f'<polygon class="c" points="{p.quad(i + 0.14, 0.5 - h / 2, i + 0.86, 0.5 + h / 2)}" '
-                   f'fill="{WARM if last else BLUE}" style="--o:{1 if last else 0.30 + i * 0.11:.2f};'
+                   f'fill="{ACCENT if last else BLUE}" style="--o:{1 if last else 0.30 + i * 0.11:.2f};'
                    f'animation-delay:{i * 0.11:.2f}s"/>')
         lx, ly = p(i + 0.5, 1.0)
         out.append(text(None, lx, ly + 30, name, 14, MUTED))
@@ -600,7 +606,8 @@ COVERS = {
     "an-agent-platform-on-the-claude-agent-sdk": agent_platform,
     "a-brief-history-of-seo-content-writing-with-ai": seo_history,
     "the-less-agentic-agents-are-in-production-the-better": less_agentic,
-    "building-a-mini-search-engine": series_search_engine,
+    # The series page hardcodes /covers/series-<slug>.svg, prefix and all.
+    "series-building-a-mini-search-engine": series_search_engine,
 }
 
 
