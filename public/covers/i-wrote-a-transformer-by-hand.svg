@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#F2F6FF"/>
+      <stop offset="1" stop-color="#F3FEF9"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#004aef"/>
+      <stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="55"/>
+    </filter>
+    <style>
+      /* 14s loop. Four rankers race. The one that wins the race is a model,
+         but the bar nobody expected - five lines that count keywords - lands
+         almost on top of the hand-written one, and the ruler tilts. The
+         subject of the post is not the model. It is the measurement. */
+
+      .bar { transform-origin: 0 0; transform: scaleX(0); }
+      @keyframes grow { 0% { transform: scaleX(0); } 18%, 82% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+      .b1 { animation: grow 14s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
+      .b2 { animation: grow 14s cubic-bezier(0.2, 0.8, 0.3, 1) infinite .5s; }
+      .b3 { animation: grow 14s cubic-bezier(0.2, 0.8, 0.3, 1) infinite 1s; }
+      .b4 { animation: grow 14s cubic-bezier(0.2, 0.8, 0.3, 1) infinite 1.5s; }
+
+      .val { opacity: 0; }
+      @keyframes show { 0%, 12% { opacity: 0; } 24%, 82% { opacity: 1; } 100% { opacity: 0; } }
+      .v1 { animation: show 14s ease infinite; }
+      .v2 { animation: show 14s ease infinite .5s; }
+      .v3 { animation: show 14s ease infinite 1s; }
+      .v4 { animation: show 14s ease infinite 1.5s; }
+
+      /* the ruler under the chart tilts once every bar has landed */
+      .ruler { transform-origin: 150px 470px; }
+      @keyframes tilt {
+        0%, 42%  { transform: rotate(0deg); }
+        56%, 78% { transform: rotate(-2.4deg); }
+        90%,100% { transform: rotate(0deg); }
+      }
+      .ruler { animation: tilt 14s cubic-bezier(0.2, 0.8, 0.3, 1) infinite; }
+
+      .flag { opacity: 0; }
+      @keyframes flag { 0%, 48% { opacity: 0; } 60%, 78% { opacity: 1; } 88%, 100% { opacity: 0; } }
+      .flag { animation: flag 14s ease infinite; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bar { transform: scaleX(1); animation: none; }
+        .val, .flag { opacity: 1; animation: none; }
+        .ruler { animation: none; }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1010" cy="120" r="150" fill="#07ef9c" opacity="0.13" filter="url(#soft)"/>
+  <circle cx="210" cy="560" r="170" fill="#004aef" opacity="0.10" filter="url(#soft)"/>
+
+  <text x="100" y="112" font-size="22" fill="#004aef" font-weight="700" letter-spacing="2">MINI-RERANKER</text>
+  <text x="100" y="178" font-size="52" fill="#0a0a0a" font-weight="700">I wrote a transformer by hand</text>
+  <text x="100" y="234" font-size="52" fill="#0a0a0a" font-weight="700">to replace a model I downloaded</text>
+
+  <!-- the race -->
+  <g font-size="19" fill="#5f656d">
+    <text x="100" y="316">random</text>
+    <text x="100" y="360">count keywords</text>
+    <text x="100" y="404">mine, by hand</text>
+    <text x="100" y="448">ms-marco-MiniLM</text>
+  </g>
+
+  <g>
+    <rect class="bar b1" x="330" y="300" width="376" height="20" rx="5" fill="#004aef" opacity="0.28"/>
+    <rect class="bar b2" x="330" y="344" width="422" height="20" rx="5" fill="#c2410c"/>
+    <rect class="bar b3" x="330" y="388" width="439" height="20" rx="5" fill="url(#brand)"/>
+    <rect class="bar b4" x="330" y="432" width="530" height="20" rx="5" fill="#004aef"/>
+  </g>
+
+  <g font-size="19" font-weight="700" fill="#1f2124">
+    <text class="val v1" x="720" y="317">0.510</text>
+    <text class="val v2" x="766" y="361">0.573</text>
+    <text class="val v3" x="783" y="405">0.596</text>
+    <text class="val v4" x="874" y="449">0.720</text>
+  </g>
+
+  <!-- the ruler, which turns out not to be straight -->
+  <g class="ruler">
+    <line x1="150" y1="470" x2="1050" y2="470" stroke="#c2d0e8" stroke-width="2"/>
+    <g stroke="#c2d0e8" stroke-width="2">
+      <line x1="330" y1="470" x2="330" y2="482"/><line x1="510" y1="470" x2="510" y2="482"/>
+      <line x1="690" y1="470" x2="690" y2="482"/><line x1="870" y1="470" x2="870" y2="482"/>
+      <line x1="1050" y1="470" x2="1050" y2="482"/>
+    </g>
+  </g>
+
+  <g class="flag">
+    <rect x="330" y="512" width="470" height="40" rx="10" fill="#c2410c" opacity="0.12"/>
+    <text x="352" y="539" font-size="19" fill="#8a3208" font-weight="700">five lines of keyword counting, no model</text>
+  </g>
+
+  <text x="100" y="592" font-size="19" fill="#5f656d">It lost. The measurement was the deliverable.</text>
+</svg>
