@@ -138,6 +138,44 @@ def lifted(marks: str) -> str:
     return f'  <g filter="url(#lift)">{marks}</g>'
 
 
+# --------------------------------------------------- interface primitives
+#
+# A bar chart is the right figure when the subject is a quantity. For most of
+# these posts the subject is a screen, and a reader who has used Google knows
+# what one looks like, so drawing it says more in less ink than any bar could.
+# Rounded corners are unavailable on a projected quadrilateral, so these are
+# plain polygons; at this scale nobody reads the corner.
+
+def slab(p, u0, v0, u1, v1, fill=None, o=1.0, delay=0.0, stroke=None):
+    f = fill or BLUE
+    extra = f' stroke="{stroke}" stroke-width="1.2"' if stroke else ""
+    return (f'<polygon class="c" points="{p.quad(u0, v0, u1, v1)}" fill="{f}"{extra} '
+            f'style="--o:{o};animation-delay:{delay:.2f}s"/>')
+
+
+def textline(p, u0, u1, v, h=0.055, o=0.22, delay=0.0, fill=None):
+    """A line of body text, the way a wireframe draws one."""
+    return slab(p, u0, v - h / 2, u1, v + h / 2, fill or MUTED, o, delay)
+
+
+def searchbox(p, u0, u1, v, query=0.42, delay=0.0):
+    """The box itself: a field, the typed query, and the button."""
+    out = [slab(p, u0, v - 0.075, u1, v + 0.075, "#ffffff", 1, delay, RULE)]
+    out.append(textline(p, u0 + 0.03, u0 + 0.03 + query, v, 0.05, 0.9, delay + 0.1, BLUE))
+    out.append(slab(p, u1 - 0.075, v - 0.048, u1 - 0.02, v + 0.048, BLUE, 0.95, delay + 0.15))
+    return "".join(out)
+
+
+def result(p, u0, v, w=0.62, delay=0.0, title_o=0.95):
+    """One organic result: url, blue title, two lines of snippet."""
+    return "".join([
+        textline(p, u0, u0 + w * 0.34, v, 0.035, 0.35, delay),
+        textline(p, u0, u0 + w, v + 0.055, 0.052, title_o, delay + 0.04, BLUE),
+        textline(p, u0, u0 + w * 0.96, v + 0.115, 0.033, 0.20, delay + 0.08),
+        textline(p, u0, u0 + w * 0.72, v + 0.158, 0.033, 0.20, delay + 0.10),
+    ])
+
+
 # ------------------------------------------------------------------ figures
 
 def crawling() -> str:
@@ -268,29 +306,21 @@ def pagerank() -> str:
 
 
 def ai_overviews() -> str:
-    """#6 — retrieval into generation. Many chunks narrow into one answer."""
-    p = Plane(516, 322, 660, 450, 3, 12)
-    out = []
-    for i in range(12):
-        out.append(f'<polygon class="c" points="{p.quad(0.05, i + 0.15, 0.95, i + 0.85)}" '
-                   f'fill="{BLUE}" style="--o:{0.30 + 0.05 * (i % 4):.2f};animation-delay:{i * 0.05:.2f}s"/>')
-    for i in range(5):
-        out.append(f'<polygon class="c" points="{p.quad(1.15, i * 2 + 1.15, 1.95, i * 2 + 2.85)}" '
-                   f'fill="{BLUE}" style="--o:0.62;animation-delay:{0.7 + i * 0.07:.2f}s"/>')
-    out.append(f'<polygon class="c" points="{p.quad(2.15, 4.15, 2.95, 7.85)}" fill="{BLUE}" '
-               f'style="--o:0.95;animation-delay:1.15s"/>')
-    for a, b in ((0.98, 1.13), (1.98, 2.13)):
-        for i in range(4):
-            x0, y0 = p(a, 1.5 + i * 3)
-            x1, y1 = p(b, 1.5 + i * 3)
-            out.append(f'<line class="c" x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" '
-                       f'stroke="{BLUE}" stroke-width="1" style="--o:0.25;animation-delay:0.9s"/>')
-    nx, ny = p(2.95, 6)
+    """#6 — what the page looks like once the answer arrives above the links."""
+    p = Plane(516, 314, 690, 470, 1, 1)
+    out = [slab(p, 0.02, 0.02, 0.98, 0.98, "#ffffff", 1, 0, RULE)]
+    out.append(searchbox(p, 0.08, 0.92, 0.13, 0.50, 0.1))
+    out.append(slab(p, 0.06, 0.24, 0.94, 0.56, ACCENT, 0.10, 0.35))
+    for i, w in enumerate([0.74, 0.80, 0.66, 0.44]):
+        out.append(textline(p, 0.10, 0.10 + w, 0.30 + i * 0.055, 0.036, 0.42, 0.45 + i * 0.06, BLUE))
+    for k in range(4):
+        out.append(slab(p, 0.10 + k * 0.075, 0.505, 0.155 + k * 0.075, 0.535, BLUE, 0.55, 0.75 + k * 0.05))
+    for i in range(2):
+        out.append(result(p, 0.08, 0.63 + i * 0.20, 0.62, 0.95 + i * 0.1, 0.45))
+    nx, ny = p(0.94, 0.40)
     return wrap(lifted("".join(out))
-                + note(nx + 34, ny, ["one answer, and every", "sentence has a source"])
-                + text(None, 170, 96, "chunks retrieved", 14, MUTED, "start")
-                + text(None, 470, 96, "kept", 14, MUTED, "start")
-                + text(None, 700, 96, "written", 14, MUTED, "start"))
+                + note(nx + 28, ny, ["the answer, with a", "source under each claim"])
+                + text(None, 176, 556, "the links, now below the fold", 14, MUTED, "start"))
 
 
 def reranking() -> str:
@@ -316,30 +346,27 @@ def reranking() -> str:
 
 
 def ai_mode() -> str:
-    """#8 — fan-out. One question becomes several searches, then one answer."""
-    p = Plane(516, 320, 620, 450, 1, 1)
-    subs = [0.14, 0.31, 0.5, 0.69, 0.86]
-    out = []
-    for i, s in enumerate(subs):
-        out.append(f'<path class="draw" d="{p.path([(0.5, 0.06), (0.5, 0.2), (s, 0.34), (s, 0.5)])}" '
-                   f'fill="none" stroke="{BLUE}" stroke-width="1.5" opacity="0.45" '
-                   f'style="--len:400;animation-delay:{i * 0.07:.2f}s"/>')
-        out.append(f'<path class="draw" d="{p.path([(s, 0.66), (s, 0.8), (0.5, 0.9), (0.5, 0.96)])}" '
-                   f'fill="none" stroke="{BLUE}" stroke-width="1.5" opacity="0.45" '
-                   f'style="--len:400;animation-delay:{0.5 + i * 0.07:.2f}s"/>')
-        for k in range(3):
-            x, y = p(s + (k - 1) * 0.035, 0.58)
-            out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="6" fill="{BLUE}" '
-                       f'style="--o:{0.8 - k * 0.2:.2f};animation-delay:{0.35 + i * 0.07:.2f}s"/>')
-    for u, v, r, o in ((0.5, 0.06, 13, 0.95), (0.5, 0.96, 15, 1.0)):
-        x, y = p(u, v)
-        out.append(f'<circle class="c" cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{BLUE}" '
-                   f'style="--o:{o};animation-delay:0.1s"/>')
-    nx, ny = p(0.86, 0.58)
+    """#8 — one question becomes several searches, and one answer comes back."""
+    p = Plane(516, 314, 700, 470, 1, 1)
+    out = [slab(p, 0.02, 0.02, 0.98, 0.98, "#ffffff", 1, 0, RULE)]
+    out.append(searchbox(p, 0.08, 0.92, 0.12, 0.56, 0.1))
+    chips = [(0.09, 0.24), (0.35, 0.20), (0.60, 0.26), (0.09, 0.19), (0.31, 0.23), (0.57, 0.21)]
+    for k, (u, w) in enumerate(chips):
+        v = 0.29 if k < 3 else 0.375
+        out.append(slab(p, u, v - 0.032, u + w, v + 0.032, BLUE, 0.13, 0.4 + k * 0.06))
+        out.append(textline(p, u + 0.02, u + w - 0.03, v, 0.03, 0.45, 0.45 + k * 0.06, BLUE))
+    for k, (u, w) in enumerate(chips):
+        v = 0.29 if k < 3 else 0.375
+        sx, sy = p(u + w / 2, v + 0.04)
+        ex, ey = p(0.5, 0.52)
+        out.append(f'<line class="c" x1="{sx:.1f}" y1="{sy:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" '
+                   f'stroke="{BLUE}" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/>')
+    out.append(slab(p, 0.06, 0.55, 0.94, 0.93, ACCENT, 0.10, 0.95))
+    for i, w in enumerate([0.78, 0.82, 0.70, 0.76, 0.50]):
+        out.append(textline(p, 0.10, 0.10 + w, 0.61 + i * 0.062, 0.036, 0.40, 1.05 + i * 0.05, BLUE))
+    nx, ny = p(0.83, 0.33)
     return wrap(lifted("".join(out))
-                + note(nx + 40, ny, ["five searches the user", "never typed"])
-                + text(None, 176, 108, "one question", 14, MUTED, "start")
-                + text(None, 176, 560, "one answer", 14, MUTED, "start"))
+                + note(nx + 30, ny, ["six searches the user", "never typed"]))
 
 
 def measuring() -> str:
@@ -366,47 +393,63 @@ def measuring() -> str:
 # ------------------------------------------------- the standalone essays
 
 def chinese_wisdom() -> str:
-    """Where the AI lives. A separate destination nobody visits, against a
-    function embedded in the surface people are already inside all day."""
-    p = Plane(516, 320, 660, 430, 2, 8)
+    """A destination nobody opens, against a function inside the app they live in."""
+    p = Plane(516, 314, 720, 450, 2, 1)
     out = []
-    for i in range(8):
-        o = 0.16 + 0.04 * (i % 3)
-        out.append(f'<polygon class="c" points="{p.quad(0.04, i + 0.18, 0.42, i + 0.82)}" '
-                   f'fill="{BLUE}" style="--o:{o:.2f};animation-delay:{i * 0.05:.2f}s"/>')
-    out.append(f'<polygon class="c" points="{p.quad(1.10, 0.18, 1.96, 7.82)}" fill="{BLUE}" '
-               f'style="--o:0.12;animation-delay:0.5s"/>')
-    for i in range(8):
-        out.append(f'<polygon class="c" points="{p.quad(1.20, i + 0.28, 1.86, i + 0.72)}" '
-                   f'fill="{BLUE}" style="--o:0.78;animation-delay:{0.7 + i * 0.05:.2f}s"/>')
-    nx, ny = p(1.96, 4)
+    out.append(slab(p, 0.20, 0.30, 0.62, 0.70, "#ffffff", 1, 0.1, RULE))
+    out.append(slab(p, 0.34, 0.40, 0.48, 0.53, BLUE, 0.85, 0.2))
+    out.append(textline(p, 0.28, 0.54, 0.60, 0.035, 0.28, 0.25))
+    out.append(slab(p, 1.10, 0.06, 1.92, 0.94, "#ffffff", 1, 0.45, RULE))
+    out.append(textline(p, 1.18, 1.62, 0.14, 0.045, 0.30, 0.5))
+    for r in range(3):
+        for c in range(4):
+            u = 1.18 + c * 0.18
+            v = 0.26 + r * 0.19
+            embedded = (r, c) == (1, 2)
+            out.append(slab(p, u, v, u + 0.13, v + 0.13,
+                            ACCENT if embedded else BLUE,
+                            0.9 if embedded else 0.20, 0.55 + (r * 4 + c) * 0.04))
+    out.append(slab(p, 1.18, 0.84, 1.84, 0.90, BLUE, 0.14, 0.95))
+    nx, ny = p(1.62, 0.45)
     return wrap(lifted("".join(out))
-                + note(nx + 34, ny, ["one surface people are", "already inside all day"])
-                + text(None, 196, 96, "a place to go", 14, MUTED, "start")
-                + text(None, 560, 96, "somewhere they already are", 14, MUTED, "start"))
+                + note(nx + 40, ny, ["the same feature, where", "they already spend the day"])
+                + text(None, 210, 96, "an app to open", 14, MUTED, "start")
+                + text(None, 620, 96, "an app they never close", 14, MUTED, "start"))
 
 
 def vibe_code_rush() -> str:
-    """How fast a product now gets built, using the post's own four numbers."""
-    p = Plane(516, 322, 620, 420, 1, 4)
-    rows = [("first product", 30 * 24, "30 days"), ("second", 15 * 24, "15 days"),
-            ("later ones", 4, "4 hours"), ("now", 1, "1 hour")]
-    top = rows[0][1]
+    """Products shipping, and the gap between them collapsing.
+
+    Drawn as the things themselves - little app windows on a timeline - because
+    a bar chart of elapsed time says nothing to a reader who has not already
+    read the post.
+    """
+    p = Plane(516, 312, 700, 400, 1, 1)
+    ships = [(0.02, "30 days"), (0.30, "15 days"), (0.545, "4 hours"), (0.715, "1 hour"),
+             (0.845, ""), (0.915, "")]
+    w, h = 0.115, 0.44
     out = []
-    for i, (name, hours, label) in enumerate(rows):
-        w = max(0.012, hours / top)
-        last = i == len(rows) - 1
-        out.append(f'<polygon class="c" points="{p.quad(0, i + 0.22, w, i + 0.78)}" '
-                   f'fill="{ACCENT if last else BLUE}" style="--o:{1 if last else 0.85};'
-                   f'animation-delay:{i * 0.12:.2f}s"/>')
-        lx, ly = p(0, i + 0.5)
-        out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
-        vx, vy = p(w, i + 0.5)
-        out.append(text(None, vx + 12, vy + 5, label, 14, INK, "start", "500"))
-    nx, ny = p(0.02, 3.5)
+    x0, y0 = p(-0.01, 0.74)
+    x1, y1 = p(0.99, 0.74)
+    out.append(f'<line x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" stroke="{RULE}"/>')
+    for k, (u, label) in enumerate(ships):
+        late = k >= 3
+        top = 0.74 - h
+        out.append(slab(p, u, top, u + w, 0.74, "#ffffff", 1, k * 0.13, RULE))
+        out.append(slab(p, u, top, u + w, top + 0.052, ACCENT if late else BLUE,
+                        0.9, k * 0.13 + 0.04))
+        for i, ww in enumerate([0.72, 0.86, 0.54, 0.80, 0.46]):
+            out.append(textline(p, u + 0.014, u + 0.014 + (w - 0.028) * ww,
+                                top + 0.11 + i * 0.062, 0.030, 0.22, k * 0.13 + 0.07 + i * 0.02))
+        tick_x, tick_y = p(u + w / 2, 0.74)
+        out.append(f'<line x1="{tick_x:.1f}" y1="{tick_y:.1f}" x2="{tick_x:.1f}" '
+                   f'y2="{tick_y + 8:.1f}" stroke="{MUTED}" stroke-width="1.1"/>')
+        if label:
+            out.append(text(None, tick_x, tick_y + 30, label, 14, MUTED))
+    nx, ny = p(0.915 + w, 0.50)
     return wrap(lifted("".join(out))
-                + note(nx + 150, ny, ["from a month", "to an hour"])
-                + text(None, 300, 566, "time to ship one product, same builder", 14, MUTED, "start"))
+                + note(nx + 30, ny, ["same builder, and the", "gap keeps closing"])
+                + text(None, 176, 104, "each product, and how long it took", 14, MUTED, "start"))
 
 
 def keyword_clustering() -> str:
@@ -478,21 +521,29 @@ def blueprint() -> str:
 
 
 def cms_pipeline() -> str:
-    """One model call, and how much of its answer survives the rules."""
-    p = Plane(516, 320, 620, 420, 1, 3)
-    rows = [("what the model wrote", 1.0, 0.30), ("what passed the rules", 0.62, 0.62),
-            ("what got published", 0.48, 1.0)]
+    """A draft, the rules it has to pass, and the page that comes out."""
+    p = Plane(516, 314, 730, 440, 3, 1)
     out = []
-    for i, (name, w, o) in enumerate(rows):
-        last = i == len(rows) - 1
-        out.append(f'<polygon class="c" points="{p.quad(0, i + 0.22, w, i + 0.78)}" '
-                   f'fill="{ACCENT if last else BLUE}" style="--o:{o};animation-delay:{i * 0.14:.2f}s"/>')
-        lx, ly = p(0, i + 0.5)
-        out.append(text(None, lx - 14, ly + 5, name, 14, MUTED, "end"))
-    nx, ny = p(0.48, 2.5)
+    out.append(slab(p, 0.05, 0.06, 0.92, 0.94, "#ffffff", 1, 0, RULE))
+    for i, w in enumerate([0.62, 0.70, 0.55, 0.68, 0.44, 0.66, 0.38]):
+        out.append(textline(p, 0.12, 0.12 + w * 0.9, 0.17 + i * 0.105, 0.045, 0.24, 0.1 + i * 0.04))
+    out.append(slab(p, 1.06, 0.06, 1.93, 0.94, "#ffffff", 1, 0.5, RULE))
+    checks = [True, True, False, True, True, False, True]
+    for i, ok in enumerate(checks):
+        v = 0.17 + i * 0.105
+        col = ACCENT if ok else BLUE
+        out.append(slab(p, 1.13, v - 0.03, 1.19, v + 0.03, col, 0.9 if ok else 0.22, 0.6 + i * 0.05))
+        out.append(textline(p, 1.23, 1.23 + (0.5 if ok else 0.34), v, 0.04, 0.22, 0.62 + i * 0.05))
+    out.append(slab(p, 2.07, 0.06, 2.94, 0.94, "#ffffff", 1, 1.1, RULE))
+    out.append(textline(p, 2.14, 2.72, 0.16, 0.055, 0.9, 1.2, BLUE))
+    for i, w in enumerate([0.68, 0.74, 0.60, 0.70, 0.46]):
+        out.append(textline(p, 2.14, 2.14 + w, 0.28 + i * 0.088, 0.04, 0.22, 1.25 + i * 0.04))
+    nx, ny = p(1.93, 0.485)
     return wrap(lifted("".join(out))
-                + note(nx + 40, ny, ["one call, and the half", "of it worth keeping"])
-                + text(None, 330, 566, "a single generation, then the checks", 14, MUTED, "start"))
+                + note(nx + 26, ny, ["two rules it failed,", "so it went back"])
+                + text(None, 178, 566, "draft", 14, MUTED, "start")
+                + text(None, 480, 566, "the checks", 14, MUTED, "start")
+                + text(None, 790, 566, "published", 14, MUTED, "start"))
 
 
 def agent_platform() -> str:
@@ -569,22 +620,15 @@ def less_agentic() -> str:
 
 
 def series_search_engine() -> str:
-    """The whole series in one picture: what each stage hands the next."""
-    p = Plane(516, 320, 660, 430, 6, 1)
-    stages = [("crawl", 1.00), ("index", 0.86), ("BM25", 0.55), ("PageRank", 0.38),
-              ("rerank", 0.16), ("answer", 0.05)]
-    out = []
-    for i, (name, h) in enumerate(stages):
-        last = i == len(stages) - 1
-        out.append(f'<polygon class="c" points="{p.quad(i + 0.14, 0.5 - h / 2, i + 0.86, 0.5 + h / 2)}" '
-                   f'fill="{ACCENT if last else BLUE}" style="--o:{1 if last else 0.30 + i * 0.11:.2f};'
-                   f'animation-delay:{i * 0.11:.2f}s"/>')
-        lx, ly = p(i + 0.5, 1.0)
-        out.append(text(None, lx, ly + 30, name, 14, MUTED))
-    nx, ny = p(6, 0.5)
+    """The series in one picture: the thing being rebuilt, a search page."""
+    p = Plane(516, 314, 700, 460, 1, 1)
+    out = [slab(p, 0.02, 0.02, 0.98, 0.98, "#ffffff", 1, 0, RULE)]
+    out.append(searchbox(p, 0.08, 0.92, 0.16, 0.46, 0.15))
+    for i in range(3):
+        out.append(result(p, 0.08, 0.34 + i * 0.22, 0.66, 0.45 + i * 0.14))
+    nx, ny = p(0.74, 0.39)
     return wrap(lifted("".join(out))
-                + note(nx + 26, ny, ["each stage is slower", "and sees fewer"])
-                + text(None, 190, 96, "documents reaching each stage", 14, MUTED, "start"))
+                + note(nx + 40, ny, ["nine parts, from the", "crawler to this page"]))
 
 
 COVERS = {
