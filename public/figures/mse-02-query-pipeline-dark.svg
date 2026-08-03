@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700" font-family="Georgia, 'Times New Roman', serif">
+  <style>
+    .bg   { fill: #131314; }
+    .box  { fill: #1b1c1f; stroke: #3a3d42; stroke-width: 1; }
+    .fill { fill: #e8eaed; stroke: none; }
+    .grp  { fill: none; stroke: #3a3d42; stroke-width: 1; stroke-dasharray: 4 4; }
+    .t    { fill: #e8eaed; font-size: 14px; font-weight: 700; }
+    .tw   { fill: #131314; font-size: 14px; font-weight: 700; }
+    .s    { fill: #9aa0a6; font-size: 11.5px; font-style: italic; }
+    .sw   { fill: #5f6368; font-size: 11.5px; font-style: italic; }
+    .n    { fill: #7c8288; font-size: 10px; font-family: ui-monospace, Menlo, monospace; }
+    .lbl  { fill: #9aa0a6; font-size: 10px; letter-spacing: 1.6px; font-family: Arial, Helvetica, sans-serif; }
+    .eyeb { fill: #9aa0a6; font-size: 10.5px; letter-spacing: 2px; font-family: Arial, Helvetica, sans-serif; }
+    .arr  { stroke: #6b7075; stroke-width: 1.2; fill: none; stroke-dasharray: 5 4; }
+    .arrs { stroke: #e8eaed; stroke-width: 1.4; fill: none; }
+    .num  { fill: #e8eaed; font-size: 12.5px; font-weight: 700; font-family: ui-monospace, Menlo, monospace; }
+  </style>
+
+  <rect class="bg" width="1000" height="700"/>
+  <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7075"/>
+  </marker>
+  <marker id="ab2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#e8eaed"/>
+  </marker>
+
+  <text class="eyeb" x="40" y="36">FIGURE 2 · QUERY PIPELINE — RUNS PER REQUEST</text>
+  <line x1="40" y1="50" x2="960" y2="50" stroke="#3a3d42"/>
+
+  <!-- query in -->
+  <rect class="fill" x="360" y="76" width="280" height="44" rx="4"/>
+  <text class="tw" x="384" y="104">Search query</text>
+
+  <path class="arrs" marker-end="url(#ab2)" d="M 500 120 V 148"/>
+
+  <!-- I. retrieve -->
+  <rect class="grp" x="230" y="150" width="540" height="268" rx="4"/>
+  <text class="lbl" x="246" y="172">I · RETRIEVE AND SCORE</text>
+
+  <rect class="box" x="290" y="186" width="420" height="52" rx="4"/>
+  <text class="n" x="300" y="202">1</text>
+  <text class="t" x="320" y="210">Tokenize and stem</text>
+  <text class="s" x="320" y="227">same code path the indexer used, or nothing matches</text>
+
+  <rect class="box" x="290" y="258" width="420" height="52" rx="4"/>
+  <text class="n" x="300" y="274">2</text>
+  <text class="t" x="320" y="282">BM25F over the inverted index</text>
+  <text class="s" x="320" y="299">title weighted 4x · k1=1.2 · b=0.75 · any term qualifies</text>
+
+  <rect class="box" x="290" y="330" width="420" height="52" rx="4"/>
+  <text class="n" x="300" y="346">3</text>
+  <text class="t" x="320" y="354">Blend PageRank and freshness</text>
+  <text class="s" x="320" y="371">0.8 x BM25 + 0.2 x PageRank · exponential decay</text>
+
+  <path class="arr" marker-end="url(#a2)" d="M 500 238 V 256"/>
+  <path class="arr" marker-end="url(#a2)" d="M 500 310 V 328"/>
+
+  <!-- II. rerank -->
+  <rect class="grp" x="230" y="436" width="540" height="140" rx="4"/>
+  <text class="lbl" x="246" y="458">II · RERANK</text>
+
+  <rect class="box" x="290" y="472" width="420" height="52" rx="4"/>
+  <text class="n" x="300" y="488">4</text>
+  <text class="t" x="320" y="496">Cross-encoder over the top 5</text>
+  <text class="s" x="320" y="513">ms-marco-MiniLM-L-6-v2 · 22M params · ONNX on CPU</text>
+
+  <rect class="box" x="290" y="536" width="420" height="26" rx="4" stroke="#e8eaed"/>
+  <text class="s" x="320" y="554" fill="#e8eaed">worth 23% of nDCG and 46% of MRR · costs 1,158 ms at p50</text>
+
+  <path class="arrs" marker-end="url(#ab2)" d="M 500 382 V 470"/>
+
+  <!-- results -->
+  <rect class="fill" x="360" y="600" width="280" height="44" rx="4"/>
+  <text class="tw" x="384" y="628">Ranked results</text>
+  <path class="arrs" marker-end="url(#ab2)" d="M 500 576 V 598"/>
+
+  <!-- side branch: AI overview -->
+  <rect class="grp" x="790" y="150" width="170" height="268" rx="4"/>
+  <text class="lbl" x="806" y="172">III · AI OVERVIEW</text>
+
+  <rect class="box" x="806" y="186" width="138" height="52" rx="4"/>
+  <text class="t" x="820" y="210">Query fan-out</text>
+  <text class="s" x="820" y="227">co-occurrence</text>
+
+  <rect class="box" x="806" y="258" width="138" height="52" rx="4"/>
+  <text class="t" x="820" y="282">Hybrid retrieval</text>
+  <text class="s" x="820" y="299">pgvector + BM25</text>
+
+  <rect class="box" x="806" y="330" width="138" height="52" rx="4"/>
+  <text class="t" x="820" y="354">Synthesis</text>
+  <text class="s" x="820" y="371">Groq · citations</text>
+
+  <path class="arr" marker-end="url(#a2)" d="M 875 238 V 256"/>
+  <path class="arr" marker-end="url(#a2)" d="M 875 310 V 328"/>
+  <path class="arr" marker-end="url(#a2)" d="M 640 98 H 875 V 184"/>
+
+  <!-- known gaps -->
+  <rect class="grp" x="40" y="150" width="170" height="268" rx="4"/>
+  <text class="lbl" x="56" y="172">MEASURED GAPS</text>
+
+  <text class="num" x="56" y="196">a</text>
+  <text class="s" x="76" y="196">spell correction is</text>
+  <text class="s" x="76" y="211">wired to another</text>
+  <text class="s" x="76" y="226">endpoint entirely</text>
+
+  <text class="num" x="56" y="256">b</text>
+  <text class="s" x="76" y="256">no phrase or</text>
+  <text class="s" x="76" y="271">proximity signal</text>
+
+  <text class="num" x="56" y="301">c</text>
+  <text class="s" x="76" y="301">any single term</text>
+  <text class="s" x="76" y="316">admits a document</text>
+
+  <text class="num" x="56" y="346">d</text>
+  <text class="s" x="76" y="346">no URL or domain</text>
+  <text class="s" x="76" y="361">field is scored</text>
+
+  <!-- a and b land on tokenize, c and d on BM25F. Ordered down the page so
+       the connectors run straight and never cross. -->
+  <path class="arr" d="M 210 196 H 250 V 200 H 288"/>
+  <path class="arr" d="M 210 260 H 268 V 224 H 288"/>
+  <path class="arr" d="M 210 305 H 250 V 276 H 288"/>
+  <path class="arr" d="M 210 350 H 268 V 298 H 288"/>
+
+  <text class="s" x="40" y="668">Numbered gaps are what the 50-query evaluation surfaced. See docs/posts/09.</text>
+</svg>

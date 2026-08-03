@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560" font-family="Georgia, 'Times New Roman', serif">
+  <style>
+    .bg   { fill: #ffffff; }
+    .box  { fill: #ffffff; stroke: #d4d4d4; stroke-width: 1; }
+    .fill { fill: #0a0a0a; stroke: none; }
+    .grp  { fill: none; stroke: #d4d4d4; stroke-width: 1; stroke-dasharray: 4 4; }
+    .t    { fill: #0a0a0a; font-size: 14px; font-weight: 700; }
+    .tw   { fill: #ffffff; font-size: 14px; font-weight: 700; }
+    .s    { fill: #767676; font-size: 11.5px; font-style: italic; }
+    .sw   { fill: #d8d8d8; font-size: 11.5px; font-style: italic; }
+    .n    { fill: #9a9a9a; font-size: 10px; font-family: ui-monospace, Menlo, monospace; }
+    .lbl  { fill: #767676; font-size: 10px; letter-spacing: 1.6px; font-family: Arial, Helvetica, sans-serif; }
+    .eyeb { fill: #767676; font-size: 10.5px; letter-spacing: 2px; font-family: Arial, Helvetica, sans-serif; }
+    .arr  { stroke: #9a9a9a; stroke-width: 1.2; fill: none; stroke-dasharray: 5 4; }
+    .arrs { stroke: #0a0a0a; stroke-width: 1.4; fill: none; }
+  </style>
+
+  <rect class="bg" width="1000" height="560"/>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#9a9a9a"/>
+  </marker>
+  <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#0a0a0a"/>
+  </marker>
+
+  <text class="eyeb" x="40" y="36">FIGURE 1 · BUILD PIPELINE — RUNS OFFLINE</text>
+  <line x1="40" y1="50" x2="960" y2="50" stroke="#e5e5e5"/>
+
+  <!-- I. fetch -->
+  <rect class="grp" x="40" y="76" width="270" height="200" rx="4"/>
+  <text class="lbl" x="56" y="98">I · FETCH</text>
+
+  <rect class="box" x="60" y="112" width="230" height="56" rx="4"/>
+  <text class="n" x="70" y="128">1</text>
+  <text class="t" x="90" y="136">Crawler</text>
+  <text class="s" x="90" y="153">BFS · robots.txt · 1.5s rate limit</text>
+
+  <rect class="box" x="60" y="196" width="230" height="56" rx="4"/>
+  <text class="n" x="70" y="212">2</text>
+  <text class="t" x="90" y="220">Parser</text>
+  <text class="s" x="90" y="237">text · links · content hash</text>
+
+  <path class="arr" marker-end="url(#a)" d="M 175 168 V 194"/>
+
+  <!-- II. index -->
+  <rect class="grp" x="350" y="76" width="300" height="404" rx="4"/>
+  <text class="lbl" x="366" y="98">II · INDEX</text>
+
+  <rect class="box" x="370" y="112" width="260" height="56" rx="4"/>
+  <text class="n" x="380" y="128">3</text>
+  <text class="t" x="400" y="136">Quality gate</text>
+  <text class="s" x="400" y="153">≥100 words · dedup by hash</text>
+
+  <rect class="box" x="370" y="196" width="260" height="56" rx="4"/>
+  <text class="n" x="380" y="212">4</text>
+  <text class="t" x="400" y="220">Tokenizer</text>
+  <text class="s" x="400" y="237">lowercase · stopwords · Porter stem</text>
+
+  <rect class="box" x="370" y="280" width="260" height="56" rx="4"/>
+  <text class="n" x="380" y="296">5</text>
+  <text class="t" x="400" y="304">Inverted index</text>
+  <text class="s" x="400" y="321">term → postings · COPY bulk load</text>
+
+  <rect class="box" x="370" y="364" width="260" height="56" rx="4"/>
+  <text class="n" x="380" y="380">6</text>
+  <text class="t" x="400" y="388">PageRank</text>
+  <text class="s" x="400" y="405">d=0.85 · 20 iterations · dangling</text>
+
+  <path class="arr" marker-end="url(#a)" d="M 290 224 H 330 V 140 H 368"/>
+  <path class="arr" marker-end="url(#a)" d="M 500 168 V 194"/>
+  <path class="arr" marker-end="url(#a)" d="M 500 252 V 278"/>
+  <path class="arr" marker-end="url(#a)" d="M 500 336 V 362"/>
+
+  <!-- III. semantic -->
+  <rect class="grp" x="690" y="76" width="270" height="284" rx="4"/>
+  <text class="lbl" x="706" y="98">III · SEMANTIC</text>
+
+  <rect class="box" x="710" y="112" width="230" height="56" rx="4"/>
+  <text class="n" x="720" y="128">7</text>
+  <text class="t" x="740" y="136">Chunker</text>
+  <text class="s" x="740" y="153">~300-token passages</text>
+
+  <rect class="box" x="710" y="196" width="230" height="56" rx="4"/>
+  <text class="n" x="720" y="212">8</text>
+  <text class="t" x="740" y="220">Embedder</text>
+  <text class="s" x="740" y="237">Voyage voyage-3-lite · 512d</text>
+
+  <rect class="box" x="710" y="280" width="230" height="56" rx="4"/>
+  <text class="n" x="720" y="296">9</text>
+  <text class="t" x="740" y="304">HNSW index</text>
+  <text class="s" x="740" y="321">pgvector · cosine</text>
+
+  <path class="arr" marker-end="url(#a)" d="M 630 140 H 670 V 140 H 708"/>
+  <path class="arr" marker-end="url(#a)" d="M 825 168 V 194"/>
+  <path class="arr" marker-end="url(#a)" d="M 825 252 V 278"/>
+
+  <!-- stores -->
+  <rect class="fill" x="370" y="448" width="260" height="52" rx="4"/>
+  <text class="tw" x="400" y="472">PostgreSQL 16 + pgvector</text>
+  <text class="sw" x="400" y="489">pages · postings · pagerank · chunks</text>
+
+  <path class="arrs" marker-end="url(#ab)" d="M 500 420 V 446"/>
+  <path class="arr" marker-end="url(#a)" d="M 825 336 V 474 H 634"/>
+
+  <text class="s" x="40" y="524">Every stage writes to Postgres. The database is the only thing the build and query paths share.</text>
+</svg>
