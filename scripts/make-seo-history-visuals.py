@@ -416,15 +416,24 @@ def arch_2_finetune():
     m.append(t(0.76, 0.712, "≈ 50 optimiser steps", 11, MUTED, "middle"))
     m.append(t(0.52, 0.60, "loss", 11.5, MUTED))
 
-    for k, (a, b) in enumerate((("base", "Mistral 24B"), ("adapter", "QLoRA r16"),
-                                ("epochs", "3"), ("lr", "2e-4"))):
-        x = 0.52 + k * 0.115
-        m.append(rect(x, 0.775, x + 0.10, 0.855, "#f6f8fd", 1, 0.30 + 0.03 * k, RULE))
-        m.append(t(x + 0.05, 0.808, a, 10, MUTED, "middle"))
-        m.append(t(x + 0.05, 0.840, b, 11.5, INK, "middle", "600"))
+    # Three models went through this dataset. Two of them stopped producing
+    # fluent Vietnamese, so the row shows the attempts rather than the winner.
+    for k, (name, note, kept) in enumerate(
+            (("gpt-oss 20B", "unusable", False),
+             ("Qwen 30B", "unusable", False),
+             ("Mistral 24B", "QLoRA r16 · 3 ep", True))):
+        x = 0.515 + k * 0.155
+        m.append(rect(x, 0.775, x + 0.14, 0.862, "#ffffff" if kept else "#f4f6fa", 1,
+                      0.30 + 0.04 * k, BLUE if kept else RULE))
+        m.append(t(x + 0.07, 0.812, name, 11.5, INK if kept else MUTED, "middle",
+                   "600" if kept else "400"))
+        m.append(t(x + 0.07, 0.848, note, 9.5, BLUE if kept else MUTED, "middle"))
+        if not kept:
+            m.append(rect(x + 0.022, 0.8085, x + 0.118, 0.8105, MUTED, 0.55,
+                          0.34 + 0.04 * k))
 
-    m.append(t(0.50, 0.955, "the target is not what the model wrote, "
-               "it is what a human was willing to publish", 13.5, MUTED, "middle"))
+    m.append(t(0.50, 0.955, "three models went through this dataset; "
+               "two of them stopped producing fluent Vietnamese", 13.5, MUTED, "middle"))
     return wrap(SLIDE_DEFS + lifted("".join(m)))
 
 
