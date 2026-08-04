@@ -85,51 +85,64 @@ def loop_arc(p: Plane, u0, u1, v, height=0.075, delay=0.0, o=0.55):
 # It animates in that order. The brief is typed, the machine arrives, the loop
 # draws itself last and does not resolve.
 
-COLS, ROWS = 10, 10
-
-# The ones with something specific in them. A literal, not a random draw: a
-# rebuild has to reproduce the image exactly or it becomes a silent redesign.
-# (9, 4) is the one the annotation lands on, so it stays where it is.
-SPECIFIC = {(1, 1), (6, 0), (3, 3), (0, 6), (7, 7), (4, 5), (2, 9), (9, 4)}
+# Four traces of one article being produced, in the order the architectures
+# happened. A step is a tick; a tick is blue when a model runs inside it. The
+# silhouette of each row is the archetype, so the evolution is legible without
+# a single box or arrow.
+#
+# `model` is a predicate over the step index, not a random draw, so a rebuild
+# reproduces the image instead of quietly redesigning it.
+TRACES = [
+    ("n8n chain", 42, lambda i: i in (9, 21, 33)),
+    ("fine-tuned", 42, lambda i: i in (9, 21, 33)),
+    ("reasoning agent", 108, lambda i: i % 3 == 1 or 44 <= i < 82),
+    ("app + rail", 34, lambda i: 13 <= i <= 16),
+]
 
 
 def cover():
-    """Content at scale, which is the thing this whole post is about.
+    """Four architectures doing one job, drawn as what each one actually does.
 
-    Ninety-nine articles laid out on the plane, four lines each. Almost all of
-    them grey. The handful in blue are the ones with something in them that
-    came from a person who knew something specific, which is the property
-    Google named in 2024 and the property the last section is about.
+    Every row is one article being produced, left to right, one tick per step.
+    Grey is a step code decides; blue is a step where a model runs. They share
+    a start rail and each ends on its own terminal mark, so the same job is
+    visible while the shapes are not: three model calls in a fixed frame, then
+    the same frame with heavier weights, then a long irregular run that bunches
+    where it could not settle, then a short quiet one.
 
-    Line lengths come from a formula so the field has the texture of prose
-    rather than the regularity of a grid, and so it redraws identically.
+    Tick heights come from a formula, so the rows read as a recording rather
+    than a diagram, and so a rebuild reproduces the image exactly.
     """
-    # Set left of centre so the right of the canvas is free for the one
-    # annotation. Deep enough that the far rows visibly converge.
-    p = Plane(506, 306, 872, 660, umax=COLS, vmax=ROWS)
+    p = Plane(660, 318, 880, 452, umax=112, vmax=len(TRACES))
     m = []
+    ends = []
 
-    for j in range(ROWS):
-        for i in range(COLS):
-            special = (i, j) in SPECIFIC
-            fill = BLUE if special else MUTED
-            base = 0.66 if special else 0.19
-            delay = 0.018 * i + 0.055 * j
-            for k in range(5):
-                # Deterministic ragged right edge, the way set prose looks.
-                w = 0.32 + 0.50 * (((i * 7 + j * 11 + k * 5) % 7) / 6.0)
-                if k == 4:
-                    w *= 0.66
-                m.append(textline(p, i + 0.08, i + 0.08 + w * 0.84,
-                                  j + 0.20 + k * 0.125, 0.068,
-                                  base if k else base * 1.3,
-                                  delay + k * 0.010, fill, "type"))
+    for j, (label, steps, is_model) in enumerate(TRACES):
+        v = j + 0.5
+        m.append(text(p, -3.0, v + 0.055, label, 15, MUTED, anchor="end"))
+        for i in range(steps):
+            model = is_model(i)
+            # Deterministic, and taller where a model runs so the blue carries
+            # weight without a second colour.
+            h = 0.085 + 0.085 * (((i * 5 + j * 7) % 6) / 5.0) + (0.14 if model else 0)
+            if j == 1 and model:
+                h += 0.06          # the fine-tune changed the model, not the shape
+            m.append(slab(p, i * 1.02, v - h / 2, i * 1.02 + 0.62, v + h / 2,
+                          BLUE if model else MUTED,
+                          0.80 if model else 0.24,
+                          0.30 * j + 0.006 * i, cls="type"))
+        m.append(dot(p, steps * 1.02 + 1.1, v, 5.0, ACCENT, 1.0, 0.30 * j + 0.006 * steps))
+        ends.append(p(steps * 1.02 + 1.1, v))
 
-    # Anchor on the blue article at (9, 4), whose right side is the last ink on
-    # that row, so the leader crosses white and lands on the mark it names.
-    ax, ay = p(9 + 0.80, 4 + 0.46)
+    # The start rail, so four different runs read as four attempts at one job.
+    m.append(connect(p, (-1.1, 0.08), (-1.1, len(TRACES) - 0.08), o=0.35, width=1.6))
+
+    # Point at the last run's terminal mark, which is the earliest of the four.
+    # The leader has to land on ink, so it is anchored off that dot rather than
+    # dropped into the white the short rows leave behind.
+    ex, ey = ends[-1]
     return wrap(lifted("".join(m))
-                + note(ax + 52, ay, ["what a specific", "person knew"]))
+                + note(ex + 50, ey, ["the one that shipped", "is the shortest run"]))
 
 
 # ----------------------------------------------------------------- slide 1
