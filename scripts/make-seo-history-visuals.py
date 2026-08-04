@@ -85,180 +85,210 @@ def loop_arc(p: Plane, u0, u1, v, height=0.075, delay=0.0, o=0.55):
 
 PANELS = ("n8n chain", "fine-tuned", "reasoning agent", "app + rail")
 
-PANELS = ("n8n chain", "fine-tuned", "reasoning agent", "app + rail")
-
-# Flat discs and hairlines read as a schematic. These give the marks a body:
-# a node is lit from the upper left, a model-heavy region carries a halo, and
-# each panel sits on a plate so the four shapes read as four objects rather
-# than one drawing with gaps in it.
 COVER_DEFS = f"""  <defs>
-    <radialGradient id="nb" cx="0.34" cy="0.28" r="0.92">
-      <stop offset="0" stop-color="#5b86f7"/>
-      <stop offset="0.52" stop-color="{BLUE}"/>
-      <stop offset="1" stop-color="#00308f"/>
-    </radialGradient>
-    <radialGradient id="nw" cx="0.34" cy="0.28" r="0.95">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#e8edf7"/>
-    </radialGradient>
+    <linearGradient id="plate" x1="0.1" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.94"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.40"/>
+    </linearGradient>
+    <linearGradient id="head" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="{BLUE}"/>
+      <stop offset="1" stop-color="#2f6bf6"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a72f4"/>
+      <stop offset="1" stop-color="{BLUE}"/>
+    </linearGradient>
     <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="{BLUE}" stop-opacity="0.20"/>
-      <stop offset="0.55" stop-color="{BLUE}" stop-opacity="0.07"/>
+      <stop offset="0" stop-color="{BLUE}" stop-opacity="0.16"/>
       <stop offset="1" stop-color="{BLUE}" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="plate" x1="0.1" y1="0" x2="0.6" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.92"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0.34"/>
-    </linearGradient>
-    <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="{BLUE}" stop-opacity="0.12"/>
-      <stop offset="0.5" stop-color="{BLUE}" stop-opacity="0.42"/>
-      <stop offset="1" stop-color="{BLUE}" stop-opacity="0.12"/>
-    </linearGradient>
     <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
-      <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#0b1a3a" flood-opacity="0.13"/>
+      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0b1a3a" flood-opacity="0.14"/>
+    </filter>
+    <filter id="card" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0b1a3a" flood-opacity="0.14"/>
     </filter>
   </defs>
 """
 
 
 def cover():
-    """The four archetypes as the shapes they actually are.
+    """The four architectures drawn as the things themselves.
 
-    A chain is a directed line with the model riding on it. A fine-tune is that
-    same line with one node swollen into a cloud of weights, because it changed
-    the model and not the shape. A reasoning agent is a hub with tools around
-    it and a return arc, which is what a ReAct loop is and what a ring of peers
-    is not. What shipped is a list of records with that same hub shrunk to a
-    satellite beside it, so the last panel literally contains the third one.
+    Dots and lines make a graph, and a graph of an n8n workflow is not what an
+    n8n workflow looks like. So panel one is a canvas: a dot grid, nodes with
+    icons and ports, bezier connectors, and a sub-node hanging underneath the
+    way a vector store hangs off an AI node. Panel two is that identical canvas
+    with our own model dropped into the middle slot, because the fine-tune
+    changed the model and not the shape. Panel three is an agent transcript,
+    alternating reasoning and tool calls with the return that makes it a loop.
+    Panel four is the application: a header, rows of articles with status, and
+    the agent in a rail beside them.
 
-    Blue is where a model runs. It grows from three nodes to a hub with a halo
-    and then collapses to a satellite, so the argument of the post is carried
-    as area rather than asserted in a caption.
+    Blue marks where a model runs. It occupies three nodes, then one swapped
+    node, then most of a transcript, then a few bubbles in a side rail.
 
-    Every position is a formula or a literal. No random draws: a rebuild has to
-    reproduce the image or it becomes a silent redesign.
+    Every position is a formula or a literal, so a rebuild reproduces the image.
     """
-    p = Plane(505, 296, 960, 384, umax=4, vmax=1)
+    p = Plane(600, 300, 1092, 396, umax=4, vmax=1)
     m = []
 
-    def q(j, lx, ly):
-        return j + 0.07 + lx * 0.86, 0.09 + ly * 0.72
+    def L(j, lx, ly):
+        return j + 0.06 + lx * 0.88, 0.10 + ly * 0.76
 
-    def xy(j, lx, ly):
-        return p(*q(j, lx, ly))
+    def XY(j, lx, ly):
+        return p(*L(j, lx, ly))
 
-    def orb(j, lx, ly, r=7.0, model=False, d=0.0, o=1.0):
-        """A node with a body. Lit from the upper left so it sits on the page."""
-        x, y = xy(j, lx, ly)
-        fill = "url(#nb)" if model else "url(#nw)"
-        ring = "" if model else (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="none" '
-                                 f'stroke="{MUTED}" stroke-width="1.2" opacity="0.5"/>')
-        return (f'<g class="pop" style="--o:{o};animation-delay:{d:.2f}s">'
-                f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{fill}"/>{ring}</g>')
+    def rect(j, a, b, c, d, fill=None, o=1.0, delay=0.0, stroke=None, cls="rise"):
+        u0, v0 = L(j, a, b)
+        u1, v1 = L(j, c, d)
+        return slab(p, u0, v0, u1, v1, fill, o, delay, stroke, cls)
 
-    def wire(j, a, b, d=0.0, o=0.5, w=1.6):
-        x0, y0 = xy(j, *a)
-        x1, y1 = xy(j, *b)
-        return (f'<line class="c" x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" '
-                f'stroke="{BLUE}" stroke-opacity="0.34" stroke-width="{w}" stroke-linecap="round" '
-                f'style="--o:{o};animation-delay:{d:.2f}s"/>')
+    def circ(j, lx, ly, r, fill, o=1.0, delay=0.0):
+        x, y = XY(j, lx, ly)
+        return (f'<circle class="pop" cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{fill}" '
+                f'style="--o:{o};animation-delay:{delay:.2f}s"/>')
 
-    def halo(j, lx, ly, rx, ry, d=0.0):
-        x, y = xy(j, lx, ly)
-        return (f'<ellipse class="c" cx="{x:.1f}" cy="{y:.1f}" rx="{rx}" ry="{ry}" '
-                f'fill="url(#halo)" style="--o:1;animation-delay:{d:.2f}s"/>')
+    def bez(j, a, b, delay=0.0, o=0.55, w=1.7):
+        """An n8n connector: leaves a port sideways and arrives sideways."""
+        x0, y0 = XY(j, *a)
+        x1, y1 = XY(j, *b)
+        k = max(abs(x1 - x0) * 0.55, 16)
+        return (f'<path class="c" d="M{x0:.1f} {y0:.1f} C{x0 + k:.1f} {y0:.1f} '
+                f'{x1 - k:.1f} {y1:.1f} {x1:.1f} {y1:.1f}" fill="none" stroke="{BLUE}" '
+                f'stroke-opacity="0.42" stroke-width="{w}" '
+                f'style="--o:{o};animation-delay:{delay:.2f}s"/>')
 
     def plate(j, d=0.0):
         pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in
-                       (xy(j, -0.06, -0.05), xy(j, 1.06, -0.05),
-                        xy(j, 1.06, 1.05), xy(j, -0.06, 1.05)))
+                       (XY(j, -0.05, -0.06), XY(j, 1.05, -0.06),
+                        XY(j, 1.05, 1.06), XY(j, -0.05, 1.06)))
         return (f'<polygon class="rise" points="{pts}" fill="url(#plate)" '
                 f'filter="url(#soft)" style="--o:1;animation-delay:{d:.2f}s"/>')
 
-    def ret_arc(j, a, b, bulge, d=0.0, o=0.55, w=2.2):
-        """The return edge, drawn round the outside so the cycle is visible."""
-        x0, y0 = xy(j, *a)
-        x1, y1 = xy(j, *b)
-        cx, cy = xy(j, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - bulge)
-        hx, hy = x1 - (x1 - cx) * 0.16, y1 - (y1 - cy) * 0.16
-        nx, ny = -(y1 - hy), (x1 - hx)
-        n = max((nx * nx + ny * ny) ** 0.5, 1e-6)
-        nx, ny = nx / n * 4.5, ny / n * 4.5
-        return (f'<g class="c" style="--o:{o};animation-delay:{d:.2f}s">'
-                f'<path d="M{x0:.1f} {y0:.1f} Q{cx:.1f} {cy:.1f} {x1:.1f} {y1:.1f}" '
-                f'fill="none" stroke="{BLUE}" stroke-width="{w}" opacity="0.55" '
-                f'stroke-linecap="round"/>'
-                f'<polygon points="{x1:.1f},{y1:.1f} {hx + nx:.1f},{hy + ny:.1f} '
-                f'{hx - nx:.1f},{hy - ny:.1f}" fill="{BLUE}" opacity="0.65"/></g>')
+    def n8n_node(j, lx, ly, w=0.26, h=0.19, model=True, delay=0.0):
+        """A node the way the canvas draws one: card, icon, two lines, ports."""
+        out = [rect(j, lx, ly, lx + w, ly + h, "#ffffff", 1, delay, RULE)]
+        out.append(rect(j, lx + 0.045, ly + 0.048, lx + 0.115, ly + h - 0.048,
+                        BLUE if model else MUTED, 0.92 if model else 0.4, delay + 0.02))
+        out.append(rect(j, lx + 0.145, ly + 0.062, lx + w - 0.04, ly + 0.092,
+                        MUTED, 0.30, delay + 0.03))
+        out.append(rect(j, lx + 0.145, ly + 0.112, lx + w - 0.09, ly + 0.138,
+                        MUTED, 0.20, delay + 0.04))
+        out.append(circ(j, lx, ly + h / 2, 3.4, "#ffffff", 1, delay + 0.02))
+        out.append(circ(j, lx + w, ly + h / 2, 3.4, BLUE, 0.75, delay + 0.02))
+        return "".join(out)
+
+    def grid(j, delay=0.0):
+        """The canvas dot grid, which is most of why an n8n screen is legible."""
+        out = []
+        for r in range(7):
+            for c in range(9):
+                out.append(circ(j, 0.045 + c * 0.115, 0.05 + r * 0.152, 1.25,
+                                MUTED, 0.30, delay))
+        return "".join(out)
 
     for j in range(4):
-        m.append(plate(j, 0.30 * j))
+        m.append(plate(j, 0.26 * j))
 
-    # 1. A line. The model rides on a frame code laid down, and retrieval hangs
-    #    off the middle of it.
-    chain = [0.08, 0.29, 0.50, 0.71, 0.92]
-    for i, lx in enumerate(chain):
+    # 1. The canvas. Three nodes wired left to right, and a vector store hanging
+    #    under the writer the way a sub-node hangs off an AI node.
+    m.append(grid(0, 0.04))
+    xs = (0.02, 0.37, 0.72)
+    for i, lx in enumerate(xs):
+        m.append(n8n_node(0, lx, 0.24, delay=0.10 + 0.07 * i))
         if i:
-            m.append(wire(0, (chain[i - 1], 0.40), (lx, 0.40), 0.05 * i, 0.55))
-        model = i in (1, 2, 3)
-        m.append(orb(0, lx, 0.40, 8.5 if model else 6.0, model, 0.05 * i))
-    m.append(wire(0, (0.50, 0.76), (0.50, 0.44), 0.28, 0.35))
-    m.append(orb(0, 0.50, 0.76, 5.5, False, 0.30))
+            m.append(bez(0, (xs[i - 1] + 0.26, 0.335), (lx, 0.335), 0.12 + 0.07 * i))
+    m.append(n8n_node(0, 0.37, 0.66, 0.26, 0.19, False, 0.34))
+    m.append(bez(0, (0.50, 0.68), (0.50, 0.43), 0.38, 0.5, 1.5))
 
-    # 2. The same line. One node became a cloud of weights.
-    m.append(halo(1, 0.50, 0.40, 78, 62, 0.42))
-    for i, lx in enumerate(chain):
+    # 2. The same canvas. Only the middle node changed.
+    m.append(grid(1, 0.30))
+    for i, lx in enumerate(xs):
+        if i != 1:
+            m.append(n8n_node(1, lx, 0.24, delay=0.36 + 0.06 * i))
         if i:
-            m.append(wire(1, (chain[i - 1], 0.40), (lx, 0.40), 0.34 + 0.03 * i, 0.55))
-        if i != 2:
-            m.append(orb(1, lx, 0.40, 8.5 if i in (1, 3) else 6.0, i in (1, 3),
-                         0.34 + 0.03 * i))
-    for k in range(58):
-        a = 2.399963 * k                       # golden angle: a deterministic disc
-        rr = 0.150 * math.sqrt((k + 0.5) / 58)
-        m.append(orb(1, 0.50 + rr * math.cos(a), 0.40 + rr * 1.28 * math.sin(a),
-                     3.4, True, 0.48 + 0.005 * k, 0.92))
+            m.append(bez(1, (xs[i - 1] + 0.26, 0.335), (lx, 0.335), 0.38 + 0.06 * i))
+    m.append(rect(1, 0.37, 0.20, 0.63, 0.47, "#ffffff", 1, 0.48, BLUE))
+    m.append(rect(1, 0.37, 0.20, 0.63, 0.245, "url(#head)", 1, 0.50))
+    pts = []
+    for k in range(13):
+        t = k / 12
+        pts.append(XY(1, 0.405 + t * 0.19, 0.435 - 0.145 * (1 - (1 - t) ** 2.6)))
+    m.append('<path class="draw" d="M' + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) +
+             f'" fill="none" stroke="{BLUE}" stroke-width="2.1" opacity="0.85" '
+             'style="--len:260;animation-delay:0.56s"/>')
+    m.append(circ(1, 0.37, 0.335, 3.4, "#ffffff", 1, 0.50))
+    m.append(circ(1, 0.63, 0.335, 3.4, BLUE, 0.75, 0.50))
 
-    # 3. A hub with tools around it and a return arc. A ReAct loop is not a ring
-    #    of peers: everything goes back through the model.
-    m.append(halo(2, 0.50, 0.42, 96, 78, 0.62))
-    tools = [(0.50 + 0.34 * math.cos(2 * math.pi * k / 5 - math.pi / 2),
-              0.42 + 0.30 * 1.12 * math.sin(2 * math.pi * k / 5 - math.pi / 2))
-             for k in range(5)]
-    for k, t in enumerate(tools):
-        m.append(wire(2, (0.50, 0.42), t, 0.66 + 0.03 * k, 0.5, 1.8))
-    for k, t in enumerate(tools):
-        m.append(orb(2, t[0], t[1], 6.0, False, 0.68 + 0.03 * k))
-    m.append(orb(2, 0.50, 0.42, 14.0, True, 0.64))
-    m.append(ret_arc(2, tools[3], (0.50, 0.42), -0.40, 0.86))
+    # 3. The transcript. Reasoning, a tool call, an observation, and the return
+    #    edge that sends it round again.
+    m.append(rect(2, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.56, RULE))
+    m.append(halo := f'<ellipse class="c" cx="{XY(2, 0.5, 0.5)[0]:.1f}" '
+             f'cy="{XY(2, 0.5, 0.5)[1]:.1f}" rx="104" ry="86" fill="url(#halo)" '
+             'style="--o:1;animation-delay:0.60s"/>')
+    rows = ((0.00, 0.62, False), (0.10, 0.44, True), (0.10, 0.52, False),
+            (0.20, 0.40, True), (0.20, 0.48, False), (0.10, 0.56, True))
+    for k, (ind, w, tool) in enumerate(rows):
+        y = 0.10 + k * 0.132
+        if tool:
+            m.append(rect(2, 0.07 + ind, y, 0.07 + ind + w, y + 0.082,
+                          "url(#chip)", 1, 0.62 + 0.05 * k, cls="type"))
+            m.append(rect(2, 0.10 + ind, y + 0.024, 0.13 + ind, y + 0.058,
+                          "#ffffff", 0.85, 0.64 + 0.05 * k, cls="type"))
+        else:
+            m.append(rect(2, 0.07 + ind, y + 0.014, 0.07 + ind + w, y + 0.068,
+                          MUTED, 0.26, 0.62 + 0.05 * k, cls="type"))
+    ax0, ay0 = XY(2, 0.055, 0.86)
+    ax1, ay1 = XY(2, 0.055, 0.145)
+    m.append(f'<g class="c" style="--o:0.6;animation-delay:0.96s">'
+             f'<path d="M{ax0:.1f} {ay0:.1f} C{ax0 - 46:.1f} {ay0:.1f} '
+             f'{ax1 - 46:.1f} {ay1:.1f} {ax1:.1f} {ay1:.1f}" fill="none" '
+             f'stroke="{BLUE}" stroke-opacity="0.55" stroke-width="2.1"/>'
+             f'<polygon points="{ax1:.1f},{ay1:.1f} {ax1 - 8:.1f},{ay1 + 5:.1f} '
+             f'{ax1 - 1:.1f},{ay1 + 10:.1f}" fill="{BLUE}" opacity="0.65"/></g>')
 
-    # 4. Records, and that same hub shrunk to a satellite beside them.
-    for r in range(6):
-        ly = 0.10 + r * 0.128
-        m.append(slab(p, *q(3, 0.03, ly - 0.020), *q(3, 0.30 + 0.22 * ((r * 3) % 4) / 3.0,
-                                                     ly + 0.020),
-                      MUTED, 0.19, 1.00 + 0.04 * r, cls="rise"))
-        m.append(orb(3, 0.575, ly, 3.6, r in (1, 4), 1.02 + 0.04 * r, 0.75))
-    m.append(halo(3, 0.84, 0.42, 44, 36, 1.28))
-    sat = [(0.84 + 0.115 * math.cos(2 * math.pi * k / 5 - math.pi / 2),
-            0.42 + 0.115 * 1.12 * math.sin(2 * math.pi * k / 5 - math.pi / 2))
-           for k in range(5)]
-    for k, t in enumerate(sat):
-        m.append(wire(3, (0.84, 0.42), t, 1.30 + 0.02 * k, 0.42, 1.3))
-        m.append(orb(3, t[0], t[1], 3.4, False, 1.32 + 0.02 * k))
-    m.append(orb(3, 0.84, 0.42, 9.5, True, 1.28))
-    m.append(ret_arc(3, sat[3], (0.84, 0.42), -0.15, 1.42, 0.5, 1.5))
-    m.append(wire(3, (0.60, 0.31), (0.74, 0.39), 1.36, 0.4))
-    m.append(wire(3, (0.74, 0.46), (0.60, 0.56), 1.38, 0.4))
+    # 4. The application. Header, rows of articles with status, and the agent in
+    #    a rail on the right.
+    m.append(rect(3, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.84, RULE))
+    m.append(rect(3, 0.00, 0.02, 1.00, 0.115, "url(#head)", 1, 0.86))
+    for k in range(3):
+        m.append(circ(3, 0.045 + k * 0.045, 0.068, 2.6, "#ffffff", 0.75, 0.88))
+    for r in range(5):
+        y = 0.20 + r * 0.152
+        m.append(rect(3, 0.045, y, 0.045 + (0.30, 0.40, 0.26, 0.36, 0.31)[r],
+                      y + 0.045, MUTED, 0.24, 0.90 + 0.04 * r, cls="rise"))
+        m.append(rect(3, 0.50, y + 0.004, 0.575, y + 0.041,
+                      BLUE if r in (1, 3) else MUTED, 0.62 if r in (1, 3) else 0.22,
+                      0.92 + 0.04 * r, cls="rise"))
+        m.append(rect(3, 0.00, y + 0.098, 0.635, y + 0.102, RULE, 0.8, 0.90 + 0.04 * r))
+    m.append(rect(3, 0.635, 0.115, 0.639, 0.98, RULE, 0.9, 1.10))
+    bubbles = ((0.665, 0.90, 0.20, False), (0.72, 0.955, 0.34, True),
+               (0.665, 0.86, 0.48, False), (0.75, 0.955, 0.62, True))
+    for k, (x0, x1, y, mine) in enumerate(bubbles):
+        m.append(rect(3, x0, y, x1, y + 0.10, "url(#chip)" if mine else MUTED,
+                      1 if mine else 0.22, 1.12 + 0.06 * k, cls="rise"))
+    m.append(rect(3, 0.665, 0.80, 0.90, 0.875, "#ffffff", 1, 1.36, RULE, cls="rise"))
 
     for j, label in enumerate(PANELS):
-        u, _ = q(j, 0.5, 0)
-        m.append(text(p, u, 1.02, label, 15, MUTED))
+        u, _ = L(j, 0.5, 0)
+        m.append(text(p, u, 1.03, label, 15, MUTED))
 
-    ax, ay = xy(3, 0.965, 0.42)
-    return wrap(COVER_DEFS + lifted("".join(m))
-                + note(ax + 34, ay, ["the loop survived.", "the stage did not."]))
+    # A diagonal leader, so the annotation sits under the last panel instead of
+    # forcing a right margin wide enough to push everything off centre. The text
+    # is right-aligned and the leader leaves from its right edge, which keeps
+    # both clear of the panel label underneath.
+    tx, ty = XY(3, 0.80, 0.60)
+    ex, ey = 1036, 502
+    m.append(f'<g class="mark"><path d="M{ex:.1f} {ey - 8:.1f} L{tx + 12:.1f} '
+             f'{ty + 18:.1f}" fill="none" stroke="{ACCENT_TEXT}" stroke-width="1.4"/>'
+             f'<circle cx="{tx + 10:.1f}" cy="{ty + 16:.1f}" r="2.6" fill="{ACCENT_TEXT}"/>'
+             f'<text x="{ex - 12:.1f}" y="{ey:.1f}" font-size="17" text-anchor="end" '
+             f'fill="{ACCENT_TEXT}">the loop survived.</text>'
+             f'<text x="{ex - 12:.1f}" y="{ey + 23:.1f}" font-size="17" text-anchor="end" '
+             f'fill="{ACCENT_TEXT}">the stage did not.</text></g>')
+
+    return wrap(COVER_DEFS + lifted("".join(m)))
 
 
 
