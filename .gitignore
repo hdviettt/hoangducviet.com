@@ -50,3 +50,4 @@ public/uploads/
 # The .cjs scripts in scripts/ are committed; the dumped/rewritten markdown is not.
 /scripts/series/
 public/figures/_*.svg
+__pycache__/
