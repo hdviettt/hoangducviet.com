@@ -51,3 +51,4 @@ public/uploads/
 /scripts/series/
 public/figures/_*.svg
 __pycache__/
+scripts/seo-history-inline/
