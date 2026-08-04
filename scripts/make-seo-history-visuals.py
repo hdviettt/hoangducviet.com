@@ -1,9 +1,9 @@
 """Cover and carousel slides for `a-brief-history-of-seo-content-writing-with-ai`.
 
 The post is about four architectures for one job, so every drawing here is one
-of those architectures rather than a chart about them. The cover plays all four
-in order; the carousel gives each its own frame at a size where the wiring is
-readable.
+of those architectures rather than a chart about them. The cover puts all four topologies side by side so the
+shape can be seen changing; the carousel gives each one its own frame at a size
+where the wiring is readable.
 
     python scripts/make-seo-history-visuals.py            # everything
     python scripts/make-seo-history-visuals.py arch-1-chain
@@ -14,6 +14,7 @@ because a chart with invented values is worse than no chart.
 """
 from __future__ import annotations
 
+import math
 import sys
 from pathlib import Path
 
@@ -76,73 +77,112 @@ def loop_arc(p: Plane, u0, u1, v, height=0.075, delay=0.0, o=0.55):
 
 # -------------------------------------------------------------------- cover
 #
-# One idea, not four. Four architectures at cover scale come out as four rows
-# of unlabelled rectangles, which is the failure this whole style exists to
-# avoid - so the cover draws the moment the post turns on instead: a brief with
-# a rule in it, a machine reading the rule, and the machine going round again
-# because the rule had a tolerance nobody ever had to write down.
-#
-# It animates in that order. The brief is typed, the machine arrives, the loop
-# draws itself last and does not resolve.
+# Two earlier versions of this cover failed in ways worth keeping a note of.
+# Four architectures drawn as labelled boxes came out as rows of rectangles
+# that said nothing. Four execution traces came out as a waveform: they showed
+# how long and how busy, which is not what an archetype is. An archetype is a
+# topology, so this draws the topologies.
 
-# Four traces of one article being produced, in the order the architectures
-# happened. A step is a tick; a tick is blue when a model runs inside it. The
-# silhouette of each row is the archetype, so the evolution is legible without
-# a single box or arrow.
-#
-# `model` is a predicate over the step index, not a random draw, so a rebuild
-# reproduces the image instead of quietly redesigning it.
-TRACES = [
-    ("n8n chain", 42, lambda i: i in (9, 21, 33)),
-    ("fine-tuned", 42, lambda i: i in (9, 21, 33)),
-    ("reasoning agent", 108, lambda i: i % 3 == 1 or 44 <= i < 82),
-    ("app + rail", 34, lambda i: 13 <= i <= 16),
-]
+PANELS = ("n8n chain", "fine-tuned", "reasoning agent", "app + rail")
 
 
 def cover():
-    """Four architectures doing one job, drawn as what each one actually does.
+    """The four archetypes as the shapes they actually are.
 
-    Every row is one article being produced, left to right, one tick per step.
-    Grey is a step code decides; blue is a step where a model runs. They share
-    a start rail and each ends on its own terminal mark, so the same job is
-    visible while the shapes are not: three model calls in a fixed frame, then
-    the same frame with heavier weights, then a long irregular run that bunches
-    where it could not settle, then a short quiet one.
+    A chain is a line. A fine-tune is that same line with one node swollen into
+    a mass, because it changed the model and not the shape. A reasoning agent
+    is a ring with a return chord and skills hanging off it. What shipped is a
+    lattice holding the state with a small ring attached at the side.
 
-    Tick heights come from a formula, so the rows read as a recording rather
-    than a diagram, and so a rebuild reproduces the image exactly.
+    Blue is where a model runs. It spreads from three nodes to a whole ring and
+    then collapses to a satellite, which is the argument of the post drawn as
+    area rather than stated.
+
+    Every position is a formula or a literal. No random draws: a rebuild has to
+    reproduce the image or it becomes a silent redesign.
     """
-    p = Plane(660, 318, 880, 452, umax=112, vmax=len(TRACES))
+    p = Plane(486, 296, 900, 560, umax=4, vmax=1)
     m = []
-    ends = []
 
-    for j, (label, steps, is_model) in enumerate(TRACES):
-        v = j + 0.5
-        m.append(text(p, -3.0, v + 0.055, label, 15, MUTED, anchor="end"))
-        for i in range(steps):
-            model = is_model(i)
-            # Deterministic, and taller where a model runs so the blue carries
-            # weight without a second colour.
-            h = 0.085 + 0.085 * (((i * 5 + j * 7) % 6) / 5.0) + (0.14 if model else 0)
-            if j == 1 and model:
-                h += 0.06          # the fine-tune changed the model, not the shape
-            m.append(slab(p, i * 1.02, v - h / 2, i * 1.02 + 0.62, v + h / 2,
-                          BLUE if model else MUTED,
-                          0.80 if model else 0.24,
-                          0.30 * j + 0.006 * i, cls="type"))
-        m.append(dot(p, steps * 1.02 + 1.1, v, 5.0, ACCENT, 1.0, 0.30 * j + 0.006 * steps))
-        ends.append(p(steps * 1.02 + 1.1, v))
+    def q(j, lx, ly):
+        """Local panel coordinates into plane coordinates."""
+        return j + 0.07 + lx * 0.86, 0.10 + ly * 0.72
 
-    # The start rail, so four different runs read as four attempts at one job.
-    m.append(connect(p, (-1.1, 0.08), (-1.1, len(TRACES) - 0.08), o=0.35, width=1.6))
+    def node_at(j, lx, ly, r=6.5, model=False, d=0.0):
+        u, v = q(j, lx, ly)
+        return dot(p, u, v, r, BLUE if model else "#ffffff", 1.0, d,
+                   cls="pop") + ("" if model else
+                                 f'<circle class="pop" cx="{p(u, v)[0]:.1f}" '
+                                 f'cy="{p(u, v)[1]:.1f}" r="{r}" fill="none" '
+                                 f'stroke="{MUTED}" stroke-width="1.3" '
+                                 f'style="--o:0.55;animation-delay:{d:.2f}s"/>')
 
-    # Point at the last run's terminal mark, which is the earliest of the four.
-    # The leader has to land on ink, so it is anchored off that dot rather than
-    # dropped into the white the short rows leave behind.
-    ex, ey = ends[-1]
+    def edge(j, a, b, d=0.0, o=0.30, w=1.3):
+        return connect(p, q(j, *a), q(j, *b), o, d, w)
+
+    # 1. A line. Five steps, three of them a model, one retrieval hanging under
+    #    the middle of it.
+    chain = [0.06, 0.27, 0.48, 0.69, 0.90]
+    for i, lx in enumerate(chain):
+        if i:
+            m.append(edge(0, (chain[i - 1], 0.42), (lx, 0.42), 0.05 * i))
+        m.append(node_at(0, lx, 0.42, 7.0, i in (1, 2, 3), 0.05 * i))
+    m.append(edge(0, (0.48, 0.74), (0.48, 0.47), 0.30))
+    m.append(node_at(0, 0.48, 0.74, 5.5, False, 0.32))
+
+    # 2. The same line. One node became a mass of weights.
+    for i, lx in enumerate(chain):
+        if i:
+            m.append(edge(1, (chain[i - 1], 0.42), (lx, 0.42), 0.34 + 0.04 * i))
+        if i != 2:
+            m.append(node_at(1, lx, 0.42, 7.0, i in (1, 3), 0.34 + 0.04 * i))
+    for k in range(44):
+        a = 2.399963 * k                     # golden angle, a deterministic disc
+        rr = 0.115 * math.sqrt((k + 0.5) / 44)
+        m.append(node_at(1, 0.48 + rr * math.cos(a), 0.42 + rr * 1.30 * math.sin(a),
+                         3.0, True, 0.50 + 0.006 * k))
+
+    # 3. A ring, the return chord that makes it an agent, and skills radiating.
+    ring = [(0.46 + 0.30 * math.cos(2 * math.pi * k / 7 - math.pi / 2),
+             0.42 + 0.28 * 1.28 * math.sin(2 * math.pi * k / 7 - math.pi / 2))
+            for k in range(7)]
+    for k in range(7):
+        m.append(edge(2, ring[k], ring[(k + 1) % 7], 0.62 + 0.03 * k, 0.34))
+    m.append(edge(2, ring[4], ring[0], 0.86, 0.5, 1.8))
+    for k, pt in enumerate(ring):
+        m.append(node_at(2, pt[0], pt[1], 6.5, True, 0.62 + 0.03 * k))
+    for k in (1, 3, 5):
+        sx = 0.46 + 1.42 * (ring[k][0] - 0.46)
+        sy = 0.42 + 1.42 * (ring[k][1] - 0.42)
+        m.append(edge(2, ring[k], (sx, sy), 0.90, 0.22))
+        m.append(node_at(2, sx, sy, 4.0, False, 0.92))
+
+    # 4. A lattice holding the state, with what is left of the loop beside it.
+    for r in range(5):
+        for c in range(6):
+            lx, ly = 0.04 + c * 0.107, 0.10 + r * 0.16
+            if c:
+                m.append(edge(3, (lx - 0.107, ly), (lx, ly), 1.00, 0.18))
+            if r:
+                m.append(edge(3, (lx, ly - 0.16), (lx, ly), 1.00, 0.18))
+            m.append(node_at(3, lx, ly, 4.2, False, 1.00 + 0.012 * (r * 6 + c)))
+    small = [(0.86 + 0.075 * math.cos(2 * math.pi * k / 4 - math.pi / 2),
+              0.42 + 0.085 * 1.28 * math.sin(2 * math.pi * k / 4 - math.pi / 2))
+             for k in range(4)]
+    for k in range(4):
+        m.append(edge(3, small[k], small[(k + 1) % 4], 1.20, 0.40))
+        m.append(node_at(3, small[k], small[k], 5.0, True, 1.20 + 0.02 * k)
+                 if False else node_at(3, small[k][0], small[k][1], 5.0, True, 1.20 + 0.02 * k))
+    m.append(edge(3, (0.575, 0.34), (0.785, 0.40), 1.30, 0.30))
+    m.append(edge(3, (0.785, 0.46), (0.575, 0.58), 1.32, 0.30))
+
+    for j, label in enumerate(PANELS):
+        u, _ = q(j, 0.5, 0)
+        m.append(text(p, u, 1.04, label, 15, MUTED))
+
+    ax, ay = p(*q(3, 0.945, 0.42))
     return wrap(lifted("".join(m))
-                + note(ex + 50, ey, ["the one that shipped", "is the shortest run"]))
+                + note(ax + 34, ay, ["the loop survived.", "the stage did not."]))
 
 
 # ----------------------------------------------------------------- slide 1
