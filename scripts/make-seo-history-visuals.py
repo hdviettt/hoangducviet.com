@@ -225,7 +225,7 @@ def cover():
     m.append(rect(1, 0.535, 0.618, 0.945, 0.622, RULE, 0.9, 0.56))
     m.append(t(1, 0.50, 0.735, "steps", 9.5, MUTED))
     m.append(t(1, 0.97, 0.735, "loss", 9.5, MUTED, "end"))
-    m.append(t(1, 0.50, 0.83, "Mistral 24B · Unsloth + TRL", 9, MUTED))
+    m.append(t(1, 0.50, 0.83, "Mistral 24B · QLoRA r16 · 3 epochs", 9, MUTED))
 
     # 3. The transcript. The loop shows as the same two steps coming round again.
     m.append(rect(2, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.52, RULE))
@@ -412,11 +412,11 @@ def arch_2_finetune():
              f'" fill="none" stroke="{BLUE}" stroke-width="2.6" opacity="0.9" '
              'style="--len:520;animation-delay:0.20s"/>')
     m.append(rect(0.575, 0.665, 0.945, 0.669, RULE, 0.9, 0.16))
-    m.append(t(0.76, 0.712, "steps", 11, MUTED, "middle"))
+    m.append(t(0.76, 0.712, "≈ 50 optimiser steps", 11, MUTED, "middle"))
     m.append(t(0.52, 0.60, "loss", 11.5, MUTED))
 
-    for k, (a, b) in enumerate((("base", "Mistral 24B"), ("stack", "Unsloth + TRL"),
-                                ("rows", "528"), ("lang", "vi"))):
+    for k, (a, b) in enumerate((("base", "Mistral 24B"), ("adapter", "QLoRA r16"),
+                                ("epochs", "3"), ("lr", "2e-4"))):
         x = 0.52 + k * 0.115
         m.append(rect(x, 0.775, x + 0.10, 0.855, "#f6f8fd", 1, 0.30 + 0.03 * k, RULE))
         m.append(t(x + 0.05, 0.808, a, 10, MUTED, "middle"))
