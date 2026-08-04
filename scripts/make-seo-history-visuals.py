@@ -85,32 +85,51 @@ def loop_arc(p: Plane, u0, u1, v, height=0.075, delay=0.0, o=0.55):
 # It animates in that order. The brief is typed, the machine arrives, the loop
 # draws itself last and does not resolve.
 
+COLS, ROWS = 10, 10
+
+# The ones with something specific in them. A literal, not a random draw: a
+# rebuild has to reproduce the image exactly or it becomes a silent redesign.
+# (9, 4) is the one the annotation lands on, so it stays where it is.
+SPECIFIC = {(1, 1), (6, 0), (3, 3), (0, 6), (7, 7), (4, 5), (2, 9), (9, 4)}
+
+
 def cover():
-    p = Plane(596, 318, 880, 470, umax=1, vmax=1)
+    """Content at scale, which is the thing this whole post is about.
+
+    Ninety-nine articles laid out on the plane, four lines each. Almost all of
+    them grey. The handful in blue are the ones with something in them that
+    came from a person who knew something specific, which is the property
+    Google named in 2024 and the property the last section is about.
+
+    Line lengths come from a formula so the field has the texture of prose
+    rather than the regularity of a grid, and so it redraws identically.
+    """
+    # Set left of centre so the right of the canvas is free for the one
+    # annotation. Deep enough that the far rows visibly converge.
+    p = Plane(506, 306, 872, 660, umax=COLS, vmax=ROWS)
     m = []
 
-    # The brief. Ordinary lines, and one of them is the rule that traps it.
-    m.append(slab(p, 0.03, 0.06, 0.40, 0.94, "#ffffff", 1, 0.02, RULE, cls="rise"))
-    for i, w in enumerate((0.26, 0.31, 0.22, 0.29)):
-        m.append(textline(p, 0.065, 0.065 + w, 0.155 + i * 0.075, 0.028, 0.20,
-                          0.08 + i * 0.05, cls="type"))
-    m.append(slab(p, 0.055, 0.505, 0.375, 0.585, ACCENT, 0.30, 0.34, cls="type"))
-    m.append(text(p, 0.215, 0.558, "≤ 1000 words", 19, INK, weight="600"))
-    for i, w in enumerate((0.30, 0.24, 0.27)):
-        m.append(textline(p, 0.065, 0.065 + w, 0.665 + i * 0.075, 0.028, 0.20,
-                          0.44 + i * 0.05, cls="type"))
+    for j in range(ROWS):
+        for i in range(COLS):
+            special = (i, j) in SPECIFIC
+            fill = BLUE if special else MUTED
+            base = 0.66 if special else 0.19
+            delay = 0.018 * i + 0.055 * j
+            for k in range(5):
+                # Deterministic ragged right edge, the way set prose looks.
+                w = 0.32 + 0.50 * (((i * 7 + j * 11 + k * 5) % 7) / 6.0)
+                if k == 4:
+                    w *= 0.66
+                m.append(textline(p, i + 0.08, i + 0.08 + w * 0.84,
+                                  j + 0.20 + k * 0.125, 0.068,
+                                  base if k else base * 1.3,
+                                  delay + k * 0.010, fill, "type"))
 
-    # The machine that reads it.
-    m.append(arrow(p, (0.415, 0.50), (0.545, 0.50), delay=0.62, o=0.6))
-    m.append(node(p, 0.58, 0.40, 0.97, 0.60, "agent", True, 0.66, 21))
-
-    # And the edge that never resolves.
-    m.append(loop_arc(p, 0.595, 0.955, 0.385, 0.175, delay=0.80, o=0.65))
-
+    # Anchor on the blue article at (9, 4), whose right side is the last ink on
+    # that row, so the leader crosses white and lands on the mark it names.
+    ax, ay = p(9 + 0.80, 4 + 0.46)
     return wrap(lifted("".join(m))
-                + note(556, 556, ["the outline was already 900,",
-                                  "and the rule had a tolerance",
-                                  "nobody had written down"]))
+                + note(ax + 52, ay, ["what a specific", "person knew"]))
 
 
 # ----------------------------------------------------------------- slide 1
