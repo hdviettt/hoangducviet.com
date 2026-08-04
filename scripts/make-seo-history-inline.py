@@ -178,12 +178,135 @@ def what_survives():
                "Four architectures, three marked unmeasurable and one that reports")
 
 
+# ----------------------------------------------------------------- section 1
+
+def all_human():
+    """The line as it ran before any of this. Every station is a person."""
+    def person(x, y, o=1.0):
+        return (f'  <g opacity="{o}"><circle cx="{x}" cy="{y}" r="6.5" fill="{BLUE}" '
+                f'opacity="0.9"/><path d="M{x - 11} {y + 18} a11 11 0 0 1 22 0" '
+                f'fill="{BLUE}" opacity="0.9"/></g>')
+    b = [cap(0, 14, "before any of this", 12, HEAD, weight="600")]
+    stations = (("outline", 0), ("article", 1), ("edit", 2))
+    for name, i in stations:
+        x = 60 + i * 176
+        b.append(box(x - 18, 30, 118, 84, "none", LINE, 1.2, 4, 0.9))
+        b.append(person(x + 41, 58))
+        b.append(cap(x + 41, 102, name, 12, HEAD, "middle", "500"))
+        if i:
+            b.append(arrow(x - 40, 72, x - 24, 72, BODY, 0.45))
+    b.append(cap(0, 142, "Three stations, three people, and about",
+                 12.5, HEAD, weight="600"))
+    b.append(cap(286, 142, "[[N]]", 12.5, BLUE, weight="700"))
+    b.append(cap(324, 142, "articles a month.", 12.5, HEAD, weight="600"))
+    return svg(158, "\n".join(b),
+               "Three stations of a content pipeline, each staffed by a person")
+
+
+# ---------------------------------------------------------------- section 3b
+
+def one_example():
+    """What a single row of the training set is, with the manual withheld."""
+    b = [cap(0, 14, "one row of seongon_travel", 12, HEAD, weight="600")]
+    rows = (("system", "the writing rules, verbatim", 3, False),
+            ("user", "keyword, outline, word target", 3, True),
+            ("assistant", "the article that shipped", 6, True))
+    y = 30
+    for role, note, lines, show in rows:
+        h = 20 + lines * 14
+        b.append(box(0, y, 620, h, "none", BLUE if show else LINE, 1.3, 4,
+                     0.55 if show else 0.9, None if show else "5 4"))
+        b.append(cap(14, y + 20, role, 11.5, HEAD if show else BODY, weight="600",
+                     o=1.0 if show else 0.7))
+        for k in range(lines):
+            w = 300 - (k % 3) * 46 if show else 240 - (k % 3) * 40
+            b.append(bar(96, y + 12 + k * 14, w, 7, BLUE if show else BODY,
+                         0.55 if show else 0.16, 1.5))
+        b.append(cap(606, y + 20, note, 11, BLUE if show else BODY, "end",
+                     o=0.85 if show else 0.55))
+        y += h + 10
+    b.append(cap(0, y + 16, "The system turn is the manual, so it stays in the building.",
+                 12.5, HEAD, weight="600"))
+    return svg(y + 34, "\n".join(b),
+               "A three-turn training example with the system turn withheld")
+
+
+# ---------------------------------------------------------------- section 4b
+
+def runtimes():
+    """Six of them. Two got used for anything, and only one is still here."""
+    items = (("LangChain", "hard to start", False),
+             ("DSPy", "tried alongside", False),
+             ("smolagents", "tried alongside", False),
+             ("OpenAI SDK", "tried alongside", False),
+             ("Agno", "easy syntax, AgentOS", True),
+             ("Claude SDK", "still here", True))
+    b = [cap(0, 14, "runtimes", 12, HEAD, weight="600")]
+    y0 = 44
+    b.append(f'  <line x1="54" y1="{y0}" x2="586" y2="{y0}" stroke="{LINE}" '
+             f'stroke-width="1.6"/>')
+    for i, (name, note, stuck) in enumerate(items):
+        x = 54 + i * 106.4
+        r = 7 if stuck else 4.5
+        b.append(f'  <circle cx="{x}" cy="{y0}" r="{r}" fill="{BLUE}" '
+                 f'opacity="{0.9 if stuck else 0.3}"/>')
+        b.append(cap(x, y0 + 26, name, 11.5 if stuck else 11,
+                     HEAD if stuck else BODY, "middle",
+                     "600" if stuck else "400", 1.0 if stuck else 0.65))
+        b.append(cap(x, y0 + 44, note, 10.5, BLUE if stuck else BODY, "middle",
+                     o=0.85 if stuck else 0.5))
+    b.append(cap(0, y0 + 84, "Four were evaluated. Two were used. One is in production.",
+                 12.5, HEAD, weight="600"))
+    return svg(y0 + 100, "\n".join(b),
+               "Six agent runtimes on a track, with the two that were used marked")
+
+
+# ----------------------------------------------------------------- section 7
+
+def where_the_human_is():
+    """The same question asked of all four: where does a person actually sit?"""
+    cols = (("workflow", 0.86, "at the end, reviewing"),
+            ("fine-tuned", None, "nowhere"),
+            ("reasoning agent", 0.86, "at the end, waiting"),
+            ("app-agent hybrid", 0.5, "beside it, throughout"))
+    b = [cap(0, 14, "where the person sits", 12, HEAD, weight="600")]
+    w, gap = 116, 33
+    for i, (name, pos, note) in enumerate(cols):
+        x = i * (w + gap)
+        b.append(box(x, 30, w, 112, "none", BLUE if pos == 0.5 else LINE,
+                     1.4 if pos == 0.5 else 1.2, 4, 1.0 if pos == 0.5 else 0.85))
+        for k in range(4):
+            b.append(bar(x + 14, 44 + k * 15, w - 28 - (k % 2) * 22, 6, BODY, 0.18, 1.5))
+        if pos is not None:
+            beside = pos == 0.5
+            px = x + w + 22 if beside else x + w - 26
+            py = 30 + 112 * pos
+            b.append(f'  <g opacity="0.92"><circle cx="{px}" cy="{py - 6}" r="6" '
+                     f'fill="{BLUE}"/><path d="M{px - 10} {py + 12} a10 10 0 0 1 20 0" '
+                     f'fill="{BLUE}"/></g>')
+            if beside:
+                b.append(arrow(px - 12, py + 2, x + w + 4, py + 2, BLUE, 0.55))
+        b.append(cap(x + w / 2, 160, name, 11.5, HEAD if pos == 0.5 else BODY,
+                     "middle", "600" if pos == 0.5 else "400",
+                     1.0 if pos == 0.5 else 0.7))
+        b.append(cap(x + w / 2, 178, note, 10.5, BLUE if pos == 0.5 else BODY,
+                     "middle", o=0.85 if pos == 0.5 else 0.55))
+    b.append(cap(0, 212, "The conversation did not retreat. The interface did.",
+                 12.5, HEAD, weight="600"))
+    return svg(228, "\n".join(b),
+               "Four architectures showing where a person sits in each, from the end to alongside")
+
+
 FIGURES = {
+    "s1-all-human": all_human,
     "s2-breakpoint": breakpoint_figure,
+    "s3b-one-example": one_example,
     "s3-fifty-steps": fifty_steps,
     "s4-retrieval-vs-skill": retrieval_vs_skill,
+    "s4b-runtimes": runtimes,
     "s5-deadlock": deadlock,
     "s6-what-survives": what_survives,
+    "s7-where-the-human-is": where_the_human_is,
 }
 
 PREVIEW = """<!doctype html><meta charset="utf-8"><style>
