@@ -83,7 +83,7 @@ def loop_arc(p: Plane, u0, u1, v, height=0.075, delay=0.0, o=0.55):
 # how long and how busy, which is not what an archetype is. An archetype is a
 # topology, so this draws the topologies.
 
-PANELS = ("n8n chain", "fine-tuned", "reasoning agent", "app + rail")
+PANELS = ("workflow", "fine-tuned", "reasoning agent", "app-agent hybrid")
 
 COVER_DEFS = f"""  <defs>
     <linearGradient id="plate" x1="0.1" y1="0" x2="0.6" y2="1">
@@ -225,7 +225,8 @@ def cover():
     m.append(rect(1, 0.535, 0.618, 0.945, 0.622, RULE, 0.9, 0.56))
     m.append(t(1, 0.50, 0.735, "steps", 9.5, MUTED))
     m.append(t(1, 0.97, 0.735, "loss", 9.5, MUTED, "end"))
-    m.append(t(1, 0.50, 0.83, "Mistral 24B · QLoRA r16 · 3 epochs", 9, MUTED))
+    m.append(t(1, 0.735, 0.825, "Mistral-Small 24B", 9, INK, "middle", "500"))
+    m.append(t(1, 0.735, 0.895, "QLoRA r16 · 3 epochs", 9, MUTED, "middle"))
 
     # 3. The transcript. The loop shows as the same two steps coming round again.
     m.append(rect(2, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.52, RULE))
