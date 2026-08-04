@@ -21,8 +21,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from figure import (  # noqa: E402
-    ACCENT, ACCENT_TEXT, BLUE, INK, MUTED, RULE,
-    Plane, connect, dot, emit, lifted, note, slab, text, textline, window, wrap,
+    ACCENT, ACCENT_TEXT, BLUE, H, INK, MUTED, RULE, W,
+    Plane, emit, lifted, slab, text, wrap,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -98,39 +98,37 @@ COVER_DEFS = f"""  <defs>
       <stop offset="0" stop-color="#3a72f4"/>
       <stop offset="1" stop-color="{BLUE}"/>
     </linearGradient>
+    <linearGradient id="loss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="{BLUE}" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="{BLUE}" stop-opacity="0"/>
+    </linearGradient>
     <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="{BLUE}" stop-opacity="0.16"/>
+      <stop offset="0" stop-color="{BLUE}" stop-opacity="0.14"/>
       <stop offset="1" stop-color="{BLUE}" stop-opacity="0"/>
     </radialGradient>
     <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
       <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0b1a3a" flood-opacity="0.14"/>
-    </filter>
-    <filter id="card" x="-30%" y="-30%" width="160%" height="170%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0b1a3a" flood-opacity="0.14"/>
     </filter>
   </defs>
 """
 
 
 def cover():
-    """The four architectures drawn as the things themselves.
+    """The four architectures drawn as the screens they actually were.
 
-    Dots and lines make a graph, and a graph of an n8n workflow is not what an
-    n8n workflow looks like. So panel one is a canvas: a dot grid, nodes with
-    icons and ports, bezier connectors, and a sub-node hanging underneath the
-    way a vector store hangs off an AI node. Panel two is that identical canvas
-    with our own model dropped into the middle slot, because the fine-tune
-    changed the model and not the shape. Panel three is an agent transcript,
-    alternating reasoning and tool calls with the return that makes it a loop.
-    Panel four is the application: a header, rows of articles with status, and
-    the agent in a rail beside them.
+    A graph of an n8n workflow is not what an n8n workflow looks like, so panel
+    one is the canvas: dot grid, named nodes with ports, bezier connectors, and
+    a vector store hanging under the writer the way a sub-node does. Panel two
+    is a training run, because that is what a fine-tune looks like: pairs going
+    in on the left, loss coming down on the right. Panel three is the agent
+    transcript, and the loop is shown by the same two steps appearing again
+    rather than by an arrow nobody can read. Panel four is the application, with
+    articles and their status, and the agent in a rail beside them.
 
-    Blue marks where a model runs. It occupies three nodes, then one swapped
-    node, then most of a transcript, then a few bubbles in a side rail.
-
-    Every position is a formula or a literal, so a rebuild reproduces the image.
+    The text is placeholder but it is the shape of the real thing, so a reader
+    can tell what each screen is without the caption.
     """
-    p = Plane(600, 300, 1092, 396, umax=4, vmax=1)
+    p = Plane(600, 318, 1092, 400, umax=4, vmax=1)
     m = []
 
     def L(j, lx, ly):
@@ -144,13 +142,16 @@ def cover():
         u1, v1 = L(j, c, d)
         return slab(p, u0, v0, u1, v1, fill, o, delay, stroke, cls)
 
+    def t(j, lx, ly, s, size=9.5, fill=MUTED, anchor="start", weight="400"):
+        u, v = L(j, lx, ly)
+        return text(p, u, v, s, size, fill, anchor, weight)
+
     def circ(j, lx, ly, r, fill, o=1.0, delay=0.0):
         x, y = XY(j, lx, ly)
         return (f'<circle class="pop" cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{fill}" '
                 f'style="--o:{o};animation-delay:{delay:.2f}s"/>')
 
     def bez(j, a, b, delay=0.0, o=0.55, w=1.7):
-        """An n8n connector: leaves a port sideways and arrives sideways."""
         x0, y0 = XY(j, *a)
         x1, y1 = XY(j, *b)
         k = max(abs(x1 - x0) * 0.55, 16)
@@ -166,220 +167,381 @@ def cover():
         return (f'<polygon class="rise" points="{pts}" fill="url(#plate)" '
                 f'filter="url(#soft)" style="--o:1;animation-delay:{d:.2f}s"/>')
 
-    def n8n_node(j, lx, ly, w=0.26, h=0.19, model=True, delay=0.0):
-        """A node the way the canvas draws one: card, icon, two lines, ports."""
-        out = [rect(j, lx, ly, lx + w, ly + h, "#ffffff", 1, delay, RULE)]
-        out.append(rect(j, lx + 0.045, ly + 0.048, lx + 0.115, ly + h - 0.048,
-                        BLUE if model else MUTED, 0.92 if model else 0.4, delay + 0.02))
-        out.append(rect(j, lx + 0.145, ly + 0.062, lx + w - 0.04, ly + 0.092,
-                        MUTED, 0.30, delay + 0.03))
-        out.append(rect(j, lx + 0.145, ly + 0.112, lx + w - 0.09, ly + 0.138,
-                        MUTED, 0.20, delay + 0.04))
-        out.append(circ(j, lx, ly + h / 2, 3.4, "#ffffff", 1, delay + 0.02))
-        out.append(circ(j, lx + w, ly + h / 2, 3.4, BLUE, 0.75, delay + 0.02))
+    def n8n_node(j, lx, ly, name, w=0.30, h=0.20, model=True, delay=0.0):
+        out = [rect(j, lx, ly, lx + w, ly + h, "#ffffff", 1, delay, RULE),
+               rect(j, lx + 0.035, ly + 0.05, lx + 0.10, ly + h - 0.05,
+                    BLUE if model else MUTED, 0.92 if model else 0.42, delay + 0.02),
+               t(j, lx + 0.125, ly + 0.095, name, 9.5, INK, weight="500"),
+               rect(j, lx + 0.125, ly + 0.125, lx + w - 0.05, ly + 0.15,
+                    MUTED, 0.22, delay + 0.04),
+               circ(j, lx, ly + h / 2, 3.4, "#ffffff", 1, delay + 0.02),
+               circ(j, lx + w, ly + h / 2, 3.4, BLUE, 0.75, delay + 0.02)]
         return "".join(out)
 
     def grid(j, delay=0.0):
-        """The canvas dot grid, which is most of why an n8n screen is legible."""
         out = []
         for r in range(7):
             for c in range(9):
-                out.append(circ(j, 0.045 + c * 0.115, 0.05 + r * 0.152, 1.25,
-                                MUTED, 0.30, delay))
+                out.append(circ(j, 0.045 + c * 0.115, 0.05 + r * 0.152, 1.2,
+                                MUTED, 0.28, delay))
         return "".join(out)
 
     for j in range(4):
-        m.append(plate(j, 0.26 * j))
+        m.append(plate(j, 0.24 * j))
 
-    # 1. The canvas. Three nodes wired left to right, and a vector store hanging
-    #    under the writer the way a sub-node hangs off an AI node.
+    # 1. The canvas.
     m.append(grid(0, 0.04))
-    xs = (0.02, 0.37, 0.72)
-    for i, lx in enumerate(xs):
-        m.append(n8n_node(0, lx, 0.24, delay=0.10 + 0.07 * i))
+    xs = (0.00, 0.35, 0.70)
+    for i, (lx, name) in enumerate(zip(xs, ("Outline", "Write", "Review"))):
+        m.append(n8n_node(0, lx, 0.22, name, delay=0.08 + 0.06 * i))
         if i:
-            m.append(bez(0, (xs[i - 1] + 0.26, 0.335), (lx, 0.335), 0.12 + 0.07 * i))
-    m.append(n8n_node(0, 0.37, 0.66, 0.26, 0.19, False, 0.34))
-    m.append(bez(0, (0.50, 0.68), (0.50, 0.43), 0.38, 0.5, 1.5))
+            m.append(bez(0, (xs[i - 1] + 0.30, 0.32), (lx, 0.32), 0.10 + 0.06 * i))
+    m.append(n8n_node(0, 0.30, 0.64, "Vector Store", 0.40, 0.20, False, 0.30))
+    m.append(bez(0, (0.50, 0.64), (0.50, 0.42), 0.34, 0.5, 1.5))
 
-    # 2. The same canvas. Only the middle node changed.
-    m.append(grid(1, 0.30))
-    for i, lx in enumerate(xs):
-        if i != 1:
-            m.append(n8n_node(1, lx, 0.24, delay=0.36 + 0.06 * i))
-        if i:
-            m.append(bez(1, (xs[i - 1] + 0.26, 0.335), (lx, 0.335), 0.38 + 0.06 * i))
-    m.append(rect(1, 0.37, 0.20, 0.63, 0.47, "#ffffff", 1, 0.48, BLUE))
-    m.append(rect(1, 0.37, 0.20, 0.63, 0.245, "url(#head)", 1, 0.50))
-    pts = []
-    for k in range(13):
-        t = k / 12
-        pts.append(XY(1, 0.405 + t * 0.19, 0.435 - 0.145 * (1 - (1 - t) ** 2.6)))
-    m.append('<path class="draw" d="M' + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) +
-             f'" fill="none" stroke="{BLUE}" stroke-width="2.1" opacity="0.85" '
-             'style="--len:260;animation-delay:0.56s"/>')
-    m.append(circ(1, 0.37, 0.335, 3.4, "#ffffff", 1, 0.50))
-    m.append(circ(1, 0.63, 0.335, 3.4, BLUE, 0.75, 0.50))
+    # 2. A training run: pairs on the left, loss coming down on the right.
+    m.append(rect(1, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.30, RULE))
+    m.append(t(1, 0.05, 0.115, "outline → published", 9.5, MUTED))
+    for r in range(6):
+        y = 0.17 + r * 0.088
+        m.append(rect(1, 0.05, y, 0.05 + (0.17, 0.20, 0.15, 0.19, 0.16, 0.18)[r],
+                      y + 0.038, BLUE, 0.55, 0.34 + 0.03 * r, cls="type"))
+        m.append(rect(1, 0.245, y, 0.245 + (0.17, 0.14, 0.19, 0.15, 0.18, 0.16)[r],
+                      y + 0.038, MUTED, 0.24, 0.35 + 0.03 * r, cls="type"))
+    m.append(t(1, 0.05, 0.79, "9,412 pairs", 9.5, INK, weight="500"))
 
-    # 3. The transcript. Reasoning, a tool call, an observation, and the return
-    #    edge that sends it round again.
-    m.append(rect(2, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.56, RULE))
-    m.append(halo := f'<ellipse class="c" cx="{XY(2, 0.5, 0.5)[0]:.1f}" '
-             f'cy="{XY(2, 0.5, 0.5)[1]:.1f}" rx="104" ry="86" fill="url(#halo)" '
+    m.append(rect(1, 0.50, 0.13, 0.97, 0.66, "#fbfcff", 1, 0.52, RULE))
+    m.append(t(1, 0.525, 0.215, "training loss", 9.5, MUTED))
+    pts = [XY(1, 0.535 + (k / 18) * 0.41, 0.30 + 0.30 * (1 - (1 - k / 18) ** 2.4))
+           for k in range(19)]
+    area = ("M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) +
+            f' L{XY(1, 0.945, 0.62)[0]:.1f} {XY(1, 0.945, 0.62)[1]:.1f}'
+            f' L{XY(1, 0.535, 0.62)[0]:.1f} {XY(1, 0.535, 0.62)[1]:.1f} Z')
+    m.append(f'<path class="c" d="{area}" fill="url(#loss)" '
              'style="--o:1;animation-delay:0.60s"/>')
-    rows = ((0.00, 0.62, False), (0.10, 0.44, True), (0.10, 0.52, False),
-            (0.20, 0.40, True), (0.20, 0.48, False), (0.10, 0.56, True))
-    for k, (ind, w, tool) in enumerate(rows):
-        y = 0.10 + k * 0.132
-        if tool:
-            m.append(rect(2, 0.07 + ind, y, 0.07 + ind + w, y + 0.082,
-                          "url(#chip)", 1, 0.62 + 0.05 * k, cls="type"))
-            m.append(rect(2, 0.10 + ind, y + 0.024, 0.13 + ind, y + 0.058,
-                          "#ffffff", 0.85, 0.64 + 0.05 * k, cls="type"))
-        else:
-            m.append(rect(2, 0.07 + ind, y + 0.014, 0.07 + ind + w, y + 0.068,
-                          MUTED, 0.26, 0.62 + 0.05 * k, cls="type"))
-    ax0, ay0 = XY(2, 0.055, 0.86)
-    ax1, ay1 = XY(2, 0.055, 0.145)
-    m.append(f'<g class="c" style="--o:0.6;animation-delay:0.96s">'
-             f'<path d="M{ax0:.1f} {ay0:.1f} C{ax0 - 46:.1f} {ay0:.1f} '
-             f'{ax1 - 46:.1f} {ay1:.1f} {ax1:.1f} {ay1:.1f}" fill="none" '
-             f'stroke="{BLUE}" stroke-opacity="0.55" stroke-width="2.1"/>'
-             f'<polygon points="{ax1:.1f},{ay1:.1f} {ax1 - 8:.1f},{ay1 + 5:.1f} '
-             f'{ax1 - 1:.1f},{ay1 + 10:.1f}" fill="{BLUE}" opacity="0.65"/></g>')
+    m.append('<path class="draw" d="M' + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) +
+             f'" fill="none" stroke="{BLUE}" stroke-width="2.2" opacity="0.9" '
+             'style="--len:340;animation-delay:0.58s"/>')
+    m.append(rect(1, 0.535, 0.618, 0.945, 0.622, RULE, 0.9, 0.56))
+    m.append(t(1, 0.50, 0.735, "step 1,200", 9.5, MUTED))
+    m.append(t(1, 0.97, 0.735, "loss 0.84", 9.5, INK, "end", "500"))
+    m.append(t(1, 0.50, 0.83, "Qwen · LoRA · 1×A100", 9, MUTED))
 
-    # 4. The application. Header, rows of articles with status, and the agent in
-    #    a rail on the right.
-    m.append(rect(3, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.84, RULE))
-    m.append(rect(3, 0.00, 0.02, 1.00, 0.115, "url(#head)", 1, 0.86))
-    for k in range(3):
-        m.append(circ(3, 0.045 + k * 0.045, 0.068, 2.6, "#ffffff", 0.75, 0.88))
-    for r in range(5):
-        y = 0.20 + r * 0.152
-        m.append(rect(3, 0.045, y, 0.045 + (0.30, 0.40, 0.26, 0.36, 0.31)[r],
-                      y + 0.045, MUTED, 0.24, 0.90 + 0.04 * r, cls="rise"))
-        m.append(rect(3, 0.50, y + 0.004, 0.575, y + 0.041,
-                      BLUE if r in (1, 3) else MUTED, 0.62 if r in (1, 3) else 0.22,
-                      0.92 + 0.04 * r, cls="rise"))
-        m.append(rect(3, 0.00, y + 0.098, 0.635, y + 0.102, RULE, 0.8, 0.90 + 0.04 * r))
-    m.append(rect(3, 0.635, 0.115, 0.639, 0.98, RULE, 0.9, 1.10))
-    bubbles = ((0.665, 0.90, 0.20, False), (0.72, 0.955, 0.34, True),
-               (0.665, 0.86, 0.48, False), (0.75, 0.955, 0.62, True))
-    for k, (x0, x1, y, mine) in enumerate(bubbles):
-        m.append(rect(3, x0, y, x1, y + 0.10, "url(#chip)" if mine else MUTED,
-                      1 if mine else 0.22, 1.12 + 0.06 * k, cls="rise"))
-    m.append(rect(3, 0.665, 0.80, 0.90, 0.875, "#ffffff", 1, 1.36, RULE, cls="rise"))
+    # 3. The transcript. The loop shows as the same two steps coming round again.
+    m.append(rect(2, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.52, RULE))
+    m.append(f'<ellipse class="c" cx="{XY(2, 0.5, 0.52)[0]:.1f}" '
+             f'cy="{XY(2, 0.5, 0.52)[1]:.1f}" rx="112" ry="92" fill="url(#halo)" '
+             'style="--o:1;animation-delay:0.56s"/>')
+    log = [(0.00, "brief: 1,000 words max", False),
+           (0.06, "search(brand_guide)", True),
+           (0.00, "outline expands to 900", False),
+           (0.06, "trim_outline()", True),
+           (0.00, "section 3 now missing", False),
+           (0.06, "trim_outline()", True)]
+    for k, (ind, label, tool) in enumerate(log):
+        y = 0.11 + k * 0.128
+        if tool:
+            w = 0.30 + 0.012 * len(label)
+            m.append(rect(2, 0.06 + ind, y, 0.06 + ind + w, y + 0.086,
+                          "url(#chip)", 1, 0.58 + 0.05 * k, cls="type"))
+            m.append(t(2, 0.085 + ind, y + 0.062, label, 9, "#ffffff", weight="500"))
+        else:
+            m.append(rect(2, 0.06 + ind, y + 0.008, 0.075 + ind, y + 0.078,
+                          MUTED, 0.30, 0.58 + 0.05 * k, cls="type"))
+            m.append(t(2, 0.095 + ind, y + 0.062, label, 9, MUTED))
+    m.append(rect(2, 0.63, 0.755, 0.94, 0.845, "#ffffff", 1, 0.94, BLUE, cls="pop"))
+    m.append(t(2, 0.785, 0.812, "↺  retry × 7", 9.5, BLUE, "middle", "600"))
+
+    # 4. The application, and the agent in the rail beside it.
+    m.append(rect(3, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.76, RULE))
+    m.append(rect(3, 0.00, 0.02, 1.00, 0.115, "url(#head)", 1, 0.78))
+    m.append(t(3, 0.045, 0.085, "Articles", 9.5, "#ffffff", weight="600"))
+    titles = (("Best CRM for SMEs", "Draft", False), ("How to pick a POS", "Review", True),
+              ("SEO audit checklist", "Draft", False), ("Landing page tips", "Live", True),
+              ("Email flows 101", "Draft", False))
+    for r, (title, status, hot) in enumerate(titles):
+        y = 0.175 + r * 0.155
+        m.append(t(3, 0.045, y + 0.045, title, 9, INK))
+        m.append(rect(3, 0.395, y + 0.006, 0.545, y + 0.058,
+                      "url(#chip)" if hot else MUTED, 1 if hot else 0.20,
+                      0.82 + 0.04 * r, cls="rise"))
+        m.append(t(3, 0.47, y + 0.046, status, 8.5, "#ffffff" if hot else MUTED,
+                   "middle", "500"))
+        m.append(rect(3, 0.00, y + 0.104, 0.60, y + 0.107, RULE, 0.8, 0.82 + 0.04 * r))
+    m.append(rect(3, 0.60, 0.115, 0.603, 0.98, RULE, 0.9, 1.02))
+    m.append(rect(3, 0.635, 0.175, 0.955, 0.285, "url(#chip)", 1, 1.06, cls="rise"))
+    m.append(t(3, 0.795, 0.245, "rewrite the intro", 8.5, "#ffffff", "middle"))
+    m.append(rect(3, 0.635, 0.335, 0.92, 0.475, MUTED, 0.18, 1.12, cls="rise"))
+    m.append(t(3, 0.66, 0.395, "done. 940 words,", 8.5, MUTED))
+    m.append(t(3, 0.66, 0.448, "intro rewritten.", 8.5, MUTED))
+    m.append(rect(3, 0.635, 0.83, 0.955, 0.925, "#ffffff", 1, 1.20, RULE, cls="rise"))
+    m.append(t(3, 0.66, 0.893, "ask the agent…", 8.5, MUTED))
 
     for j, label in enumerate(PANELS):
         u, _ = L(j, 0.5, 0)
         m.append(text(p, u, 1.03, label, 15, MUTED))
 
-    # A diagonal leader, so the annotation sits under the last panel instead of
-    # forcing a right margin wide enough to push everything off centre. The text
-    # is right-aligned and the leader leaves from its right edge, which keeps
-    # both clear of the panel label underneath.
-    tx, ty = XY(3, 0.80, 0.60)
-    ex, ey = 1036, 502
-    m.append(f'<g class="mark"><path d="M{ex:.1f} {ey - 8:.1f} L{tx + 12:.1f} '
-             f'{ty + 18:.1f}" fill="none" stroke="{ACCENT_TEXT}" stroke-width="1.4"/>'
-             f'<circle cx="{tx + 10:.1f}" cy="{ty + 16:.1f}" r="2.6" fill="{ACCENT_TEXT}"/>'
-             f'<text x="{ex - 12:.1f}" y="{ey:.1f}" font-size="17" text-anchor="end" '
-             f'fill="{ACCENT_TEXT}">the loop survived.</text>'
-             f'<text x="{ex - 12:.1f}" y="{ey + 23:.1f}" font-size="17" text-anchor="end" '
-             f'fill="{ACCENT_TEXT}">the stage did not.</text></g>')
-
     return wrap(COVER_DEFS + lifted("".join(m)))
 
 
-
-# ----------------------------------------------------------------- slide 1
+# ------------------------------------------------------------------ slides
 #
-# The n8n canvas as it actually looked: three model nodes left to right, and
-# the retrieval layer hanging under the writer, hash-diffed from Drive.
+# A slide has the whole canvas, so it carries what a cover panel cannot: node
+# subtitles, column headers, tool arguments, axis ticks, counters. Same
+# components as the cover, drawn at a size where the detail is readable.
+
+SLIDE_DEFS = COVER_DEFS
+
+
+def kit(p):
+    """Drawing helpers in 0..1 surface coordinates."""
+
+    def rect(a, b, c, d, fill=None, o=1.0, delay=0.0, stroke=None, cls="rise"):
+        return slab(p, a, b, c, d, fill, o, delay, stroke, cls)
+
+    def t(x, y, s, size=13, fill=MUTED, anchor="start", weight="400"):
+        return text(p, x, y, s, size, fill, anchor, weight)
+
+    def circ(x, y, r, fill, o=1.0, delay=0.0):
+        cx, cy = p(x, y)
+        return (f'<circle class="pop" cx="{cx:.1f}" cy="{cy:.1f}" r="{r}" fill="{fill}" '
+                f'style="--o:{o};animation-delay:{delay:.2f}s"/>')
+
+    def bez(a, b, delay=0.0, o=0.55, w=2.0):
+        x0, y0 = p(*a)
+        x1, y1 = p(*b)
+        k = max(abs(x1 - x0) * 0.55, 26)
+        return (f'<path class="c" d="M{x0:.1f} {y0:.1f} C{x0 + k:.1f} {y0:.1f} '
+                f'{x1 - k:.1f} {y1:.1f} {x1:.1f} {y1:.1f}" fill="none" stroke="{BLUE}" '
+                f'stroke-opacity="0.45" stroke-width="{w}" '
+                f'style="--o:{o};animation-delay:{delay:.2f}s"/>')
+
+    return rect, t, circ, bez
+
 
 def arch_1_chain():
-    p = Plane(600, 296, 900, 470, umax=1, vmax=1)
-    m = []
-    labels = ("Outline", "Write", "Review")
-    for i, u in enumerate((0.05, 0.39, 0.73)):
-        m.append(node(p, u, 0.16, u + 0.22, 0.32, labels[i], True, i * 0.10, 18))
-        if i:
-            m.append(arrow(p, (u - 0.12, 0.24), (u - 0.012, 0.24), delay=i * 0.10))
+    """The n8n canvas, with the names and the sub-nodes it actually carries."""
+    p = Plane(600, 326, 1020, 470, umax=1, vmax=1)
+    rect, t, circ, bez = kit(p)
+    m = [f'<rect x="0" y="0" width="{W}" height="{H}" fill="none"/>']
 
-    m.append(node(p, 0.33, 0.58, 0.61, 0.72, "vector store", delay=0.34, size=16))
-    m.append(arrow(p, (0.47, 0.573), (0.47, 0.334), delay=0.38))
-    m.append(node(p, 0.03, 0.58, 0.26, 0.72, "Drive", delay=0.30, size=16))
-    m.append(arrow(p, (0.268, 0.65), (0.322, 0.65), delay=0.34))
-    m.append(text(p, 0.295, 0.545, "hash diff", 14, ACCENT_TEXT))
-    m.append(text(p, 0.50, 0.075, "code holds the control flow", 16, MUTED))
-    return wrap(lifted("".join(m)) + note(392, 556, ["a model runs at three points, and nowhere else"]))
+    for r in range(9):
+        for c in range(15):
+            m.append(circ(0.035 + c * 0.0665, 0.05 + r * 0.108, 1.6, MUTED, 0.26, 0.02))
 
+    def node(x, y, name, sub, w=0.20, h=0.145, model=True, delay=0.0):
+        out = [rect(x, y, x + w, y + h, "#ffffff", 1, delay, RULE),
+               rect(x + 0.018, y + 0.028, x + 0.055, y + h - 0.028,
+                    BLUE if model else MUTED, 0.92 if model else 0.42, delay + 0.02),
+               t(x + 0.072, y + 0.062, name, 14, INK, weight="600"),
+               t(x + 0.072, y + 0.104, sub, 11.5, MUTED),
+               circ(x, y + h / 2, 5.0, "#ffffff", 1, delay + 0.02),
+               circ(x + w, y + h / 2, 5.0, BLUE, 0.8, delay + 0.02)]
+        return "".join(out)
 
-# ----------------------------------------------------------------- slide 2
-#
-# A fine-tune is a dataset and a model, so that is what gets drawn. The pairs
-# are outline and *published* article: the target is what a human shipped, not
-# what the model first wrote.
+    m.append(rect(0.02, 0.05, 0.20, 0.115, "#ffffff", 1, 0.02, RULE, cls="rise"))
+    m.append(t(0.036, 0.093, "seo-article-v3", 12.5, MUTED))
+    m.append(circ(0.185, 0.082, 4.0, ACCENT, 1, 0.04))
+
+    m.append(rect(0.02, 0.30, 0.115, 0.435, "#ffffff", 1, 0.06, RULE))
+    m.append(t(0.0675, 0.352, "▶", 15, BLUE, "middle"))
+    m.append(t(0.0675, 0.398, "brief added", 11, MUTED, "middle"))
+    m.append(circ(0.115, 0.3675, 5.0, BLUE, 0.8, 0.08))
+
+    xs = ((0.175, "Outline", "Agent"), (0.445, "Write", "Agent"), (0.715, "Review", "Agent"))
+    for i, (x, name, sub) in enumerate(xs):
+        m.append(node(x, 0.295, name, sub, delay=0.12 + 0.08 * i))
+        prev = 0.115 if i == 0 else xs[i - 1][0] + 0.20
+        m.append(bez((prev, 0.3675), (x, 0.3675), 0.14 + 0.08 * i))
+
+    m.append(node(0.395, 0.66, "Supabase", "Vector Store", 0.20, 0.145, False, 0.38))
+    m.append(f'<line class="c" x1="{p(0.495, 0.66)[0]:.1f}" y1="{p(0.495, 0.66)[1]:.1f}" x2="{p(0.495, 0.445)[0]:.1f}" y2="{p(0.495, 0.445)[1]:.1f}" stroke="{BLUE}" stroke-opacity="0.45" stroke-width="1.8" style="--o:0.5;animation-delay:0.42s"/>')
+    m.append(t(0.512, 0.575, "retrieval", 11.5, ACCENT_TEXT))
+
+    m.append(node(0.135, 0.66, "Drive", "hash diff", 0.20, 0.145, False, 0.34))
+    m.append(bez((0.335, 0.7325), (0.395, 0.7325), 0.40, 0.5, 1.8))
+
+    m.append(t(0.935, 0.3675, "→ CMS", 13, MUTED))
+    m.append(t(0.50, 0.955, "code holds the control flow; a model runs at three points",
+               13.5, MUTED, "middle"))
+    return wrap(SLIDE_DEFS + lifted("".join(m)))
+
 
 def arch_2_finetune():
-    p = Plane(600, 296, 900, 470, umax=1, vmax=1)
+    """What a fine-tune looks like: the pairs going in and the loss coming down."""
+    p = Plane(600, 326, 1020, 470, umax=1, vmax=1)
+    rect, t, circ, bez = kit(p)
     m = []
-    for i in range(7):
-        v = 0.14 + i * 0.098
-        m.append(textline(p, 0.04, 0.21, v, 0.040, 0.60, 0.05 + i * 0.05, BLUE, "type"))
-        m.append(textline(p, 0.235, 0.45, v, 0.040, 0.24, 0.07 + i * 0.05, cls="type"))
-    m.append(text(p, 0.125, 0.055, "outline", 15, MUTED))
-    m.append(text(p, 0.34, 0.055, "what shipped", 15, MUTED))
 
-    m.append(arrow(p, (0.49, 0.43), (0.59, 0.43), delay=0.50))
-    m.append(node(p, 0.61, 0.32, 0.95, 0.54, "weights", True, 0.54, 20))
-    return wrap(lifted("".join(m)) + note(392, 556, ["the target is what a human was willing to publish"]))
+    m.append(rect(0.02, 0.06, 0.46, 0.90, "#ffffff", 1, 0.02, RULE))
+    m.append(rect(0.02, 0.06, 0.46, 0.145, "#f6f8fd", 1, 0.03))
+    m.append(t(0.04, 0.118, "pairs.jsonl", 13, INK, weight="600"))
+    m.append(t(0.44, 0.118, "9,412 rows", 12, MUTED, "end"))
+    for r in range(9):
+        y = 0.185 + r * 0.075
+        m.append(t(0.038, y + 0.030, f"{r + 1:>3}", 10.5, MUTED))
+        m.append(rect(0.072, y, 0.072 + (0.13, 0.16, 0.11, 0.15, 0.12, 0.14, 0.10,
+                                         0.155, 0.125)[r], y + 0.036,
+                      BLUE, 0.55, 0.06 + 0.03 * r, cls="type"))
+        m.append(rect(0.245, y, 0.245 + (0.15, 0.12, 0.17, 0.13, 0.16, 0.11, 0.155,
+                                         0.12, 0.14)[r], y + 0.036,
+                      MUTED, 0.24, 0.07 + 0.03 * r, cls="type"))
+    m.append(t(0.10, 0.885, "outline", 11.5, ACCENT_TEXT))
+    m.append(t(0.30, 0.885, "what shipped", 11.5, ACCENT_TEXT))
 
+    m.append(rect(0.50, 0.06, 0.98, 0.90, "#ffffff", 1, 0.10, RULE))
+    m.append(rect(0.50, 0.06, 0.98, 0.145, "#f6f8fd", 1, 0.11))
+    m.append(t(0.52, 0.118, "training run", 13, INK, weight="600"))
+    m.append(t(0.96, 0.118, "epoch 2 / 3", 12, MUTED, "end"))
 
-# ----------------------------------------------------------------- slide 3
-#
-# The loop is the point. A chain stops at step three; this reads its own output
-# and goes again, and a skill is pulled in only when the step calls for it.
+    for k, lab in enumerate(("2.0", "1.5", "1.0", "0.5")):
+        y = 0.225 + k * 0.115
+        m.append(rect(0.575, y, 0.945, y + 0.003, RULE, 0.8, 0.14))
+        m.append(t(0.565, y + 0.018, lab, 10.5, MUTED, "end"))
+    pts = [p(0.582 + (k / 22) * 0.355, 0.225 + 0.395 * (1 - (1 - k / 22) ** 2.6))
+           for k in range(23)]
+    area = ("M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) +
+            f' L{p(0.937, 0.665)[0]:.1f} {p(0.937, 0.665)[1]:.1f}'
+            f' L{p(0.582, 0.665)[0]:.1f} {p(0.582, 0.665)[1]:.1f} Z')
+    m.append(f'<path class="c" d="{area}" fill="url(#loss)" style="--o:1;animation-delay:0.24s"/>')
+    m.append('<path class="draw" d="M' + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) +
+             f'" fill="none" stroke="{BLUE}" stroke-width="2.6" opacity="0.9" '
+             'style="--len:520;animation-delay:0.20s"/>')
+    m.append(rect(0.575, 0.665, 0.945, 0.669, RULE, 0.9, 0.16))
+    for k, lab in enumerate(("0", "400", "800", "1,200")):
+        m.append(t(0.582 + k * 0.118, 0.708, lab, 10.5, MUTED, "middle"))
+    m.append(t(0.52, 0.60, "loss", 11.5, MUTED))
+
+    for k, (a, b) in enumerate((("model", "Qwen"), ("method", "LoRA"),
+                                ("gpu", "1×A100"), ("loss", "0.84"))):
+        x = 0.52 + k * 0.115
+        m.append(rect(x, 0.775, x + 0.10, 0.855, "#f6f8fd", 1, 0.30 + 0.03 * k, RULE))
+        m.append(t(x + 0.05, 0.808, a, 10, MUTED, "middle"))
+        m.append(t(x + 0.05, 0.840, b, 11.5, INK, "middle", "600"))
+
+    m.append(t(0.50, 0.955, "the target is not what the model wrote, "
+               "it is what a human was willing to publish", 13.5, MUTED, "middle"))
+    return wrap(SLIDE_DEFS + lifted("".join(m)))
+
 
 def arch_3_agent():
-    p = Plane(600, 296, 900, 470, umax=1, vmax=1)
+    """The transcript. The loop is two steps arriving again, not an arrow."""
+    p = Plane(600, 326, 1020, 470, umax=1, vmax=1)
+    rect, t, circ, bez = kit(p)
     m = []
-    m.append(node(p, 0.16, 0.30, 0.44, 0.48, "reason", True, 0.04, 19))
-    m.append(node(p, 0.58, 0.30, 0.86, 0.48, "act", delay=0.12, size=19))
-    m.append(arrow(p, (0.448, 0.39), (0.572, 0.39), delay=0.14))
-    m.append(loop_arc(p, 0.175, 0.855, 0.295, 0.185, delay=0.24))
-    m.append(text(p, 0.50, 0.075, "the model holds the control flow", 16, MUTED))
 
-    m.append(node(p, 0.16, 0.66, 0.44, 0.80, "skill", delay=0.34, size=17))
-    m.append(arrow(p, (0.30, 0.655), (0.30, 0.492), delay=0.38))
-    return wrap(lifted("".join(m)) + note(392, 556, ["a skill is loaded only when the step calls for it"]))
+    m.append(rect(0.10, 0.05, 0.90, 0.90, "#ffffff", 1, 0.02, RULE))
+    m.append(rect(0.10, 0.05, 0.90, 0.135, "#f6f8fd", 1, 0.03))
+    m.append(t(0.12, 0.108, "run 4f2a", 13, INK, weight="600"))
+    m.append(t(0.235, 0.108, "claude agent sdk", 12, MUTED))
+    m.append(t(0.88, 0.108, "18.4s", 12, MUTED, "end"))
 
+    log = (("reason", "the brief caps the article at 1,000 words", 0.00, "84"),
+           ("act", "search(brand_guide, \"tone\")", 0.03, "1.2k"),
+           ("observe", "3 passages returned", 0.06, "310"),
+           ("reason", "the approved outline expands to 900", 0.00, "96"),
+           ("act", "trim_outline(target=850)", 0.03, "540"),
+           ("observe", "section 3 is now missing", 0.06, "128"),
+           ("act", "trim_outline(target=850)", 0.03, "540"))
+    for k, (role, body, ind, tok) in enumerate(log):
+        y = 0.175 + k * 0.098
+        m.append(t(0.125, y + 0.048, f"{k + 1:>2}", 10.5, MUTED))
+        if role == "act":
+            w = 0.022 * len(body) * 0.62 + 0.06
+            m.append(rect(0.16 + ind, y, 0.16 + ind + w, y + 0.068,
+                          "url(#chip)", 1, 0.06 + 0.05 * k, cls="type"))
+            m.append(t(0.175 + ind, y + 0.047, body, 12, "#ffffff", weight="500"))
+        else:
+            m.append(rect(0.16 + ind, y + 0.008, 0.1645 + ind, y + 0.060,
+                          MUTED, 0.35, 0.06 + 0.05 * k, cls="type"))
+            m.append(t(0.176 + ind, y + 0.047, body, 12,
+                       INK if role == "reason" else MUTED))
+        m.append(t(0.145, y + 0.047, "", 10))
+        m.append(t(0.875, y + 0.047, tok, 10.5, MUTED, "end"))
 
-# ----------------------------------------------------------------- slide 4
-#
-# What shipped. An application holds the state in the middle of the screen and
-# the conversation moves to a rail beside it. Drawn as the screen, because a
-# reader who has used a spreadsheet already knows what one looks like.
+    ry0, ry1 = 0.175 + 4 * 0.098, 0.175 + 7 * 0.098
+    x0, y0 = p(0.905, ry0)
+    x1, y1 = p(0.905, ry1)
+    m.append(f'<g class="c" style="--o:0.75;animation-delay:0.52s">'
+             f'<path d="M{x0:.1f} {y0:.1f} h14 V{y1:.1f} h-14" fill="none" '
+             f'stroke="{BLUE}" stroke-opacity="0.6" stroke-width="1.8"/></g>')
+    bx, by = p(0.925, (ry0 + ry1) / 2)
+    m.append(f'<g class="mark"><rect x="{bx + 6:.0f}" y="{by - 15:.0f}" width="86" '
+             f'height="30" rx="15" fill="#ffffff" stroke="{BLUE}" stroke-width="1.4"/>'
+             f'<text x="{bx + 49:.0f}" y="{by + 5:.0f}" font-size="13" fill="{BLUE}" '
+             f'text-anchor="middle" font-weight="600">↺ × 7</text></g>')
+
+    m.append(t(0.50, 0.955, "the same two steps arrive again; "
+               "the rule had a tolerance nobody wrote down", 13.5, MUTED, "middle"))
+    return wrap(SLIDE_DEFS + lifted("".join(m)))
+
 
 def arch_4_hybrid():
-    p = Plane(600, 292, 900, 450, umax=1, vmax=1)
+    """The application that shipped, with the conversation moved to a rail."""
+    p = Plane(600, 326, 1020, 470, umax=1, vmax=1)
+    rect, t, circ, bez = kit(p)
     m = []
-    m.append(slab(p, 0.02, 0.06, 0.64, 0.84, "#ffffff", 1, 0.04, RULE, cls="rise"))
-    m.append(slab(p, 0.02, 0.06, 0.64, 0.155, BLUE, 0.9, 0.06, cls="rise"))
-    for i in range(6):
-        v = 0.235 + i * 0.105
-        m.append(textline(p, 0.055, 0.055 + (0.24, 0.30, 0.20, 0.27, 0.22, 0.31)[i],
-                          v, 0.030, 0.26, 0.10 + i * 0.04, cls="rise"))
-        m.append(dot(p, 0.595, v, 5.0, ACCENT if i in (1, 3) else RULE, 1, 0.12 + i * 0.04))
-        m.append(slab(p, 0.02, v + 0.052, 0.64, v + 0.054, RULE, 0.7, 0.10 + i * 0.04))
 
-    m.append(slab(p, 0.69, 0.06, 0.98, 0.84, "#ffffff", 1, 0.42, RULE, cls="rise"))
-    m.append(slab(p, 0.69, 0.06, 0.98, 0.155, ACCENT, 0.95, 0.44, cls="rise"))
-    for i, w in enumerate((0.21, 0.15, 0.23, 0.12)):
-        m.append(textline(p, 0.715, 0.715 + w, 0.245 + i * 0.095, 0.028, 0.24,
-                          0.48 + i * 0.06, cls="type"))
-    m.append(arrow(p, (0.685, 0.60), (0.615, 0.60), delay=0.78, o=0.6))
-    return wrap(lifted("".join(m)) + note(392, 556, ["the conversation moved to a rail beside the work"]))
+    m.append(rect(0.02, 0.05, 0.98, 0.90, "#ffffff", 1, 0.02, RULE))
+    m.append(rect(0.02, 0.05, 0.98, 0.135, "url(#head)", 1, 0.03))
+    m.append(t(0.042, 0.108, "Articles", 14, "#ffffff", weight="600"))
+    for k in range(3):
+        m.append(circ(0.94 + k * 0.017, 0.0925, 3.2, "#ffffff", 0.7, 0.05))
+
+    m.append(rect(0.02, 0.135, 0.155, 0.90, "#fafbfe", 1, 0.05))
+    for k, nav in enumerate(("Queue", "Briefs", "Published", "Settings")):
+        m.append(t(0.042, 0.215 + k * 0.088, nav, 12,
+                   INK if k == 0 else MUTED, weight="600" if k == 0 else "400"))
+    m.append(rect(0.02, 0.185, 0.024, 0.235, BLUE, 1, 0.06))
+
+    cols = ((0.175, "Title"), (0.475, "Owner"), (0.585, "Status"), (0.685, "Words"))
+    for x, lab in cols:
+        m.append(t(x, 0.195, lab, 11, MUTED, weight="600"))
+    m.append(rect(0.155, 0.215, 0.735, 0.218, RULE, 0.9, 0.07))
+
+    rows = (("Best CRM for SMEs", "Linh", "Draft", "820", False),
+            ("How to pick a POS", "Minh", "Review", "1,040", True),
+            ("SEO audit checklist", "Linh", "Draft", "610", False),
+            ("Landing page tips", "An", "Live", "980", True),
+            ("Email flows 101", "Minh", "Draft", "740", False),
+            ("Choosing a helpdesk", "An", "Draft", "560", False))
+    for r, (title, owner, status, words, hot) in enumerate(rows):
+        y = 0.245 + r * 0.104
+        m.append(t(0.175, y + 0.052, title, 12.5, INK))
+        m.append(t(0.475, y + 0.052, owner, 12, MUTED))
+        m.append(rect(0.585, y + 0.014, 0.665, y + 0.070,
+                      "url(#chip)" if hot else "#eef1f7", 1, 0.08 + 0.04 * r, cls="rise"))
+        m.append(t(0.625, y + 0.053, status, 11, "#ffffff" if hot else MUTED,
+                   "middle", "500"))
+        m.append(t(0.720, y + 0.052, words, 12, MUTED, "end"))
+        m.append(rect(0.155, y + 0.088, 0.735, y + 0.090, RULE, 0.7, 0.08 + 0.04 * r))
+
+    m.append(rect(0.735, 0.135, 0.738, 0.90, RULE, 0.9, 0.34))
+    m.append(t(0.755, 0.195, "Agent", 12, MUTED, weight="600"))
+    m.append(rect(0.795, 0.225, 0.96, 0.305, "url(#chip)", 1, 0.38, cls="rise"))
+    m.append(t(0.9375, 0.272, "rewrite the intro", 11.5, "#ffffff", "end"))
+    m.append(rect(0.755, 0.335, 0.945, 0.465, "#f2f4f9", 1, 0.44, cls="rise"))
+    m.append(t(0.772, 0.385, "done. 940 words, and the", 11.5, MUTED))
+    m.append(t(0.772, 0.428, "intro leads with the price.", 11.5, MUTED))
+    m.append(rect(0.815, 0.495, 0.96, 0.575, "url(#chip)", 1, 0.50, cls="rise"))
+    m.append(t(0.9375, 0.542, "set it to Review", 11.5, "#ffffff", "end"))
+    m.append(rect(0.755, 0.605, 0.90, 0.685, "#f2f4f9", 1, 0.56, cls="rise"))
+    m.append(t(0.772, 0.652, "row 2 updated.", 11.5, MUTED))
+    m.append(rect(0.755, 0.79, 0.96, 0.865, "#ffffff", 1, 0.62, RULE, cls="rise"))
+    m.append(t(0.772, 0.838, "ask the agent…", 11.5, MUTED))
+
+    x0, y0 = p(0.752, 0.545)
+    x1, y1 = p(0.672, 0.383)
+    m.append(f'<g class="c" style="--o:0.7;animation-delay:0.66s">'
+             f'<path d="M{x0:.1f} {y0:.1f} C{x0 - 34:.1f} {y0:.1f} {x1 + 30:.1f} '
+             f'{y1:.1f} {x1:.1f} {y1:.1f}" fill="none" stroke="{ACCENT_TEXT}" '
+             f'stroke-width="1.6"/>'
+             f'<polygon points="{x1:.1f},{y1:.1f} {x1 + 9:.1f},{y1 - 4:.1f} '
+             f'{x1 + 8:.1f},{y1 + 6:.1f}" fill="{ACCENT_TEXT}"/></g>')
+
+    m.append(t(0.50, 0.955, "the application holds the state; "
+               "the conversation moved to a rail beside it", 13.5, MUTED, "middle"))
+    return wrap(SLIDE_DEFS + lifted("".join(m)))
 
 
 FIGURES = {"a-brief-history-of-seo-content-writing-with-ai": cover}
