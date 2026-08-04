@@ -201,14 +201,14 @@ def cover():
 
     # 2. A training run: pairs on the left, loss coming down on the right.
     m.append(rect(1, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.30, RULE))
-    m.append(t(1, 0.05, 0.115, "outline → published", 9.5, MUTED))
+    m.append(t(1, 0.05, 0.115, "seongon_travel", 9.5, INK, weight="600"))
     for r in range(6):
         y = 0.17 + r * 0.088
         m.append(rect(1, 0.05, y, 0.05 + (0.17, 0.20, 0.15, 0.19, 0.16, 0.18)[r],
                       y + 0.038, BLUE, 0.55, 0.34 + 0.03 * r, cls="type"))
         m.append(rect(1, 0.245, y, 0.245 + (0.17, 0.14, 0.19, 0.15, 0.18, 0.16)[r],
                       y + 0.038, MUTED, 0.24, 0.35 + 0.03 * r, cls="type"))
-    m.append(t(1, 0.05, 0.79, "9,412 pairs", 9.5, INK, weight="500"))
+    m.append(t(1, 0.05, 0.79, "528 pairs · vi", 9.5, INK, weight="500"))
 
     m.append(rect(1, 0.50, 0.13, 0.97, 0.66, "#fbfcff", 1, 0.52, RULE))
     m.append(t(1, 0.525, 0.215, "training loss", 9.5, MUTED))
@@ -223,9 +223,9 @@ def cover():
              f'" fill="none" stroke="{BLUE}" stroke-width="2.2" opacity="0.9" '
              'style="--len:340;animation-delay:0.58s"/>')
     m.append(rect(1, 0.535, 0.618, 0.945, 0.622, RULE, 0.9, 0.56))
-    m.append(t(1, 0.50, 0.735, "step 1,200", 9.5, MUTED))
-    m.append(t(1, 0.97, 0.735, "loss 0.84", 9.5, INK, "end", "500"))
-    m.append(t(1, 0.50, 0.83, "Qwen · LoRA · 1×A100", 9, MUTED))
+    m.append(t(1, 0.50, 0.735, "steps", 9.5, MUTED))
+    m.append(t(1, 0.97, 0.735, "loss", 9.5, MUTED, "end"))
+    m.append(t(1, 0.50, 0.83, "Mistral 24B · Unsloth + TRL", 9, MUTED))
 
     # 3. The transcript. The loop shows as the same two steps coming round again.
     m.append(rect(2, 0.00, 0.02, 1.00, 0.98, "#ffffff", 1, 0.52, RULE))
@@ -375,29 +375,33 @@ def arch_2_finetune():
 
     m.append(rect(0.02, 0.06, 0.46, 0.90, "#ffffff", 1, 0.02, RULE))
     m.append(rect(0.02, 0.06, 0.46, 0.145, "#f6f8fd", 1, 0.03))
-    m.append(t(0.04, 0.118, "pairs.jsonl", 13, INK, weight="600"))
-    m.append(t(0.44, 0.118, "9,412 rows", 12, MUTED, "end"))
+    m.append(t(0.04, 0.118, "seongon_travel", 13, INK, weight="600"))
+    m.append(t(0.44, 0.118, "528 rows", 12, MUTED, "end"))
     for r in range(9):
         y = 0.185 + r * 0.075
         m.append(t(0.038, y + 0.030, f"{r + 1:>3}", 10.5, MUTED))
-        m.append(rect(0.072, y, 0.072 + (0.13, 0.16, 0.11, 0.15, 0.12, 0.14, 0.10,
-                                         0.155, 0.125)[r], y + 0.036,
+        m.append(rect(0.072, y, 0.112, y + 0.036, MUTED, 0.42, 0.05 + 0.03 * r,
+                      cls="type"))
+        m.append(rect(0.128, y, 0.128 + (0.075, 0.095, 0.065, 0.088, 0.070, 0.082,
+                                         0.060, 0.092, 0.074)[r], y + 0.036,
                       BLUE, 0.55, 0.06 + 0.03 * r, cls="type"))
         m.append(rect(0.245, y, 0.245 + (0.15, 0.12, 0.17, 0.13, 0.16, 0.11, 0.155,
                                          0.12, 0.14)[r], y + 0.036,
                       MUTED, 0.24, 0.07 + 0.03 * r, cls="type"))
-    m.append(t(0.10, 0.885, "outline", 11.5, ACCENT_TEXT))
-    m.append(t(0.30, 0.885, "what shipped", 11.5, ACCENT_TEXT))
+    m.append(t(0.092, 0.885, "system", 11, ACCENT_TEXT, "middle"))
+    m.append(t(0.168, 0.885, "brief", 11, ACCENT_TEXT, "middle"))
+    m.append(t(0.315, 0.885, "what shipped", 11, ACCENT_TEXT, "middle"))
 
     m.append(rect(0.50, 0.06, 0.98, 0.90, "#ffffff", 1, 0.10, RULE))
     m.append(rect(0.50, 0.06, 0.98, 0.145, "#f6f8fd", 1, 0.11))
     m.append(t(0.52, 0.118, "training run", 13, INK, weight="600"))
-    m.append(t(0.96, 0.118, "epoch 2 / 3", 12, MUTED, "end"))
+    m.append(t(0.96, 0.118, "Vietnamese · travel", 12, MUTED, "end"))
 
-    for k, lab in enumerate(("2.0", "1.5", "1.0", "0.5")):
+    # No tick values. The model card publishes no loss numbers and inventing a
+    # scale for a post about honest measurement would be the wrong kind of joke.
+    for k in range(4):
         y = 0.225 + k * 0.115
         m.append(rect(0.575, y, 0.945, y + 0.003, RULE, 0.8, 0.14))
-        m.append(t(0.565, y + 0.018, lab, 10.5, MUTED, "end"))
     pts = [p(0.582 + (k / 22) * 0.355, 0.225 + 0.395 * (1 - (1 - k / 22) ** 2.6))
            for k in range(23)]
     area = ("M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in pts) +
@@ -408,12 +412,11 @@ def arch_2_finetune():
              f'" fill="none" stroke="{BLUE}" stroke-width="2.6" opacity="0.9" '
              'style="--len:520;animation-delay:0.20s"/>')
     m.append(rect(0.575, 0.665, 0.945, 0.669, RULE, 0.9, 0.16))
-    for k, lab in enumerate(("0", "400", "800", "1,200")):
-        m.append(t(0.582 + k * 0.118, 0.708, lab, 10.5, MUTED, "middle"))
+    m.append(t(0.76, 0.712, "steps", 11, MUTED, "middle"))
     m.append(t(0.52, 0.60, "loss", 11.5, MUTED))
 
-    for k, (a, b) in enumerate((("model", "Qwen"), ("method", "LoRA"),
-                                ("gpu", "1×A100"), ("loss", "0.84"))):
+    for k, (a, b) in enumerate((("base", "Mistral 24B"), ("stack", "Unsloth + TRL"),
+                                ("rows", "528"), ("lang", "vi"))):
         x = 0.52 + k * 0.115
         m.append(rect(x, 0.775, x + 0.10, 0.855, "#f6f8fd", 1, 0.30 + 0.03 * k, RULE))
         m.append(t(x + 0.05, 0.808, a, 10, MUTED, "middle"))
