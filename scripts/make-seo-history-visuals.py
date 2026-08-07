@@ -355,6 +355,19 @@ def arch_1_chain():
         prev = 0.115 if i == 0 else xs[i - 1][0] + 0.20
         m.append(bez((prev, 0.3675), (x, 0.3675), 0.14 + 0.08 * i))
 
+    # Write <-> Review is an evaluator-optimizer loop: the reviewer's verdict
+    # returns to the writer, and the draft goes round until it passes. This is
+    # the return edge a straight chain never had.
+    wx, wy = p(0.545, 0.295)
+    rx, ry = p(0.815, 0.295)
+    ax, ay = p(0.68, 0.205)
+    m.append(f'<g class="c" style="--o:0.6;animation-delay:0.50s">'
+             f'<path d="M{rx:.1f} {ry:.1f} Q{ax:.1f} {ay:.1f} {wx:.1f} {wy:.1f}" '
+             f'fill="none" stroke="{BLUE}" stroke-width="1.7"/>'
+             f'<polygon points="{wx:.1f},{wy:.1f} {wx - 5:.1f},{wy - 9:.1f} '
+             f'{wx + 5:.1f},{wy - 9:.1f}" fill="{BLUE}"/></g>')
+    m.append(t(0.68, 0.183, "revise", 12, ACCENT_TEXT, "middle", "500"))
+
     m.append(node(0.395, 0.66, "Supabase", "Vector Store", 0.20, 0.145, False, 0.38))
     m.append(f'<line class="c" x1="{p(0.495, 0.66)[0]:.1f}" y1="{p(0.495, 0.66)[1]:.1f}" x2="{p(0.495, 0.445)[0]:.1f}" y2="{p(0.495, 0.445)[1]:.1f}" stroke="{BLUE}" stroke-opacity="0.45" stroke-width="1.8" style="--o:0.5;animation-delay:0.42s"/>')
     m.append(t(0.512, 0.575, "retrieval", 11.5, ACCENT_TEXT))
