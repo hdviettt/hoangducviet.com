@@ -1,5 +1,3 @@
-import { Icon } from "@/components/ui/Icon";
-
 interface ViewCountProps {
   count: number;
   /** When true, pushes itself to the far right via `ml-auto`. Used in
@@ -8,17 +6,10 @@ interface ViewCountProps {
   rightAligned?: boolean;
 }
 
-export function ViewCount({ count, rightAligned = false }: ViewCountProps) {
-  if (count <= 0) return null;
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 tabular-nums ${
-        rightAligned ? "ml-auto" : ""
-      }`}
-      aria-label={`${count} ${count === 1 ? "view" : "views"}`}
-    >
-      <Icon name="visibility" size={14} className="opacity-70" />
-      {count.toLocaleString()}
-    </span>
-  );
+// View-count display is turned off on the public site. The number still
+// gets fetched from PostHog and the admin analytics dashboard is unaffected;
+// only the reader-facing eye-icon badge is hidden. To re-enable, restore the
+// previous render from git history.
+export function ViewCount(_props: ViewCountProps) {
+  return null;
 }
