@@ -1,45 +1,74 @@
+// Skeleton for the post-detail route. Mirrors the real PostDetail anatomy
+// (centered meta → title → byline, full-width cover hero, centered standfirst,
+// centered prose column — no sidebar) so the hand-off to real content doesn't
+// visibly shift the layout.
+// Explicit, stable keys + widths so the decorative bars vary naturally without
+// keying React nodes on their array index.
+const PROSE_A = [
+  { id: "a1", w: 92 },
+  { id: "a2", w: 78 },
+  { id: "a3", w: 85 },
+  { id: "a4", w: 70 },
+  { id: "a5", w: 88 },
+  { id: "a6", w: 74 },
+  { id: "a7", w: 90 },
+  { id: "a8", w: 66 },
+  { id: "a9", w: 82 },
+  { id: "a10", w: 54 },
+];
+const PROSE_B = [
+  { id: "b1", w: 84 },
+  { id: "b2", w: 72 },
+  { id: "b3", w: 89 },
+  { id: "b4", w: 68 },
+  { id: "b5", w: 80 },
+  { id: "b6", w: 62 },
+  { id: "b7", w: 76 },
+];
+
 export default function PostLoading() {
   return (
-    <div className="py-8 sm:py-12 md:py-16">
-      <div className="h-4 w-20 bg-muted animate-pulse mb-8" />
-
-      <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12 items-start">
-        <div className="min-w-0">
-          <div className="mb-10 sm:mb-12">
-            <div className="h-10 w-3/4 bg-muted animate-pulse mb-4" />
-            <div className="h-4 w-32 bg-muted animate-pulse" />
-          </div>
-
-          <div className="space-y-3">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-4 bg-muted animate-pulse"
-                style={{ width: `${60 + ((i * 13) % 40)}%` }}
-              />
-            ))}
-            <div className="h-6" />
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={`p2-${i}`}
-                className="h-4 bg-muted animate-pulse"
-                style={{ width: `${55 + ((i * 19) % 40)}%` }}
-              />
-            ))}
-          </div>
+    <div className="pt-12 sm:pt-16 md:pt-20 pb-24" aria-hidden>
+      {/* centered header: meta row → title → byline */}
+      <div className="mx-auto max-w-[880px] text-center mb-10 md:mb-14">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-5 md:mb-7">
+          <div className="h-4 w-28 bg-muted animate-pulse rounded" />
+          <div className="h-4 w-24 bg-muted animate-pulse rounded" />
         </div>
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-9 sm:h-11 md:h-[52px] w-[86%] bg-muted animate-pulse rounded-lg" />
+          <div className="h-9 sm:h-11 md:h-[52px] w-[54%] bg-muted animate-pulse rounded-lg" />
+        </div>
+        <div className="h-4 w-32 bg-muted animate-pulse rounded mx-auto mt-6 md:mt-8" />
+      </div>
 
-        <aside className="hidden lg:block">
-          <div className="space-y-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-3 bg-muted animate-pulse"
-                style={{ width: `${60 + ((i * 10) % 40)}%` }}
-              />
-            ))}
-          </div>
-        </aside>
+      {/* full-width cover hero (matches the real 1200×630 cover) */}
+      <div className="mx-auto max-w-[1360px] mb-12 md:mb-16 w-full aspect-[1200/630] bg-muted animate-pulse rounded-[var(--md-sys-shape-corner-large-increased)] ring-1 ring-inset ring-md-outline-variant" />
+
+      {/* centered standfirst */}
+      <div className="mx-auto max-w-[720px] mb-12 md:mb-16 flex flex-col items-center gap-3">
+        <div className="h-5 w-[90%] bg-muted animate-pulse rounded" />
+        <div className="h-5 w-[82%] bg-muted animate-pulse rounded" />
+        <div className="h-5 w-[46%] bg-muted animate-pulse rounded" />
+      </div>
+
+      {/* centered prose column */}
+      <div className="mx-auto max-w-[720px] space-y-3">
+        {PROSE_A.map((line) => (
+          <div
+            key={line.id}
+            className="h-4 bg-muted animate-pulse rounded"
+            style={{ width: `${line.w}%` }}
+          />
+        ))}
+        <div className="h-6" />
+        {PROSE_B.map((line) => (
+          <div
+            key={line.id}
+            className="h-4 bg-muted animate-pulse rounded"
+            style={{ width: `${line.w}%` }}
+          />
+        ))}
       </div>
     </div>
   );

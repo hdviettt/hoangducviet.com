@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import MarkdownContent from "@/components/content/MarkdownContent";
 import { LikeButton } from "@/components/posts/LikeButton";
+import { feedRowDate } from "@/components/posts/FeedRow";
 import PostNavigation from "@/components/posts/PostNavigation";
 import SeriesParts from "@/components/posts/SeriesParts";
 import { ViewCount } from "@/components/posts/ViewCount";
@@ -123,12 +124,7 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
         <header className="mx-auto max-w-[880px] text-center mb-10 md:mb-14">
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[14px] leading-5 text-md-on-surface-variant mb-5 md:mb-7">
             <time className="tabular-nums" dateTime={data.date_created ?? ""}>
-              {data.date_created &&
-                new Date(data.date_created).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+              {feedRowDate(data.date_created)}
             </time>
             {seriesCtx && (
               <Link
