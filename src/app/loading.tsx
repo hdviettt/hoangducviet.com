@@ -55,7 +55,7 @@ export default function HomeLoading() {
                 </div>
                 <div className="mt-4 h-4 w-24 bg-muted animate-pulse rounded" />
               </div>
-              <div className="order-first sm:order-none w-full sm:w-[220px] md:w-[260px] sm:shrink-0 aspect-[16/9] rounded-[var(--md-sys-shape-corner-large-increased)] bg-muted animate-pulse" />
+              <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square rounded-[var(--md-sys-shape-corner-large-increased)] bg-muted animate-pulse" />
             </div>
           ))}
         </div>

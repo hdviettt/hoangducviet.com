@@ -38,14 +38,14 @@ export default function FeedRow({
     // below; from sm up the thumbnail moves to the right, top-aligned.
     <Link
       href={href}
-      className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10 transition-colors duration-200 ease-md-standard hover:bg-md-surface-container-low"
+      className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
     >
       <div className="min-w-0 flex-1">
         <h3 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
           {title}
         </h3>
         {description && (
-          <p className="mt-3 text-[16px] leading-[26px] text-md-on-surface-variant line-clamp-3">
+          <p className="mt-3 text-[16px] leading-[26px] text-md-on-surface-variant">
             {description}
           </p>
         )}
@@ -58,7 +58,7 @@ export default function FeedRow({
       {/* inset hairline ring: near-white SVG covers dissolve into the page
           background without it — keeps every thumbnail a crisp frame */}
       {thumbnail && (
-        <div className="order-first sm:order-none w-full sm:w-[220px] md:w-[260px] sm:shrink-0 aspect-[16/9] overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
+        <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
           {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
           <img
             src={thumbnail}
