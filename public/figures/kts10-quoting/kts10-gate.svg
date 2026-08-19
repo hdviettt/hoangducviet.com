@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <style>
+    /* 14s loop. Each class is a different kind of arrival, because the figures
+       are about different kinds of event: text is typed, a result appears, a
+       panel expands and pushes what is under it away, a curve is drawn. A fade
+       only says "this exists".
+
+       `transform-box: fill-box` is what makes transform-origin mean the shape's
+       own box rather than the whole canvas. Without it a scaleX on a text line
+       grows from the middle of the page.
+
+       Every class rests on the finished figure, and reduced motion paints that
+       frame directly. The og:image renderer forces reduced motion, so the still
+       it captures is always the completed drawing. Check this after any change
+       to the keyframes: a scaleY(0) that fails to reset removes the shape from
+       every social card, and nobody notices until someone shares the post. */
+    .c, .type, .pop, .rise, .expandy { transform-box: fill-box; }
+
+    .c { opacity: 0; animation: fade 14s ease-in-out infinite; }
+    @keyframes fade { 0% { opacity: 0 } 20%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+
+    .type { opacity: 0; transform-origin: left center;
+             animation: type 14s cubic-bezier(0.25, 0.9, 0.3, 1) infinite; }
+    @keyframes type { 0% { opacity: 0; transform: scaleX(0) }
+                      6% { opacity: var(--o, 1); transform: scaleX(0) }
+                      22%, 88% { opacity: var(--o, 1); transform: scaleX(1) }
+                      100% { opacity: 0; transform: scaleX(1) } }
+
+    .pop { opacity: 0; transform-origin: center;
+            animation: pop 14s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
+    @keyframes pop { 0% { opacity: 0; transform: scale(0.6) }
+                     18%, 88% { opacity: var(--o, 1); transform: scale(1) }
+                     100% { opacity: 0; transform: scale(0.6) } }
+
+    .rise { opacity: 0; animation: rise 14s cubic-bezier(0.2, 0.9, 0.3, 1) infinite; }
+    @keyframes rise { 0% { opacity: 0; transform: translateY(22px) }
+                      20%, 88% { opacity: var(--o, 1); transform: translateY(0) }
+                      100% { opacity: 0; transform: translateY(22px) } }
+
+    .expandy { opacity: 0; transform-origin: top center;
+                animation: expandy 14s cubic-bezier(0.2, 0.9, 0.25, 1) infinite; }
+    @keyframes expandy { 0% { opacity: 0; transform: scaleY(0) }
+                         6% { opacity: var(--o, 1); transform: scaleY(0) }
+                         24%, 88% { opacity: var(--o, 1); transform: scaleY(1) }
+                         100% { opacity: 0; transform: scaleY(0) } }
+
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 40% { opacity: 0 } 52%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .c, .type, .pop, .rise, .expandy { opacity: var(--o, 1); transform: none; animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <defs>
+    <linearGradient id="head" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#004aef"/>
+      <stop offset="1" stop-color="#2f6bf6"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a72f4"/>
+      <stop offset="1" stop-color="#004aef"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0.1" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.94"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.42"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0b1a3a" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+<g filter="url(#lift)"><rect class="rise" x="120.0" y="96.0" width="420.0" height="62.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.06s"/><text x="140.0" y="122.0" text-anchor="start" font-size="11.5" fill="#b2453f" font-weight="600">v1 · truthiness</text><text x="140.0" y="146.0" text-anchor="start" font-size="15" fill="#1f2124" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">if not stages.get(step):</text><rect class="rise" x="660.0" y="96.0" width="420.0" height="62.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.06s"/><text x="680.0" y="122.0" text-anchor="start" font-size="11.5" fill="#04815a" font-weight="600">v2 · presence</text><text x="680.0" y="146.0" text-anchor="start" font-size="15" fill="#1f2124" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">if step not in stages:</text><rect class="rise" x="490.0" y="218.0" width="220.0" height="60.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1" style="--o:1;animation-delay:0.18s"/><text x="600.0" y="248.0" text-anchor="middle" font-size="13" fill="#1f2124" font-weight="600">full payload</text><text x="600.0" y="268.0" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">{ price, links... }</text><text x="460.0" y="254.0" text-anchor="end" font-size="13.5" fill="#04815a" font-weight="400">passes</text><text x="740.0" y="254.0" text-anchor="start" font-size="13.5" fill="#04815a" font-weight="400">passes</text><rect class="rise" x="80" y="298" width="1040" height="76" rx="10" fill="#eef7f1" style="--o:1;animation-delay:0.24s"/><rect class="rise" x="490.0" y="306.0" width="220.0" height="60.0" rx="10" fill="#ffffff" stroke="#004aef" stroke-width="1.3" style="--o:1;animation-delay:0.26s"/><text x="600.0" y="336.0" text-anchor="middle" font-size="13" fill="#1f2124" font-weight="600">empty payload</text><text x="600.0" y="356.0" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">{ }</text><text x="460.0" y="342.0" text-anchor="end" font-size="13.5" fill="#b2453f" font-weight="700">passes, slips through</text><text x="740.0" y="342.0" text-anchor="start" font-size="13.5" fill="#04815a" font-weight="700">fires</text><circle class="pop" cx="762.0" cy="318.0" r="5" fill="#07ef9c" style="--o:1;animation-delay:0.40s"/><rect class="rise" x="490.0" y="394.0" width="220.0" height="60.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1" style="--o:1;animation-delay:0.34s"/><text x="600.0" y="424.0" text-anchor="middle" font-size="13" fill="#1f2124" font-weight="600">missing step</text><text x="600.0" y="444.0" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">(absent)</text><text x="460.0" y="430.0" text-anchor="end" font-size="13.5" fill="#5f656d" font-weight="400">fires</text><text x="740.0" y="430.0" text-anchor="start" font-size="13.5" fill="#5f656d" font-weight="400">fires</text><text x="600.0" y="478.0" text-anchor="middle" font-size="12" fill="#04815a" font-weight="400">the empty payload is the whole bug: one check waves it through, the other fires</text><text x="600.0" y="600.0" text-anchor="middle" font-size="15" fill="#5f656d" font-weight="400">empty is not never-ran; the gate has to know the difference</text></g>
+</svg>

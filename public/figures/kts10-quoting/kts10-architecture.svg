@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'DM Sans', Roboto, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#fafbfe"/>
+      <stop offset="1" stop-color="#edf1fa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.47" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#004aef" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#004aef" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lift" x="-25%" y="-25%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1a3a" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <style>
+    /* 14s loop. Each class is a different kind of arrival, because the figures
+       are about different kinds of event: text is typed, a result appears, a
+       panel expands and pushes what is under it away, a curve is drawn. A fade
+       only says "this exists".
+
+       `transform-box: fill-box` is what makes transform-origin mean the shape's
+       own box rather than the whole canvas. Without it a scaleX on a text line
+       grows from the middle of the page.
+
+       Every class rests on the finished figure, and reduced motion paints that
+       frame directly. The og:image renderer forces reduced motion, so the still
+       it captures is always the completed drawing. Check this after any change
+       to the keyframes: a scaleY(0) that fails to reset removes the shape from
+       every social card, and nobody notices until someone shares the post. */
+    .c, .type, .pop, .rise, .expandy { transform-box: fill-box; }
+
+    .c { opacity: 0; animation: fade 14s ease-in-out infinite; }
+    @keyframes fade { 0% { opacity: 0 } 20%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
+
+    .type { opacity: 0; transform-origin: left center;
+             animation: type 14s cubic-bezier(0.25, 0.9, 0.3, 1) infinite; }
+    @keyframes type { 0% { opacity: 0; transform: scaleX(0) }
+                      6% { opacity: var(--o, 1); transform: scaleX(0) }
+                      22%, 88% { opacity: var(--o, 1); transform: scaleX(1) }
+                      100% { opacity: 0; transform: scaleX(1) } }
+
+    .pop { opacity: 0; transform-origin: center;
+            animation: pop 14s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
+    @keyframes pop { 0% { opacity: 0; transform: scale(0.6) }
+                     18%, 88% { opacity: var(--o, 1); transform: scale(1) }
+                     100% { opacity: 0; transform: scale(0.6) } }
+
+    .rise { opacity: 0; animation: rise 14s cubic-bezier(0.2, 0.9, 0.3, 1) infinite; }
+    @keyframes rise { 0% { opacity: 0; transform: translateY(22px) }
+                      20%, 88% { opacity: var(--o, 1); transform: translateY(0) }
+                      100% { opacity: 0; transform: translateY(22px) } }
+
+    .expandy { opacity: 0; transform-origin: top center;
+                animation: expandy 14s cubic-bezier(0.2, 0.9, 0.25, 1) infinite; }
+    @keyframes expandy { 0% { opacity: 0; transform: scaleY(0) }
+                         6% { opacity: var(--o, 1); transform: scaleY(0) }
+                         24%, 88% { opacity: var(--o, 1); transform: scaleY(1) }
+                         100% { opacity: 0; transform: scaleY(0) } }
+
+    .draw { stroke-dasharray: var(--len, 2000); stroke-dashoffset: var(--len, 2000);
+             animation: draw 14s ease-in-out infinite; }
+    @keyframes draw { 0% { stroke-dashoffset: var(--len, 2000) }
+                      26%, 88% { stroke-dashoffset: 0 }
+                      100% { stroke-dashoffset: var(--len, 2000) } }
+
+    .mark { opacity: 0; animation: mark 14s ease infinite; }
+    @keyframes mark { 0%, 40% { opacity: 0 } 52%, 86% { opacity: 1 } 96%, 100% { opacity: 0 } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .c, .type, .pop, .rise, .expandy { opacity: var(--o, 1); transform: none; animation: none }
+      .draw { stroke-dashoffset: 0; animation: none }
+      .mark { opacity: 1; animation: none }
+    }
+  </style>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <defs>
+    <linearGradient id="head" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#004aef"/>
+      <stop offset="1" stop-color="#2f6bf6"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a72f4"/>
+      <stop offset="1" stop-color="#004aef"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0.1" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.94"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.42"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0b1a3a" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+<g filter="url(#lift)"><g class="pop" style="--o:1;animation-delay:0.02s"><circle cx="96.0" cy="139.0" r="7" fill="#04815a"/><path d="M84.0 161.0 a12 12 0 0 1 24 0 z" fill="#04815a"/></g><text x="96.0" y="186.0" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400">operator</text><rect class="rise" x="150.0" y="108.0" width="320.0" height="82.0" rx="10" fill="#ffffff" stroke="#004aef" stroke-width="1.4" style="--o:1;animation-delay:0.06s"/><text x="310.0" y="150.0" text-anchor="middle" font-size="17" fill="#1f2124" font-weight="600">the app</text><text x="310.0" y="174.0" text-anchor="middle" font-size="12.5" fill="#5f656d" font-weight="400">holds the state, one row per step</text><rect class="rise" x="520.0" y="108.0" width="330.0" height="82.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.12s"/><text x="685.0" y="146.0" text-anchor="middle" font-size="17" fill="#1f2124" font-weight="600">the agent</text><text x="685.0" y="168.0" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400">navigates, never computes a number</text><rect class="rise" x="540.0" y="200.0" width="96.0" height="26.0" rx="10" fill="#f4f7ff" stroke="#004aef" stroke-width="1" style="--o:1;animation-delay:0.16s"/><text x="588.0" y="217.0" text-anchor="middle" font-size="10.5" fill="#004aef" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">get_quote</text><rect class="rise" x="643.0" y="200.0" width="96.0" height="26.0" rx="10" fill="#f4f7ff" stroke="#004aef" stroke-width="1" style="--o:1;animation-delay:0.19s"/><text x="691.0" y="217.0" text-anchor="middle" font-size="10.5" fill="#004aef" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">run_step</text><rect class="rise" x="746.0" y="200.0" width="96.0" height="26.0" rx="10" fill="#f4f7ff" stroke="#004aef" stroke-width="1" style="--o:1;animation-delay:0.22s"/><text x="794.0" y="217.0" text-anchor="middle" font-size="10.5" fill="#004aef" font-weight="400" font-family="ui-monospace, 'JetBrains Mono', monospace">set_route</text><g class="c" style="--o:0.5;animation-delay:0.08s"><line x1="128.0" y1="150.0" x2="141.0" y2="150.0" stroke="#5f656d" stroke-width="1.7"/><polygon points="150.0,150.0 141.0,154.5 141.0,145.5" fill="#5f656d"/></g><g class="c" style="--o:0.55;animation-delay:0.14s"><line x1="470.0" y1="135.0" x2="511.0" y2="135.0" stroke="#004aef" stroke-width="1.7"/><polygon points="520.0,135.0 511.0,139.5 511.0,130.5" fill="#004aef"/></g><g class="c" style="--o:0.55;animation-delay:0.16s"><line x1="520.0" y1="163.0" x2="479.0" y2="163.0" stroke="#004aef" stroke-width="1.7"/><polygon points="470.0,163.0 479.0,158.5 479.0,167.5" fill="#004aef"/></g><text x="150.0" y="288.0" text-anchor="start" font-size="12" fill="#5f656d" font-weight="400">nine deterministic steps</text><rect class="rise" x="153.0" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.20s"/><text x="188.9" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">1</text><text x="188.9" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">input</text><rect class="rise" x="230.8" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.23s"/><text x="266.7" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">2</text><text x="266.7" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">check keywords</text><rect class="rise" x="308.6" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.26s"/><text x="344.4" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">3</text><text x="344.4" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">read rankings</text><rect class="rise" x="386.3" y="300.0" width="71.8" height="74.0" rx="10" fill="#f4f7ff" stroke="#004aef" stroke-width="1.4" style="--o:1;animation-delay:0.29s"/><text x="422.2" y="326.0" text-anchor="middle" font-size="11" fill="#004aef" font-weight="600">4</text><text x="422.2" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">pick rivals</text><rect class="rise" x="464.1" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.32s"/><text x="500.0" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">5</text><text x="500.0" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">cluster</text><rect class="rise" x="541.9" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.35s"/><text x="577.8" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">6</text><text x="577.8" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">estimate KPI</text><rect class="rise" x="619.7" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.38s"/><text x="655.6" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">7</text><text x="655.6" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">size off-page</text><rect class="rise" x="697.4" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.41s"/><text x="733.3" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">8</text><text x="733.3" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">size content</text><rect class="rise" x="775.2" y="300.0" width="71.8" height="74.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.44s"/><text x="811.1" y="326.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="600">9</text><text x="811.1" y="350.0" text-anchor="middle" font-size="9" fill="#1f2124" font-weight="400">assemble costs</text><circle class="pop" cx="422.2" cy="392.0" r="4.5" fill="#004aef" style="--o:1;animation-delay:0.32s"/><text x="422.2" y="412.0" text-anchor="middle" font-size="11" fill="#04815a" font-weight="500">one step calls the model</text><g class="c" style="--o:0.4;animation-delay:0.20s"><line x1="310.0" y1="190.0" x2="310.0" y2="291.0" stroke="#004aef" stroke-width="1.7"/><polygon points="310.0,300.0 305.5,291.0 314.5,291.0" fill="#004aef"/></g><rect class="rise" x="880.0" y="108.0" width="240.0" height="192.0" rx="10" fill="#f6f8fb" stroke="#dfe4ec" stroke-width="1.4" style="--o:1;animation-delay:0.24s"/><text x="1000.0" y="138.0" text-anchor="middle" font-size="13" fill="#1f2124" font-weight="600" font-family="ui-monospace, 'JetBrains Mono', monospace">quote_stages</text><rect class="rise" x="902.0" y="158.0" width="196.0" height="24.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1" style="--o:1;animation-delay:0.28s"/><rect class="rise" x="902.0" y="188.0" width="196.0" height="24.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1" style="--o:1;animation-delay:0.30s"/><rect class="rise" x="902.0" y="218.0" width="196.0" height="24.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1" style="--o:1;animation-delay:0.32s"/><rect class="rise" x="902.0" y="248.0" width="196.0" height="24.0" rx="10" fill="#ffffff" stroke="#dfe4ec" stroke-width="1" style="--o:1;animation-delay:0.34s"/><text x="1000.0" y="292.0" text-anchor="middle" font-size="11" fill="#5f656d" font-weight="400">one row per step</text><g class="c" style="--o:0.45;animation-delay:0.30s"><line x1="850.0" y1="250.0" x2="871.0" y2="250.0" stroke="#004aef" stroke-width="1.7"/><polygon points="880.0,250.0 871.0,254.5 871.0,245.5" fill="#004aef"/></g><line x1="150" y1="430" x2="850" y2="430" stroke="#04815a" stroke-width="2" stroke-dasharray="7 5" class="draw" style="--len:720;animation-delay:0.42s"/><text x="150.0" y="452.0" text-anchor="start" font-size="13" fill="#04815a" font-weight="400">invariant gate: every result must be present, not just truthy</text><g class="c" style="--o:0.4;animation-delay:0.40s"><line x1="310.0" y1="374.0" x2="310.0" y2="417.0" stroke="#004aef" stroke-width="1.7"/><polygon points="310.0,426.0 305.5,417.0 314.5,417.0" fill="#004aef"/></g><rect class="rise" x="150.0" y="474.0" width="320.0" height="52.0" rx="10" fill="#ffffff" stroke="#004aef" stroke-width="1.4" style="--o:1;animation-delay:0.50s"/><text x="310.0" y="506.0" text-anchor="middle" font-size="13.5" fill="#1f2124" font-weight="600">the workbench a human approves</text><g class="pop" style="--o:1;animation-delay:0.56s"><circle cx="560.0" cy="493.0" r="7" fill="#04815a"/><path d="M548.0 515.0 a12 12 0 0 1 24 0 z" fill="#04815a"/></g><g class="c" style="--o:0.6;animation-delay:0.56s"><line x1="470.0" y1="500.0" x2="533.0" y2="500.0" stroke="#04815a" stroke-width="1.7"/><polygon points="542.0,500.0 533.0,504.5 533.0,495.5" fill="#04815a"/></g><text x="600.0" y="600.0" text-anchor="middle" font-size="15" fill="#5f656d" font-weight="400">nine deterministic steps; the state lives in the rows they write, not the chat</text></g>
+</svg>
