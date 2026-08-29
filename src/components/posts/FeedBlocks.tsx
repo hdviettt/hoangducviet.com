@@ -1,10 +1,8 @@
 import FeedRow from "@/components/posts/FeedRow";
 import type { FeedItem } from "@/lib/posts";
 
-// scale.com/blog "MORE POSTS" list: one uninterrupted single-column list of
-// hairline rows, shared by / and /posts. Every item — standalone post or
-// series — is one Scale-style row; a series row links to its own page (where
-// the parts are listed) instead of expanding inline.
+// The list, shared by / and /posts: uniform hairline rows, with any multi-post
+// series expanding inline. Capped to a reading measure so it reads dense.
 export default function FeedBlocks({
   items,
   viewCounts,
@@ -13,7 +11,7 @@ export default function FeedBlocks({
   viewCounts: Record<string, number>;
 }) {
   return (
-    <div className="border-t border-md-outline-variant">
+    <div className="max-w-[680px]">
       {items.map((item) => {
         const key =
           item.kind === "series"

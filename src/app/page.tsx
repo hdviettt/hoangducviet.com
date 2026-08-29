@@ -115,6 +115,20 @@ export default async function Home() {
 
   const jsonLd = createEntityGraph({ image: profileImageUrl });
 
+  // Distinct years present in the feed, newest first — a small index in the rail.
+  const years = Array.from(
+    new Set(
+      allItems.map((it) =>
+        (it.kind === "series" ? it.lastDate : it.post.date_created || "").slice(
+          0,
+          4,
+        ),
+      ),
+    ),
+  )
+    .filter(Boolean)
+    .sort((a, b) => b.localeCompare(a));
+
   return (
     <div className="pb-16 md:pb-20">
       <script
@@ -128,18 +142,36 @@ export default async function Home() {
         imageUrl={imageUrl}
       />
 
-      {/* scale.com/blog "MORE POSTS" style: a small eyebrow over the
-          single-column hairline feed (FeedBlocks). */}
-      <section className="mt-8 md:mt-12">
-        <span className="block text-[12px] font-semibold uppercase tracking-[0.13em] text-md-on-surface-variant">
-          Writing
-        </span>
-        <p className="mt-2 text-[15px] leading-6 text-md-on-surface-variant max-w-[600px]">
-          Search engines from scratch, AI agents, and honest notes from building
-          AI systems.
-        </p>
+      {/* Asymmetric two-zone writing index: a sticky rail (heading, standfirst,
+          year index) beside the list — fills a wide viewport with structure. */}
+      <section className="mt-12 max-w-[960px] md:mt-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[64px]">
+          <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
+            <h2 className="text-[26px] font-medium tracking-[-0.02em] text-md-on-surface">
+              Writing
+            </h2>
+            <p className="mt-3 max-w-[260px] text-[14.5px] leading-[1.55] text-md-on-surface-variant">
+              Search engines from scratch, AI agents, and honest notes from
+              building AI systems.
+            </p>
+            {years.length > 1 && (
+              <div className="mt-7 hidden flex-col gap-2 text-[13px] tabular-nums text-md-on-surface-variant lg:flex">
+                {years.map((y, i) => (
+                  <span
+                    key={y}
+                    className={
+                      i === 0
+                        ? "font-medium text-md-on-surface"
+                        : "transition-colors hover:text-md-on-surface"
+                    }
+                  >
+                    {y}
+                  </span>
+                ))}
+              </div>
+            )}
+          </aside>
 
-        <div className="mt-6 md:mt-8">
           <FeedBlocks items={allItems} viewCounts={viewCounts} />
         </div>
       </section>
