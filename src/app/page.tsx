@@ -1,3 +1,4 @@
+import ProfileHero from "@/components/layout/ProfileHero";
 import FeedBlocks from "@/components/posts/FeedBlocks";
 import { getGlobalMetadata } from "@/lib/global";
 import { IDENTITY } from "@/lib/identity";
@@ -5,7 +6,6 @@ import { createEntityGraph } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
-import ProfileHero from "@/components/layout/ProfileHero";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -60,7 +60,6 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-
 export default async function Home() {
   let profileData: any[] = [];
   let allItems: FeedItem[] = [];
@@ -92,7 +91,6 @@ export default async function Home() {
   }
 
   const mainProfile = profileData[0];
-
 
   // Collect every slug rendered on the homepage so we can fetch all view
   // counts in a single PostHog round-trip (cached 5 min in posthog-server).
@@ -130,18 +128,18 @@ export default async function Home() {
         imageUrl={imageUrl}
       />
 
-      {/* Writing — one chronological feed: post rows in a two-column grid,
-          series interrupting with their sticky-rail showcases (FeedBlocks). */}
-      <section className="mt-4 md:mt-8">
-        <h2 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
+      {/* scale.com/blog "MORE POSTS" style: a small eyebrow over the
+          single-column hairline feed (FeedBlocks). */}
+      <section className="mt-8 md:mt-12">
+        <span className="block text-[12px] font-semibold uppercase tracking-[0.13em] text-md-on-surface-variant">
           Writing
-        </h2>
-        <p className="mt-2 md:mt-3 text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal text-md-on-surface-variant max-w-[820px]">
-          Search engines, AI agents, and honest write-ups from a real AI
-          initiative
+        </span>
+        <p className="mt-2 text-[15px] leading-6 text-md-on-surface-variant max-w-[600px]">
+          Search engines from scratch, AI agents, and honest notes from building
+          AI systems.
         </p>
 
-        <div className="mt-10 md:mt-16">
+        <div className="mt-6 md:mt-8">
           <FeedBlocks items={allItems} viewCounts={viewCounts} />
         </div>
       </section>
