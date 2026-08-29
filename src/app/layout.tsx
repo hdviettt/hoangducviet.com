@@ -33,9 +33,6 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(baseUrl),
     title: siteTitle,
     description: siteTagline,
-    icons: {
-      icon: "/favicon.svg",
-    },
     alternates: {},
   };
 }

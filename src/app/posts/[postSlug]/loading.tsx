@@ -42,9 +42,6 @@ export default function PostLoading() {
         <div className="h-4 w-32 bg-muted animate-pulse rounded mx-auto mt-6 md:mt-8" />
       </div>
 
-      {/* full-width cover hero (matches the real 1200×630 cover) */}
-      <div className="mx-auto max-w-[1360px] mb-12 md:mb-16 w-full aspect-[1200/630] bg-muted animate-pulse rounded-[var(--md-sys-shape-corner-large-increased)] ring-1 ring-inset ring-md-outline-variant" />
-
       {/* centered standfirst */}
       <div className="mx-auto max-w-[720px] mb-12 md:mb-16 flex flex-col items-center gap-3">
         <div className="h-5 w-[90%] bg-muted animate-pulse rounded" />

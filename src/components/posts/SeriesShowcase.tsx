@@ -60,21 +60,6 @@ export default function SeriesShowcase({
               {series.summary}
             </p>
           )}
-          <Link
-            href={`/series/${series.slug}`}
-            className="group block order-first mb-6 lg:order-none lg:mb-0 lg:mt-6"
-          >
-            <div className="overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
-              {/* biome-ignore lint/a11y/useAltText: decorative cover, title is adjacent */}
-              <img
-                src={`/covers/series-${series.slug}.svg`}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="w-full h-auto transition-transform duration-300 ease-md-standard group-hover:scale-[1.02]"
-              />
-            </div>
-          </Link>
         </div>
 
         {/* Parts — the exact FeedRow anatomy, so rail posts read as first-class
@@ -105,16 +90,6 @@ export default function SeriesShowcase({
                     <ViewCount count={viewCounts[part.slug] ?? 0} />
                   )}
                 </div>
-              </div>
-              <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] lg:w-[180px] xl:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
-                {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
-                <img
-                  src={`/covers/${part.slug}.svg`}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover transition-transform duration-300 ease-md-standard group-hover:scale-[1.03]"
-                />
               </div>
             </Link>
           ))}

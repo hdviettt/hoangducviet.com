@@ -148,11 +148,6 @@ export default async function SeriesPage({ params }: SeriesParams) {
     (sum: number, p: any) => sum + (p.slug ? (viewCounts[p.slug] ?? 0) : 0),
     0,
   );
-  // The feed shows the series cover from /covers/, so the series page leads
-  // with the same image. Falling back to the stored thumbnail would repeat a
-  // picture that already appears inside the description body.
-  const coverUrl = `/covers/series-${params.seriesSlug}.svg`;
-
   return (
     <div className="pt-12 sm:pt-16 md:pt-20 pb-24">
       <script
@@ -167,7 +162,10 @@ export default async function SeriesPage({ params }: SeriesParams) {
           <span className="font-medium text-primary">Series</span>
           {isSeries && <span>{posts.length} parts</span>}
           {seriesDate && (
-            <time className="tabular-nums" dateTime={seriesItem.date_created ?? ""}>
+            <time
+              className="tabular-nums"
+              dateTime={seriesItem.date_created ?? ""}
+            >
               {seriesDate}
             </time>
           )}
@@ -218,11 +216,6 @@ export default async function SeriesPage({ params }: SeriesParams) {
         </div>
       </header>
 
-      <div className="mb-12 md:mb-16 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
-        {/* biome-ignore lint/a11y/useAltText: decorative cover, title precedes it */}
-        <img src={coverUrl} alt="" decoding="async" className="w-full h-auto" />
-      </div>
-
       {seriesItem.description && (
         <div
           className="article-content mx-auto max-w-[720px] mb-16 md:mb-20"
@@ -259,25 +252,15 @@ export default async function SeriesPage({ params }: SeriesParams) {
                       </p>
                     )}
                     <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
-                      {isSeries && <span className="tabular-nums">Part {i + 1}</span>}
+                      {isSeries && (
+                        <span className="tabular-nums">Part {i + 1}</span>
+                      )}
                       <span className="tabular-nums">
                         {feedRowDate(post.date_created)}
                       </span>
                       {views > 0 && <ViewCount count={views} />}
                     </div>
                   </div>
-                  {post.thumbnail && (
-                    <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
-                      {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
-                      <img
-                        src={post.thumbnail}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-300 ease-md-standard group-hover:scale-[1.03]"
-                      />
-                    </div>
-                  )}
                 </Link>
               );
             })}

@@ -28,7 +28,6 @@ export default function FeedRow({
     : `/posts/${item.post.slug}`;
   const title = isSeries ? item.series.title : item.post.title;
   const date = feedRowDate(isSeries ? item.lastDate : item.post.date_created);
-  const thumbnail = isSeries ? null : item.post.thumbnail || null;
   const description = isSeries
     ? item.series.summary
     : item.post.description || null;
@@ -36,11 +35,8 @@ export default function FeedRow({
   return (
     // Mobile mirrors deepmind.google: full-width thumbnail on top, text
     // below; from sm up the thumbnail moves to the right, top-aligned.
-    <Link
-      href={href}
-      className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
-    >
-      <div className="min-w-0 flex-1">
+    <Link href={href} className="group block py-8 md:py-10">
+      <div className="min-w-0">
         <h3 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
           {title}
         </h3>
@@ -55,20 +51,6 @@ export default function FeedRow({
           {views > 0 && <ViewCount count={views} />}
         </div>
       </div>
-      {/* inset hairline ring: near-white SVG covers dissolve into the page
-          background without it — keeps every thumbnail a crisp frame */}
-      {thumbnail && (
-        <div className="order-first sm:order-none w-full sm:w-[180px] md:w-[240px] sm:shrink-0 aspect-[3/2] sm:aspect-square overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
-          {/* biome-ignore lint/a11y/useAltText: decorative thumbnail, title is adjacent */}
-          <img
-            src={thumbnail}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover transition-transform duration-300 ease-md-standard group-hover:scale-[1.03]"
-          />
-        </div>
-      )}
     </Link>
   );
 }

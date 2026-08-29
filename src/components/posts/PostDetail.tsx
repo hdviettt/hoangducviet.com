@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 import MarkdownContent from "@/components/content/MarkdownContent";
-import { LikeButton } from "@/components/posts/LikeButton";
 import { feedRowDate } from "@/components/posts/FeedRow";
+import { LikeButton } from "@/components/posts/LikeButton";
 import PostNavigation from "@/components/posts/PostNavigation";
 import SeriesParts from "@/components/posts/SeriesParts";
 import { ViewCount } from "@/components/posts/ViewCount";
@@ -10,8 +10,8 @@ import { ViewCount } from "@/components/posts/ViewCount";
 import { getAnonId } from "@/lib/anon";
 import { createBlogPostingSchema, createBreadcrumbSchema } from "@/lib/jsonld";
 import { getLikeState } from "@/lib/likes";
-import { getPostViewCount } from "@/lib/posthog-server";
 import { socialImagePath } from "@/lib/og";
+import { getPostViewCount } from "@/lib/posthog-server";
 import {
   getAdjacentPosts,
   getPostBySlug,
@@ -61,11 +61,6 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const postUrl = `${baseUrl}/posts/${postSlug}`;
-  const thumbnailUrl = data.thumbnail
-    ? data.thumbnail.startsWith("http")
-      ? data.thumbnail
-      : `${baseUrl}${data.thumbnail}`
-    : undefined;
 
   // Structured data and social cards want a raster; the page itself keeps the
   // animated SVG.
@@ -161,18 +156,6 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
           </p>
         </header>
 
-        {thumbnailUrl && (
-          <div className="mx-auto max-w-[1360px] mb-12 md:mb-16 overflow-hidden rounded-[var(--md-sys-shape-corner-large-increased)] bg-md-surface-container ring-1 ring-inset ring-md-outline-variant">
-            {/* biome-ignore lint/a11y/useAltText: cover image, title precedes it */}
-            <img
-              src={thumbnailUrl}
-              alt=""
-              decoding="async"
-              className="w-full h-auto"
-            />
-          </div>
-        )}
-
         {standfirst && (
           <div className="standfirst mx-auto max-w-[720px] text-center mb-12 md:mb-16">
             <MarkdownContent content={standfirst} />
@@ -226,7 +209,9 @@ function splitStandfirst(
   markdown: string,
   description?: string | null,
 ): { standfirst: string | null; body: string } {
-  const m = markdown.match(/^\s*##\s*TL;DR\s*\r?\n+([\s\S]*?)\r?\n+---\s*\r?\n/);
+  const m = markdown.match(
+    /^\s*##\s*TL;DR\s*\r?\n+([\s\S]*?)\r?\n+---\s*\r?\n/,
+  );
   if (m) {
     return { standfirst: m[1].trim(), body: markdown.slice(m[0].length) };
   }
