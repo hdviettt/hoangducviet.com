@@ -1,11 +1,12 @@
+import type { FeedItem } from "@/lib/posts";
 import Link from "next/link";
 
-import { ViewCount } from "@/components/posts/ViewCount";
-import type { FeedItem } from "@/lib/posts";
+// scale.com/blog list row: DATE (left) · TITLE (large, regular) · CATEGORY
+// (right), separated by a single hairline (border-b here). One column on
+// mobile (date → title → category), three columns from sm up. No cover, no
+// excerpt — the list is the design.
 
-// deepmind.google list row: medium-weight title + description + meta line,
-// top-aligned with the thumbnail on the right. No CTA link — the whole card
-// is the link. Each row closes with a hairline (border-b from the parent).
+// DD.MM.YYYY — kept for the post-detail and series pages that already use it.
 export function feedRowDate(iso: string | null | undefined): string {
   if (!iso) return "";
   const d = new Date(iso);
@@ -15,42 +16,61 @@ export function feedRowDate(iso: string | null | undefined): string {
   return `${dd}.${mm}.${d.getUTCFullYear()}`;
 }
 
+const MONTHS = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+];
+
+// "AUG 2026" — the Scale-style month-year stamp shown in the feed.
+function monthYear(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
 export default function FeedRow({
   item,
-  views,
 }: {
   item: FeedItem;
-  views: number;
+  // Accepted for call-site compatibility; the Scale row shows no view count.
+  views?: number;
 }) {
   const isSeries = item.kind === "series";
   const href = isSeries
     ? `/series/${item.series.slug}`
     : `/posts/${item.post.slug}`;
   const title = isSeries ? item.series.title : item.post.title;
-  const date = feedRowDate(isSeries ? item.lastDate : item.post.date_created);
-  const description = isSeries
-    ? item.series.summary
-    : item.post.description || null;
+  const date = monthYear(isSeries ? item.lastDate : item.post.date_created);
+  const category = isSeries
+    ? "Series"
+    : (item.post.categories?.[0]?.title ?? "");
 
   return (
-    // Mobile mirrors deepmind.google: full-width thumbnail on top, text
-    // below; from sm up the thumbnail moves to the right, top-aligned.
-    <Link href={href} className="group block py-8 md:py-10">
-      <div className="min-w-0">
-        <h3 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
-          {title}
-        </h3>
-        {description && (
-          <p className="mt-3 text-[16px] leading-[26px] text-md-on-surface-variant">
-            {description}
-          </p>
-        )}
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
-          <span className="tabular-nums">{date}</span>
-          {isSeries && <span>Series · {item.parts.length} parts</span>}
-          {views > 0 && <ViewCount count={views} />}
-        </div>
-      </div>
+    <Link
+      href={href}
+      className="group grid grid-cols-1 sm:grid-cols-[clamp(92px,12vw,150px)_1fr_auto] items-baseline gap-y-1.5 sm:gap-x-6 md:gap-x-12 py-7 md:py-9 border-b border-md-outline-variant"
+    >
+      <span className="text-[12.5px] font-medium tracking-[0.07em] uppercase text-md-on-surface-variant tabular-nums sm:pt-1.5">
+        {date}
+      </span>
+      <h3 className="text-[20px] leading-[1.2] md:text-[27px] md:leading-[1.16] font-normal tracking-tight text-md-on-surface [text-wrap:balance] transition-colors duration-200 ease-md-standard group-hover:text-primary">
+        {title}
+      </h3>
+      {category && (
+        <span className="text-[11.5px] font-medium tracking-[0.07em] uppercase text-md-on-surface-variant whitespace-nowrap sm:justify-self-end sm:text-right sm:pt-2">
+          {category}
+        </span>
+      )}
     </Link>
   );
 }

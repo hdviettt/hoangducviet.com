@@ -1,29 +1,10 @@
 import FeedRow from "@/components/posts/FeedRow";
-import SeriesShowcase from "@/components/posts/SeriesShowcase";
 import type { FeedItem } from "@/lib/posts";
 
-// One chronological feed, two treatments (shared by / and /posts):
-// consecutive posts flow into a two-column row grid; a series interrupts the
-// stream with its full-width sticky-rail showcase, in its date position.
-// Regular posts don't get featured/sticky treatment — only series do.
-type Block =
-  | { kind: "posts"; items: Extract<FeedItem, { kind: "post" }>[] }
-  | { kind: "series"; item: Extract<FeedItem, { kind: "series" }> };
-
-function toBlocks(items: FeedItem[]): Block[] {
-  const blocks: Block[] = [];
-  for (const item of items) {
-    if (item.kind === "series") {
-      blocks.push({ kind: "series", item });
-    } else {
-      const last = blocks[blocks.length - 1];
-      if (last?.kind === "posts") last.items.push(item);
-      else blocks.push({ kind: "posts", items: [item] });
-    }
-  }
-  return blocks;
-}
-
+// scale.com/blog "MORE POSTS" list: one uninterrupted single-column list of
+// hairline rows, shared by / and /posts. Every item — standalone post or
+// series — is one Scale-style row; a series row links to its own page (where
+// the parts are listed) instead of expanding inline.
 export default function FeedBlocks({
   items,
   viewCounts,
@@ -31,37 +12,19 @@ export default function FeedBlocks({
   items: FeedItem[];
   viewCounts: Record<string, number>;
 }) {
-  const blocks = toBlocks(items);
-
   return (
-    <div>
-      {blocks.map((block, i) =>
-        block.kind === "series" ? (
-          <SeriesShowcase
-            key={`series-${block.item.series.slug}`}
-            item={block.item}
-            viewCounts={viewCounts}
-            className={i > 0 ? "mt-10 md:mt-14" : ""}
-          />
-        ) : (
-          // One border language: every card closes with a hairline. Grid
-          // children stretch to the row height, so the rules align per row.
-          <div
-            key={`posts-${i}`}
-            className={`grid md:grid-cols-2 gap-x-16 xl:gap-x-20 [&>a]:border-b [&>a]:border-md-outline-variant ${
-              i > 0 ? "mt-10 md:mt-14" : ""
-            }`}
-          >
-            {block.items.map((item) => (
-              <FeedRow
-                key={item.post.slug}
-                item={item}
-                views={viewCounts[item.post.slug ?? ""] ?? 0}
-              />
-            ))}
-          </div>
-        ),
-      )}
+    <div className="border-t border-md-outline-variant">
+      {items.map((item) => {
+        const key =
+          item.kind === "series"
+            ? `series-${item.series.slug}`
+            : `post-${item.post.slug}`;
+        const slug =
+          item.kind === "series" ? item.parts[0]?.slug : item.post.slug;
+        return (
+          <FeedRow key={key} item={item} views={viewCounts[slug ?? ""] ?? 0} />
+        );
+      })}
     </div>
   );
 }

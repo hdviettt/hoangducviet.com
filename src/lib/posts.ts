@@ -196,6 +196,26 @@ export async function getFeedItems(options?: {
     .where(eq(posts.status, "published"))
     .orderBy(desc(posts.dateCreated));
 
+  // Primary category per post (first attached) — powers the feed's Scale-style
+  // category column.
+  const postIds = rows.map((r) => r.post.id);
+  const catRows = postIds.length
+    ? await db
+        .select({
+          postId: postsCategories.postId,
+          title: postCategories.title,
+        })
+        .from(postsCategories)
+        .innerJoin(
+          postCategories,
+          eq(postsCategories.categorySlug, postCategories.slug),
+        )
+    : [];
+  const primaryCategory = new Map<number, string>();
+  for (const c of catRows) {
+    if (!primaryCategory.has(c.postId)) primaryCategory.set(c.postId, c.title);
+  }
+
   // Count published posts per series so we know which series qualify
   // (2+ posts).
   const seriesPostCount = new Map<string, number>();
@@ -213,6 +233,8 @@ export async function getFeedItems(options?: {
 
   for (const r of rows) {
     const post = mapPost(r.post);
+    const cat = primaryCategory.get(r.post.id);
+    if (cat) post.categories = [{ title: cat }];
     const dateIso = (r.post.dateCreated as Date).toISOString();
     const isSeriesMember =
       r.seriesSlug != null &&
