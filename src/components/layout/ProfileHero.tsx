@@ -1,5 +1,5 @@
 import { Icon } from "@/components/ui/Icon";
-import { IDENTITY, SEONGON_EXPERT_URL, SOCIAL_PROFILES } from "@/lib/identity";
+import { IDENTITY, SOCIAL_PROFILES } from "@/lib/identity";
 // Brand marks aren't in Material Symbols — keep lucide for these four only.
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import Image from "next/image";
@@ -45,29 +45,10 @@ export default function ProfileHero({
             )}
             <div className="min-w-0">
               {name && (
-                <h1 className="text-[34px] leading-10 sm:text-[42px] sm:leading-[48px] md:text-[48px] md:leading-[54px] font-normal tracking-tight text-md-on-surface mb-3">
+                <h1 className="text-[34px] leading-10 sm:text-[42px] sm:leading-[48px] md:text-[48px] md:leading-[54px] font-normal tracking-tight text-md-on-surface">
                   {name}
                 </h1>
               )}
-              <a
-                href={SEONGON_EXPERT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="View my profile at SEONGON"
-                className="group inline-flex items-center gap-2 rounded-full border border-md-outline-variant bg-md-surface-container-low py-1.5 pl-2 pr-3.5 hover:border-md-primary/40 hover:bg-md-surface-container transition-colors duration-200 ease-md-standard"
-              >
-                <Image
-                  src="/seongon-mark.png"
-                  alt="SEONGON logo"
-                  width={1276}
-                  height={1252}
-                  className="w-5 h-5 object-contain"
-                />
-                <span className="md-label-large text-md-on-surface">
-                  {IDENTITY.jobTitle}{" "}
-                  <span className="text-md-on-surface-variant">at</span> SEONGON
-                </span>
-              </a>
             </div>
           </div>
 
@@ -107,7 +88,6 @@ export default function ProfileHero({
             </a>
           </div>
         </div>
-
       </div>
     </section>
   );

@@ -26,7 +26,7 @@ export const IDENTITY = {
   email: "viethd2704@gmail.com",
   employer: { name: "SEONGON", url: "https://seongon.com" },
   description:
-    "21 year-old AI Leader at SEONGON, specialized in Agentic Search Engine Optimization (SEO) and building Agentic AI systems for SME C-level executives in Vietnam",
+    "21 year-old AI Leader, specialized in Agentic Search Engine Optimization (SEO) and building Agentic AI systems for SME C-level executives in Vietnam",
   knowsAbout: [
     "Agentic SEO",
     "Search Engine Optimization",

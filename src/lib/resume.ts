@@ -31,6 +31,7 @@ export const EXPERIENCE: Company[] = [
         title: "Artificial Intelligence Leader",
         type: "Full-time",
         start: "2025-08",
+        end: "2026-08",
       },
       {
         title: "AI Software Developer",

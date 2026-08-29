@@ -55,7 +55,7 @@ export function createEntityGraph(params?: {
         email: IDENTITY.email,
         jobTitle: IDENTITY.jobTitle,
         description,
-        worksFor: { "@id": ORG_ID },
+        alumniOf: { "@id": ORG_ID },
         knowsAbout: [...IDENTITY.knowsAbout],
         sameAs: SAME_AS,
       },
@@ -99,7 +99,7 @@ export function createAboutPageSchema(params?: { description?: string }) {
         url: SITE_ORIGIN,
         jobTitle: IDENTITY.jobTitle,
         description,
-        worksFor: { "@id": ORG_ID },
+        alumniOf: { "@id": ORG_ID },
         knowsAbout: [...IDENTITY.knowsAbout],
         hasCredential: CERTIFICATIONS.map((c) => ({
           "@type": "EducationalOccupationalCredential",

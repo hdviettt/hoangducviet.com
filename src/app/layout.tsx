@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: siteTitle,
     description: siteTagline,
     icons: {
-      icon: "/seongon-mark.png",
+      icon: "/favicon.svg",
     },
     alternates: {},
   };
@@ -70,7 +70,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://us.i.posthog.com" />
         <link rel="preconnect" href="https://us-assets.i.posthog.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
