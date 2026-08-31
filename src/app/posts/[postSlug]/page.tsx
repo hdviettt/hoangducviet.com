@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
 import PostDetail from "@/components/posts/PostDetail";
 import { getGlobalMetadata } from "@/lib/global";
@@ -6,6 +7,14 @@ import { getPostBySlug, getPosts } from "@/lib/posts";
 import { socialImages } from "@/lib/og";
 
 export const dynamic = "force-dynamic";
+
+// A logged-in admin previewing a draft carries the same session cookie the
+// middleware checks for /admin. Verifying it server-side is what keeps drafts
+// from leaking to anyone who guesses `?preview=1`.
+function isAdminRequest(): boolean {
+  const secret = process.env.SESSION_SECRET;
+  return Boolean(secret) && cookies().get("admin_session")?.value === secret;
+}
 
 export async function generateStaticParams() {
   try {
@@ -18,11 +27,17 @@ export async function generateStaticParams() {
 
 interface PostParams {
   params: { postSlug: string };
+  searchParams?: { preview?: string };
 }
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: PostParams): Promise<Metadata> {
+  // A preview is a private, unpublished view — never let it be indexed.
+  if (searchParams?.preview === "1") {
+    return { title: "Preview", robots: { index: false, follow: false } };
+  }
   try {
     const [post, globalData] = await Promise.all([
       getPostBySlug(params.postSlug),
@@ -67,6 +82,7 @@ export async function generateMetadata({
   }
 }
 
-export default function PostPage({ params }: PostParams) {
-  return <PostDetail postSlug={params.postSlug} />;
+export default function PostPage({ params, searchParams }: PostParams) {
+  const preview = searchParams?.preview === "1" && isAdminRequest();
+  return <PostDetail postSlug={params.postSlug} preview={preview} />;
 }

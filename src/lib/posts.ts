@@ -84,6 +84,19 @@ export async function getPostBySlug(slug: string): Promise<Post> {
   return mapPost(result[0]);
 }
 
+// Preview fetch: the post at this slug regardless of status, so an admin can
+// see a draft rendered exactly like the live article before publishing. Callers
+// MUST gate this behind an authenticated admin (see /posts/[slug]?preview=1).
+export async function getPostForPreview(slug: string): Promise<Post | null> {
+  if (!slug) return null;
+  const result = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.slug, slug))
+    .limit(1);
+  return result.length ? mapPost(result[0]) : null;
+}
+
 export async function getAdjacentPosts(currentSlug: string): Promise<{
   previous: Pick<Post, "slug" | "title"> | null;
   next: Pick<Post, "slug" | "title"> | null;

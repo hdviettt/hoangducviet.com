@@ -15,19 +15,26 @@ import { getPostViewCount } from "@/lib/posthog-server";
 import {
   getAdjacentPosts,
   getPostBySlug,
+  getPostForPreview,
   getSeriesContext,
   getSeriesForPost,
 } from "@/lib/posts";
 
 interface PostDetailProps {
   postSlug: string;
+  // When true, render the post at this slug regardless of status (drafts
+  // included). The page only sets this for an authenticated admin.
+  preview?: boolean;
 }
 
 // Shared post-detail rendering used by both /posts/[postSlug] (standalone
 // posts) and /series/[seriesSlug]/[postSlug] (series posts). The page-level
 // route is responsible for resolving the right URL and redirect/notFound;
 // this component just renders the post, its TL;DR, and series-aware nav.
-export default async function PostDetail({ postSlug }: PostDetailProps) {
+export default async function PostDetail({
+  postSlug,
+  preview = false,
+}: PostDetailProps) {
   let data: any = null;
   let adjacentPosts = { previous: null as any, next: null as any };
   let seriesAssoc: { slug: string; title: string } | null = null;
@@ -35,7 +42,10 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
 
   try {
     [data, adjacentPosts, seriesAssoc, seriesCtx] = await Promise.all([
-      getPostBySlug(postSlug),
+      // getPostBySlug throws when a slug isn't a published post; the preview
+      // fetch returns any status (null if missing). Both leave `data` falsy
+      // for the not-found branch below.
+      preview ? getPostForPreview(postSlug) : getPostBySlug(postSlug),
       getAdjacentPosts(postSlug),
       getSeriesForPost(postSlug),
       getSeriesContext(postSlug),
@@ -109,6 +119,11 @@ export default async function PostDetail({ postSlug }: PostDetailProps) {
 
   return (
     <>
+      {preview && data.status !== "published" && (
+        <div className="bg-md-tertiary-container text-md-on-tertiary-container text-center text-[13px] leading-5 py-1.5 px-4">
+          Preview · this {data.status} is not published yet
+        </div>
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

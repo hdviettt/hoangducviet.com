@@ -72,6 +72,16 @@ export default function PostForm({
   );
   const [drawerOpen, setDrawerOpen] = useState(true);
 
+  // Live preview: "edit" is the writer, "split" shows editor + rendered site
+  // side by side, "preview" is the rendered site full width. The preview is an
+  // iframe of the real /posts/[slug]?preview=1 page, so it is byte-identical to
+  // what publishing would show (carousels, SVG render-fences, KaTeX, themes).
+  const [view, setView] = useState<"edit" | "split" | "preview">("edit");
+  const [savedSlug, setSavedSlug] = useState<string | null>(
+    isEdit ? (initialData?.slug ?? null) : null,
+  );
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   // The slug as it exists on the server. Autosave never renames (a post that
   // belongs to a series is referenced by slug via FK) — only an explicit save
   // applies a slug change.
@@ -154,6 +164,7 @@ export default function PostForm({
             `/admin/posts/${post.slug}/edit`,
           );
         }
+        setSavedSlug(post.slug);
         if (opts.nextStatus) setStatus(opts.nextStatus);
         setSaveState("saved");
         setLastSavedAt(Date.now());
@@ -234,9 +245,31 @@ export default function PostForm({
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [dirty, title, content]);
 
+  // Keep the preview in step: when a save lands, reload the iframe so it shows
+  // the latest words. The frame is same-origin, so reload() keeps scroll. The
+  // iframe loads its src on its own when the preview first opens, so this only
+  // needs to react to saves, not to the view switch.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reload on save only
+  useEffect(() => {
+    if (view === "edit") return;
+    iframeRef.current?.contentWindow?.location.reload();
+  }, [lastSavedAt]);
+
+  // Entering a preview should show the latest words, so flush any pending edits.
+  const openPreview = (next: "split" | "preview") => {
+    setView(next);
+    if (dirty && savedSlugRef.current) save();
+  };
+
   const words = countWords(content);
   const readMins = Math.max(1, Math.ceil(words / 200));
   const isPublished = status === "published";
+  const previewSrc = savedSlug ? `/posts/${savedSlug}?preview=1` : null;
+  const VIEWS = [
+    ["edit", "edit", "Edit"],
+    ["split", "vertical_split", "Split"],
+    ["preview", "visibility", "Preview"],
+  ] as const;
 
   const statusLine =
     saveState === "saving"
@@ -284,6 +317,32 @@ export default function PostForm({
             {statusLine}
           </span>
 
+          {/* View toggle: edit / split / rendered preview */}
+          <div className="flex items-center rounded-lg border border-md-outline-variant overflow-hidden shrink-0">
+            {VIEWS.map(([mode, icon, label]) => (
+              <button
+                key={mode}
+                type="button"
+                title={
+                  mode !== "edit" && !savedSlug
+                    ? "Save once to preview"
+                    : label
+                }
+                onClick={() =>
+                  mode === "edit" ? setView("edit") : openPreview(mode)
+                }
+                disabled={mode !== "edit" && !savedSlug}
+                className={`px-2.5 py-1.5 inline-flex items-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                  view === mode
+                    ? "bg-md-secondary-container text-md-on-secondary-container"
+                    : "text-md-on-surface-variant hover:bg-md-on-surface/8"
+                }`}
+              >
+                <Icon name={icon} size={17} />
+              </button>
+            ))}
+          </div>
+
           <button
             type="button"
             onClick={() => save({ explicit: true })}
@@ -320,9 +379,72 @@ export default function PostForm({
           </button>
         </div>
 
-        {/* Editor */}
-        <div className="flex-1 min-h-0 overflow-hidden px-5 sm:px-8 lg:px-14 xl:px-20 pt-6 pb-2">
-          <RichEditor content={content} onChange={setContent} />
+        {/* Editor + live preview */}
+        <div className="flex-1 min-h-0 overflow-hidden flex">
+          {view !== "preview" && (
+            <div
+              className={`min-w-0 h-full overflow-hidden pt-6 pb-2 ${
+                view === "split"
+                  ? "w-1/2 border-r border-md-outline-variant px-5 lg:px-8"
+                  : "w-full px-5 sm:px-8 lg:px-14 xl:px-20"
+              }`}
+            >
+              <RichEditor content={content} onChange={setContent} />
+            </div>
+          )}
+
+          {view !== "edit" && (
+            <div
+              className={`min-w-0 h-full flex flex-col bg-md-surface ${
+                view === "split" ? "w-1/2" : "w-full"
+              }`}
+            >
+              <div className="shrink-0 flex items-center gap-2 px-4 py-1.5 border-b border-md-outline-variant text-[12px] leading-4 text-md-on-surface-variant">
+                <Icon name="visibility" size={14} />
+                <span className="truncate">
+                  Live preview{status !== "published" && " · draft"}
+                </span>
+                <div className="ml-auto flex items-center gap-0.5">
+                  <button
+                    type="button"
+                    title="Refresh preview"
+                    onClick={() =>
+                      dirty && savedSlugRef.current
+                        ? save()
+                        : iframeRef.current?.contentWindow?.location.reload()
+                    }
+                    className="p-1 rounded hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors"
+                  >
+                    <Icon name="refresh" size={15} />
+                  </button>
+                  {previewSrc && (
+                    <a
+                      href={previewSrc}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Open preview in new tab"
+                      className="p-1 rounded hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors"
+                    >
+                      <Icon name="open_in_new" size={15} />
+                    </a>
+                  )}
+                </div>
+              </div>
+              {previewSrc ? (
+                <iframe
+                  ref={iframeRef}
+                  src={previewSrc}
+                  title="Post preview"
+                  className="flex-1 w-full border-0 bg-md-surface"
+                />
+              ) : (
+                <div className="flex-1 grid place-items-center px-6 text-center text-[13px] leading-5 text-md-on-surface-variant">
+                  Save the draft once, then it previews here exactly as the site
+                  will render it.
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Writing status bar */}
@@ -431,14 +553,18 @@ export default function PostForm({
               </section>
             )}
 
-            {savedSlugRef.current && (
+            {savedSlug && (
               <a
-                href={`/posts/${savedSlugRef.current}`}
+                href={
+                  isPublished
+                    ? `/posts/${savedSlug}`
+                    : `/posts/${savedSlug}?preview=1`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-[14px] leading-5 text-md-on-surface-variant hover:text-md-primary transition-colors"
               >
-                view post
+                {isPublished ? "view post" : "preview post"}
                 <Icon name="open_in_new" size={16} />
               </a>
             )}
