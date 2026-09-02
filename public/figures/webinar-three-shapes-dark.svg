@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="s1" font-family="Inter, Helvetica Neue, Helvetica, Arial, sans-serif" viewBox="0 0 1080 716" role="img" aria-label="Three ways to do the same SEO publishing task, ordered by who decides the steps. Workflow: you write the steps, no model, three boxes in a row. AI Workflow: the same steps plus one box a model writes. Agent: you hand over a goal, and inside a dashed region the agent picks its own steps and loops back on the real result before choosing the next one.">
+<style>
+/* --- Workflow · AI Workflow · Agent --- */
+#s1 .task{fill:#AFBFD0;font-size:15px}
+#s1 .h{fill:#EAF0F6;font-size:19px;font-weight:700;letter-spacing:-.015em}
+#s1 .who{fill:#AFBFD0;font-size:13.5px}
+#s1 .pt{fill:#EAF0F6;font-size:15px;font-weight:500}
+#s1 .pt.hi{fill:#4E82FF;font-weight:600}
+#s1 .box{fill:#12171E;stroke:#313D49;stroke-width:1.4}
+#s1 .box.hi{stroke:#4E82FF;stroke-width:1.7;fill:#14203A}
+#s1 .zone{fill:#1B222C;stroke:#313D49;stroke-width:1.3;stroke-dasharray:6 5;opacity:.9}
+#s1 .zt{fill:#4E82FF;font-size:10px;font-weight:700;letter-spacing:.14em}
+#s1 .zn{fill:#AFBFD0;font-size:12.5px}
+#s1 .mini{fill:#12171E;stroke:#2C4B85;stroke-width:1.4}
+#s1 .mq{fill:#4E82FF;font-size:17px;font-weight:700}
+#s1 .ic{fill:none;stroke:#7C8B9C;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#s1 .ic.hi{stroke:#4E82FF}
+#s1 .ln{stroke:#313D49;stroke-width:1.4;fill:none}
+#s1 .ln.b{stroke:#4E82FF;opacity:.8}
+#s1 .ln.dsh{stroke:#4E82FF;stroke-dasharray:5 5;opacity:.7}
+#s1 .close{fill:#EAF0F6;font-size:13.5px;font-weight:600}
+.s1_ic{fill:none;stroke:#7C8B9C;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.s1_ic.s1_hi{stroke:#4E82FF}
+</style>
+<rect width="1080" height="716" fill="#12171E"/>
+
+
+  <defs>
+    <g id="s1-k-list" class="s1_ic"><circle cx="2.6" cy="5" r="1.1"></circle><circle cx="2.6" cy="10" r="1.1"></circle><circle cx="2.6" cy="15" r="1.1"></circle><path d="M7 5h11M7 10h11M7 15h7"></path></g>
+    <g id="s1-k-code" class="s1_ic"><path d="M7.4 5.6 3 10l4.4 4.4M12.6 5.6 17 10l-4.4 4.4"></path></g>
+    <g id="s1-k-up" class="s1_ic"><path d="M10 13.4V3.6M6.2 7.4 10 3.6l3.8 3.8M3.5 16.8h13"></path></g>
+    <g id="s1-k-spark" class="s1_ic s1_hi"><path d="M10 2.2c.7 4.6 2.5 6.4 7.1 7.1-4.6.7-6.4 2.5-7.1 7.1-.7-4.6-2.5-6.4-7.1-7.1 4.6-.7 6.4-2.5 7.1-7.1z"></path></g>
+    <g id="s1-k-target" class="s1_ic s1_hi"><circle cx="10" cy="10" r="7.4"></circle><circle cx="10" cy="10" r="3.2"></circle><path d="M10 2.6v2.2M10 15.2v2.2M2.6 10h2.2M15.2 10h2.2"></path></g>
+    <g id="s1-k-check" class="s1_ic"><circle cx="10" cy="10" r="7.6"></circle><path d="M6.5 10.2 9 12.7l4.6-5"></path></g>
+    <marker id="s1-ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0.6 0.8 L7 4 L0.6 7.2" fill="none" stroke="#313D49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></marker>
+    <marker id="s1-ab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0.6 0.8 L7 4 L0.6 7.2" fill="none" stroke="#4E82FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></marker>
+  </defs>
+
+  <text class="task" x="30" y="26">Task: publish an SEO article</text>
+  <text class="h" x="30" y="104">Workflow</text>
+  <text class="who" x="198" y="104">You write the steps. No model involved.</text>
+  <rect class="box" x="30" y="122" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="153" data-cy="154"><use href="#s1-k-list" x="49.0" y="144.0"></use><text class="pt" x="80.0" y="159.3">Fetch the article list</text></g>
+  <path class="ln" d="M278 154h8" marker-end="url(#s1-ag)"></path>
+  <rect class="box" x="288" y="122" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="411" data-cy="154"><use href="#s1-k-code" x="289.5" y="144.0"></use><text class="pt" x="320.5" y="159.3">Convert the content to HTML</text></g>
+  <path class="ln" d="M536 154h8" marker-end="url(#s1-ag)"></path>
+  <rect class="box" x="546" y="122" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="669" data-cy="154"><use href="#s1-k-up" x="590.0" y="144.0"></use><text class="pt" x="621.0" y="159.3">Push to the CMS</text></g>
+  <text class="h" x="30" y="262">AI Workflow</text>
+  <text class="who" x="198" y="262">Still your steps. A model does exactly one of them.</text>
+  <rect class="box" x="30" y="280" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="153" data-cy="312"><use href="#s1-k-list" x="49.0" y="302.0"></use><text class="pt" x="80.0" y="317.3">Fetch the article list</text></g>
+  <path class="ln" d="M278 312h8" marker-end="url(#s1-ag)"></path>
+  <rect class="box" x="288" y="280" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="411" data-cy="312"><use href="#s1-k-code" x="289.5" y="302.0"></use><text class="pt" x="320.5" y="317.3">Convert the content to HTML</text></g>
+  <path class="ln" d="M536 312h8" marker-end="url(#s1-ag)"></path>
+  <rect class="box" x="546" y="280" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="669" data-cy="312"><use href="#s1-k-up" x="590.0" y="302.0"></use><text class="pt" x="621.0" y="317.3">Push to the CMS</text></g>
+  <path class="ln" d="M794 312h8" marker-end="url(#s1-ag)"></path>
+  <rect class="box hi" x="804" y="280" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="927" data-cy="312"><use href="#s1-k-spark" x="829.8" y="302.0"></use><text class="pt hi" x="860.8" y="317.3">Write meta description</text></g>
+  <text class="h" x="30" y="414">Agent</text>
+  <text class="who" x="198" y="414">You hand over a goal and some capability. It picks the steps.</text>
+
+  <rect class="box hi" x="30" y="465" width="246" height="64" rx="32"></rect>
+  <g class="nd" data-cx="153" data-cy="497"><use href="#s1-k-target" x="74.6" y="487.0"></use><text class="pt hi" x="105.6" y="502.3">The goal you set</text></g>
+  <path class="ln b" d="M280 497h22" marker-end="url(#s1-ab)"></path>
+  <rect class="zone" x="320" y="434" width="470" height="176" rx="16"></rect>
+  <text class="zt" x="555" y="460" text-anchor="middle">IT DECIDES THE STEPS</text>
+  <rect class="mini" x="360" y="476" width="112" height="42" rx="21"></rect>
+  <text class="mq" x="416" y="503" text-anchor="middle">?</text>
+  <path class="ln b" d="M474 497h14" marker-end="url(#s1-ab)"></path>
+  <rect class="mini" x="492" y="476" width="112" height="42" rx="21"></rect>
+  <text class="mq" x="548" y="503" text-anchor="middle">?</text>
+  <path class="ln b" d="M606 497h14" marker-end="url(#s1-ab)"></path>
+  <rect class="mini" x="624" y="476" width="112" height="42" rx="21"></rect>
+  <text class="mq" x="680" y="503" text-anchor="middle">?</text>
+  <path class="ln dsh" d="M736 524C720 562 432 562 416 524" marker-end="url(#s1-ab)"></path>
+  <text class="zn" x="555" y="590" text-anchor="middle">Looks at the real result, then picks the next step</text>
+  <path class="ln b" d="M794 497h22" marker-end="url(#s1-ab)"></path>
+  <rect class="box" x="820" y="465" width="220" height="64" rx="32"></rect>
+  <g class="nd" data-cx="930" data-cy="497"><use href="#s1-k-check" x="872.0" y="487.0"></use><text class="pt" x="903.0" y="502.3">Done</text></g>
+
+  <text class="close" x="540" y="668" text-anchor="middle">How many steps and in what order is unknown up front. More flexible means harder to check.</text>
+</svg>

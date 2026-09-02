@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="s12" font-family="Inter, Helvetica Neue, Helvetica, Arial, sans-serif" viewBox="0 0 1010 578" role="img" aria-label="Three layers on one vertical axis. The value chain the company sells, the process as it runs today with the roles that do each stage, and the process as it could be once AI is placed into it, marked stage by stage as human, workflow, AI workflow or agent.">
+<style>
+/* --- Bản thiết kế vận hành --- */
+#s12 .lead{fill:#EAF0F6;font-size:16.5px;font-weight:600}
+#s12 .lead2{fill:#AFBFD0;font-size:15px}
+#s12 .rl{fill:#EAF0F6;font-size:16.5px;font-weight:700;letter-spacing:-.015em}
+#s12 .rs{fill:#6E7C8B;font-size:12.5px}
+#s12 .vt{fill:#EAF0F6;font-size:13.5px;font-weight:600}
+#s12 .vo{fill:#6E7C8B;font-size:11.5px}
+#s12 .rt{fill:#EAF0F6;font-size:13px;font-weight:600}
+#s12 .wt{fill:#EAF0F6;font-size:13.5px;font-weight:700}
+#s12 .wt.on{fill:#4E82FF}
+#s12 .tag{fill:#6E7C8B;font-size:9.5px;font-weight:700;letter-spacing:.13em}
+#s12 .tag.on{fill:#4E82FF}
+#s12 .nt{fill:#AFBFD0;font-size:11.5px}
+#s12 .bpl{fill:#4E82FF;font-size:12px;font-weight:700;letter-spacing:.15em}
+#s12 .bps{fill:#6E7C8B;font-size:13px}
+#s12 .vc{fill:#1B222C;stroke:#313D49;stroke-width:1.3}
+#s12 .cell{fill:#12171E;stroke:#313D49;stroke-width:1.3}
+#s12 .cell.hi{fill:#14203A;stroke:#2C4B85;stroke-width:1.6}
+#s12 .ic{fill:none;stroke:#7C8B9C;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#s12 .ar{stroke:#313D49;stroke-width:1.4;fill:none}
+#s12 .hr{stroke:#212A34;stroke-width:1.3}
+#s12 .div{stroke:#313D49;stroke-width:1.5}
+#s12 .guide{stroke:#212A34;stroke-width:1.1;stroke-dasharray:3 5}
+#s12 .bp{stroke:#4E82FF;stroke-width:1.7;fill:none}
+.s12_ic{fill:none;stroke:#7C8B9C;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+</style>
+<rect width="1010" height="578" fill="#12171E"/>
+
+
+  <defs>
+    <g id="s12-k-user" class="s12_ic"><circle cx="10" cy="6.4" r="3.4"></circle><path d="M3.2 17.2c0-3.4 3-5.6 6.8-5.6s6.8 2.2 6.8 5.6"></path></g>
+    <marker id="s12-ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0.6 0.8 L7 4 L0.6 7.2" fill="none" stroke="#313D49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></marker>
+    <marker id="s12-ab" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0.6 0.8 L7 4 L0.6 7.2" fill="none" stroke="#4E82FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></marker>
+  </defs>
+
+  <text class="lead" x="30" y="16">Three layers stacked on one vertical axis.</text>
+  <text class="lead2" x="30" y="38">Read down a column to see how one stage changes.</text>
+
+  <line class="guide" x1="276.5" y1="96" x2="276.5" y2="452"></line>
+  <line class="guide" x1="433.5" y1="96" x2="433.5" y2="452"></line>
+  <line class="guide" x1="590.5" y1="96" x2="590.5" y2="452"></line>
+  <line class="guide" x1="747.5" y1="96" x2="747.5" y2="452"></line>
+  <line class="guide" x1="904.5" y1="96" x2="904.5" y2="452"></line>
+  <line class="div" x1="186" y1="48" x2="186" y2="472"></line>
+
+  <text class="rl" x="30" y="82">Value chain</text>
+  <text class="rs" x="30" y="102">what the company sells</text>
+  <rect class="vc" x="204" y="52" width="145" height="44" rx="9"></rect>
+  <text class="vt" x="276" y="80" text-anchor="middle">Take the brief</text>
+  <text class="vo" x="276" y="116" text-anchor="middle">out: a brief</text>
+  <path class="ar" d="M350 74h6" marker-end="url(#s12-ag)"></path>
+  <rect class="vc" x="361" y="52" width="145" height="44" rx="9"></rect>
+  <text class="vt" x="434" y="80" text-anchor="middle">Keyword research</text>
+  <text class="vo" x="434" y="116" text-anchor="middle">out: a keyword set</text>
+  <path class="ar" d="M507 74h6" marker-end="url(#s12-ag)"></path>
+  <rect class="vc" x="518" y="52" width="145" height="44" rx="9"></rect>
+  <text class="vt" x="590" y="80" text-anchor="middle">Produce the content</text>
+  <text class="vo" x="590" y="116" text-anchor="middle">out: an article</text>
+  <path class="ar" d="M664 74h6" marker-end="url(#s12-ag)"></path>
+  <rect class="vc" x="675" y="52" width="145" height="44" rx="9"></rect>
+  <text class="vt" x="748" y="80" text-anchor="middle">Publish</text>
+  <text class="vo" x="748" y="116" text-anchor="middle">out: a live page</text>
+  <path class="ar" d="M821 74h6" marker-end="url(#s12-ag)"></path>
+  <rect class="vc" x="832" y="52" width="145" height="44" rx="9"></rect>
+  <text class="vt" x="904" y="80" text-anchor="middle">Measure &amp; report</text>
+  <text class="vo" x="904" y="116" text-anchor="middle">out: a report</text>
+  <line class="hr" x1="30" y1="140" x2="980" y2="140"></line>
+
+  <text class="rl" x="30" y="222">Process as-is</text>
+  <text class="rs" x="30" y="242">who does it today, and how</text>
+  <rect class="cell" x="204" y="162" width="145" height="124" rx="10"></rect>
+  <use href="#s12-k-user" x="268" y="178"></use>
+  <text class="rt" x="276" y="224" text-anchor="middle">Account</text>
+  <text class="nt" x="276" y="246" text-anchor="middle">Meets the client,</text>
+  <text class="nt" x="276" y="264" text-anchor="middle">writes down the ask</text>
+  <rect class="cell" x="361" y="162" width="145" height="124" rx="10"></rect>
+  <use href="#s12-k-user" x="424" y="178"></use>
+  <text class="rt" x="434" y="224" text-anchor="middle">SEO exec</text>
+  <text class="nt" x="434" y="246" text-anchor="middle">Opens tools, filters by hand,</text>
+  <text class="nt" x="434" y="264" text-anchor="middle">pastes into a sheet</text>
+  <rect class="cell" x="518" y="162" width="145" height="124" rx="10"></rect>
+  <use href="#s12-k-user" x="570" y="178"></use>
+  <use href="#s12-k-user" x="592" y="178"></use>
+  <text class="rt" x="590" y="224" text-anchor="middle">Writer + editor</text>
+  <text class="nt" x="590" y="246" text-anchor="middle">Writes, revises,</text>
+  <text class="nt" x="590" y="264" text-anchor="middle">passes it back and forth</text>
+  <rect class="cell" x="675" y="162" width="145" height="124" rx="10"></rect>
+  <use href="#s12-k-user" x="738" y="178"></use>
+  <text class="rt" x="748" y="224" text-anchor="middle">Technical</text>
+  <text class="nt" x="748" y="246" text-anchor="middle">Copies into HTML,</text>
+  <text class="nt" x="748" y="264" text-anchor="middle">pushes to the CMS</text>
+  <rect class="cell" x="832" y="162" width="145" height="124" rx="10"></rect>
+  <use href="#s12-k-user" x="896" y="178"></use>
+  <text class="rt" x="904" y="224" text-anchor="middle">SEO lead</text>
+  <text class="nt" x="904" y="246" text-anchor="middle">Exports the numbers,</text>
+  <text class="nt" x="904" y="264" text-anchor="middle">builds the deck</text>
+  <line class="hr" x1="30" y1="310" x2="980" y2="310"></line>
+
+  <text class="rl" x="30" y="392">Process could-be</text>
+  <text class="rs" x="30" y="412">once AI is placed into it</text>
+  <rect class="cell" x="204" y="332" width="145" height="124" rx="10"></rect>
+  <text class="tag" x="276" y="358" text-anchor="middle">HUMAN</text>
+  <text class="wt" x="276" y="386" text-anchor="middle">Still a person</text>
+  <text class="nt" x="276" y="412" text-anchor="middle">Reads the client,</text>
+  <text class="nt" x="276" y="430" text-anchor="middle">settles the scope.</text>
+  <rect class="cell hi" x="361" y="332" width="145" height="124" rx="10"></rect>
+  <text class="tag on" x="434" y="358" text-anchor="middle">AI WORKFLOW</text>
+  <text class="wt on" x="434" y="386" text-anchor="middle">Cluster the keywords</text>
+  <text class="nt" x="434" y="412" text-anchor="middle">A person settles</text>
+  <text class="nt" x="434" y="430" text-anchor="middle">the final list.</text>
+  <rect class="cell hi" x="518" y="332" width="145" height="124" rx="10"></rect>
+  <text class="tag on" x="590" y="358" text-anchor="middle">AGENT</text>
+  <text class="wt on" x="590" y="386" text-anchor="middle">Write and revise</text>
+  <text class="nt" x="590" y="412" text-anchor="middle">A person approves</text>
+  <text class="nt" x="590" y="430" text-anchor="middle">the final draft.</text>
+  <rect class="cell" x="675" y="332" width="145" height="124" rx="10"></rect>
+  <text class="tag" x="748" y="358" text-anchor="middle">WORKFLOW</text>
+  <text class="wt" x="748" y="386" text-anchor="middle">Push to the CMS</text>
+  <text class="nt" x="748" y="412" text-anchor="middle">No model needed.</text>
+  <text class="nt" x="748" y="430" text-anchor="middle">A script is enough.</text>
+  <rect class="cell hi" x="832" y="332" width="145" height="124" rx="10"></rect>
+  <text class="tag on" x="904" y="358" text-anchor="middle">AI WORKFLOW</text>
+  <text class="wt on" x="904" y="386" text-anchor="middle">Assemble the report</text>
+  <text class="nt" x="904" y="412" text-anchor="middle">A person reads the</text>
+  <text class="nt" x="904" y="430" text-anchor="middle">numbers.</text>
+
+  <path class="bp" d="M74 528C90 502 140 490 178 470" marker-end="url(#s12-ab)"></path>
+  <text class="bpl" x="30" y="548">THE BLUEPRINT</text>
+  <text class="bps" x="150" y="548">only all three layers together are the blueprint</text>
+</svg>
