@@ -199,3 +199,14 @@ INSERT INTO project_posts (project_slug, post_slug)
 INSERT INTO project_posts (project_slug, post_slug)
   SELECT 'agentic-presentation-system', post_slug FROM series_posts WHERE series_slug = 'an-agentic-system-for-creating-presentations'
   ON CONFLICT DO NOTHING;
+
+-- Flagship structure (authoritative; overrides the per-INSERT featured/sort/parent
+-- above so a re-seed reproduces the live homepage): three top-level featured
+-- works, then the rest as children hanging off the platform.
+UPDATE projects SET parent_slug = NULL,                  featured = true,  sort_order = 1 WHERE slug = 'mini-search-engine';
+UPDATE projects SET parent_slug = NULL,                  featured = true,  sort_order = 2 WHERE slug = 'agentic-ai-platform';
+UPDATE projects SET parent_slug = NULL,                  featured = true,  sort_order = 3 WHERE slug = 'agentic-presentation-system';
+UPDATE projects SET parent_slug = 'agentic-ai-platform', featured = false, sort_order = 4 WHERE slug = 'cms-publishing-pipeline';
+UPDATE projects SET parent_slug = 'agentic-ai-platform', featured = false, sort_order = 5 WHERE slug = 'content-seo-ai';
+UPDATE projects SET parent_slug = 'agentic-ai-platform', featured = false, sort_order = 6 WHERE slug = 'keyword-clustering';
+UPDATE projects SET parent_slug = 'agentic-ai-platform', featured = false, sort_order = 7 WHERE slug = 'seo-quoting-agent';

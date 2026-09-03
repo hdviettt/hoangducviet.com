@@ -41,16 +41,50 @@ function StackSheet({ project }: { project: Project }) {
   );
 }
 
-function Eyebrow({ parent }: { parent?: { title: string; slug: string } }) {
-  if (!parent) return null;
+// A small build-status pill, shown only when a project is not fully live, so a
+// live project carries no badge (the default, unremarkable state).
+function StatusPill({ status }: { status: string }) {
+  if (status === "wip") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-md-tertiary-container px-2.5 py-1 text-[12px] font-medium text-md-on-tertiary-container">
+        <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+        In progress
+      </span>
+    );
+  }
+  if (status === "archived") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-md-surface-container-high px-2.5 py-1 text-[12px] font-medium text-md-on-surface-variant">
+        Archived
+      </span>
+    );
+  }
+  return null;
+}
+
+// The top row: an optional link back to a parent project, and the status pill.
+function HeaderTags({
+  parent,
+  status,
+}: {
+  parent?: { title: string; slug: string };
+  status: string;
+}) {
+  const showStatus = status === "wip" || status === "archived";
+  if (!parent && !showStatus) return null;
   return (
-    <Link
-      href={`/work/${parent.slug}`}
-      className="mb-3 inline-flex w-fit items-center gap-1.5 text-[13px] font-medium text-md-on-surface-variant transition-colors hover:text-primary"
-    >
-      <span aria-hidden className="text-primary">&#8226;</span>
-      On the platform
-    </Link>
+    <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+      {parent && (
+        <Link
+          href={`/work/${parent.slug}`}
+          className="inline-flex w-fit items-center gap-1.5 text-[13px] font-medium text-md-on-surface-variant transition-colors hover:text-primary"
+        >
+          <span aria-hidden className="text-primary">&#8226;</span>
+          On the platform
+        </Link>
+      )}
+      <StatusPill status={status} />
+    </div>
   );
 }
 
@@ -88,7 +122,7 @@ export default function WorkSection({
   return (
     <section>
       <div className="max-w-[760px]">
-        <Eyebrow parent={parent} />
+        <HeaderTags parent={parent} status={project.buildStatus} />
         <Link href={href} className="group block w-fit">
           <h2 className="text-[32px] font-medium leading-[1.06] tracking-[-0.03em] text-md-on-surface transition-colors group-hover:text-primary sm:text-[42px]">
             {project.title}
