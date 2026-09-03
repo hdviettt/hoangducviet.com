@@ -16,19 +16,23 @@
   <style>
     /* 14s loop. Each class is a different kind of arrival, because the figures
        are about different kinds of event: text is typed, a result appears, a
-       panel expands and pushes what is under it away, a curve is drawn.
-       `transform-box: fill-box` is what makes transform-origin mean the shape's
-       own box rather than the whole canvas.
+       panel expands and pushes what is under it away, a curve is drawn. A fade
+       only says "this exists".
 
-       Every animation rests on the finished figure, and reduced motion paints
-       that frame directly. The og:image renderer runs with reduced motion
-       forced, so the still it captures is always the completed drawing. */
+       `transform-box: fill-box` is what makes transform-origin mean the shape's
+       own box rather than the whole canvas. Without it a scaleX on a text line
+       grows from the middle of the page.
+
+       Every class rests on the finished figure, and reduced motion paints that
+       frame directly. The og:image renderer forces reduced motion, so the still
+       it captures is always the completed drawing. Check this after any change
+       to the keyframes: a scaleY(0) that fails to reset removes the shape from
+       every social card, and nobody notices until someone shares the post. */
     .c, .type, .pop, .rise, .expandy { transform-box: fill-box; }
 
     .c { opacity: 0; animation: fade 14s ease-in-out infinite; }
     @keyframes fade { 0% { opacity: 0 } 20%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
 
-    /* a caret running left to right */
     .type { opacity: 0; transform-origin: left center;
              animation: type 14s cubic-bezier(0.25, 0.9, 0.3, 1) infinite; }
     @keyframes type { 0% { opacity: 0; transform: scaleX(0) }
@@ -36,7 +40,6 @@
                       22%, 88% { opacity: var(--o, 1); transform: scaleX(1) }
                       100% { opacity: 0; transform: scaleX(1) } }
 
-    /* lands with a little overshoot, the way a result appears */
     .pop { opacity: 0; transform-origin: center;
             animation: pop 14s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
     @keyframes pop { 0% { opacity: 0; transform: scale(0.6) }
@@ -48,7 +51,6 @@
                       20%, 88% { opacity: var(--o, 1); transform: translateY(0) }
                       100% { opacity: 0; transform: translateY(22px) } }
 
-    /* a panel opening downward, which is what pushes the links off the frame */
     .expandy { opacity: 0; transform-origin: top center;
                 animation: expandy 14s cubic-bezier(0.2, 0.9, 0.25, 1) infinite; }
     @keyframes expandy { 0% { opacity: 0; transform: scaleY(0) }
@@ -73,5 +75,20 @@
   </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <g filter="url(#lift)"><line x1="196.5" y1="463.3" x2="835.5" y2="463.3" stroke="#dfe4ec" stroke-width="1"/><line x1="191.3" y1="393.8" x2="840.7" y2="393.8" stroke="#dfe4ec" stroke-width="1"/><line x1="186.0" y1="322.0" x2="846.0" y2="322.0" stroke="#dfe4ec" stroke-width="1"/><line x1="180.5" y1="247.8" x2="851.5" y2="247.8" stroke="#dfe4ec" stroke-width="1"/><line x1="174.8" y1="171.1" x2="857.2" y2="171.1" stroke="#dfe4ec" stroke-width="1"/><polygon class="c" points="179.8,146.0 223.3,146.0 226.4,196.0 183.4,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.00s"/><polygon class="c" points="351.3,146.0 394.8,146.0 396.1,196.0 353.1,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.27s"/><polygon class="c" points="522.9,146.0 566.3,146.0 565.8,196.0 522.8,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.54s"/><polygon class="c" points="694.4,146.0 737.8,146.0 735.4,196.0 692.5,196.0" fill="#004aef" style="--o:0.82;animation-delay:0.81s"/><polygon class="c" points="241.7,223.6 284.4,223.6 286.8,271.8 244.6,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.14s"/><polygon class="c" points="410.3,223.6 453.0,223.6 453.7,271.8 411.4,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.41s"/><polygon class="c" points="579.0,223.6 621.7,223.6 620.6,271.8 578.3,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.68s"/><polygon class="c" points="747.6,223.6 790.3,223.6 787.4,271.8 745.2,271.8" fill="#004aef" style="--o:0.82;animation-delay:0.95s"/><polygon class="c" points="301.5,298.5 343.5,298.5 345.3,345.2 303.7,345.2" fill="#004aef" style="--o:0.82;animation-delay:0.28s"/><polygon class="c" points="467.3,298.5 509.4,298.5 509.4,345.2 467.9,345.2" fill="#004aef" style="--o:0.82;animation-delay:0.55s"/><polygon class="c" points="633.2,298.5 675.2,298.5 673.6,345.2 632.0,345.2" fill="#004aef" style="--o:0.82;animation-delay:0.82s"/><polygon class="c" points="799.1,298.5 841.1,298.5 837.7,345.2 796.1,345.2" fill="#004aef" style="--o:0.82;animation-delay:1.09s"/><polygon class="c" points="196.2,371.1 237.5,371.1 240.4,416.3 199.5,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.15s"/><polygon class="c" points="359.3,371.1 400.7,371.1 401.9,416.3 361.0,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.42s"/><polygon class="c" points="522.5,371.1 563.9,371.1 563.4,416.3 522.5,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.69s"/><polygon class="c" points="685.7,371.1 727.0,371.1 724.9,416.3 684.0,416.3" fill="#004aef" style="--o:0.82;animation-delay:0.96s"/><polygon class="c" points="254.8,441.3 295.5,441.3 297.7,485.1 257.4,485.1" fill="#004aef" style="--o:0.82;animation-delay:0.29s"/><polygon class="c" points="415.4,441.3 456.1,441.3 456.7,485.1 416.4,485.1" fill="#004aef" style="--o:0.82;animation-delay:0.56s"/><polygon class="c" points="575.9,441.3 616.6,441.3 615.6,485.1 575.3,485.1" fill="#004aef" style="--o:0.82;animation-delay:0.83s"/><polygon class="c" points="736.5,441.3 777.2,441.3 774.6,485.1 734.3,485.1" fill="#004aef" style="--o:0.82;animation-delay:1.10s"/></g><g class="mark"><line x1="839.5" y1="247.8" x2="881.5" y2="247.8" stroke="#04815a" stroke-width="1.4"/><text x="891.5" y="241.8" font-size="17" fill="#04815a">one request per host,</text><text x="891.5" y="263.8" font-size="17" fill="#04815a">then wait</text></g><text x="190.0" y="100.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">five hosts, twelve slots</text>
+  <defs>
+    <linearGradient id="gblue" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#3d76ff"/><stop offset="1" stop-color="#004aef"/>
+    </linearGradient>
+    <linearGradient id="ggreen" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#6df7cd"/><stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <linearGradient id="gcard" x1="0.1" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.74"/>
+    </linearGradient>
+    <linearGradient id="gchip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7ff"/><stop offset="1" stop-color="#e6ecfa"/>
+    </linearGradient>
+  </defs>
+  <g filter="url(#lift)"><line x1="245.0" y1="484.8" x2="892.4" y2="484.8" stroke="#dfe4ec"/><text x="212.8" y="228.6" text-anchor="end" font-size="13" fill="#5f656d" font-weight="500">example.com</text><line class="c" x1="244.3" y1="220.4" x2="915.6" y2="220.4" stroke="#dfe4ec" stroke-width="1" style="--o:0.8;animation-delay:0.1s"/><path class="pop" d="M250.3 201.0 Q250.0 196.0 255.0 196.0 L262.7 196.0 Q267.7 196.0 268.0 201.0 L270.1 239.6 Q270.4 244.6 265.4 244.6 L257.9 244.6 Q252.9 244.6 252.6 239.6 Z" fill="url(#ggreen)" style="--o:1;animation-delay:0.20s"/><path class="pop" d="M455.0 201.0 Q454.9 196.0 459.9 196.0 L467.6 196.0 Q472.6 196.0 472.7 201.0 L473.0 239.6 Q473.1 244.6 468.1 244.6 L460.6 244.6 Q455.6 244.6 455.5 239.6 Z" fill="url(#ggreen)" style="--o:1;animation-delay:0.30s"/><path class="pop" d="M659.7 201.0 Q659.8 196.0 664.8 196.0 L672.5 196.0 Q677.5 196.0 677.3 201.0 L676.0 239.6 Q675.8 244.6 670.8 244.6 L663.3 244.6 Q658.3 244.6 658.5 239.6 Z" fill="url(#ggreen)" style="--o:1;animation-delay:0.40s"/><path class="pop" d="M864.3 200.9 Q864.7 196.0 869.7 196.0 L877.4 196.0 Q882.4 196.0 882.0 200.9 L878.9 239.6 Q878.5 244.6 873.5 244.6 L866.0 244.6 Q861.0 244.6 861.4 239.6 Z" fill="url(#ggreen)" style="--o:1;animation-delay:0.50s"/><text x="220.1" y="337.8" text-anchor="end" font-size="13" fill="#5f656d" font-weight="500">vnexpress.net</text><line class="c" x1="250.8" y1="330.0" x2="906.0" y2="330.0" stroke="#dfe4ec" stroke-width="1" style="--o:0.8;animation-delay:0.1s"/><path class="pop" d="M324.7 311.7 Q324.4 306.7 329.4 306.7 L336.7 306.7 Q341.7 306.7 341.9 311.7 L343.3 348.1 Q343.5 353.1 338.5 353.1 L331.4 353.1 Q326.4 353.1 326.2 348.1 Z" fill="url(#gblue)" style="--o:0.5;animation-delay:0.30s"/><path class="pop" d="M524.4 311.7 Q524.4 306.7 529.4 306.7 L536.6 306.7 Q541.6 306.7 541.6 311.7 L541.4 348.1 Q541.4 353.1 536.4 353.1 L529.3 353.1 Q524.3 353.1 524.3 348.1 Z" fill="url(#gblue)" style="--o:0.5;animation-delay:0.40s"/><path class="pop" d="M724.1 311.7 Q724.3 306.7 729.3 306.7 L736.6 306.7 Q741.6 306.7 741.3 311.7 L739.5 348.1 Q739.2 353.1 734.2 353.1 L727.2 353.1 Q722.2 353.1 722.4 348.1 Z" fill="url(#gblue)" style="--o:0.5;animation-delay:0.50s"/><text x="227.1" y="441.9" text-anchor="end" font-size="13" fill="#5f656d" font-weight="500">shopee.vn</text><line class="c" x1="257.0" y1="434.4" x2="896.8" y2="434.4" stroke="#dfe4ec" stroke-width="1" style="--o:0.8;animation-delay:0.1s"/><path class="pop" d="M393.5 417.2 Q393.4 412.2 398.4 412.2 L405.2 412.2 Q410.2 412.2 410.4 417.2 L411.2 451.4 Q411.3 456.4 406.3 456.4 L399.6 456.4 Q394.6 456.4 394.5 451.4 Z" fill="url(#gblue)" style="--o:0.5;animation-delay:0.40s"/><path class="pop" d="M588.5 417.2 Q588.6 412.2 593.6 412.2 L600.5 412.2 Q605.5 412.2 605.4 417.2 L604.7 451.4 Q604.6 456.4 599.6 456.4 L592.9 456.4 Q587.9 456.4 588.0 451.4 Z" fill="url(#gblue)" style="--o:0.5;animation-delay:0.50s"/><path class="pop" d="M783.5 417.2 Q783.8 412.2 788.8 412.2 L795.7 412.2 Q800.7 412.2 800.4 417.2 L798.1 451.4 Q797.8 456.4 792.8 456.4 L786.1 456.4 Q781.1 456.4 781.4 451.4 Z" fill="url(#gblue)" style="--o:0.5;animation-delay:0.60s"/><path class="draw" d="M258.1 182.7 L257.0 161.7 L463.4 161.7 L463.6 182.7" fill="none" stroke="#04815a" stroke-width="1.6" style="--len:400;animation-delay:0.9s"/></g><g class="mark"><line x1="908.8" y1="161.7" x2="950.8" y2="161.7" stroke="#04815a" stroke-width="1.4"/><text x="960.8" y="155.7" font-size="17" fill="#04815a">one request per host,</text><text x="960.8" y="177.7" font-size="17" fill="#04815a">then wait</text></g><text x="190.0" y="100.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">three hosts on one clock</text>
 </svg>

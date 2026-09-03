@@ -52,3 +52,34 @@ public/uploads/
 public/figures/_*.svg
 __pycache__/
 scripts/seo-history-inline/
+
+# --- local dev & design scratch (never deployed; prod builds on Railway/Nixpacks) ---
+# Local Docker dev stack — a root Dockerfile would otherwise hijack Railway's build
+/Dockerfile
+/docker-compose.yml
+/.dockerignore
+/docker/
+# Design exploration, mockups, and decks
+/_v2_light.html
+/concept-*.html
+/demo-*.html
+/portfolio-*.html
+/series-map.html
+/series-outlines.html
+/series-review.html
+/showcase-*.html
+/showcase-brief.md
+/mock/
+/deck-shots/
+/project-media/
+# Cover/thumbnail experiments and unused work media
+/public/covers-v2/
+/public/covers-v3/
+/public/work/
+# One-off / debug scripts
+/scripts/_tmp_*.cjs
+/scripts/dbcheck.cjs
+/scripts/dump-*.cjs
+/scripts/figure2.py
+/scripts/make-covers-*.py
+/scripts/verify-figs.cjs

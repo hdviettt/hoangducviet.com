@@ -778,6 +778,18 @@ h6 {
   transform: translateX(-50%);
 }
 
+/* Selected work reuses the post carousel, but constrained to the content
+   column instead of bleeding to the viewport (the homepage is left-aligned). */
+.work-carousel .media-carousel {
+  width: 100%;
+  margin: 0;
+  transform: none;
+  --mc-max: 600px;
+  --mc-peek: 84px;
+  --mc-pad: 0;
+  --mc-slide: min(var(--mc-max), calc(100% - var(--mc-peek)));
+}
+
 @media (max-width: 899px) {
   .media-carousel {
     --mc-gap: 0.75rem;
@@ -1761,3 +1773,473 @@ select.md-field {
   transform: scale(1.04);
   filter: brightness(1.05);
 }
+
+
+/* ===================== Featured project showcase ===================== */
+/* Ported from the "Agentic presentation system" design source. Everything is
+   scoped under .feature-showcase; the accent maps to the M3 primary token and
+   dark mode is driven by the site's .dark class on <html>. */
+.feature-showcase {
+  --surface: #ffffff;
+  --surface-2: #f7f8fa;
+  --surface-3: #eceef1;
+  --ink: #0a0b0d;
+  --muted: #54585f;
+  --faint: #898d96;
+  --hair: #e6e8ec;
+  --hair-2: #d7dae0;
+  --primary: hsl(var(--md-sys-color-primary));
+  --gdot: #ccd1d9;
+  --primary-soft: #004aef12; --ci-blue:#d6e2fb; --ci-blue-ink:#1b2b4e; --ci-line:#9aa3b2; --ci-frame:#eff3fb; --ci-frame-b:#cdd9ef; --l0:#e9f0fd; --l1:#dce7fc; --l2:#cfe0fb; --l3:#c2d8fa; --l4:#b5d0f9; --l5:#a8c8f8;
+  --sans: var(--font-inter);
+  --mono: var(--font-mono);
+  --fs-r1: 16px;
+  --fs-rf: 999px;
+  --fs-shadow: 0 2px 4px rgba(16, 18, 30, 0.04), 0 6px 20px -12px rgba(16, 18, 30, 0.1);
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 24px;
+  font-family: var(--sans);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.dark .feature-showcase {
+  --surface: #181a1e;
+  --surface-2: #1b1d22;
+  --surface-3: #23262b;
+  --ink: #e9eaec;
+  --muted: #b0b3b9;
+  --faint: #797d86;
+  --hair: #282b31;
+  --hair-2: #373b42;
+  --gdot: #2c3038;
+  --primary-soft: #94aaff1c; --ci-blue:#28324c; --ci-blue-ink:#cdd8f2; --ci-line:#565d6a; --ci-frame:#191d28; --ci-frame-b:#333c52; --l0:#222c44; --l1:#26314e; --l2:#2a3858; --l3:#2e3e62; --l4:#32446c; --l5:#364a76;
+  --fs-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px -14px rgba(0, 0, 0, 0.6);
+}
+/* Diagram-only mode: the /work deep-dive supplies its own hero, metrics, and
+   "Built with", so hide the showcase's built-in header and Models/Stack bands. */
+.feature-showcase.diagram .head,
+.feature-showcase.diagram .meta { display: none; }
+.feature-showcase * { box-sizing: border-box; }
+
+/* ---- Work illustrations -----------------------------------------------------
+   A shared, theme-aware line-art vocabulary for the full-bleed /work showcase
+   sections. Colours resolve from M3 tokens, so every illustration flips with
+   the site theme without per-illustration dark styles. */
+/* A soft accent glow behind a /work section visual, so the illustration or
+   carousel reads as a hero element rather than a flat panel. */
+.work-visual { position: relative; isolation: isolate; }
+.work-visual::before {
+  content: "";
+  position: absolute;
+  inset: 4% 6%;
+  z-index: -1;
+  border-radius: 44px;
+  background: radial-gradient(
+    56% 58% at 50% 40%,
+    hsl(var(--md-sys-color-primary) / 0.18),
+    transparent 72%
+  );
+  filter: blur(34px);
+}
+/* ---- Work architecture diagram --------------------------------------------
+   Our own clean palette (not a copy of anyone's): soft neutral ground, soft
+   blue cards for logic and agents, muted grey for data and infra, and the
+   SEONGON brand blue on the pivotal step. Light on the bare scope, dark under
+   `.dark`. No true black, no muddy dark. Model logos live only in the stack
+   below, so the diagram never implies a particular vendor. */
+.work-diagram {
+  --wd-bg: #f2f3f1;
+  --wd-zone: #fbfbfa;
+  --wd-zone-b: #e2e4e6;
+  --wd-blue: #cbdcf0;
+  --wd-blue-ink: #33517b;
+  --wd-neutral: #e4e6e1;
+  --wd-neutral-ink: #55564f;
+  --wd-hub: hsl(var(--md-sys-color-primary));
+  --wd-ink: #1c1e22;
+  --wd-muted: #5d626c;
+  --wd-faint: #979ca6;
+  --wd-line: #b5b9c1;
+  --wd-tile: #ffffff;
+  --wd-icc: #46566c;
+  --wd-field: #ffffff;
+  --wd-tagbg: #e8ebf1;
+  --wd-tagink: #47506a;
+  --wd-offbg: #e6e9f0;
+  /* "Paper" surfaces: the deck preview and the library cards. A real slide is
+     light; in dark mode it becomes an elevated dark card (not a glaring white
+     block), so the whole diagram stays one theme. */
+  --wd-paper: #ffffff;
+  --wd-paper-b: #e0e3ea;
+  --wd-paper-ink: #232838;
+  --wd-paper-ink2: #6a7286;
+  --wd-paper-faint: #9aa2b2;
+  --wd-paper-rule: #edeff3;
+  --wd-paper-g1: #c9d0dc;
+  --wd-paper-g2: #e3e7ee;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+.dark .work-diagram {
+  --wd-bg: #15161a;
+  --wd-zone: #1c1d22;
+  --wd-zone-b: #2b2d34;
+  --wd-blue: #273b56;
+  --wd-blue-ink: #c3d7ef;
+  --wd-neutral: #2c2f39;
+  --wd-neutral-ink: #bcc1cc;
+  --wd-hub: #3a63d8;
+  --wd-ink: #e7e9ed;
+  --wd-muted: #a3a8b2;
+  --wd-faint: #6b7079;
+  --wd-line: #4b4f59;
+  --wd-tile: #dce2ee;
+  --wd-icc: #aebfd8;
+  --wd-field: #23252c;
+  --wd-tagbg: #2a2d36;
+  --wd-tagink: #aeb6c8;
+  --wd-offbg: #23262e;
+  --wd-paper: #24262e;
+  --wd-paper-b: #343845;
+  --wd-paper-ink: #e7e9ed;
+  --wd-paper-ink2: #a3a8b2;
+  --wd-paper-faint: #757b86;
+  --wd-paper-rule: #2f323b;
+  --wd-paper-g1: #464b57;
+  --wd-paper-g2: #363a44;
+}
+.work-diagram .wd-bg { fill: var(--wd-bg); }
+.work-diagram .wd-zone { fill: var(--wd-zone); stroke: var(--wd-zone-b); stroke-width: 1; }
+.work-diagram .wd-zone-t { fill: var(--wd-muted); font-size: 13px; font-weight: 600; }
+.work-diagram .wd-note { fill: var(--wd-faint); font-size: 11px; font-family: var(--font-mono), monospace; }
+.work-diagram .wd-card { fill: var(--wd-blue); }
+.work-diagram .wd-card.neutral { fill: var(--wd-neutral); }
+.work-diagram .wd-card.hub { fill: var(--wd-hub); }
+.work-diagram .wd-title { fill: var(--wd-blue-ink); font-size: 13.5px; font-weight: 600; }
+.work-diagram .neutral .wd-title { fill: var(--wd-neutral-ink); }
+.work-diagram .hub .wd-title { fill: #fff; }
+.work-diagram .wd-sub { fill: var(--wd-blue-ink); opacity: 0.72; font-size: 11px; }
+.work-diagram .neutral .wd-sub { fill: var(--wd-neutral-ink); opacity: 0.8; }
+.work-diagram .hub .wd-sub { fill: rgba(255, 255, 255, 0.85); opacity: 1; }
+.work-diagram .wd-edge { fill: none; stroke: var(--wd-line); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.work-diagram .wd-edge.dash { stroke-dasharray: 5 4; }
+.work-diagram .wd-flab rect { fill: var(--wd-zone); }
+.work-diagram .wd-flab-r { fill: var(--wd-zone); }
+.work-diagram .wd-lab { fill: var(--wd-muted); font-size: 11px; }
+/* Model family: light-blue fill + a solid accent ring (learned-model nodes) */
+.work-diagram .wd-card.accent { fill: var(--wd-blue); stroke: hsl(var(--md-sys-color-primary) / 0.5); stroke-width: 1.5; }
+/* Precomputed data feed (solid hairline) vs. the conditional re-search loop (accent dash) */
+.work-diagram .wd-feed { fill: none; stroke: var(--wd-line); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.work-diagram .wd-loop { fill: none; stroke: hsl(var(--md-sys-color-primary) / 0.5); stroke-width: 1.5; stroke-dasharray: 5 4; stroke-linecap: round; stroke-linejoin: round; }
+.dark .work-diagram .wd-bar { fill: #31343d; }
+.dark .work-diagram .wd-abub { fill: #2c2f38; }
+.work-diagram .wd-tile { fill: var(--wd-tile); }
+.work-diagram .wd-ic { fill: none; stroke: var(--wd-icc); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.work-diagram .wd-chip { fill: var(--wd-tile); }
+.work-diagram .wd-clogo { fill: var(--wd-icc); }
+.work-diagram .wd-tools { fill: var(--wd-blue-ink); opacity: 0.66; font-size: 10px; font-family: var(--font-mono), monospace; }
+.work-diagram .neutral .wd-tools { fill: var(--wd-neutral-ink); opacity: 0.8; }
+.work-diagram .hub .wd-tools { fill: rgba(255, 255, 255, 0.8); opacity: 1; }
+/* Bespoke system-and-interaction diagram pieces */
+.work-diagram .wd-panel { fill: var(--wd-zone); stroke: var(--wd-zone-b); stroke-width: 1; }
+.work-diagram .wd-panel-t { fill: var(--wd-ink); font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.work-diagram .wd-subzone { fill: none; stroke: var(--wd-zone-b); stroke-width: 1.1; stroke-dasharray: 5 4; }
+.work-diagram .wd-subzone-t { fill: var(--wd-faint); font-size: 12px; font-weight: 600; }
+.work-diagram .wd-mono { fill: var(--wd-muted); font-size: 11.5px; font-family: var(--font-mono), monospace; }
+.work-diagram .wd-mono-k { fill: var(--wd-faint); font-size: 11px; font-family: var(--font-mono), monospace; }
+.work-diagram .wd-input { fill: var(--wd-field); stroke: var(--wd-zone-b); stroke-width: 1; }
+.work-diagram .wd-inputtext { fill: var(--wd-ink); font-size: 15px; font-weight: 500; }
+.work-diagram .wd-pill { fill: hsl(var(--md-sys-color-primary) / 0.14); }
+.work-diagram .wd-pill-t { fill: hsl(var(--md-sys-color-primary)); font-size: 10.5px; font-weight: 600; }
+.work-diagram .wd-bar { fill: var(--wd-neutral); }
+.work-diagram .wd-bar-a { fill: hsl(var(--md-sys-color-primary)); }
+.work-diagram .wd-hr { stroke: var(--wd-zone-b); stroke-width: 1; }
+.work-diagram .wd-ret { fill: none; stroke: hsl(var(--md-sys-color-primary) / 0.55); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.work-diagram .wd-ret-t { fill: hsl(var(--md-sys-color-primary)); font-size: 11px; font-family: var(--font-mono), monospace; }
+/* Model / service tag chips inside nodes */
+.work-diagram .wd-tag { fill: var(--wd-tagbg); }
+.work-diagram .wd-tag-t { fill: var(--wd-tagink); font-size: 10.5px; font-family: var(--font-mono), monospace; }
+.work-diagram .wd-tag-dot { fill: hsl(var(--md-sys-color-primary)); }
+.work-diagram .wd-tag-logo { fill: var(--wd-tagink); }
+/* Brand logos used as node marks: clean monochrome fill, no background */
+.work-diagram .wd-ologo { fill: var(--wd-icc); }
+.work-diagram .neutral .wd-ologo { fill: var(--wd-neutral-ink); }
+.work-diagram .hub .wd-ologo { fill: #fff; }
+.work-diagram .hub .wd-ic { stroke: #fff; }
+.work-diagram .neutral .wd-ic { stroke: var(--wd-neutral-ink); }
+/* Section band labels (sentence case, no tracking) */
+.work-diagram .wd-band-t { fill: var(--wd-muted); font-size: 12.5px; font-weight: 600; letter-spacing: 0; }
+/* Offline (prebuilt) section: a solid, quiet block, set apart from the dashed
+   per-query sections. */
+.work-diagram .wd-offline { fill: var(--wd-offbg); stroke: var(--wd-zone-b); stroke-width: 1.2; }
+.work-diagram .wd-offline-t { fill: var(--wd-faint); font-size: 10.5px; font-family: var(--font-mono), monospace; }
+/* Real example text inside the result card */
+.work-diagram .wd-real { fill: var(--wd-blue-ink); opacity: 0.82; font-size: 11.5px; }
+.work-diagram .wd-cite { fill: hsl(var(--md-sys-color-primary)); font-size: 10px; font-family: var(--font-mono), monospace; }
+/* Follow-up (AI Mode) chat bubbles in the You panel */
+.work-diagram .wd-qbub { fill: hsl(var(--md-sys-color-primary) / 0.2); }
+.work-diagram .wd-qbub-t { fill: hsl(var(--md-sys-color-primary)); font-size: 12.5px; font-weight: 500; }
+.work-diagram .wd-abub { fill: var(--wd-neutral); }
+.work-diagram .wd-abub-t { fill: var(--wd-neutral-ink); font-size: 12.5px; font-weight: 500; }
+.work-diagram .wd-band-n { fill: var(--wd-faint); font-size: 10.5px; font-family: var(--font-mono), monospace; opacity: 0.85; }
+/* Input mode tabs */
+.work-diagram .wd-tab { fill: hsl(var(--md-sys-color-primary) / 0.14); }
+.work-diagram .wd-tab-t { fill: hsl(var(--md-sys-color-primary)); font-size: 12px; font-weight: 600; }
+.work-diagram .wd-tab-out { fill: none; stroke: var(--wd-zone-b); stroke-width: 1.2; }
+.work-diagram .wd-tab-out-t { fill: var(--wd-muted); font-size: 12px; font-weight: 500; }
+.work-illus { display: block; width: 100%; height: auto; overflow: visible; }
+.work-illus .wi-panel { fill: hsl(var(--md-sys-color-surface-container-low)); }
+/* A floating card with soft depth. Shadow is a no-op on dark grounds, where the
+   border carries the separation instead. */
+.work-illus .wi-card {
+  fill: hsl(var(--md-sys-color-surface-container-lowest));
+  stroke: hsl(var(--md-sys-color-outline-variant));
+  stroke-width: 1.25;
+  filter: drop-shadow(0 2px 6px rgba(24, 33, 56, 0.12));
+}
+:root[data-theme="dark"] .work-illus .wi-card,
+:root:not([data-theme="light"]) .work-illus .wi-card {
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+.work-illus .wi-tint { fill: hsl(var(--md-sys-color-primary) / 0.05); }
+.work-illus .wi-tint-b {
+  fill: hsl(var(--md-sys-color-primary) / 0.05);
+  stroke: hsl(var(--md-sys-color-primary) / 0.15);
+  stroke-width: 1;
+}
+.work-illus .wi-chip-fill { fill: hsl(var(--md-sys-color-surface-container-high)); }
+.work-illus .wi-node {
+  fill: hsl(var(--md-sys-color-surface-container-lowest));
+  stroke: hsl(var(--md-sys-color-outline-variant));
+  stroke-width: 1.5;
+}
+.work-illus .wi-node-soft { fill: hsl(var(--md-sys-color-surface-container-high)); stroke: none; }
+.work-illus .wi-accent {
+  fill: hsl(var(--md-sys-color-primary) / 0.12);
+  stroke: hsl(var(--md-sys-color-primary));
+  stroke-width: 1.5;
+}
+.work-illus .wi-accent-solid { fill: hsl(var(--md-sys-color-primary)); }
+.work-illus .wi-line {
+  fill: none;
+  stroke: hsl(var(--md-sys-color-outline-variant));
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.work-illus .wi-line-dash { stroke-dasharray: 3 4; }
+.work-illus .wi-ink {
+  fill: none;
+  stroke: hsl(var(--md-sys-color-on-surface));
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.work-illus .wi-ink-v { fill: hsl(var(--md-sys-color-on-surface-variant)); }
+.work-illus .wi-accent-ink {
+  fill: none;
+  stroke: hsl(var(--md-sys-color-primary));
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.work-illus .wi-label {
+  fill: hsl(var(--md-sys-color-on-surface-variant));
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+.work-illus .wi-label-a { fill: hsl(var(--md-sys-color-primary)); }
+.work-illus .wi-mono {
+  fill: hsl(var(--md-sys-color-on-surface-variant));
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+}
+.work-illus .wi-dot { fill: hsl(var(--md-sys-color-outline)); }
+.work-illus .wi-dot-a { fill: hsl(var(--md-sys-color-primary)); }
+.work-illus .wi-dot-2 { fill: hsl(var(--md-sys-color-tertiary)); }
+.work-illus .wi-bar { fill: hsl(var(--md-sys-color-outline-variant)); }
+.work-illus .wi-bar-a { fill: hsl(var(--md-sys-color-primary)); }
+.feature-showcase .lg { display: block; fill: currentColor; }
+.feature-showcase .head { position: relative; }
+.feature-showcase .eyebrow { font-size: 12px; color: var(--faint); font-weight: 500; }
+.feature-showcase .eyebrow .mono { font-family: var(--mono); margin-left: 9px; padding-left: 9px; border-left: 1px solid var(--hair-2); }
+.feature-showcase .fs-title { margin: 13px 0 0; font-size: 25px; line-height: 1.16; font-weight: 600; letter-spacing: -0.018em; max-width: 22ch; color: var(--ink); }
+.feature-showcase .thesis { margin: 13px 0 0; font-size: 16px; line-height: 1.55; color: var(--muted); max-width: 64ch; }
+.feature-showcase .thesis b { color: var(--ink); font-weight: 600; }
+.feature-showcase .sh { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.2; color: var(--ink); }
+.feature-showcase .showcase { margin-top: 24px; }
+.feature-showcase .pills { position: relative; display: inline-flex; background: var(--surface-2); border: 1px solid var(--hair); border-radius: 999px; padding: 4px; }
+.feature-showcase .pillbg { position: absolute; top: 4px; left: 0; height: calc(100% - 8px); border-radius: 999px; background: var(--surface); box-shadow: 0 1px 3px rgba(16, 18, 30, 0.12); transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), width 0.32s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform, width; }
+.feature-showcase .pill { position: relative; z-index: 1; appearance: none; border: 0; background: transparent; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500; color: var(--muted); padding: 7px 15px; border-radius: 999px; transition: color 0.2s; }
+.feature-showcase .pill:hover { color: var(--ink); }
+.feature-showcase .pill.on { color: var(--ink); font-weight: 600; }
+.feature-showcase .frame { position: relative; margin-top: 14px; aspect-ratio: 16 / 9; border: 1px solid var(--hair); border-radius: var(--fs-r1); background: var(--surface-2); overflow: hidden; box-shadow: var(--fs-shadow); }
+.feature-showcase .stage { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.35s ease; }
+.feature-showcase .stage.on { opacity: 1; visibility: visible; }
+.feature-showcase .track { position: absolute; inset: 0; display: flex; transition: transform 0.45s cubic-bezier(0.4, 0, 0.15, 1); }
+.feature-showcase .slide { position: relative; flex: 0 0 100%; height: 100%; }
+.feature-showcase .slide .ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; }
+.feature-showcase .slide .ph .n { font-size: 14px; color: var(--muted); }
+.feature-showcase .slide .ph .f { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.feature-showcase .smedia { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.feature-showcase .mslide { display: flex; align-items: center; gap: 28px; padding: 22px 34px; }
+.feature-showcase .m-art { flex: 0 0 44%; background: var(--surface); border: 1px solid var(--hair); border-radius: 12px; padding: 14px; }
+.feature-showcase .m-art .il { display: block; width: 100%; height: auto; }
+.feature-showcase .m-txt { flex: 1; }
+.feature-showcase .m-h { font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+.feature-showcase .m-b { margin-top: 9px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+.feature-showcase .gstage { display: flex; align-items: center; justify-content: center; padding: 12px 16px; }
+.feature-showcase .gstage .diag { width: 100%; height: auto; max-height: 100%; }
+.feature-showcase .navbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 13px; min-height: 30px; }
+.feature-showcase .ncap { font-size: 13px; color: var(--muted); }
+.feature-showcase .nright { display: flex; align-items: center; gap: 16px; }
+.feature-showcase .nright.hide { visibility: hidden; pointer-events: none; }
+.feature-showcase .ndots { display: flex; gap: 7px; align-items: center; }
+.feature-showcase .ndot { width: 7px; height: 7px; border-radius: 999px; background: var(--hair-2); border: 0; padding: 0; cursor: pointer; transition: width 0.2s, background 0.2s; }
+.feature-showcase .ndot.on { background: var(--primary); width: 19px; }
+.feature-showcase .nbtns { display: flex; gap: 7px; }
+.feature-showcase .nbtn { width: 30px; height: 30px; border-radius: 999px; border: 1px solid var(--hair); background: var(--surface); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.15s; }
+.feature-showcase .nbtn:hover { color: var(--ink); border-color: var(--hair-2); }
+.feature-showcase .nbtn svg { width: 13px; height: 13px; }
+.feature-showcase .meta { display: grid; grid-template-columns: 206px 1fr; gap: 40px; margin-top: 34px; align-items: start; }
+.feature-showcase .meta .band { margin-top: 0; }
+.feature-showcase .meta .models { margin-top: 11px; gap: 10px; }
+.feature-showcase .meta .mc { width: 38px; height: 38px; }
+.feature-showcase .meta .mc .lg { width: 17px; height: 17px; }
+.feature-showcase .meta .sg .gl { flex: 0 0 96px; }
+.feature-showcase .diag { display: block; width: 100%; height: auto; }
+.feature-showcase .diag text { font-family: var(--sans); }
+.feature-showcase .diag .grid { fill: url(#dots); stroke: none; }
+.feature-showcase .diag .gdot { fill: var(--gdot); }
+.feature-showcase .diag .card { fill: var(--surface); stroke: var(--hair-2); stroke-width: 1; }
+.feature-showcase .diag .card.adv { fill: var(--surface); stroke-dasharray: 4 3; }
+.feature-showcase .diag .card.hub { fill: var(--primary); stroke: none; }
+.feature-showcase .diag .nlabel { font-size: 14.5px; font-weight: 600; fill: var(--ink); }
+.feature-showcase .diag .hub .nlabel { fill: #fff; }
+.feature-showcase .diag .nsub { font-size: 12px; fill: var(--faint); }
+.feature-showcase .diag .hub .nsub { fill: rgba(255, 255, 255, 0.82); }
+.feature-showcase .diag .tile { fill: var(--surface-3); stroke: none; }
+.feature-showcase .diag .tile.hub { fill: rgba(255, 255, 255, 0.2); }
+.feature-showcase .diag .gl { fill: none; stroke: var(--muted); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.feature-showcase .diag .hub .gl { stroke: #fff; }
+.feature-showcase .diag .edge { fill: none; stroke: var(--hair-2); stroke-width: 1.7; stroke-linejoin: round; stroke-linecap: round; }
+.feature-showcase .diag .edge.dash { stroke-dasharray: 4 4; }
+.feature-showcase .diag marker path { fill: var(--hair-2); }
+.feature-showcase .diag .cont { fill: none; stroke: var(--hair-2); stroke-width: 1; }
+.feature-showcase .diag .cont-t { font-size: 12px; font-weight: 600; fill: var(--ink); }
+.feature-showcase .diag .cap { font-size: 11px; fill: var(--faint); }
+.feature-showcase .diag .mini { fill: var(--surface); stroke: var(--hair-2); stroke-width: 1; }
+.feature-showcase .diag .mini.dash { stroke-dasharray: 4 3; }
+.feature-showcase .diag .mini-t { font-size: 11px; font-weight: 600; fill: var(--ink); }
+.feature-showcase .diag .mini-t.pt { font-size: 10px; }
+.feature-showcase .diag .chip { fill: var(--surface); stroke: var(--hair-2); stroke-width: 1; }
+.feature-showcase .diag .hub .chip { fill: #fff; stroke: none; }
+.feature-showcase .diag .cl { fill: var(--muted); }
+.feature-showcase .diag .hub .cl { fill: var(--primary); }
+.feature-showcase .diag .lbl { font-size: 12px; fill: var(--faint); }
+.feature-showcase .diag .flabel rect { fill: var(--surface-2); }
+.feature-showcase .il-c { fill: var(--surface); stroke: var(--hair-2); stroke-width: 1.2; }
+.feature-showcase .il-a { fill: var(--primary); stroke: none; }
+.feature-showcase .il-aw { fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.feature-showcase .il-mi { fill: none; stroke: var(--muted); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.feature-showcase .il-l { fill: none; stroke: var(--hair-2); stroke-width: 1.4; }
+.feature-showcase .il-al { fill: none; stroke: var(--primary); stroke-width: 1.6; }
+.feature-showcase .il-mar { fill: var(--primary); }
+.feature-showcase .il-f { fill: var(--surface-3); }
+.feature-showcase .il-f2 { fill: var(--surface-2); }
+.feature-showcase .il-g { fill: none; stroke: var(--hair); stroke-width: 1; }
+.feature-showcase .il-dot { fill: var(--muted); }
+.feature-showcase .band { margin-top: 50px; }
+.feature-showcase .models { margin-top: 18px; display: flex; gap: 13px; flex-wrap: wrap; }
+.feature-showcase .model { position: relative; outline: none; }
+.feature-showcase .mc { width: 42px; height: 42px; border-radius: var(--fs-rf); background: var(--surface); border: 1px solid var(--hair); display: flex; align-items: center; justify-content: center; color: var(--ink); transition: transform 0.16s ease, box-shadow 0.16s ease; }
+.feature-showcase .mc .lg { width: 19px; height: 19px; }
+.feature-showcase .model:hover .mc,
+.feature-showcase .model:focus-visible .mc { transform: translateY(-5px); box-shadow: var(--fs-shadow); }
+.feature-showcase .tip { position: absolute; left: 50%; bottom: calc(100% - 2px); transform: translateX(-50%); white-space: nowrap; background: var(--surface); border: 1px solid var(--hair); border-radius: 9px; padding: 6px 10px; box-shadow: var(--fs-shadow); opacity: 0; pointer-events: none; transition: opacity 0.16s ease; z-index: 3; }
+.feature-showcase .model:hover .tip,
+.feature-showcase .model:focus-visible .tip { opacity: 1; }
+.feature-showcase .tip .nm { display: block; font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.feature-showcase .tip .id { display: block; font-family: var(--mono); font-size: 11px; color: var(--faint); line-height: 1.35; }
+.feature-showcase .tip:after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--hair); }
+.feature-showcase .stack { margin-top: 18px; display: flex; flex-direction: column; gap: 16px; }
+.feature-showcase .sg { display: flex; gap: 18px; align-items: baseline; }
+.feature-showcase .sg .gl { flex: 0 0 108px; font-size: 12px; color: var(--faint); }
+.feature-showcase .sg .gi { display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.feature-showcase .si { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; color: var(--ink); }
+.feature-showcase .si .lg { width: 15px; height: 15px; color: var(--muted); }
+.feature-showcase .si .mk { flex: 0 0 auto; width: 15px; height: 15px; border-radius: 4px; border: 1px solid var(--hair-2); display: inline-flex; align-items: center; justify-content: center; line-height: 1; font-size: 8px; font-weight: 600; color: var(--muted); }
+@media (max-width: 640px) { .feature-showcase .meta { grid-template-columns: 1fr; gap: 22px; } }
+@media (max-width: 600px) { .feature-showcase .mslide { flex-direction: column; align-items: flex-start; gap: 14px; padding: 18px; } }
+
+
+/* ---- Claude-style architecture illustration (Orchestration tab) ---- */
+.feature-showcase .gstage .cidiag{max-height:100%}
+
+  .feature-showcase .cidiag {display:block;width:100%;height:auto;font-family:var(--sans)}
+  .feature-showcase .cidiag text {font-family:var(--sans)}
+  .feature-showcase .ci-panel {fill:var(--surface-3);stroke:var(--hair);stroke-width:1}
+  .feature-showcase .ci-ptitle {fill:var(--muted);font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .feature-showcase .ci-zone {fill:none;stroke:var(--hair-2);stroke-width:1.1;stroke-dasharray:4 4}
+  .feature-showcase .ci-zone-t {fill:var(--faint);font-size:11px;font-weight:600;letter-spacing:.03em}
+  .feature-showcase .ci-node.agent .ci-box {fill:var(--ci-blue);stroke:none}
+  .feature-showcase .ci-node.dash .ci-box {fill:var(--ci-blue);stroke:var(--ci-frame-b);stroke-width:1.1;stroke-dasharray:4 3}
+  .feature-showcase .ci-node.hub .ci-box {fill:var(--primary);stroke:none}
+  .feature-showcase .ci-node.plain .ci-box {fill:var(--surface);stroke:var(--hair-2);stroke-width:1}
+  .feature-showcase .ci-tile2 {fill:var(--surface);stroke:none}
+  .feature-showcase .ci-node.plain .ci-tile2 {fill:var(--surface-3)}
+  .feature-showcase .ci-node.hub .ci-tile2 {fill:rgba(255,255,255,.2)}
+  .feature-showcase .ci-ic2 {fill:none;stroke:var(--ci-blue-ink);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .feature-showcase .ci-node.plain .ci-ic2 {stroke:var(--muted)}
+  .feature-showcase .ci-node.hub .ci-ic2 {stroke:#fff}
+  .feature-showcase .ci-bt2 {fill:var(--ci-blue-ink);font-size:15px;font-weight:600}
+  .feature-showcase .ci-node.plain .ci-bt2 {fill:var(--ink)}
+  .feature-showcase .ci-node.hub .ci-bt2 {fill:#fff;font-size:16px;font-weight:700}
+  .feature-showcase .ci-bs2 {fill:var(--ci-blue-ink);opacity:.74;font-size:12px}
+  .feature-showcase .ci-node.plain .ci-bs2 {fill:var(--muted);opacity:1}
+  .feature-showcase .ci-node.hub .ci-bs2 {fill:rgba(255,255,255,.85);opacity:1}
+  .feature-showcase .ci-tool2 {fill:var(--ci-blue-ink);opacity:.8;font-size:11px;font-family:var(--mono)}
+  .feature-showcase .ci-node.hub .ci-tool2 {fill:rgba(255,255,255,.9);opacity:1}
+  .feature-showcase .ci-chip {fill:var(--surface);stroke:var(--hair-2);stroke-width:1}
+  .feature-showcase .ci-node.hub .ci-chip {fill:#fff;stroke:none}
+  .feature-showcase .ci-clogo {fill:var(--muted)}
+  .feature-showcase .ci-node.hub .ci-clogo {fill:var(--primary)}
+  .feature-showcase .ci-avatar {fill:var(--surface);stroke:var(--hair-2);stroke-width:1}
+  .feature-showcase .ci-avic {fill:none;stroke:var(--muted);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .feature-showcase .ci-lead {fill:var(--ink);font-size:14.5px;font-weight:600}
+  .feature-showcase .ci-brief {fill:var(--muted);font-size:13.5px}
+  .feature-showcase .ci-file {fill:var(--surface);stroke:var(--hair-2);stroke-width:1}
+  .feature-showcase .ci-fic {fill:none;stroke:var(--muted);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .feature-showcase .ci-fname {fill:var(--muted);font-size:11.5px;font-family:var(--mono)}
+  .feature-showcase .ci-hr {stroke:var(--hair-2);stroke-width:1}
+  .feature-showcase .ci-json {fill:var(--muted);font-size:12.5px;font-family:var(--mono)}
+  .feature-showcase .ci-json.k {fill:var(--faint);font-size:11px}
+  .feature-showcase .ci-tagm {fill:var(--faint);font-size:11.5px;font-family:var(--mono)}
+  .feature-showcase .ci-gate {fill:var(--primary-soft);stroke:var(--primary);stroke-width:1.3}
+  .feature-showcase .ci-gate-t {fill:var(--primary);font-size:12.5px;font-weight:600;font-family:var(--mono)}
+  .feature-showcase .ci-note {fill:var(--faint);font-size:11px;font-family:var(--mono)}
+  .feature-showcase .ci-edge {fill:none;stroke:var(--ci-line);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .feature-showcase .ci-edge.dash {stroke-dasharray:5 4}
+  .feature-showcase .ci-lab {fill:var(--muted);font-size:12px}
+  .feature-showcase .ci-lab.sm {fill:var(--faint);font-size:11px;font-family:var(--mono)}
+  .feature-showcase .ci-flab rect {fill:var(--surface-3)}
+  .feature-showcase .ci-life {stroke:var(--hair-2);stroke-width:1.3}
+  .feature-showcase .ci-node.lane.t0 .ci-lane {fill:var(--l0)}
+  .feature-showcase .ci-node.lane.t1 .ci-lane {fill:var(--l1)}
+  .feature-showcase .ci-node.lane.t2 .ci-lane {fill:var(--l2)}
+  .feature-showcase .ci-node.lane.t3 .ci-lane {fill:var(--l3)}
+  .feature-showcase .ci-node.lane.t4 .ci-lane {fill:var(--l4)}
+  .feature-showcase .ci-node.lane.t5 .ci-lane {fill:var(--l5)}
+  .feature-showcase .ci-lane {stroke:none}
+  .feature-showcase .ci-node.lane .ci-tile2 {fill:rgba(255,255,255,.55)}
+  .feature-showcase .ci-node.lane .ci-ic2 {stroke:var(--ci-blue-ink)}
+  .feature-showcase .ci-lane-t {fill:var(--ci-blue-ink);font-size:12.5px;font-weight:600}
+  .feature-showcase .ci-frame {fill:var(--ci-frame);stroke:var(--ci-frame-b);stroke-width:1.2}
+  .feature-showcase .ci-ftab {fill:var(--ci-frame-b)}
+  .feature-showcase .ci-ftab-t {fill:var(--ci-blue-ink);font-size:12px;font-weight:600}

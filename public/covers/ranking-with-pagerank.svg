@@ -16,19 +16,23 @@
   <style>
     /* 14s loop. Each class is a different kind of arrival, because the figures
        are about different kinds of event: text is typed, a result appears, a
-       panel expands and pushes what is under it away, a curve is drawn.
-       `transform-box: fill-box` is what makes transform-origin mean the shape's
-       own box rather than the whole canvas.
+       panel expands and pushes what is under it away, a curve is drawn. A fade
+       only says "this exists".
 
-       Every animation rests on the finished figure, and reduced motion paints
-       that frame directly. The og:image renderer runs with reduced motion
-       forced, so the still it captures is always the completed drawing. */
+       `transform-box: fill-box` is what makes transform-origin mean the shape's
+       own box rather than the whole canvas. Without it a scaleX on a text line
+       grows from the middle of the page.
+
+       Every class rests on the finished figure, and reduced motion paints that
+       frame directly. The og:image renderer forces reduced motion, so the still
+       it captures is always the completed drawing. Check this after any change
+       to the keyframes: a scaleY(0) that fails to reset removes the shape from
+       every social card, and nobody notices until someone shares the post. */
     .c, .type, .pop, .rise, .expandy { transform-box: fill-box; }
 
     .c { opacity: 0; animation: fade 14s ease-in-out infinite; }
     @keyframes fade { 0% { opacity: 0 } 20%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
 
-    /* a caret running left to right */
     .type { opacity: 0; transform-origin: left center;
              animation: type 14s cubic-bezier(0.25, 0.9, 0.3, 1) infinite; }
     @keyframes type { 0% { opacity: 0; transform: scaleX(0) }
@@ -36,7 +40,6 @@
                       22%, 88% { opacity: var(--o, 1); transform: scaleX(1) }
                       100% { opacity: 0; transform: scaleX(1) } }
 
-    /* lands with a little overshoot, the way a result appears */
     .pop { opacity: 0; transform-origin: center;
             animation: pop 14s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
     @keyframes pop { 0% { opacity: 0; transform: scale(0.6) }
@@ -48,7 +51,6 @@
                       20%, 88% { opacity: var(--o, 1); transform: translateY(0) }
                       100% { opacity: 0; transform: translateY(22px) } }
 
-    /* a panel opening downward, which is what pushes the links off the frame */
     .expandy { opacity: 0; transform-origin: top center;
                 animation: expandy 14s cubic-bezier(0.2, 0.9, 0.25, 1) infinite; }
     @keyframes expandy { 0% { opacity: 0; transform: scaleY(0) }
@@ -73,5 +75,20 @@
   </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <g filter="url(#lift)"><line class="c" x1="346.4" y1="232.5" x2="516.0" y2="302.7" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.00s"/><line class="c" x1="673.4" y1="208.6" x2="516.0" y2="302.7" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.05s"/><line class="c" x1="314.3" y1="385.6" x2="516.0" y2="302.7" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.10s"/><line class="c" x1="705.4" y1="378.2" x2="516.0" y2="302.7" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.15s"/><line class="c" x1="463.2" y1="176.3" x2="346.4" y2="232.5" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.20s"/><line class="c" x1="463.2" y1="176.3" x2="673.4" y2="208.6" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.25s"/><line class="c" x1="590.7" y1="436.8" x2="705.4" y2="378.2" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.30s"/><line class="c" x1="259.1" y1="302.7" x2="314.3" y2="385.6" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.35s"/><line class="c" x1="773.3" y1="295.0" x2="705.4" y2="378.2" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.40s"/><line class="c" x1="416.2" y1="429.5" x2="314.3" y2="385.6" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.45s"/><line class="c" x1="631.2" y1="318.0" x2="516.0" y2="302.7" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.50s"/><line class="c" x1="478.0" y1="363.3" x2="516.0" y2="302.7" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.55s"/><line class="c" x1="673.4" y1="208.6" x2="631.2" y2="318.0" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.60s"/><line class="c" x1="705.4" y1="378.2" x2="631.2" y2="318.0" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.65s"/><line class="c" x1="346.4" y1="232.5" x2="259.1" y2="302.7" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.70s"/><line class="c" x1="590.7" y1="436.8" x2="416.2" y2="429.5" stroke="#004aef" stroke-width="1.1" style="--o:0.26;animation-delay:0.75s"/><circle class="pop" cx="516.0" cy="302.7" r="29.0" fill="#004aef" style="--o:0.87;animation-delay:0.30s"/><circle class="pop" cx="346.4" cy="232.5" r="16.2" fill="#004aef" style="--o:0.55;animation-delay:0.36s"/><circle class="pop" cx="673.4" cy="208.6" r="18.0" fill="#004aef" style="--o:0.59;animation-delay:0.42s"/><circle class="pop" cx="314.3" cy="385.6" r="14.5" fill="#004aef" style="--o:0.51;animation-delay:0.48s"/><circle class="pop" cx="705.4" cy="378.2" r="17.1" fill="#004aef" style="--o:0.57;animation-delay:0.54s"/><circle class="pop" cx="463.2" cy="176.3" r="12.7" fill="#004aef" style="--o:0.46;animation-delay:0.60s"/><circle class="pop" cx="590.7" cy="436.8" r="13.6" fill="#004aef" style="--o:0.48;animation-delay:0.66s"/><circle class="pop" cx="259.1" cy="302.7" r="11.8" fill="#004aef" style="--o:0.44;animation-delay:0.72s"/><circle class="pop" cx="773.3" cy="295.0" r="12.3" fill="#004aef" style="--o:0.45;animation-delay:0.78s"/><circle class="pop" cx="416.2" cy="429.5" r="11.8" fill="#004aef" style="--o:0.44;animation-delay:0.84s"/><circle class="pop" cx="631.2" cy="318.0" r="13.6" fill="#004aef" style="--o:0.48;animation-delay:0.90s"/><circle class="pop" cx="478.0" cy="363.3" r="12.7" fill="#004aef" style="--o:0.46;animation-delay:0.96s"/></g><g class="mark"><line x1="532.0" y1="302.7" x2="574.0" y2="302.7" stroke="#04815a" stroke-width="1.4"/><text x="584.0" y="296.7" font-size="17" fill="#04815a">rank is what other</text><text x="584.0" y="318.7" font-size="17" fill="#04815a">pages give you</text></g><text x="190.0" y="100.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">pages, sized by the authority they collect</text>
+  <defs>
+    <linearGradient id="gblue" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#3d76ff"/><stop offset="1" stop-color="#004aef"/>
+    </linearGradient>
+    <linearGradient id="ggreen" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#6df7cd"/><stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <linearGradient id="gcard" x1="0.1" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.74"/>
+    </linearGradient>
+    <linearGradient id="gchip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7ff"/><stop offset="1" stop-color="#e6ecfa"/>
+    </linearGradient>
+  </defs>
+  <g filter="url(#lift)"><path class="draw" d="M179.6 164.5 L308.5 228.8 L344.2 246.7" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.00s"/><path class="draw" d="M182.9 302.5 L531.1 326.9 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.05s"/><path class="draw" d="M229.9 439.9 L539.3 357.6 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.10s"/><path class="draw" d="M355.2 501.9 L566.7 371.9 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.15s"/><path class="draw" d="M493.8 147.7 L376.5 225.3 L344.2 246.7" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.20s"/><path class="draw" d="M518.5 462.0 L603.8 362.6 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.25s"/><path class="draw" d="M709.8 135.0 L645.9 291.5 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.30s"/><path class="draw" d="M845.1 189.5 L675.1 302.8 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.35s"/><path class="draw" d="M895.8 318.2 L467.0 262.6 L344.2 246.7" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.40s"/><path class="draw" d="M849.5 447.3 L678.2 359.3 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.45s"/><path class="draw" d="M653.6 505.5 L634.3 372.7 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.50s"/><path class="draw" d="M422.8 372.3 L583.1 342.3 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="1.5" opacity="0.30" style="--len:800;animation-delay:0.55s"/><path class="draw" d="M344.2 246.7 L495.4 302.5 L628.6 333.8" fill="none" stroke="#004aef" stroke-width="2.6" opacity="0.5" style="--len:800;animation-delay:0.62s"/><circle class="pop" cx="179.6" cy="164.5" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.25s"/><circle class="pop" cx="182.9" cy="302.5" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.29s"/><circle class="pop" cx="229.9" cy="439.9" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.34s"/><circle class="pop" cx="355.2" cy="501.9" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.39s"/><circle class="pop" cx="493.8" cy="147.7" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.43s"/><circle class="pop" cx="518.5" cy="462.0" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.47s"/><circle class="pop" cx="709.8" cy="135.0" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.52s"/><circle class="pop" cx="845.1" cy="189.5" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.56s"/><circle class="pop" cx="895.8" cy="318.2" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.61s"/><circle class="pop" cx="849.5" cy="447.3" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.66s"/><circle class="pop" cx="653.6" cy="505.5" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.70s"/><circle class="pop" cx="422.8" cy="372.3" r="7" fill="url(#gblue)" style="--o:0.45;animation-delay:0.74s"/><circle class="pop" cx="344.2" cy="246.7" r="19" fill="url(#gblue)" style="--o:0.7;animation-delay:0.75s"/><circle class="pop" cx="628.6" cy="333.8" r="46" fill="url(#ggreen)" style="--o:1;animation-delay:0.88s"/></g><g class="mark"><line x1="648.6" y1="335.8" x2="690.6" y2="335.8" stroke="#04815a" stroke-width="1.4"/><text x="700.6" y="329.8" font-size="17" fill="#04815a">rank is what other</text><text x="700.6" y="351.8" font-size="17" fill="#04815a">pages give you</text></g><text x="190.0" y="100.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">pages, sized by the authority they collect</text>
 </svg>

@@ -1,3 +1,4 @@
+import SelectedWork from "@/components/home/SelectedWork";
 import ProfileHero from "@/components/layout/ProfileHero";
 import FeedBlocks from "@/components/posts/FeedBlocks";
 import { getGlobalMetadata } from "@/lib/global";
@@ -5,6 +6,7 @@ import { IDENTITY } from "@/lib/identity";
 import { createEntityGraph } from "@/lib/jsonld";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
+import { type Project, getFeaturedProjects } from "@/lib/projects";
 import { getProfile } from "@/lib/profile";
 import type { Metadata } from "next";
 
@@ -63,14 +65,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   let profileData: any[] = [];
   let allItems: FeedItem[] = [];
+  let featuredProjects: Project[] = [];
 
   try {
-    const [profileResult, itemsResult] = await Promise.all([
+    const [profileResult, itemsResult, projectsResult] = await Promise.all([
       getProfile(),
       getFeedItems(),
+      getFeaturedProjects(),
     ]);
     profileData = profileResult;
     allItems = itemsResult;
+    featuredProjects = projectsResult;
   } catch (error) {
     console.error("Error fetching data:", error);
     return (
@@ -142,9 +147,14 @@ export default async function Home() {
         imageUrl={imageUrl}
       />
 
+      {/* Selected work: featured projects, rendered from the projects table. */}
+      <div className="mt-14 md:mt-20">
+        <SelectedWork projects={featuredProjects} />
+      </div>
+
       {/* Asymmetric two-zone writing index: a sticky rail (heading, standfirst,
           year index) beside the list — fills a wide viewport with structure. */}
-      <section className="mt-12 max-w-[960px] md:mt-16">
+      <section className="mt-12 max-w-[1120px] md:mt-16">
         <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[64px]">
           <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
             <h2 className="text-[26px] font-medium tracking-[-0.02em] text-md-on-surface">

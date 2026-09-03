@@ -1,12 +1,26 @@
 import {
   boolean,
   integer,
+  jsonb,
   pgTable,
   primaryKey,
   serial,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+
+// Shapes of the rich showcase JSON stored on a project. Kept here so both the
+// schema ($type) and src/lib/projects.ts share one source of truth.
+export type ProjectFeature = { name: string; desc: string };
+export type ProjectLogo = { name: string; mark?: string; letter?: string };
+export type ProjectStackGroup = { group: string; items: ProjectLogo[] };
+export type ProjectMedia = {
+  type: "image" | "video";
+  src: string;
+  caption?: string;
+};
+// A single "by the numbers" stat: a hard figure and what it measures.
+export type ProjectMetric = { value: string; label: string };
 
 // Site-wide settings (single row)
 export const global = pgTable("global", {
@@ -135,11 +149,19 @@ export const projects = pgTable("projects", {
   slug: text("slug").primaryKey(),
   title: text("title").notNull(),
   tagline: text("tagline"), // one-liner for cards
-  content: text("content"), // HTML — long-form writeup on the detail page
+  description: text("description"), // showcase paragraph under the title
+  content: text("content"), // HTML long-form writeup on the detail page
   thumbnail: text("thumbnail"),
   repoUrl: text("repo_url"),
   liveUrl: text("live_url"),
-  techTags: text("tech_tags").array(), // e.g. ["Python", "Next.js"]
+  techTags: text("tech_tags").array(), // legacy flat tags; stack is the source now
+  parentSlug: text("parent_slug"), // soft self-ref: a child piece of a parent project
+  // Rich showcase content (see the Project* types above).
+  features: jsonb("features").$type<ProjectFeature[]>().notNull().default([]),
+  stack: jsonb("stack").$type<ProjectStackGroup[]>().notNull().default([]),
+  models: jsonb("models").$type<ProjectLogo[]>().notNull().default([]),
+  media: jsonb("media").$type<ProjectMedia[]>().notNull().default([]),
+  metrics: jsonb("metrics").$type<ProjectMetric[]>().notNull().default([]),
   status: text("status").notNull().default("draft"), // draft | published
   buildStatus: text("build_status").notNull().default("live"), // live | wip | archived
   featured: boolean("featured").notNull().default(false),

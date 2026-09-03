@@ -13,6 +13,11 @@ interface FileExplorerProps {
 const navItems = [
   { href: "/", label: "Home", match: (p: string) => p === "/" },
   {
+    href: "/work",
+    label: "Work",
+    match: (p: string) => p.startsWith("/work"),
+  },
+  {
     href: "/posts",
     label: "Posts",
     match: (p: string) => p.startsWith("/posts"),
@@ -98,7 +103,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           scrolled ? "bg-md-background/80 backdrop-blur-lg" : "bg-md-background"
         }`}
       >
-        <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-14 xl:px-20 h-16 flex items-center gap-8">
+        <div className="mx-auto max-w-[1140px] px-5 sm:px-8 lg:px-12 h-16 flex items-center gap-8">
           <Link
             href="/"
             className="text-[17px] font-medium tracking-tight text-md-on-surface whitespace-nowrap"
@@ -145,7 +150,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-14 xl:px-20 pb-16">
+      <main className="mx-auto max-w-[1140px] px-5 sm:px-8 lg:px-12 pb-16">
         {children}
       </main>
     </div>

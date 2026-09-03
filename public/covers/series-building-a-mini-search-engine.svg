@@ -16,19 +16,23 @@
   <style>
     /* 14s loop. Each class is a different kind of arrival, because the figures
        are about different kinds of event: text is typed, a result appears, a
-       panel expands and pushes what is under it away, a curve is drawn.
-       `transform-box: fill-box` is what makes transform-origin mean the shape's
-       own box rather than the whole canvas.
+       panel expands and pushes what is under it away, a curve is drawn. A fade
+       only says "this exists".
 
-       Every animation rests on the finished figure, and reduced motion paints
-       that frame directly. The og:image renderer runs with reduced motion
-       forced, so the still it captures is always the completed drawing. */
+       `transform-box: fill-box` is what makes transform-origin mean the shape's
+       own box rather than the whole canvas. Without it a scaleX on a text line
+       grows from the middle of the page.
+
+       Every class rests on the finished figure, and reduced motion paints that
+       frame directly. The og:image renderer forces reduced motion, so the still
+       it captures is always the completed drawing. Check this after any change
+       to the keyframes: a scaleY(0) that fails to reset removes the shape from
+       every social card, and nobody notices until someone shares the post. */
     .c, .type, .pop, .rise, .expandy { transform-box: fill-box; }
 
     .c { opacity: 0; animation: fade 14s ease-in-out infinite; }
     @keyframes fade { 0% { opacity: 0 } 20%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
 
-    /* a caret running left to right */
     .type { opacity: 0; transform-origin: left center;
              animation: type 14s cubic-bezier(0.25, 0.9, 0.3, 1) infinite; }
     @keyframes type { 0% { opacity: 0; transform: scaleX(0) }
@@ -36,7 +40,6 @@
                       22%, 88% { opacity: var(--o, 1); transform: scaleX(1) }
                       100% { opacity: 0; transform: scaleX(1) } }
 
-    /* lands with a little overshoot, the way a result appears */
     .pop { opacity: 0; transform-origin: center;
             animation: pop 14s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
     @keyframes pop { 0% { opacity: 0; transform: scale(0.6) }
@@ -48,7 +51,6 @@
                       20%, 88% { opacity: var(--o, 1); transform: translateY(0) }
                       100% { opacity: 0; transform: translateY(22px) } }
 
-    /* a panel opening downward, which is what pushes the links off the frame */
     .expandy { opacity: 0; transform-origin: top center;
                 animation: expandy 14s cubic-bezier(0.2, 0.9, 0.25, 1) infinite; }
     @keyframes expandy { 0% { opacity: 0; transform: scaleY(0) }
@@ -73,5 +75,20 @@
   </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <g filter="url(#lift)"><polygon class="c" points="165.6,123.1 866.4,123.1 838.7,489.8 193.3,489.8" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.2" style="--o:1;animation-delay:0.00s"/><polygon class="c" points="211.2,149.9 820.8,149.9 816.8,210.6 215.2,210.6" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.2" style="--o:1;animation-delay:0.15s"/><polygon class="type" points="234.2,170.3 566.6,170.3 566.4,190.5 235.4,190.5" fill="#004aef" style="--o:0.9;animation-delay:0.25s"/><polygon class="pop" points="765.8,160.9 805.6,160.9 803.2,199.8 763.7,199.8" fill="#004aef" style="--o:0.95;animation-delay:0.30s"/><polygon class="rise" points="217.5,245.3 377.0,245.3 377.4,259.0 218.4,259.0" fill="#5f656d" style="--o:0.35;animation-delay:0.45s"/><polygon class="rise" points="218.7,263.5 685.9,263.5 685.1,283.7 220.0,283.7" fill="#004aef" style="--o:0.95;animation-delay:0.47s"/><polygon class="rise" points="220.4,290.4 666.3,290.4 665.9,303.1 221.3,303.1" fill="#5f656d" style="--o:0.2;animation-delay:0.49s"/><polygon class="rise" points="221.5,306.9 554.7,306.9 554.6,319.5 222.4,319.5" fill="#5f656d" style="--o:0.2;animation-delay:0.51s"/><polygon class="rise" points="223.1,330.1 379.6,330.1 380.0,343.4 223.9,343.4" fill="#5f656d" style="--o:0.35;animation-delay:0.59s"/><polygon class="rise" points="224.2,347.7 682.7,347.7 682.0,367.1 225.5,367.1" fill="#004aef" style="--o:0.95;animation-delay:0.61s"/><polygon class="rise" points="225.9,373.6 663.5,373.6 663.1,385.9 226.7,385.9" fill="#5f656d" style="--o:0.2;animation-delay:0.63s"/><polygon class="rise" points="227.0,389.5 554.0,389.5 553.9,401.7 227.8,401.7" fill="#5f656d" style="--o:0.2;animation-delay:0.65s"/><polygon class="rise" points="228.5,411.9 382.1,411.9 382.5,424.6 229.3,424.6" fill="#5f656d" style="--o:0.35;animation-delay:0.73s"/><polygon class="rise" points="229.6,428.8 679.7,428.8 679.0,447.5 230.8,447.5" fill="#004aef" style="--o:0.95;animation-delay:0.75s"/><polygon class="rise" points="231.2,453.8 660.8,453.8 660.4,465.6 232.0,465.6" fill="#5f656d" style="--o:0.2;animation-delay:0.77s"/><polygon class="rise" points="232.3,469.1 553.3,469.1 553.2,480.8 233.0,480.8" fill="#5f656d" style="--o:0.2;animation-delay:0.79s"/></g><g class="mark"><line x1="683.6" y1="271.7" x2="725.6" y2="271.7" stroke="#04815a" stroke-width="1.4"/><text x="735.6" y="265.7" font-size="17" fill="#04815a">nine parts, from the</text><text x="735.6" y="287.7" font-size="17" fill="#04815a">crawler to this page</text></g>
+  <defs>
+    <linearGradient id="gblue" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#3d76ff"/><stop offset="1" stop-color="#004aef"/>
+    </linearGradient>
+    <linearGradient id="ggreen" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#6df7cd"/><stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <linearGradient id="gcard" x1="0.1" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.74"/>
+    </linearGradient>
+    <linearGradient id="gchip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7ff"/><stop offset="1" stop-color="#e6ecfa"/>
+    </linearGradient>
+  </defs>
+  <g filter="url(#lift)"><path class="rise" d="M421.1 279.8 Q420.8 266.8 433.8 266.8 L883.7 266.8 Q896.7 266.8 895.6 279.7 L878.5 482.1 Q877.4 495.1 864.4 495.1 L438.6 495.1 Q425.6 495.1 425.4 482.1 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.42;animation-delay:0.04s"/><path class="rise" d="M394.1 263.7 Q393.8 250.7 406.8 250.7 L858.4 250.7 Q871.4 250.7 870.3 263.6 L854.3 467.6 Q853.3 480.6 840.3 480.6 L413.0 480.6 Q400.0 480.6 399.7 467.6 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.47;animation-delay:0.11s"/><path class="rise" d="M367.0 247.5 Q366.6 234.5 379.6 234.5 L832.9 234.5 Q845.9 234.5 844.9 247.4 L830.0 453.0 Q829.0 466.0 816.0 466.0 L387.2 466.0 Q374.2 466.0 373.8 453.0 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.52;animation-delay:0.18s"/><path class="rise" d="M339.7 231.1 Q339.2 218.2 352.2 218.2 L807.2 218.2 Q820.2 218.2 819.3 231.1 L805.5 438.3 Q804.6 451.3 791.6 451.3 L361.2 451.3 Q348.2 451.3 347.7 438.3 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.5700000000000001;animation-delay:0.25s"/><path class="rise" d="M312.1 214.7 Q311.5 201.7 324.5 201.7 L781.3 201.7 Q794.3 201.7 793.5 214.7 L780.8 423.5 Q780.0 436.5 767.0 436.5 L335.0 436.5 Q322.0 436.5 321.5 423.5 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.62;animation-delay:0.32s"/><path class="rise" d="M284.4 198.1 Q283.7 185.2 296.7 185.2 L755.2 185.2 Q768.2 185.2 767.5 198.1 L755.9 408.6 Q755.2 421.6 742.2 421.6 L308.7 421.6 Q295.7 421.6 295.0 408.6 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.6699999999999999;animation-delay:0.39s"/><path class="rise" d="M256.5 181.5 Q255.7 168.5 268.7 168.5 L729.0 168.5 Q742.0 168.5 741.3 181.5 L730.9 393.6 Q730.3 406.6 717.3 406.6 L282.2 406.6 Q269.2 406.6 268.4 393.6 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.72;animation-delay:0.46s"/><path class="rise" d="M228.3 164.7 Q227.5 151.7 240.5 151.7 L702.5 151.7 Q715.5 151.7 715.0 164.7 L705.7 378.5 Q705.2 391.5 692.2 391.5 L255.5 391.5 Q242.5 391.5 241.6 378.5 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:0.77;animation-delay:0.53s"/><path class="rise" d="M200.0 147.7 Q199.1 134.8 212.1 134.8 L675.9 134.8 Q688.9 134.8 688.4 147.7 L680.4 363.3 Q679.9 376.3 666.9 376.3 L228.6 376.3 Q215.6 376.3 214.7 363.3 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:1;animation-delay:0.62s"/><path class="rise" d="M230.4 174.7 Q229.3 158.0 246.1 158.0 L542.3 158.0 Q559.0 158.0 558.8 174.7 L558.8 174.7 Q558.7 191.4 542.0 191.4 L248.1 191.4 Q231.4 191.4 230.4 174.7 Z" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.2" style="--o:1;animation-delay:0.68s"/><polygon class="type" points="251.5,168.9 444.5,168.9 444.7,181.4 252.2,181.4" fill="#004aef" style="--o:0.9;animation-delay:0.76s"/><path class="pop" d="M580.3 174.7 Q580.5 158.0 597.2 158.0 L642.6 158.0 Q659.3 158.0 658.8 174.7 L658.8 174.7 Q658.3 191.4 641.6 191.4 L596.7 191.4 Q580.0 191.4 580.3 174.7 Z" fill="url(#gblue)" style="--o:0.9;animation-delay:0.80s"/><polygon class="c" points="233.8,230.4 332.6,230.4 332.9,238.5 234.3,238.5" fill="#5f656d" style="--o:0.26;animation-delay:0.84s"/><polygon class="rise" points="234.7,243.8 544.1,243.8 544.1,255.9 235.4,255.9" fill="#004aef" style="--o:0.85;animation-delay:0.87s"/><polygon class="c" points="236.9,280.8 334.6,280.8 334.9,288.7 237.4,288.7" fill="#5f656d" style="--o:0.26;animation-delay:0.89s"/><polygon class="rise" points="237.8,293.9 488.2,293.9 488.2,305.7 238.5,305.7" fill="#004aef" style="--o:0.5;animation-delay:0.92s"/><polygon class="c" points="240.0,330.0 336.6,330.0 336.9,337.8 240.5,337.8" fill="#5f656d" style="--o:0.26;animation-delay:0.94s"/><polygon class="rise" points="240.8,342.8 488.5,342.8 488.6,354.4 241.5,354.4" fill="#004aef" style="--o:0.5;animation-delay:0.97s"/></g><g class="mark"><line x1="676.6" y1="250.7" x2="718.6" y2="250.7" stroke="#04815a" stroke-width="1.4"/><text x="728.6" y="244.7" font-size="17" fill="#04815a">nine parts, from the</text><text x="728.6" y="266.7" font-size="17" fill="#04815a">crawler to this page</text></g>
 </svg>

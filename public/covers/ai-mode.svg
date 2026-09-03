@@ -16,19 +16,23 @@
   <style>
     /* 14s loop. Each class is a different kind of arrival, because the figures
        are about different kinds of event: text is typed, a result appears, a
-       panel expands and pushes what is under it away, a curve is drawn.
-       `transform-box: fill-box` is what makes transform-origin mean the shape's
-       own box rather than the whole canvas.
+       panel expands and pushes what is under it away, a curve is drawn. A fade
+       only says "this exists".
 
-       Every animation rests on the finished figure, and reduced motion paints
-       that frame directly. The og:image renderer runs with reduced motion
-       forced, so the still it captures is always the completed drawing. */
+       `transform-box: fill-box` is what makes transform-origin mean the shape's
+       own box rather than the whole canvas. Without it a scaleX on a text line
+       grows from the middle of the page.
+
+       Every class rests on the finished figure, and reduced motion paints that
+       frame directly. The og:image renderer forces reduced motion, so the still
+       it captures is always the completed drawing. Check this after any change
+       to the keyframes: a scaleY(0) that fails to reset removes the shape from
+       every social card, and nobody notices until someone shares the post. */
     .c, .type, .pop, .rise, .expandy { transform-box: fill-box; }
 
     .c { opacity: 0; animation: fade 14s ease-in-out infinite; }
     @keyframes fade { 0% { opacity: 0 } 20%, 88% { opacity: var(--o, 1) } 100% { opacity: 0 } }
 
-    /* a caret running left to right */
     .type { opacity: 0; transform-origin: left center;
              animation: type 14s cubic-bezier(0.25, 0.9, 0.3, 1) infinite; }
     @keyframes type { 0% { opacity: 0; transform: scaleX(0) }
@@ -36,7 +40,6 @@
                       22%, 88% { opacity: var(--o, 1); transform: scaleX(1) }
                       100% { opacity: 0; transform: scaleX(1) } }
 
-    /* lands with a little overshoot, the way a result appears */
     .pop { opacity: 0; transform-origin: center;
             animation: pop 14s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
     @keyframes pop { 0% { opacity: 0; transform: scale(0.6) }
@@ -48,7 +51,6 @@
                       20%, 88% { opacity: var(--o, 1); transform: translateY(0) }
                       100% { opacity: 0; transform: translateY(22px) } }
 
-    /* a panel opening downward, which is what pushes the links off the frame */
     .expandy { opacity: 0; transform-origin: top center;
                 animation: expandy 14s cubic-bezier(0.2, 0.9, 0.25, 1) infinite; }
     @keyframes expandy { 0% { opacity: 0; transform: scaleY(0) }
@@ -73,5 +75,20 @@
   </style>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <g filter="url(#lift)"><polygon class="c" points="165.3,118.8 866.7,118.8 838.4,493.5 193.6,493.5" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.2" style="--o:1;animation-delay:0.00s"/><polygon class="c" points="209.8,129.3 822.2,129.3 818.1,191.9 213.9,191.9" fill="#ffffff" stroke="#dfe4ec" stroke-width="1.2" style="--o:1;animation-delay:0.10s"/><polygon class="type" points="233.0,150.4 639.4,150.4 638.8,171.2 234.2,171.2" fill="#004aef" style="--o:0.9;animation-delay:0.20s"/><polygon class="pop" points="766.9,140.7 806.9,140.7 804.4,180.8 764.7,180.8" fill="#004aef" style="--o:0.95;animation-delay:0.25s"/><polygon class="pop" points="222.8,217.7 394.4,217.7 395.1,243.5 224.5,243.5" fill="#004aef" style="--o:0.13;animation-delay:0.40s"/><polygon class="pop" points="237.5,224.6 373.2,224.6 373.6,236.7 238.3,236.7" fill="#004aef" style="--o:0.45;animation-delay:0.45s"/><polygon class="pop" points="408.7,217.7 551.8,217.7 551.6,243.5 409.3,243.5" fill="#004aef" style="--o:0.13;animation-delay:0.46s"/><polygon class="pop" points="423.2,224.6 530.3,224.6 530.2,236.7 423.4,236.7" fill="#004aef" style="--o:0.45;animation-delay:0.51s"/><polygon class="pop" points="587.5,217.7 773.5,217.7 772.0,243.5 587.1,243.5" fill="#004aef" style="--o:0.13;animation-delay:0.52s"/><polygon class="pop" points="601.7,224.6 751.6,224.6 751.0,236.7 601.5,236.7" fill="#004aef" style="--o:0.45;animation-delay:0.57s"/><polygon class="pop" points="225.0,252.0 359.9,252.0 360.7,277.5 226.6,277.5" fill="#004aef" style="--o:0.13;animation-delay:0.58s"/><polygon class="pop" points="239.6,258.8 338.8,258.8 339.3,270.7 240.3,270.7" fill="#004aef" style="--o:0.45;animation-delay:0.63s"/><polygon class="pop" points="381.1,252.0 544.4,252.0 544.2,277.5 381.9,277.5" fill="#004aef" style="--o:0.13;animation-delay:0.64s"/><polygon class="pop" points="395.5,258.8 523.1,258.8 523.1,270.7 395.8,270.7" fill="#004aef" style="--o:0.45;animation-delay:0.69s"/><polygon class="pop" points="565.7,252.0 714.7,252.0 713.6,277.5 565.4,277.5" fill="#004aef" style="--o:0.13;animation-delay:0.70s"/><polygon class="pop" points="579.8,258.8 693.2,258.8 692.7,270.7 579.6,270.7" fill="#004aef" style="--o:0.45;animation-delay:0.75s"/><line class="c" x1="309.9" y1="246.8" x2="516.0" y2="321.8" stroke="#004aef" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/><line class="c" x1="480.5" y1="246.8" x2="516.0" y2="321.8" stroke="#004aef" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/><line class="c" x1="679.4" y1="246.8" x2="516.0" y2="321.8" stroke="#004aef" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/><line class="c" x1="293.8" y1="280.6" x2="516.0" y2="321.8" stroke="#004aef" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/><line class="c" x1="463.1" y1="280.6" x2="516.0" y2="321.8" stroke="#004aef" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/><line class="c" x1="639.4" y1="280.6" x2="516.0" y2="321.8" stroke="#004aef" stroke-width="1" style="--o:0.18;animation-delay:0.85s"/><polygon class="expandy" points="209.3,333.4 822.7,333.4 812.8,475.5 219.2,475.5" fill="#07ef9c" style="--o:0.1;animation-delay:0.95s"/><polygon class="type" points="238.2,349.6 779.9,349.6 779.1,363.3 239.1,363.3" fill="#004aef" style="--o:0.4;animation-delay:1.05s"/><polygon class="type" points="239.7,373.2 806.1,373.2 805.2,386.8 240.6,386.8" fill="#004aef" style="--o:0.4;animation-delay:1.10s"/><polygon class="type" points="241.2,396.6 722.1,396.6 721.5,410.1 242.0,410.1" fill="#004aef" style="--o:0.4;animation-delay:1.15s"/><polygon class="type" points="242.7,419.7 762.0,419.7 761.3,433.1 243.5,433.1" fill="#004aef" style="--o:0.4;animation-delay:1.20s"/><polygon class="type" points="244.1,442.6 584.0,442.6 583.8,455.8 244.9,455.8" fill="#004aef" style="--o:0.4;animation-delay:1.25s"/></g><g class="mark"><line x1="738.5" y1="246.8" x2="780.5" y2="246.8" stroke="#04815a" stroke-width="1.4"/><text x="790.5" y="240.8" font-size="17" fill="#04815a">six searches the user</text><text x="790.5" y="262.8" font-size="17" fill="#04815a">never typed</text></g>
+  <defs>
+    <linearGradient id="gblue" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#3d76ff"/><stop offset="1" stop-color="#004aef"/>
+    </linearGradient>
+    <linearGradient id="ggreen" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#6df7cd"/><stop offset="1" stop-color="#07ef9c"/>
+    </linearGradient>
+    <linearGradient id="gcard" x1="0.1" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.74"/>
+    </linearGradient>
+    <linearGradient id="gchip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7ff"/><stop offset="1" stop-color="#e6ecfa"/>
+    </linearGradient>
+  </defs>
+  <g filter="url(#lift)"><path class="rise" d="M273.4 166.0 Q272.6 152.0 286.6 152.0 L745.4 152.0 Q759.4 152.0 758.6 166.0 L757.9 180.1 Q757.2 194.1 743.2 194.1 L288.8 194.1 Q274.8 194.1 274.1 180.1 Z" fill="url(#gcard)" stroke="#dfe4ec" stroke-width="1.2" style="--o:1;animation-delay:0.00s"/><text x="302.3" y="180.0" text-anchor="start" font-size="12" fill="#5f656d" font-weight="500">which crm should a 20-person team buy?</text><path class="draw" d="M516.0 194.1 L516.0 257.5 L247.8 279.5 L249.9 315.7" fill="none" stroke="#004aef" stroke-width="1.8" opacity="0.42" style="--len:600;animation-delay:0.16s"/><path class="pop" d="M129.9 329.6 Q128.7 315.7 142.7 315.7 L357.2 315.7 Q371.2 315.7 371.7 329.7 L372.0 339.1 Q372.4 353.1 358.4 353.1 L145.9 353.1 Q131.9 353.1 130.7 339.1 Z" fill="url(#gchip)" style="--o:0.85;animation-delay:0.36s"/><text x="251.4" y="340.7" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400">best crm for smes</text><path class="draw" d="M252.2 353.1 L254.6 393.3 L516.0 413.9 L516.0 448.0" fill="none" stroke="#004aef" stroke-width="1.8" opacity="0.42" style="--len:600;animation-delay:0.56s"/><path class="draw" d="M516.0 194.1 L516.0 257.5 L516.0 279.5 L516.0 315.7" fill="none" stroke="#004aef" stroke-width="1.8" opacity="0.42" style="--len:600;animation-delay:0.22s"/><path class="pop" d="M395.1 329.7 Q394.7 315.7 408.7 315.7 L623.3 315.7 Q637.3 315.7 636.9 329.7 L636.7 339.1 Q636.3 353.1 622.3 353.1 L409.7 353.1 Q395.7 353.1 395.3 339.1 Z" fill="url(#gchip)" style="--o:0.85;animation-delay:0.43s"/><text x="516.0" y="340.7" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400">crm pricing 2026</text><path class="draw" d="M516.0 353.1 L516.0 393.3 L516.0 413.9 L516.0 448.0" fill="none" stroke="#004aef" stroke-width="1.8" opacity="0.42" style="--len:600;animation-delay:0.62s"/><path class="draw" d="M516.0 194.1 L516.0 257.5 L784.2 279.5 L782.1 315.7" fill="none" stroke="#004aef" stroke-width="1.8" opacity="0.42" style="--len:600;animation-delay:0.28s"/><path class="pop" d="M660.3 329.7 Q660.8 315.7 674.8 315.7 L889.3 315.7 Q903.3 315.7 902.1 329.6 L901.3 339.1 Q900.1 353.1 886.1 353.1 L673.6 353.1 Q659.6 353.1 660.0 339.1 Z" fill="url(#gchip)" style="--o:0.85;animation-delay:0.50s"/><text x="780.6" y="340.7" text-anchor="middle" font-size="12" fill="#5f656d" font-weight="400">crm vs spreadsheet</text><path class="draw" d="M779.8 353.1 L777.4 393.3 L516.0 413.9 L516.0 448.0" fill="none" stroke="#004aef" stroke-width="1.8" opacity="0.42" style="--len:600;animation-delay:0.68s"/><path class="expandy" d="M288.9 462.0 Q288.2 448.0 302.2 448.0 L729.8 448.0 Q743.8 448.0 743.1 462.0 L742.1 480.8 Q741.3 494.8 727.3 494.8 L304.7 494.8 Q290.7 494.8 289.9 480.8 Z" fill="url(#ggreen)" style="--o:0.22;animation-delay:0.78s"/><text x="516.0" y="476.5" text-anchor="middle" font-size="13" fill="#04815a" font-weight="500">one answer</text></g><g class="mark"><line x1="765.7" y1="253.9" x2="807.7" y2="253.9" stroke="#04815a" stroke-width="1.4"/><text x="817.7" y="247.9" font-size="17" fill="#04815a">one question becomes</text><text x="817.7" y="269.9" font-size="17" fill="#04815a">three searches</text></g><text x="190.0" y="100.0" text-anchor="start" font-size="14" fill="#5f656d" font-weight="400">the fan-out, and what comes back</text>
 </svg>
