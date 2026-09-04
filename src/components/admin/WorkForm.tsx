@@ -6,10 +6,8 @@ import RichEditor from "@/components/admin/RichEditor";
 import { useToast } from "@/components/admin/Toast";
 import { MARK_IDS } from "@/components/home/logo-marks";
 import type {
-  ProjectFeature,
   ProjectLogo,
   ProjectMedia,
-  ProjectMetric,
   ProjectStackGroup,
 } from "@/db/schema";
 import { useRouter } from "next/navigation";
@@ -23,18 +21,14 @@ interface WorkFormProps {
     description: string;
     content: string;
     thumbnail: string;
-    repoUrl: string;
-    liveUrl: string;
     parentSlug: string;
     status: string;
     buildStatus: string;
     featured: boolean;
     sortOrder: number;
-    features: ProjectFeature[];
     stack: ProjectStackGroup[];
     models: ProjectLogo[];
     media: ProjectMedia[];
-    metrics: ProjectMetric[];
     postSlugs: string[];
   };
   allPosts: Array<{ slug: string; title: string }>;
@@ -44,14 +38,6 @@ interface WorkFormProps {
 
 const removeBtn =
   "shrink-0 h-8 w-8 inline-flex items-center justify-center rounded-lg text-md-on-surface-variant hover:bg-md-error/10 hover:text-md-error";
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-2 mt-2 text-[13px] font-medium text-md-on-surface">
-      {children}
-    </div>
-  );
-}
 
 // Shared editor for a single {name, mark?, letter?} logo chip.
 function LogoRow({
@@ -113,18 +99,14 @@ export default function WorkForm({
   const [description, setDescription] = useState(initialData?.description ?? "");
   const [content, setContent] = useState(initialData?.content ?? "");
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
-  const [repoUrl, setRepoUrl] = useState(initialData?.repoUrl ?? "");
-  const [liveUrl, setLiveUrl] = useState(initialData?.liveUrl ?? "");
   const [parentSlug, setParentSlug] = useState(initialData?.parentSlug ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
   const [buildStatus, setBuildStatus] = useState(initialData?.buildStatus ?? "live");
   const [featured, setFeatured] = useState(initialData?.featured ?? false);
   const [sortOrder, setSortOrder] = useState(String(initialData?.sortOrder ?? 0));
-  const [features, setFeatures] = useState<ProjectFeature[]>(initialData?.features ?? []);
   const [models, setModels] = useState<ProjectLogo[]>(initialData?.models ?? []);
   const [stack, setStack] = useState<ProjectStackGroup[]>(initialData?.stack ?? []);
   const [media, setMedia] = useState<ProjectMedia[]>(initialData?.media ?? []);
-  const [metrics, setMetrics] = useState<ProjectMetric[]>(initialData?.metrics ?? []);
   const [postSlugs, setPostSlugs] = useState<string[]>(initialData?.postSlugs ?? []);
 
   const onTitle = (value: string) => {
@@ -153,18 +135,14 @@ export default function WorkForm({
           description: description || null,
           content: content || null,
           thumbnail: thumbnail || null,
-          repoUrl: repoUrl || null,
-          liveUrl: liveUrl || null,
           parentSlug: parentSlug || null,
           status,
           buildStatus,
           featured,
           sortOrder,
-          features,
           models,
           stack,
           media,
-          metrics,
           postSlugs,
         }),
       });
@@ -234,17 +212,6 @@ export default function WorkForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="md-field-label">repo url</label>
-          <input type="url" value={repoUrl} onChange={(e) => setRepoUrl(e.target.value)} placeholder="https://github.com/..." className="md-field" />
-        </div>
-        <div>
-          <label className="md-field-label">live url</label>
-          <input type="url" value={liveUrl} onChange={(e) => setLiveUrl(e.target.value)} placeholder="https://..." className="md-field" />
-        </div>
-      </div>
-
       <div>
         <label className="md-field-label">
           parent project <span>(nest this under another project)</span>
@@ -263,64 +230,6 @@ export default function WorkForm({
               </option>
             ))}
         </select>
-      </div>
-
-      {/* Features repeater */}
-      <div>
-        <label className="md-field-label">features <span>(the pipeline / capabilities)</span></label>
-        <div className="space-y-2">
-          {features.map((f, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <input
-                value={f.name}
-                onChange={(e) => setFeatures((p) => p.map((x, idx) => (idx === i ? { ...x, name: e.target.value } : x)))}
-                placeholder="name"
-                className="md-field-dense w-40 shrink-0"
-              />
-              <input
-                value={f.desc}
-                onChange={(e) => setFeatures((p) => p.map((x, idx) => (idx === i ? { ...x, desc: e.target.value } : x)))}
-                placeholder="one-line description"
-                className="md-field-dense flex-1"
-              />
-              <button type="button" onClick={() => setFeatures((p) => p.filter((_, idx) => idx !== i))} className={removeBtn} aria-label="Remove">
-                &times;
-              </button>
-            </div>
-          ))}
-        </div>
-        <button type="button" onClick={() => setFeatures((p) => [...p, { name: "", desc: "" }])} className="md-btn md-btn-tonal md-btn-sm mt-2">
-          + feature
-        </button>
-      </div>
-
-      {/* Metrics repeater */}
-      <div>
-        <label className="md-field-label">metrics <span>(the "by the numbers" band on the deep-dive)</span></label>
-        <div className="space-y-2">
-          {metrics.map((m, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <input
-                value={m.value}
-                onChange={(e) => setMetrics((p) => p.map((x, idx) => (idx === i ? { ...x, value: e.target.value } : x)))}
-                placeholder="0.74"
-                className="md-field-dense w-32 shrink-0 font-mono"
-              />
-              <input
-                value={m.label}
-                onChange={(e) => setMetrics((p) => p.map((x, idx) => (idx === i ? { ...x, label: e.target.value } : x)))}
-                placeholder="what it measures"
-                className="md-field-dense flex-1"
-              />
-              <button type="button" onClick={() => setMetrics((p) => p.filter((_, idx) => idx !== i))} className={removeBtn} aria-label="Remove">
-                &times;
-              </button>
-            </div>
-          ))}
-        </div>
-        <button type="button" onClick={() => setMetrics((p) => [...p, { value: "", label: "" }])} className="md-btn md-btn-tonal md-btn-sm mt-2">
-          + metric
-        </button>
       </div>
 
       {/* Models repeater */}
@@ -445,7 +354,7 @@ export default function WorkForm({
       {/* Backing writing */}
       {allPosts.length > 0 && (
         <div>
-          <label className="md-field-label">backing writing <span>(posts and series parts)</span></label>
+          <label className="md-field-label">related articles <span>(posts and collection parts)</span></label>
           <div className="max-h-48 divide-y divide-md-outline-variant overflow-y-auto rounded-2xl border border-md-outline-variant">
             {allPosts.map((post) => (
               <button

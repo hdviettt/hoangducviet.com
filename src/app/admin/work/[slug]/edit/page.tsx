@@ -42,18 +42,14 @@ export default async function EditWorkPage({ params }: Params) {
           description: p.description ?? "",
           content: p.content ?? "",
           thumbnail: p.thumbnail ?? "",
-          repoUrl: p.repoUrl ?? "",
-          liveUrl: p.liveUrl ?? "",
           parentSlug: p.parentSlug ?? "",
           status: p.status,
           buildStatus: p.buildStatus,
           featured: p.featured,
           sortOrder: p.sortOrder,
-          features: p.features ?? [],
           stack: p.stack ?? [],
           models: p.models ?? [],
           media: p.media ?? [],
-          metrics: p.metrics ?? [],
           postSlugs: linked.map((l) => l.postSlug),
         }}
       />
