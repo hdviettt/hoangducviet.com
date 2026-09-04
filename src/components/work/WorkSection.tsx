@@ -1,41 +1,11 @@
-import { Chips } from "@/components/work/StackChips";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import type { Project } from "@/lib/projects";
-import type { ProjectLogo } from "@/db/schema";
 import Link from "next/link";
-import { Fragment } from "react";
 
-// One /work section: title and description, then a carousel of the project's
-// real media (screenshots and clips), then the stack as an aligned spec sheet.
-// Projects without media yet simply show no visual until screenshots are added
-// in /admin/work.
+// One /work section, kept deliberately compact so the writing feed below it reads
+// with equal weight: a title, a one-line description, the project's media if any,
+// and a link into the deep-dive. The full stack lives on the deep-dive page.
 
-// Stack as a spec sheet: group label in a fixed left column, chips aligned in
-// the column to its right, so the whole thing reads as one considered table.
-function StackSheet({ project }: { project: Project }) {
-  const groups: { group: string; items: ProjectLogo[] }[] = [
-    ...(project.models.length > 0
-      ? [{ group: "Models", items: project.models }]
-      : []),
-    ...project.stack,
-  ];
-  if (groups.length === 0) return null;
-  return (
-    <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-[max-content_1fr] sm:gap-y-3.5">
-      {groups.map((g) => (
-        <Fragment key={g.group}>
-          <div className="text-[13.5px] font-medium text-md-on-surface-variant sm:pt-[9px]">
-            {g.group}
-          </div>
-          <Chips items={g.items} />
-        </Fragment>
-      ))}
-    </div>
-  );
-}
-
-// A small build-status pill, shown only when a project is not fully live, so a
-// live project carries no badge (the default, unremarkable state).
 function StatusPill({ status }: { status: string }) {
   if (status === "wip") {
     return (
@@ -55,7 +25,6 @@ function StatusPill({ status }: { status: string }) {
   return null;
 }
 
-// The top row: an optional link back to a parent project, and the status pill.
 function HeaderTags({
   parent,
   status,
@@ -110,19 +79,19 @@ export default function WorkSection({
       <div className="max-w-[760px]">
         <HeaderTags parent={parent} status={project.buildStatus} />
         <Link href={href} className="group block w-fit">
-          <h2 className="text-[32px] font-medium leading-[1.06] tracking-[-0.03em] text-md-on-surface transition-colors group-hover:text-primary sm:text-[42px]">
+          <h2 className="text-[28px] font-medium leading-[1.1] tracking-[-0.02em] text-md-on-surface transition-colors group-hover:text-primary sm:text-[32px]">
             {project.title}
           </h2>
         </Link>
         {project.description && (
-          <p className="mt-5 max-w-[64ch] text-[17px] leading-[1.6] text-md-on-surface-variant">
+          <p className="mt-4 max-w-[64ch] text-[16px] leading-[1.55] text-md-on-surface-variant">
             {project.description}
           </p>
         )}
       </div>
 
       {project.media.length > 0 && (
-        <div className="work-carousel mt-10 md:mt-12">
+        <div className="work-carousel mt-8">
           <MediaCarousel
             items={project.media.map((m) => ({
               src: m.src,
@@ -137,10 +106,7 @@ export default function WorkSection({
         </div>
       )}
 
-      <div className="mt-10 flex flex-col gap-8 md:mt-11 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
-        <StackSheet project={project} />
-        <ExploreLink href={href} className="shrink-0 lg:pt-1" />
-      </div>
+      <ExploreLink href={href} className="mt-5" />
     </section>
   );
 }

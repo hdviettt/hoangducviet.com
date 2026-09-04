@@ -99,13 +99,39 @@ export function markDef(
   return { d: m.d, vb: m.vb ?? "0 0 24 24", evenodd: !!m.evenodd };
 }
 
+// Brand colours for the marks that have a recognizable single hue. Achromatic
+// brands (Next.js, Vercel, E2B, ONNX, Voyage) are left out and fall back to
+// currentColor, so they stay legible in both light and dark themes.
+const MARK_COLORS: Record<string, string> = {
+  claude: "#D97757",
+  gpt: "#10A37F",
+  gemini: "#4285F4",
+  deepseek: "#4D6BFE",
+  react: "#61DAFB",
+  python: "#3776AB",
+  fastapi: "#05998B",
+  wordpress: "#21759B",
+  supabase: "#3FCF8E",
+  zod: "#3E67B1",
+  postgres: "#4C86C6",
+  pglite: "#4C86C6",
+  r2: "#F38020",
+  tavily: "#468BFF",
+  dataforseo: "#1E88E5",
+  meta: "#0080FB",
+  huggingface: "#FFD21E",
+  redis: "#FF4438",
+};
+
 export function Mark({ id, className = "h-[14px] w-[14px]" }: { id: string; className?: string }) {
   const m = MARKS[id];
   if (!m) return null;
+  const color = MARK_COLORS[id];
   return (
     <svg
       viewBox={m.vb ?? "0 0 24 24"}
-      className={`shrink-0 fill-current ${className}`}
+      className={`shrink-0 ${color ? "" : "fill-current"} ${className}`}
+      style={color ? { fill: color } : undefined}
       fillRule={m.evenodd ? "evenodd" : undefined}
       aria-hidden="true"
     >

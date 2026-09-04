@@ -158,12 +158,8 @@ export default async function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[64px]">
           <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
             <h2 className="text-[26px] font-medium tracking-[-0.02em] text-md-on-surface">
-              Writing
+              Articles
             </h2>
-            <p className="mt-3 max-w-[260px] text-[14.5px] leading-[1.55] text-md-on-surface-variant">
-              Search engines from scratch, AI agents, and honest notes from
-              building AI systems.
-            </p>
             {years.length > 1 && (
               <div className="mt-7 hidden flex-col gap-2 text-[13px] tabular-nums text-md-on-surface-variant lg:flex">
                 {years.map((y, i) => (

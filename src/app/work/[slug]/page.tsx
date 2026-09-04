@@ -1,11 +1,13 @@
+import { feedRowDate } from "@/components/posts/FeedRow";
 import { ChildRow } from "@/components/work/ProjectRow";
-import ProjectReference from "@/components/work/ProjectReference";
+import { Chips } from "@/components/work/StackChips";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import { IDENTITY } from "@/lib/identity";
 import { getProjectBySlug } from "@/lib/projects";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Fragment } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -31,25 +33,28 @@ export async function generateMetadata({
   };
 }
 
-function ExtButton({ href, label }: { href: string; label: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group inline-flex items-center gap-1.5 rounded-full border border-md-outline-variant px-4 py-2 text-[13.5px] font-medium text-md-on-surface transition-colors hover:border-primary hover:text-primary"
-    >
-      {label}
-      <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-        ↗
+function StatusPill({ status }: { status: string }) {
+  if (status === "wip") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-md-tertiary-container px-3 py-1 text-[12px] font-medium text-md-on-tertiary-container">
+        <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
+        In progress
       </span>
-    </a>
-  );
+    );
+  }
+  if (status === "archived") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-md-surface-container-high px-3 py-1 text-[12px] font-medium text-md-on-surface-variant">
+        Archived
+      </span>
+    );
+  }
+  return null;
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-6 text-[12.5px] font-medium uppercase tracking-[0.08em] text-md-on-surface-variant">
+    <h2 className="mb-5 text-[14px] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
       {children}
     </h2>
   );
@@ -66,9 +71,19 @@ export default async function ProjectDeepDivePage({
   const hasMedia = project.media.length > 0;
   const hasChildren = !!project.children && project.children.length > 0;
   const hasPosts = !!project.posts && project.posts.length > 0;
+  const hasStack = project.models.length > 0 || project.stack.length > 0;
+  const showStatus =
+    project.buildStatus === "wip" || project.buildStatus === "archived";
+
+  const stackGroups = [
+    ...(project.models.length > 0
+      ? [{ group: "Models", items: project.models }]
+      : []),
+    ...project.stack,
+  ];
 
   return (
-    <div className="pb-20 md:pb-28">
+    <div className="max-w-[880px] pb-20 md:pb-28">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2.5 pt-10 text-[14px] sm:pt-12 md:pt-14">
         <Link href="/work" className="text-md-on-surface-variant transition-colors hover:text-primary">
@@ -87,106 +102,102 @@ export default async function ProjectDeepDivePage({
         )}
       </div>
 
-      <div className="mt-8 max-w-[880px]">
-        {/* Hero */}
-        <header>
-          <h1 className="max-w-[20ch] text-[34px] leading-[1.05] font-medium tracking-[-0.03em] text-md-on-surface sm:text-[42px]">
-            {project.title}
-          </h1>
-          {project.description && (
-            <p className="mt-5 max-w-[68ch] text-[17px] leading-[1.55] text-md-on-surface-variant">
-              {project.description}
-            </p>
-          )}
-          {(project.repoUrl || project.liveUrl) && (
-            <div className="mt-7 flex flex-wrap gap-3">
-              {project.liveUrl && <ExtButton href={project.liveUrl} label="Live demo" />}
-              {project.repoUrl && <ExtButton href={project.repoUrl} label="View the code" />}
-            </div>
-          )}
-        </header>
-
-        {/* Visual: a carousel of the project's real media (screenshots, clips) */}
-        {hasMedia && (
-          <div className="work-carousel mt-12">
-            <MediaCarousel
-              items={project.media.map((m) => ({
-                src: m.src,
-                caption: m.caption,
-                type: m.type,
-                fit: "cover",
-              }))}
-              ratio="16 / 9"
-              mat="ambient"
-              label={`${project.title} media`}
-            />
+      {/* ===== Hero ===== */}
+      <header className="mt-8">
+        {showStatus && (
+          <div className="mb-5">
+            <StatusPill status={project.buildStatus} />
           </div>
         )}
+        <h1 className="max-w-[20ch] text-balance text-[34px] font-medium leading-[1.05] tracking-[-0.03em] text-md-on-surface sm:text-[44px]">
+          {project.title}
+        </h1>
+        {project.description && (
+          <p className="mt-5 max-w-[66ch] text-[18px] leading-[1.55] text-md-on-surface-variant">
+            {project.description}
+          </p>
+        )}
+      </header>
 
-        {/* Narrative */}
-        {project.content && (
-          <div
-            className="article-content mt-14 md:mt-16"
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted admin content
-            dangerouslySetInnerHTML={{ __html: project.content }}
+      {/* ===== Built with: the stack, up top ===== */}
+      {hasStack && (
+        <section className="mt-11 border-t border-md-outline-variant pt-8 md:mt-12">
+          <SectionLabel>Built with</SectionLabel>
+          <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-[max-content_1fr] sm:gap-y-4">
+            {stackGroups.map((g) => (
+              <Fragment key={g.group}>
+                <div className="text-[13.5px] font-medium text-md-on-surface-variant sm:pt-[8px]">
+                  {g.group}
+                </div>
+                <Chips items={g.items} />
+              </Fragment>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ===== Media: carousel of real screenshots and clips ===== */}
+      {hasMedia && (
+        <div className="work-carousel mt-12 md:mt-14">
+          <MediaCarousel
+            items={project.media.map((m) => ({
+              src: m.src,
+              caption: m.caption,
+              type: m.type,
+              fit: "cover",
+            }))}
+            ratio="16 / 9"
+            mat="ambient"
+            label={`${project.title} media`}
           />
-        )}
+        </div>
+      )}
 
-        {/* Reference: what it does + built with */}
-        {(project.features.length > 0 ||
-          project.stack.length > 0 ||
-          project.models.length > 0) && (
-          <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
-            <ProjectReference
-              features={project.features}
-              stack={project.stack}
-              models={project.models}
-            />
-          </section>
-        )}
+      {/* ===== The story ===== */}
+      {project.content && (
+        <div
+          className="article-content mt-14 md:mt-16"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted admin content
+          dangerouslySetInnerHTML={{ __html: project.content }}
+        />
+      )}
 
-        {/* Pieces on the platform */}
-        {hasChildren && (
-          <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
-            <SectionLabel>Pieces on the platform</SectionLabel>
-            <div>
-              {project.children?.map((c) => (
-                <ChildRow key={c.slug} child={c} />
-              ))}
-            </div>
-          </section>
-        )}
+      {/* ===== Pieces on the platform ===== */}
+      {hasChildren && (
+        <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
+          <SectionLabel>Pieces on the platform</SectionLabel>
+          <div>
+            {project.children?.map((c) => (
+              <ChildRow key={c.slug} child={c} />
+            ))}
+          </div>
+        </section>
+      )}
 
-        {/* Writing */}
-        {hasPosts && (
-          <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
-            <SectionLabel>
-              {project.posts && project.posts.length > 1
-                ? `Writing (${project.posts.length} parts)`
-                : "Writing"}
-            </SectionLabel>
-            <ul className="divide-y divide-md-outline-variant">
-              {project.posts?.map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`/posts/${p.slug}`}
-                    className="group flex items-baseline gap-3.5 py-3.5"
-                  >
-                    {p.date_created && (
-                      <span className="shrink-0 font-mono text-[12px] tabular-nums text-md-on-surface-variant">
-                        {p.date_created.slice(0, 10).split("-").reverse().join(".")}
-                      </span>
-                    )}
-                    <span className="text-[15.5px] text-md-on-surface transition-colors group-hover:text-primary">
-                      {p.title}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </div>
+      {/* ===== Writing ===== */}
+      {hasPosts && (
+        <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
+          <h2 className="mb-4 text-[22px] font-medium tracking-[-0.02em] text-md-on-surface">
+            Articles
+          </h2>
+          <div>
+            {project.posts?.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/posts/${p.slug}`}
+                className="group grid grid-cols-1 items-baseline gap-y-1.5 border-b border-md-outline-variant py-[21px] sm:grid-cols-[92px_1fr] sm:gap-x-6"
+              >
+                <span className="text-[13px] font-medium tabular-nums text-md-on-surface-variant sm:pt-[4px]">
+                  {feedRowDate(p.date_created)}
+                </span>
+                <h3 className="text-[21px] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface [text-wrap:balance] transition-colors group-hover:text-primary">
+                  {p.title}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
