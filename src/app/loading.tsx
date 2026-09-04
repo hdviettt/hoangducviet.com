@@ -8,20 +8,17 @@ export default function HomeLoading() {
     <div className="pb-16 md:pb-20" aria-hidden>
       {/* ProfileHero */}
       <section className="pt-10 sm:pt-12 md:pt-16 pb-10 md:pb-14">
-        <div className="max-w-[640px]">
-          <div className="flex items-center gap-5 sm:gap-7 mb-6">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full bg-muted animate-pulse shrink-0" />
-            <div className="min-w-0 flex-1">
-              <div className="h-9 sm:h-11 md:h-12 w-48 bg-muted animate-pulse rounded-lg mb-3" />
-              <div className="h-8 w-56 bg-muted animate-pulse rounded-full" />
-            </div>
+        <div className="max-w-[640px] mx-auto">
+          <div className="flex flex-col items-center gap-4 sm:gap-5 mb-5">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-muted animate-pulse shrink-0" />
+            <div className="h-7 sm:h-9 md:h-10 w-48 bg-muted animate-pulse rounded-lg" />
           </div>
-          <div className="space-y-3">
+          <div className="space-y-3 flex flex-col items-center">
             <div className="h-4 w-full bg-muted animate-pulse rounded" />
             <div className="h-4 w-11/12 bg-muted animate-pulse rounded" />
             <div className="h-4 w-4/5 bg-muted animate-pulse rounded" />
           </div>
-          <div className="mt-7 flex items-center gap-5">
+          <div className="mt-6 flex justify-center items-center gap-5">
             <div className="w-5 h-5 rounded-full bg-muted animate-pulse" />
             <div className="w-5 h-5 rounded-full bg-muted animate-pulse" />
             <div className="w-5 h-5 rounded-full bg-muted animate-pulse" />
