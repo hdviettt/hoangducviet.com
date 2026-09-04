@@ -1,21 +1,14 @@
-import PresentationDiagram from "@/components/work/PresentationDiagram";
 import { Chips } from "@/components/work/StackChips";
-import ProjectDiagram from "@/components/work/WorkDiagrams";
-import SearchSystemDiagram from "@/components/work/SearchSystemDiagram";
-import AgenticPlatformDiagram from "@/components/work/AgenticPlatformDiagram";
-import CmsPipelineDiagram from "@/components/work/CmsPipelineDiagram";
-import ClusteringDiagram from "@/components/work/ClusteringDiagram";
-import QuotingDiagram from "@/components/work/QuotingDiagram";
-import ContentSeoDiagram from "@/components/work/ContentSeoDiagram";
+import MediaCarousel from "@/components/widgets/MediaCarousel";
 import type { Project } from "@/lib/projects";
 import type { ProjectLogo } from "@/db/schema";
 import Link from "next/link";
 import { Fragment } from "react";
 
-// One /work section: title and description, then a large designed architecture
-// diagram (the presentation agent keeps its bespoke interactive one), then the
-// stack presented as an aligned spec sheet. Real screenshots live on the
-// deep-dive.
+// One /work section: title and description, then a carousel of the project's
+// real media (screenshots and clips), then the stack as an aligned spec sheet.
+// Projects without media yet simply show no visual until screenshots are added
+// in /admin/work.
 
 // Stack as a spec sheet: group label in a fixed left column, chips aligned in
 // the column to its right, so the whole thing reads as one considered table.
@@ -111,13 +104,6 @@ export default function WorkSection({
   parent?: { title: string; slug: string };
 }) {
   const href = `/work/${project.slug}`;
-  const isPresentation = project.slug === "agentic-presentation-system";
-  const isSearch = project.slug === "mini-search-engine";
-  const isPlatform = project.slug === "agentic-ai-platform";
-  const isCms = project.slug === "cms-publishing-pipeline";
-  const isClustering = project.slug === "keyword-clustering";
-  const isQuoting = project.slug === "seo-quoting-agent";
-  const isContent = project.slug === "content-seo-ai";
 
   return (
     <section>
@@ -135,25 +121,21 @@ export default function WorkSection({
         )}
       </div>
 
-      <div className="work-visual mt-10 md:mt-12">
-        {isPresentation ? (
-          <PresentationDiagram />
-        ) : isSearch ? (
-          <SearchSystemDiagram />
-        ) : isPlatform ? (
-          <AgenticPlatformDiagram />
-        ) : isCms ? (
-          <CmsPipelineDiagram />
-        ) : isClustering ? (
-          <ClusteringDiagram />
-        ) : isQuoting ? (
-          <QuotingDiagram />
-        ) : isContent ? (
-          <ContentSeoDiagram />
-        ) : (
-          <ProjectDiagram slug={project.slug} />
-        )}
-      </div>
+      {project.media.length > 0 && (
+        <div className="work-carousel mt-10 md:mt-12">
+          <MediaCarousel
+            items={project.media.map((m) => ({
+              src: m.src,
+              caption: m.caption,
+              type: m.type,
+              fit: "cover",
+            }))}
+            ratio="16 / 9"
+            mat="ambient"
+            label={`${project.title} media`}
+          />
+        </div>
+      )}
 
       <div className="mt-10 flex flex-col gap-8 md:mt-11 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
         <StackSheet project={project} />

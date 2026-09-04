@@ -1,13 +1,5 @@
-import PresentationDiagram from "@/components/work/PresentationDiagram";
 import { ChildRow } from "@/components/work/ProjectRow";
 import ProjectReference from "@/components/work/ProjectReference";
-import ProjectDiagram, { hasDiagram } from "@/components/work/WorkDiagrams";
-import SearchSystemDiagram from "@/components/work/SearchSystemDiagram";
-import AgenticPlatformDiagram from "@/components/work/AgenticPlatformDiagram";
-import CmsPipelineDiagram from "@/components/work/CmsPipelineDiagram";
-import ClusteringDiagram from "@/components/work/ClusteringDiagram";
-import QuotingDiagram from "@/components/work/QuotingDiagram";
-import ContentSeoDiagram from "@/components/work/ContentSeoDiagram";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import { IDENTITY } from "@/lib/identity";
 import { getProjectBySlug } from "@/lib/projects";
@@ -74,9 +66,6 @@ export default async function ProjectDeepDivePage({
   const hasMedia = project.media.length > 0;
   const hasChildren = !!project.children && project.children.length > 0;
   const hasPosts = !!project.posts && project.posts.length > 0;
-  // The presentation agent has a bespoke interactive architecture diagram; it
-  // stands in for the media carousel inside the shared deep-dive shell.
-  const showcaseSlug = project.slug === "agentic-presentation-system";
 
   return (
     <div className="pb-20 md:pb-28">
@@ -117,44 +106,9 @@ export default async function ProjectDeepDivePage({
           )}
         </header>
 
-        {/* Visual: the architecture diagram (or bespoke interactive one) */}
-        {showcaseSlug ? (
-          <div className="work-visual mt-12">
-            <PresentationDiagram />
-          </div>
-        ) : project.slug === "mini-search-engine" ? (
-          <div className="work-visual mt-12">
-            <SearchSystemDiagram />
-          </div>
-        ) : project.slug === "agentic-ai-platform" ? (
-          <div className="work-visual mt-12">
-            <AgenticPlatformDiagram />
-          </div>
-        ) : project.slug === "cms-publishing-pipeline" ? (
-          <div className="work-visual mt-12">
-            <CmsPipelineDiagram />
-          </div>
-        ) : project.slug === "keyword-clustering" ? (
-          <div className="work-visual mt-12">
-            <ClusteringDiagram />
-          </div>
-        ) : project.slug === "seo-quoting-agent" ? (
-          <div className="work-visual mt-12">
-            <QuotingDiagram />
-          </div>
-        ) : project.slug === "content-seo-ai" ? (
-          <div className="work-visual mt-12">
-            <ContentSeoDiagram />
-          </div>
-        ) : hasDiagram(project.slug) ? (
-          <div className="work-visual mt-12">
-            <ProjectDiagram slug={project.slug} />
-          </div>
-        ) : null}
-
-        {/* Real screenshots below the diagram, when the project has them */}
+        {/* Visual: a carousel of the project's real media (screenshots, clips) */}
         {hasMedia && (
-          <div className="work-carousel mt-10 md:mt-12">
+          <div className="work-carousel mt-12">
             <MediaCarousel
               items={project.media.map((m) => ({
                 src: m.src,

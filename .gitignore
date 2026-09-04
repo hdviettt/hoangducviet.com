@@ -72,10 +72,9 @@ scripts/seo-history-inline/
 /mock/
 /deck-shots/
 /project-media/
-# Cover/thumbnail experiments and unused work media
+# Cover/thumbnail experiments
 /public/covers-v2/
 /public/covers-v3/
-/public/work/
 # One-off / debug scripts
 /scripts/_tmp_*.cjs
 /scripts/dbcheck.cjs
