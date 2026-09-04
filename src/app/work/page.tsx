@@ -23,19 +23,7 @@ export default async function WorkPage() {
 
   return (
     <div className="pb-24 md:pb-32">
-      <header className="max-w-[820px] pt-12 md:pt-20">
-        <h1 className="text-[42px] leading-[1.03] font-medium tracking-[-0.035em] text-md-on-surface sm:text-[56px]">
-          Systems I built, not slides I made.
-        </h1>
-        <p className="mt-6 max-w-[60ch] text-[17px] leading-[1.55] text-md-on-surface-variant">
-          Two bodies of work. A search engine built from scratch to understand
-          retrieval end to end, and an AI platform of agents I built and led
-          inside a 117-person company. Most of it started as a black box I
-          wanted to take apart.
-        </p>
-      </header>
-
-      <div className="mt-20 flex flex-col md:mt-28">
+      <div className="flex flex-col pt-12 md:pt-16">
         {projects.map((p, i) => {
           const parent =
             p.parentSlug && byslug.has(p.parentSlug)

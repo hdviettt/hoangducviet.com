@@ -50,20 +50,6 @@ function HeaderTags({
   );
 }
 
-function ExploreLink({ href, className = "" }: { href: string; className?: string }) {
-  return (
-    <Link
-      href={href}
-      className={`group inline-flex items-center gap-1.5 text-[14.5px] font-medium text-primary hover:underline ${className}`}
-    >
-      Explore the project
-      <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-        {"->"}
-      </span>
-    </Link>
-  );
-}
-
 export default function WorkSection({
   project,
   parent,
@@ -105,8 +91,6 @@ export default function WorkSection({
           />
         </div>
       )}
-
-      <ExploreLink href={href} className="mt-5" />
     </section>
   );
 }

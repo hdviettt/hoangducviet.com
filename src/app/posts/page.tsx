@@ -12,12 +12,12 @@ export async function generateMetadata(): Promise<Metadata> {
     const siteTitle =
       global && global.length > 0 ? global[0].title : "Hoang Duc Viet";
     return {
-      title: `Writing - ${siteTitle}`,
+      title: `Articles - ${siteTitle}`,
       description: "Archive of all posts and series.",
       alternates: { canonical: "/posts" },
     };
   } catch {
-    return { title: "Writing" };
+    return { title: "Articles" };
   }
 }
 
@@ -42,13 +42,47 @@ export default async function PostsPage() {
   }
   const viewCounts = await getPostViewCounts(slugs);
 
-  return <div className="pt-12 sm:pt-16 md:pt-20 pb-16 md:pb-20">
-      <h1 className="text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
-        Writing
-      </h1>
-      <p className="mt-2 md:mt-3 text-[22px] leading-7 md:text-[28px] md:leading-9 font-normal text-md-on-surface-variant max-w-[820px] mb-10 md:mb-14">
-        Every post and series, newest first
-      </p>
-      <FeedBlocks items={items} viewCounts={viewCounts} />
-    </div>;
+  // Distinct years present in the feed, newest first — mirrors the homepage rail.
+  const years = Array.from(
+    new Set(
+      items.map((it) =>
+        (it.kind === "series" ? it.lastDate : it.post.date_created || "").slice(
+          0,
+          4,
+        ),
+      ),
+    ),
+  )
+    .filter(Boolean)
+    .sort((a, b) => b.localeCompare(a));
+
+  return (
+    <section className="max-w-[1120px] pb-16 pt-12 sm:pt-16 md:pb-20 md:pt-20">
+      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[64px]">
+        <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
+          <h1 className="text-[26px] font-medium tracking-[-0.02em] text-md-on-surface">
+            Articles
+          </h1>
+          {years.length > 1 && (
+            <div className="mt-7 hidden flex-col gap-2 text-[13px] tabular-nums text-md-on-surface-variant lg:flex">
+              {years.map((y, i) => (
+                <span
+                  key={y}
+                  className={
+                    i === 0
+                      ? "font-medium text-md-on-surface"
+                      : "transition-colors hover:text-md-on-surface"
+                  }
+                >
+                  {y}
+                </span>
+              ))}
+            </div>
+          )}
+        </aside>
+
+        <FeedBlocks items={items} viewCounts={viewCounts} />
+      </div>
+    </section>
+  );
 }
