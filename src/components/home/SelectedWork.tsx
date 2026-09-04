@@ -1,6 +1,5 @@
 import WorkSection from "@/components/work/WorkSection";
 import type { Project } from "@/lib/projects";
-import Link from "next/link";
 
 /**
  * Homepage "Selected work": the featured (top-level) projects, rendered as the
@@ -33,16 +32,6 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
           </div>
         ))}
       </div>
-
-      <Link
-        href="/work"
-        className="group mt-10 inline-flex items-center gap-1.5 text-[14.5px] font-medium text-primary hover:underline"
-      >
-        See all work
-        <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-          {"->"}
-        </span>
-      </Link>
     </section>
   );
 }
