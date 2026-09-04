@@ -22,10 +22,10 @@ function markdownTarget(pathname: string): string | null {
   let m = pathname.match(/^\/(posts|projects)\/([^/]+)\/?$/);
   if (m) return `/${m[1]}/${m[2]}/md`;
 
-  // Series landing → the series markdown. (Series posts live at /posts/[slug];
-  // legacy /series/[s]/[p] URLs 308-redirect there.)
-  m = pathname.match(/^\/series\/([^/]+)\/?$/);
-  if (m) return `/series/${m[1]}/md`;
+  // Collection landing → the collection markdown. (Collection posts live at
+  // /posts/[slug]; legacy /series/[s]/[p] URLs 308-redirect there.)
+  m = pathname.match(/^\/collection\/([^/]+)\/?$/);
+  if (m) return `/collection/${m[1]}/md`;
 
   return null;
 }
@@ -84,6 +84,16 @@ export function middleware(request: NextRequest) {
     );
   }
 
+  // Series was renamed to Collection. Send any remaining /series/* URL to its
+  // /collection/* equivalent (legacy nested post URLs are handled just above).
+  const renamedSeries = pathname.match(/^\/series\/(.+?)\/?$/);
+  if (renamedSeries) {
+    return NextResponse.redirect(
+      new URL(`/collection/${renamedSeries[1]}`, request.url),
+      308,
+    );
+  }
+
   // Markdown for Agents: serve the markdown rendition of the same URL when
   // the client asks for `text/markdown`. HTML stays the default for browsers.
   const mdTarget = markdownTarget(pathname);
@@ -132,6 +142,7 @@ export const config = {
     "/posts/:path*",
     "/projects/:path*",
     "/series/:path*",
+    "/collection/:path*",
     "/api/posts/:path*",
   ],
 };

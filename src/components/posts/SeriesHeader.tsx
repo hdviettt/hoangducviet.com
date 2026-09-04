@@ -13,7 +13,7 @@ export default function SeriesHeader({
 }: SeriesHeaderProps) {
   return (
     <Link
-      href={`/series/${series.slug}`}
+      href={`/collection/${series.slug}`}
       className="md-label-medium uppercase tracking-widest text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard inline-flex items-center gap-2"
     >
       <span className="tabular-nums">

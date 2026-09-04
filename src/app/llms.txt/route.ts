@@ -54,7 +54,7 @@ export async function GET() {
       lines.push("## Series");
       for (const s of allSeries) {
         const desc = s.summary ? `: ${s.summary}` : "";
-        lines.push(`- [${s.title}](${BASE_URL}/series/${s.slug})${desc}`);
+        lines.push(`- [${s.title}](${BASE_URL}/collection/${s.slug})${desc}`);
       }
       lines.push("");
     }

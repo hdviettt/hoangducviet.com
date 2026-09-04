@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     const seriesEntries = allSeries.map((s) => ({
-      url: `${BASE_URL}/series/${s.slug}`,
+      url: `${BASE_URL}/collection/${s.slug}`,
       lastModified: s.dateUpdated ?? s.dateCreated ?? new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,

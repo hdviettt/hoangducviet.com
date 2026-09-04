@@ -239,7 +239,7 @@ export async function runAgentSkill(rawText: string): Promise<string> {
       if (!list.length) return "No published series yet.";
       const lines = list.map(
         (s) =>
-          `- **${s.title ?? s.slug}** — ${BASE_URL}/series/${s.slug}${
+          `- **${s.title ?? s.slug}** — ${BASE_URL}/collection/${s.slug}${
             s.summary ? `\n  ${stripHtml(s.summary)}` : ""
           }`,
       );

@@ -185,7 +185,7 @@ export default function ProjectForm({
           value={summary}
           onChange={(e) => setSummary(e.target.value)}
           rows={5}
-          placeholder="Shown in full on the series card — aim for ≤160 characters"
+          placeholder="Shown in full on the collection card — aim for ≤160 characters"
           className="md-field !leading-6"
         />
         <DescriptionMeter value={summary} />

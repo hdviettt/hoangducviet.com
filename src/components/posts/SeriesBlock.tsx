@@ -81,11 +81,11 @@ export default function SeriesBlock({
         <div className="flex flex-col">
           <span className="inline-flex w-fit items-center gap-1.5 px-2.5 py-0.5 rounded-full md-label-small bg-md-primary text-md-on-primary mb-4">
             <Icon name="auto_stories" size={14} />
-            Series · {parts.length} parts
+            Collection · {parts.length} parts
           </span>
 
           <Link
-            href={`/series/${series.slug}`}
+            href={`/collection/${series.slug}`}
             className="block mb-3 hover:text-primary transition-colors duration-200 ease-md-standard"
           >
             <h3 className="text-2xl md:text-3xl font-medium tracking-tight text-md-on-surface">
@@ -107,10 +107,10 @@ export default function SeriesBlock({
           </div>
 
           <Link
-            href={`/series/${series.slug}`}
+            href={`/collection/${series.slug}`}
             className="mt-auto self-start inline-flex items-center gap-1 md-label-medium text-primary hover:underline transition-colors duration-200"
           >
-            View series
+            View collection
             <Icon name="arrow_forward" size={16} />
           </Link>
         </div>
@@ -141,7 +141,7 @@ export default function SeriesBlock({
 
           {remaining > 0 && (
             <Link
-              href={`/series/${series.slug}`}
+              href={`/collection/${series.slug}`}
               className="self-start mt-1 md-label-small text-primary hover:underline"
             >
               +{remaining} more part{remaining > 1 ? "s" : ""}

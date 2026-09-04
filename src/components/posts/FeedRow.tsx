@@ -61,7 +61,7 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
       </span>
       <div>
         <Link
-          href={`/series/${series.slug}`}
+          href={`/collection/${series.slug}`}
           className={`${TITLE_CLS} hover:text-primary`}
         >
           {series.title}

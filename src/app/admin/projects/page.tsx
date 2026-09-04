@@ -37,7 +37,7 @@ export default async function AdminProjectsPage() {
   return (
     <div className="max-w-[900px]">
       <PageHeader
-        title="Series"
+        title="Collection"
         count={allProjects.length}
         action={
           <Link

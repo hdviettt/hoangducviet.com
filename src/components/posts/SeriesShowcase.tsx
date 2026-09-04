@@ -45,12 +45,12 @@ export default function SeriesShowcase({
             every other card, instead of stacking against part 1's cover. */}
         <div className="mb-10 lg:mb-0 lg:sticky lg:top-10 lg:self-start flex flex-col">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
-            <span className="font-medium text-primary">Series</span>
+            <span className="font-medium text-primary">Collection</span>
             <span>{parts.length} parts</span>
             <span className="tabular-nums">{feedRowDate(item.lastDate)}</span>
             {views > 0 && <ViewCount count={views} />}
           </div>
-          <Link href={`/series/${series.slug}`} className="group block mt-3">
+          <Link href={`/collection/${series.slug}`} className="group block mt-3">
             <h3 className="text-[28px] leading-9 md:text-[42px] md:leading-[48px] font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
               {series.title}
             </h3>

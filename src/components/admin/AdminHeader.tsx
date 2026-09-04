@@ -16,10 +16,10 @@ function getBreadcrumb(pathname: string): { section: string; page?: string } {
   if (pathname === "/admin/posts/new") return { section: "Posts", page: "New" };
   if (pathname.startsWith("/admin/posts")) return { section: "Posts" };
   if (/^\/admin\/projects\/[^/]+\/edit$/.test(pathname))
-    return { section: "Series", page: "Edit" };
+    return { section: "Collection", page: "Edit" };
   if (pathname === "/admin/projects/new")
-    return { section: "Series", page: "New" };
-  if (pathname.startsWith("/admin/projects")) return { section: "Series" };
+    return { section: "Collection", page: "New" };
+  if (pathname.startsWith("/admin/projects")) return { section: "Collection" };
   if (pathname.startsWith("/admin/categories"))
     return { section: "Categories" };
   if (pathname.startsWith("/admin/media")) return { section: "Media" };

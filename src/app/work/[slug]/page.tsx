@@ -178,7 +178,7 @@ export default async function ProjectDeepDivePage({
       {hasPosts && (
         <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
           <h2 className="mb-4 text-[22px] font-medium tracking-[-0.02em] text-md-on-surface">
-            Articles
+            Related Articles
           </h2>
           <div>
             {project.posts?.map((p) => (

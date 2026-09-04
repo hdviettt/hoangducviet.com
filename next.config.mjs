@@ -88,7 +88,7 @@ const nextConfig = {
       // Projects was removed; the search engine lives as its writing series.
       {
         source: "/projects/mini-search-engine",
-        destination: "/series/building-a-mini-search-engine",
+        destination: "/collection/building-a-mini-search-engine",
         permanent: true,
       },
       { source: "/projects", destination: "/", permanent: true },

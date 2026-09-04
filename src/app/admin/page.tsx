@@ -37,7 +37,7 @@ export default async function AdminDashboard() {
       icon: "description",
     },
     {
-      label: "Series",
+      label: "Collection",
       count: seriesCount[0].value,
       href: "/admin/projects",
       icon: "folder",

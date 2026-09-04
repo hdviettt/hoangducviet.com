@@ -14,7 +14,7 @@ export default function SeriesParts({
   return (
     <nav aria-label="All parts in this series" className="mt-10">
       <Link
-        href={`/series/${series.slug}`}
+        href={`/collection/${series.slug}`}
         className="block md-label-large uppercase tracking-widest text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard mb-4"
       >
         All parts

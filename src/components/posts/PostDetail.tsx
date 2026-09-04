@@ -28,7 +28,7 @@ interface PostDetailProps {
 }
 
 // Shared post-detail rendering used by both /posts/[postSlug] (standalone
-// posts) and /series/[seriesSlug]/[postSlug] (series posts). The page-level
+// posts) and /collection/[seriesSlug]/[postSlug] (series posts). The page-level
 // route is responsible for resolving the right URL and redirect/notFound;
 // this component just renders the post, its TL;DR, and series-aware nav.
 export default async function PostDetail({
@@ -138,7 +138,7 @@ export default async function PostDetail({
             </time>
             {seriesCtx && (
               <Link
-                href={`/series/${seriesCtx.series.slug}`}
+                href={`/collection/${seriesCtx.series.slug}`}
                 className="hover:text-primary transition-colors"
               >
                 {seriesCtx.series.title} · Part {seriesCtx.partNumber} of{" "}
@@ -147,7 +147,7 @@ export default async function PostDetail({
             )}
             {!seriesCtx && seriesAssoc && (
               <Link
-                href={`/series/${seriesAssoc.slug}`}
+                href={`/collection/${seriesAssoc.slug}`}
                 className="hover:text-primary transition-colors"
               >
                 {seriesAssoc.title}

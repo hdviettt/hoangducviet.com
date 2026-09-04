@@ -47,13 +47,13 @@ export async function generateMetadata({
         ? seriesItem.thumbnail
         : `${baseUrl}${seriesItem.thumbnail}`
       : null;
-    const seriesUrl = `${baseUrl}/series/${params.seriesSlug}`;
+    const seriesUrl = `${baseUrl}/collection/${params.seriesSlug}`;
     const description = seriesItem.summary || "";
 
     return {
       title: `${seriesItem.title} | ${siteTitle}`,
       description,
-      alternates: { canonical: `/series/${params.seriesSlug}` },
+      alternates: { canonical: `/collection/${params.seriesSlug}` },
       openGraph: {
         title: seriesItem.title,
         description,
@@ -101,7 +101,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
 
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
-  const seriesUrl = `${baseUrl}/series/${params.seriesSlug}`;
+  const seriesUrl = `${baseUrl}/collection/${params.seriesSlug}`;
 
   // One cached PostHog round-trip for every post in the series.
   const viewCounts = await getPostViewCounts(
@@ -159,7 +159,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
           summary, then the cover. */}
       <header className="mb-10 md:mb-14">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
-          <span className="font-medium text-primary">Series</span>
+          <span className="font-medium text-primary">Collection</span>
           {isSeries && <span>{posts.length} parts</span>}
           {seriesDate && (
             <time

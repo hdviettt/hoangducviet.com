@@ -45,7 +45,7 @@ export async function GET(
       group: seriesItem.group_title,
       date_created: seriesItem.date_created,
       date_updated: seriesItem.date_updated,
-      canonical: `${BASE_URL}/series/${params.seriesSlug}`,
+      canonical: `${BASE_URL}/collection/${params.seriesSlug}`,
     });
 
     const body = htmlToMarkdown(seriesItem.description);

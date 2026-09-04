@@ -18,7 +18,7 @@ const navSections = [
     { href: "/admin", label: "Dashboard", icon: "dashboard", exact: true },
     { href: "/admin/posts", label: "Posts", icon: "description" },
     { href: "/admin/work", label: "Work", icon: "widgets" },
-    { href: "/admin/projects", label: "Series", icon: "folder" },
+    { href: "/admin/projects", label: "Collection", icon: "folder" },
     { href: "/admin/categories", label: "Categories", icon: "label" },
   ],
   [{ href: "/admin/media", label: "Media", icon: "image" }],

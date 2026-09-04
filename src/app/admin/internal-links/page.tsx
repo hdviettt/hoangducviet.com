@@ -106,19 +106,19 @@ export default async function InternalLinksPage() {
     const links = extractLinksFromHtml(project.description);
     for (const target of links) {
       edges.push({
-        sourcePath: `/series/${project.slug}`,
+        sourcePath: `/collection/${project.slug}`,
         targetPath: target,
         linkType: "content",
       });
     }
   }
 
-  // 2. Series <-> Post relationships (from seriesPosts join table)
-  // Series posts canonicalize at /series/[seriesSlug]/[postSlug]; the series
-  // landing links to each part, and each part's series header links back.
+  // 2. Collection <-> Post relationships (from seriesPosts join table)
+  // Posts canonicalize at /posts/[postSlug]; the collection landing links to
+  // each part, and each part's collection header links back.
   for (const rel of allProjectPosts) {
-    const seriesPath = `/series/${rel.seriesSlug}`;
-    const postPath = `/series/${rel.seriesSlug}/${rel.postSlug}`;
+    const seriesPath = `/collection/${rel.seriesSlug}`;
+    const postPath = `/posts/${rel.postSlug}`;
     edges.push({
       sourcePath: seriesPath,
       targetPath: postPath,

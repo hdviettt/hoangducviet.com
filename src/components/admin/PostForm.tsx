@@ -500,7 +500,7 @@ export default function PostForm({
                 </div>
                 {allProjects.length > 0 && (
                   <div>
-                    <label className="md-field-label">Series</label>
+                    <label className="md-field-label">Collection</label>
                     <select
                       value={projectSlug}
                       onChange={(e) => setProjectSlug(e.target.value)}

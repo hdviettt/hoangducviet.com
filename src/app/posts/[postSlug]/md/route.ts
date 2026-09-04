@@ -1,5 +1,5 @@
 import { expandWidgetFences } from "@/lib/markdown-export";
-import { getPostBySlug, getSeriesForPost } from "@/lib/posts";
+import { getPostBySlug } from "@/lib/posts";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
 
@@ -24,15 +24,10 @@ export async function GET(
   { params }: { params: { postSlug: string } },
 ) {
   try {
-    const [post, seriesAssoc] = await Promise.all([
-      getPostBySlug(params.postSlug),
-      getSeriesForPost(params.postSlug),
-    ]);
+    const post = await getPostBySlug(params.postSlug);
 
-    // Series posts canonicalize at /series/[s]/[p]; standalone posts at /posts/[p].
-    const canonicalPath = seriesAssoc
-      ? `/series/${seriesAssoc.slug}/${params.postSlug}`
-      : `/posts/${params.postSlug}`;
+    // Every post canonicalizes at /posts/[slug].
+    const canonicalPath = `/posts/${params.postSlug}`;
 
     const head = frontmatter({
       title: post.title,
