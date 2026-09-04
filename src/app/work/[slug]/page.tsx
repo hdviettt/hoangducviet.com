@@ -33,25 +33,6 @@ export async function generateMetadata({
   };
 }
 
-function StatusPill({ status }: { status: string }) {
-  if (status === "wip") {
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-md-tertiary-container px-3 py-1 text-[12px] font-medium text-md-on-tertiary-container">
-        <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-current opacity-70" />
-        In progress
-      </span>
-    );
-  }
-  if (status === "archived") {
-    return (
-      <span className="inline-flex items-center rounded-full bg-md-surface-container-high px-3 py-1 text-[12px] font-medium text-md-on-surface-variant">
-        Archived
-      </span>
-    );
-  }
-  return null;
-}
-
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="mb-5 text-[14px] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
@@ -72,8 +53,6 @@ export default async function ProjectDeepDivePage({
   const hasChildren = !!project.children && project.children.length > 0;
   const hasPosts = !!project.posts && project.posts.length > 0;
   const hasStack = project.models.length > 0 || project.stack.length > 0;
-  const showStatus =
-    project.buildStatus === "wip" || project.buildStatus === "archived";
 
   const stackGroups = [
     ...(project.models.length > 0
@@ -104,11 +83,6 @@ export default async function ProjectDeepDivePage({
 
       {/* ===== Hero ===== */}
       <header className="mt-8">
-        {showStatus && (
-          <div className="mb-5">
-            <StatusPill status={project.buildStatus} />
-          </div>
-        )}
         <h1 className="max-w-[20ch] text-balance text-[34px] font-medium leading-[1.05] tracking-[-0.03em] text-md-on-surface sm:text-[44px]">
           {project.title}
         </h1>

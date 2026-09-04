@@ -19,25 +19,18 @@ export function generateMetadata(): Metadata {
 
 export default async function WorkPage() {
   const projects = await getProjects();
-  const byslug = new Map(projects.map((p) => [p.slug, p]));
 
   return (
     <div className="pb-24 md:pb-32">
       <div className="flex flex-col pt-12 md:pt-16">
-        {projects.map((p, i) => {
-          const parent =
-            p.parentSlug && byslug.has(p.parentSlug)
-              ? { title: byslug.get(p.parentSlug)!.title, slug: p.parentSlug }
-              : undefined;
-          return (
-            <div
-              key={p.slug}
-              className="border-t border-md-outline-variant py-16 first:border-t-0 first:pt-0 md:py-24"
-            >
-              <WorkSection project={p} index={i} parent={parent} />
-            </div>
-          );
-        })}
+        {projects.map((p, i) => (
+          <div
+            key={p.slug}
+            className="border-t border-md-outline-variant py-16 first:border-t-0 first:pt-0 md:py-24"
+          >
+            <WorkSection project={p} index={i} />
+          </div>
+        ))}
       </div>
     </div>
   );
