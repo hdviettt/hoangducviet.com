@@ -7,8 +7,13 @@ import type { Project } from "@/lib/projects";
 import Link from "next/link";
 
 /**
- * One featured project as a split editorial block: the pitch on a narrow left
- * rail, the artwork on a wide right one, 1:2 so the artwork carries the row.
+ * One project as a split editorial block: the pitch on a narrow left rail, the
+ * media on a wide right one, 1:2 so the media carries the row.
+ *
+ * The one format for a project anywhere it is introduced — the homepage's
+ * "Selected work" and the /work index both render this. They used to differ:
+ * /work had its own component with a full-bleed carousel under each title. Two
+ * pages introducing the same project two ways reads as two products.
  *
  * The right rail is the part worth explaining. Only one of these projects has
  * anything to photograph — a runtime and a credential store do not look like
@@ -50,6 +55,10 @@ export default function FeaturedWork({ project }: { project: Project }) {
   const kids = project.children?.length ?? 0;
   const eyebrow = kids > 0 ? `Platform · ${kids} agents inside` : "Project";
   const stack = flattenStack(project.stack, project.techTags);
+  // Khong anh, khong clip, khong so lieu thi khong co cot phai. Thieu cai nay,
+  // mot du an bi xoa het metrics trong CMS se render ra mot <dl> rong, tuc la
+  // mot vach mau mong nam giua trang.
+  const visual = Boolean(art || hero || metrics.length > 0);
 
   return (
     // Three columns, not twelve. A 12-column grid with an 80px gap has eleven
@@ -57,7 +66,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
     <article className="grid grid-cols-1 items-start gap-10 md:grid-cols-3 md:gap-12 lg:gap-16">
-      <div className="md:col-span-1">
+      <div className={visual ? "md:col-span-1" : "md:col-span-2"}>
         <p className="text-[14px] leading-6 text-md-on-surface-variant">
           {eyebrow}
         </p>
@@ -93,7 +102,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
       </div>
 
       <div className="md:col-span-2">
-        {art ? (
+        {!visual ? null : art ? (
           // Purpose-drawn hero art, and the whole point of it is that it has no
           // frame: it sits on the page's own ground the way blog.google's
           // artwork does. A rounded box around the same pixels reads smaller,

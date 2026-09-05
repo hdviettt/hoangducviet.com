@@ -1,4 +1,4 @@
-import WorkSection from "@/components/work/WorkSection";
+import FeaturedWork from "@/components/work/FeaturedWork";
 import { IDENTITY } from "@/lib/identity";
 import { getProjects } from "@/lib/projects";
 import type { Metadata } from "next";
@@ -6,14 +6,19 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export function generateMetadata(): Metadata {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const description =
     "Two bodies of work: a search engine built from scratch, and an AI platform of agents I built and led inside a company.";
   return {
     title: `Work - ${IDENTITY.name}`,
     description,
     alternates: { canonical: "/work" },
-    openGraph: { title: `Work - ${IDENTITY.name}`, description, url: `${baseUrl}/work` },
+    openGraph: {
+      title: `Work - ${IDENTITY.name}`,
+      description,
+      url: `${baseUrl}/work`,
+    },
   };
 }
 
@@ -22,13 +27,17 @@ export default async function WorkPage() {
 
   return (
     <div className="pb-24 md:pb-32">
-      <div className="flex flex-col pt-12 md:pt-16">
-        {projects.map((p, i) => (
+      {/* Cung mot khoi voi "Selected work" o trang chu, khong phai mot bien the
+          rieng. Truoc day trang nay dung WorkSection: tieu de, mot doan mo ta,
+          roi mot carousel toan man. Hai trang cung gioi thieu mot du an ma
+          trinh bay khac nhau thi doc ra la hai san pham. */}
+      <div className="work-breakout flex flex-col pt-12 md:pt-16">
+        {projects.map((p) => (
           <div
             key={p.slug}
-            className="border-t border-md-outline-variant py-16 first:border-t-0 first:pt-0 md:py-24"
+            className="border-t border-md-outline-variant py-14 first:border-t-0 first:pt-0 md:py-20"
           >
-            <WorkSection project={p} index={i} />
+            <FeaturedWork project={p} />
           </div>
         ))}
       </div>

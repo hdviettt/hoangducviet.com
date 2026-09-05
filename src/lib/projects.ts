@@ -91,6 +91,41 @@ function mapProject(row: ProjectRow, related?: ProjectPostRef[]): Project {
   };
 }
 
+// Gan danh sach con vao tung du an cha. Dung chung cho ca /work lan trang chu:
+// khoi featured lay so con lam eyebrow ("Platform . 4 agents inside"), nen chi
+// mot trong hai ben nap children thi cung mot du an hien hai kieu o hai trang.
+async function attachChildren(list: Project[]): Promise<Project[]> {
+  const parentSlugs = list.map((p) => p.slug);
+  if (parentSlugs.length === 0) return list;
+  const childRows = await db
+    .select({
+      slug: projects.slug,
+      title: projects.title,
+      tagline: projects.tagline,
+      buildStatus: projects.buildStatus,
+      parentSlug: projects.parentSlug,
+    })
+    .from(projects)
+    .where(
+      and(
+        eq(projects.status, "published"),
+        inArray(projects.parentSlug, parentSlugs),
+      ),
+    )
+    .orderBy(asc(projects.sortOrder));
+  for (const p of list) {
+    p.children = childRows
+      .filter((c) => c.parentSlug === p.slug)
+      .map((c) => ({
+        slug: c.slug,
+        title: c.title,
+        tagline: c.tagline ?? null,
+        buildStatus: c.buildStatus,
+      }));
+  }
+  return list;
+}
+
 export async function getProjects(): Promise<Project[]> {
   try {
     const rows = await db
@@ -98,7 +133,7 @@ export async function getProjects(): Promise<Project[]> {
       .from(projects)
       .where(eq(projects.status, "published"))
       .orderBy(asc(projects.sortOrder), desc(projects.dateCreated));
-    return rows.map((r) => mapProject(r));
+    return await attachChildren(rows.map((r) => mapProject(r)));
   } catch (error) {
     console.error("getProjects failed:", error);
     return [];
@@ -112,41 +147,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
       .from(projects)
       .where(and(eq(projects.status, "published"), eq(projects.featured, true)))
       .orderBy(asc(projects.sortOrder));
-    const featured = rows.map((r) => mapProject(r));
-
-    // Attach each parent's published child pieces so the homepage shows the
-    // same parent/child structure as /work (the platform lists its agents,
-    // rather than hiding that it contains other work).
-    const parentSlugs = featured.map((p) => p.slug);
-    if (parentSlugs.length > 0) {
-      const childRows = await db
-        .select({
-          slug: projects.slug,
-          title: projects.title,
-          tagline: projects.tagline,
-          buildStatus: projects.buildStatus,
-          parentSlug: projects.parentSlug,
-        })
-        .from(projects)
-        .where(
-          and(
-            eq(projects.status, "published"),
-            inArray(projects.parentSlug, parentSlugs),
-          ),
-        )
-        .orderBy(asc(projects.sortOrder));
-      for (const p of featured) {
-        p.children = childRows
-          .filter((c) => c.parentSlug === p.slug)
-          .map((c) => ({
-            slug: c.slug,
-            title: c.title,
-            tagline: c.tagline ?? null,
-            buildStatus: c.buildStatus,
-          }));
-      }
-    }
-    return featured;
+    return await attachChildren(rows.map((r) => mapProject(r)));
   } catch (error) {
     console.error("getFeaturedProjects failed:", error);
     return [];
@@ -197,9 +198,14 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         buildStatus: projects.buildStatus,
       })
       .from(projects)
-      .where(and(eq(projects.parentSlug, slug), eq(projects.status, "published")))
+      .where(
+        and(eq(projects.parentSlug, slug), eq(projects.status, "published")),
+      )
       .orderBy(asc(projects.sortOrder));
-    project.children = childRows.map((c) => ({ ...c, tagline: c.tagline ?? null }));
+    project.children = childRows.map((c) => ({
+      ...c,
+      tagline: c.tagline ?? null,
+    }));
 
     // Parent (for a child), so the deep-dive can link up.
     if (project.parentSlug) {
