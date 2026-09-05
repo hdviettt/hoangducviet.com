@@ -1,7 +1,8 @@
 import { feedRowDate } from "@/components/posts/FeedRow";
+import { Icon } from "@/components/ui/Icon";
+import MediaCarousel from "@/components/widgets/MediaCarousel";
 import { ChildRow } from "@/components/work/ProjectRow";
 import { Chips } from "@/components/work/StackChips";
-import MediaCarousel from "@/components/widgets/MediaCarousel";
 import { IDENTITY } from "@/lib/identity";
 import { getProjectBySlug } from "@/lib/projects";
 import type { Metadata } from "next";
@@ -18,7 +19,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const project = await getProjectBySlug(params.slug);
   if (!project) return { title: `Work - ${IDENTITY.name}` };
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const description = project.tagline ?? project.description ?? "";
   return {
     title: `${project.title} - ${IDENTITY.name}`,
@@ -63,23 +65,53 @@ export default async function ProjectDeepDivePage({
 
   return (
     <div className="max-w-[880px] pb-20 md:pb-28">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2.5 pt-10 text-[14px] sm:pt-12 md:pt-14">
-        <Link href="/work" className="text-md-on-surface-variant transition-colors hover:text-primary">
-          ← Work
+      {/* Breadcrumb. A trail, not a back arrow: "← Work" only says where the
+          previous tab was, while the trail says where this page sits. The last
+          crumb is the section rather than the title, since the title is the h1
+          directly underneath. */}
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center gap-1.5 pt-10 text-[13px] sm:pt-12 md:pt-14"
+      >
+        <Link
+          href="/"
+          className="rounded-sm text-md-on-surface-variant underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Home
+        </Link>
+        <Icon
+          name="chevron_right"
+          size={16}
+          className="text-md-outline"
+          aria-hidden="true"
+        />
+        <Link
+          href="/work"
+          className={`rounded-sm underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+            project.parent ? "text-md-on-surface-variant" : "text-md-on-surface"
+          }`}
+          aria-current={project.parent ? undefined : "page"}
+        >
+          Work
         </Link>
         {project.parent && (
           <>
-            <span className="text-md-outline-variant">/</span>
+            <Icon
+              name="chevron_right"
+              size={16}
+              className="text-md-outline"
+              aria-hidden="true"
+            />
             <Link
               href={`/work/${project.parent.slug}`}
-              className="text-md-on-surface-variant transition-colors hover:text-primary"
+              aria-current="page"
+              className="rounded-sm text-md-on-surface underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {project.parent.title}
             </Link>
           </>
         )}
-      </div>
+      </nav>
 
       {/* ===== Hero ===== */}
       <header className="mt-8">
