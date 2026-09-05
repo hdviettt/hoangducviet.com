@@ -803,16 +803,26 @@ h6 {
   transform: translateX(-50%);
 }
 
-/* Selected work reuses the post carousel, but constrained to the content
-   column instead of bleeding to the viewport (the homepage is left-aligned). */
+/* Carousel cua trang du an: giu trong cot noi dung thay vi tran ra viewport.
+
+   `--mc-max` tung la 600px, dat ra hoi carousel con dung o "Selected work"
+   tren trang chu. Cho do da bo carousel, nen cai khoa 600px chi con tac dung
+   o day — trong mot cot 880px — va no bien mot anh chup man hinh thanh mot
+   o nho troi giua mot vet mo. Slide gio lay tron cot. */
 .work-carousel .media-carousel {
   width: 100%;
   margin: 0;
   transform: none;
-  --mc-max: 600px;
-  --mc-peek: 84px;
+  --mc-max: 880px;
+  --mc-peek: 72px;
   --mc-pad: 0;
   --mc-slide: min(var(--mc-max), calc(100% - var(--mc-peek)));
+}
+
+/* Mot slide thi khong co gi de he ra: chua 72px cho mot hang xom khong ton tai
+   la thu day anh nho lai va bat mat mat can giua mot khoang trong. */
+.work-carousel--one .media-carousel {
+  --mc-peek: 0px;
 }
 
 /* Selected work breaks out past the 1044px content column, so a featured

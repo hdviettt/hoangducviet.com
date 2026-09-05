@@ -147,7 +147,11 @@ export default async function ProjectDeepDivePage({
 
       {/* ===== Media: carousel of real screenshots and clips ===== */}
       {hasMedia && (
-        <div className="work-carousel mt-12 md:mt-14">
+        <div
+          className={`work-carousel mt-12 md:mt-14 ${
+            project.media.length > 1 ? "" : "work-carousel--one"
+          }`}
+        >
           <MediaCarousel
             items={project.media.map((m) => ({
               src: m.src,
