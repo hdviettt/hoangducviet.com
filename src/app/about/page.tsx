@@ -72,7 +72,7 @@ export default async function AboutPage() {
       {/* Expanded story — no divider, same dark tone as the hero bio so the two
           read as one continuous block. Hidden entirely when the body is empty. */}
       {bodyHtml && (
-        <section className="max-w-[560px] mt-2 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards">
+        <section className="mx-auto max-w-[560px] mt-2 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards">
           <div
             className="text-md-on-surface [&_p]:text-[17px] [&_p]:leading-[28px] [&_p]:mb-5 [&_p:last-child]:mb-0 [&_strong]:font-medium [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
             dangerouslySetInnerHTML={{ __html: bodyHtml }}

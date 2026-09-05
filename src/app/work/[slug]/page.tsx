@@ -64,7 +64,10 @@ export default async function ProjectDeepDivePage({
   ];
 
   return (
-    <div className="max-w-[880px] pb-20 md:pb-28">
+    // Can giua trong khung 1044px cua vo trang, giong trang bai viet. Thieu
+    // mx-auto thi khoi 880px dinh sat mep trai va bo trong 164px ben phai —
+    // do 1440px thi le trai 198, le phai 473.
+    <div className="mx-auto max-w-[880px] pb-20 md:pb-28">
       {/* Breadcrumb. A trail, not a back arrow: "← Work" only says where the
           previous tab was, while the trail says where this page sits. The last
           crumb is the section rather than the title, since the title is the h1

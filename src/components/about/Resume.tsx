@@ -9,8 +9,18 @@ const LINKEDIN =
   "https://www.linkedin.com/in/hdviet/";
 
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 function ym(s: string): { y: number; m: number } {
@@ -58,7 +68,10 @@ export default function Resume() {
   const now = new Date();
 
   return (
-    <div className="max-w-[560px] mt-16 md:mt-20">
+    // Cung 560px va cung mx-auto voi khoi tieu su ngay tren. Thieu mx-auto thi
+    // phan Experience tut ve mep trai trong khi ca nua trang tren can giua —
+    // do o 1440px: tieu su bat dau tu 441, Experience tu 198.
+    <div className="mx-auto max-w-[560px] mt-16 md:mt-20">
       <section className="animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
         <SectionLabel>Experience</SectionLabel>
         <div className="space-y-12">

@@ -11,7 +11,10 @@ export default function FeedBlocks({
   viewCounts: Record<string, number>;
 }) {
   return (
-    <div className="max-w-[680px]">
+    // Khong khoa 680px nua. O luoi chua no rong 780 (1044 - 200 rail - 64 gap),
+    // nen cai khoa nay de thua dung 100px ben phai — tren /posts, noi khong con
+    // gi khac de lap, do ra la ca trang lech 100px sang trai.
+    <div>
       {items.map((item) => {
         const key =
           item.kind === "series"
