@@ -1,5 +1,3 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { Icon } from "@/components/ui/Icon";
 import FeaturedClip from "@/components/work/FeaturedClip";
 import { KitDots, flattenStack } from "@/components/work/StackChips";
@@ -34,18 +32,8 @@ export default function FeaturedWork({ project }: { project: Project }) {
   const art = /\.(svg|webp|png)$/.test(project.thumbnail ?? "")
     ? (project.thumbnail as string)
     : null;
-  // Whether this hero has a dark twin is a fact about the file, not about its
-  // extension: a drawing in page colours needs one, a render that carries its
-  // own ground does not, and both ship as .webp or .svg. So ask the disk. This
-  // is a server component and public/ is on it, which beats a naming rule that
-  // would silently 404 the day one hero breaks it.
-  const darkSrc = art?.replace(/\.(svg|webp|png)$/, "-dark.$1") ?? null;
-  const twinned = darkSrc
-    ? existsSync(join(process.cwd(), "public", darkSrc))
-    : false;
-  // Thứ tự nguồn ảnh, và đây là hợp đồng với CMS: thumbnail thắng nếu có, rồi
-  // đến media đầu tiên (ảnh hay clip đều được), cuối cùng mới là bảng số. Tức
-  // là để đổi hình khối này, sửa hai ô đó trong /admin/work là xong.
+  // Thu tu nguon anh, va day la hop dong voi CMS: thumbnail thang neu co, roi
+  // den media dau tien (anh hay clip deu duoc), cuoi cung moi la bang so.
   const hero = project.media[0];
   const clip = hero?.type === "video" ? hero : null;
   const shot = hero?.type === "image" ? hero : null;
@@ -109,27 +97,14 @@ export default function FeaturedWork({ project }: { project: Project }) {
           // because the eye measures the box and not the drawing. Light and
           // dark twins are stacked and swapped by CSS, since an <img> cannot
           // read the page theme.
-          <Link
-            href={href}
-            className={`group block ${twinned ? "" : "overflow-hidden rounded-2xl"}`}
-          >
+          <Link href={href} className="group block overflow-hidden rounded-2xl">
             <img
               src={art}
               alt={project.title}
               loading="lazy"
               decoding="async"
-              className={`${twinned ? "fig-light" : ""} w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]`}
+              className="w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]"
             />
-            {twinned && (
-              <img
-                src={darkSrc as string}
-                alt=""
-                aria-hidden="true"
-                loading="lazy"
-                decoding="async"
-                className="fig-dark w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]"
-              />
-            )}
           </Link>
         ) : clip ? (
           // A clip from the CMS. Same box as a screenshot, and the same crop

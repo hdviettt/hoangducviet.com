@@ -79,7 +79,10 @@ export default function ProfileHero({
                 </a>
               );
             })}
-            <span className="w-px h-4 bg-md-outline-variant" />
+            {/* Gach ngan cach chi co nghia khi email nam cung dong voi day
+                icon. Tren mobile email xuong dong, nen no thanh mot vach dung
+                lo lung o cuoi hang icon. */}
+            <span className="hidden h-4 w-px bg-md-outline-variant sm:block" />
             <a
               href={`mailto:${IDENTITY.email}`}
               className="inline-flex items-center gap-1.5 md-body-medium text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"

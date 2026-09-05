@@ -1,10 +1,7 @@
 "use client";
-
-import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { useTheme } from "./ThemeProvider";
 
 interface FileExplorerProps {
   children: ReactNode;
@@ -31,7 +28,6 @@ const navItems = [
 
 export default function FileExplorer({ children }: FileExplorerProps) {
   const pathname = usePathname();
-  const { theme, toggleTheme, mounted } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
@@ -103,22 +99,22 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           scrolled ? "bg-md-background/80 backdrop-blur-lg" : "bg-md-background"
         }`}
       >
-        <div className="mx-auto max-w-[1140px] px-5 sm:px-8 lg:px-12 h-16 flex items-center gap-8">
+        <div className="mx-auto max-w-[1140px] px-5 sm:px-8 lg:px-12 h-16 flex items-center gap-4 sm:gap-8">
           <Link
             href="/"
-            className="text-[17px] font-medium tracking-tight text-md-on-surface whitespace-nowrap"
+            className="text-[15px] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[17px]"
           >
             Hoang Duc Viet
           </Link>
 
-          <nav className="hidden sm:flex items-center gap-6">
+          <nav className="ml-auto flex items-center gap-4 sm:gap-6">
             {navItems.map((item) => {
               const active = item.match(pathname);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-[14px] leading-5 transition-colors duration-200 ease-md-standard ${
+                  className={`text-[13px] leading-5 sm:text-[14px] transition-colors duration-200 ease-md-standard ${
                     active
                       ? "text-md-on-surface font-medium"
                       : "text-md-on-surface-variant hover:text-md-on-surface"
@@ -129,24 +125,6 @@ export default function FileExplorer({ children }: FileExplorerProps) {
               );
             })}
           </nav>
-
-          <div className="ml-auto flex items-center gap-2">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-md-outline text-md-on-surface-variant hover:bg-md-on-surface/5 hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
-              aria-label="Toggle theme"
-            >
-              {!mounted ? (
-                <span className="w-5 h-5 inline-block" />
-              ) : (
-                <Icon
-                  name={theme === "light" ? "dark_mode" : "light_mode"}
-                  size={20}
-                />
-              )}
-            </button>
-          </div>
         </div>
       </header>
 

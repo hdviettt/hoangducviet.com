@@ -175,35 +175,13 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
             "w-full h-auto rounded-[var(--md-sys-shape-corner-large-increased)]";
           return (
             <figure className="my-6">
-              {darkSrc ? (
-                // Same diagram, two bakes; CSS shows exactly one per theme. The
-                // dark twin repeats the information, so it carries no alt.
-                <>
-                  <img
-                    src={s}
-                    alt={alt || ""}
-                    loading="lazy"
-                    decoding="async"
-                    className={`fig-light ${imgClass}`}
-                  />
-                  <img
-                    src={darkSrc}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    decoding="async"
-                    className={`fig-dark ${imgClass}`}
-                  />
-                </>
-              ) : (
-                <img
-                  src={s}
-                  alt={alt || ""}
-                  loading="lazy"
-                  decoding="async"
-                  className={imgClass}
-                />
-              )}
+              <img
+                src={s}
+                alt={alt || ""}
+                loading="lazy"
+                decoding="async"
+                className={imgClass}
+              />
               {alt && (
                 <figcaption
                   className="text-center text-sm mt-3"

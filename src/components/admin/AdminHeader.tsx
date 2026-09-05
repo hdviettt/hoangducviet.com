@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "@/components/layout/ThemeProvider";
 import { Icon } from "@/components/ui/Icon";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -31,8 +30,7 @@ function getBreadcrumb(pathname: string): { section: string; page?: string } {
 
 export default function AdminHeader() {
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [_mounted, setMounted] = useState(false);
   const { section, page } = getBreadcrumb(pathname);
 
   useEffect(() => setMounted(true), []);
@@ -58,24 +56,6 @@ export default function AdminHeader() {
           </span>
         </>
       )}
-
-      <div className="ml-auto flex items-center gap-2">
-        <button
-          type="button"
-          onClick={toggleTheme}
-          className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-md-outline text-md-on-surface-variant hover:bg-md-on-surface/5 hover:text-md-on-surface transition-colors duration-200 ease-md-standard"
-          aria-label="Toggle theme"
-        >
-          {!mounted ? (
-            <span className="w-5 h-5 inline-block" />
-          ) : (
-            <Icon
-              name={theme === "light" ? "dark_mode" : "light_mode"}
-              size={20}
-            />
-          )}
-        </button>
-      </div>
     </header>
   );
 }

@@ -4,7 +4,6 @@ import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 import ClientFileExplorer from "@/components/layout/ClientFileExplorer";
-import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { PostHogProvider } from "@/components/providers/PostHogProvider";
 import { getGlobalMetadata } from "@/lib/global";
 
@@ -37,33 +36,15 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Runs before hydration so the first paint is already the right theme.
-// A stored choice always wins; with no choice we follow the operating system,
-// which is what a visitor arriving in dark mode expects to see.
-const themeScript = `
-  (function() {
-    try {
-      var stored = localStorage.getItem('theme');
-      var dark = stored
-        ? stored === 'dark'
-        : window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (dark) document.documentElement.classList.add('dark');
-    } catch (e) {}
-  })();
-`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${jetbrainsMono.variable} overflow-x-hidden`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={`${jetbrainsMono.variable} overflow-x-hidden`}>
       <head>
+        <meta name="color-scheme" content="light" />
         <link rel="preconnect" href="https://us.i.posthog.com" />
         <link rel="preconnect" href="https://us-assets.i.posthog.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -80,15 +61,12 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
         />
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">
         <GoogleAnalytics gaId="G-GGK8FWGCPX" />
-        <ThemeProvider>
-          <PostHogProvider>
-            <ClientFileExplorer>{children}</ClientFileExplorer>
-          </PostHogProvider>
-        </ThemeProvider>
+        <PostHogProvider>
+          <ClientFileExplorer>{children}</ClientFileExplorer>
+        </PostHogProvider>
       </body>
     </html>
   );

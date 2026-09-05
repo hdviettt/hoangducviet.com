@@ -148,71 +148,6 @@
     --article-code-bg: hsl(var(--md-sys-color-surface-variant));
     --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
   }
-
-  .dark {
-    /* ----- M3 color roles (dark) ----- */
-    --md-sys-color-primary: 223 100% 76%; /* Prosperous Blue tint for dark surface */
-    --md-sys-color-on-primary: 221 100% 14%;
-    --md-sys-color-primary-container: 221 75% 32%;
-    --md-sys-color-on-primary-container: 221 100% 93%;
-
-    --md-sys-color-secondary: 220 18% 78%;
-    --md-sys-color-on-secondary: 222 25% 18%;
-    --md-sys-color-secondary-container: 222 18% 28%;
-    --md-sys-color-on-secondary-container: 220 35% 92%;
-
-    --md-sys-color-tertiary: 280 45% 78%;
-    --md-sys-color-on-tertiary: 280 50% 18%;
-    --md-sys-color-tertiary-container: 280 30% 30%;
-    --md-sys-color-on-tertiary-container: 280 45% 92%;
-    --md-sys-color-warning: 45 98% 70%;
-    --md-sys-color-scrim: 0 0% 0%;
-
-    --md-sys-color-error: 4 100% 80%;
-    --md-sys-color-on-error: 4 100% 16%;
-
-    --md-sys-color-background: 220 9% 8%; /* #131314 — Gemini-style deep neutral */
-    --md-sys-color-on-background: 220 13% 91%;
-
-    --md-sys-color-surface: 220 9% 8%;
-    --md-sys-color-on-surface: 220 13% 91%;
-    --md-sys-color-surface-variant: 220 8% 16%;
-    --md-sys-color-on-surface-variant: 220 8% 72%;
-
-    --md-sys-color-surface-container-lowest: 220 9% 5%;
-    --md-sys-color-surface-container-low: 220 9% 10%;
-    --md-sys-color-surface-container: 220 8% 13%;
-    --md-sys-color-surface-container-high: 220 8% 16%;
-    --md-sys-color-surface-container-highest: 220 8% 20%;
-
-    --md-sys-color-outline: 220 8% 38%;
-    --md-sys-color-outline-variant: 220 8% 22%;
-
-    --md-sys-color-inverse-surface: 220 13% 91%;
-    --md-sys-color-inverse-on-surface: 220 9% 12%;
-    --md-sys-color-inverse-primary: 221 100% 47%;
-
-    /* ----- M3 elevation (dark) — subtler shadows ----- */
-    --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
-    --md-sys-elevation-level2: 0 1px 3px 0 rgba(0, 0, 0, 0.32), 0 1px 2px 0
-      rgba(0, 0, 0, 0.24);
-    --md-sys-elevation-level3: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px
-      -2px rgba(0, 0, 0, 0.3);
-    --md-sys-elevation-level4: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px
-      -4px rgba(0, 0, 0, 0.35);
-    --md-sys-elevation-level5: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px
-      -6px rgba(0, 0, 0, 0.4);
-
-    /* Chart series — dark steps chosen (not flipped) and re-validated against
-       the dark surface: inside the lightness band, above the chroma floor. */
-    --chart-1: #7fa3ff;
-    --chart-2: #c8763f;
-
-    /* Article content — dark */
-    --article-text: hsl(220 9% 72%);
-    --article-heading: hsl(220 18% 96%);
-    --article-link-hover: hsl(223 100% 86%);
-  }
 }
 
 @layer base {
@@ -845,7 +780,21 @@ h6 {
    "PostgreSQL + pgvector" would then hang past the right edge and give the
    page a horizontal scrollbar it can never scroll back from. No hover, no
    pill; the name is still in the DOM for a screen reader either way. */
-@media (hover: hover) {
+/* `opacity: 0` van chiem cho trong layout, nen cai pill nay day scrollWidth
+   cua trang len 429px trong mot viewport 390px — ca trang mobile truot ngang
+   duoc 39px ma khong ai thay tai sao. `display: none` moi lay no ra khoi
+   layout; tren may co hover thi tra lai. */
+.stack-tip {
+  display: none;
+}
+
+/* Dieu kien co CA be rong, khong chi hover. Hai ly do: mot cua so desktop hep
+   cung tran y het mot cai dien thoai, va `hover` la thu khong kiem chung duoc
+   bang cong cu o day — con be rong thi do duoc. */
+@media (min-width: 640px) and (hover: hover) {
+  .stack-tip {
+    display: block;
+  }
   .group:hover > .stack-tip {
     opacity: 1;
   }
@@ -950,12 +899,6 @@ h6 {
     ), hsl(var(--md-sys-color-surface-container));
 }
 
-.dark .media-carousel__frame[data-mat="brand"] {
-  --mat-near: 0.07;
-  --mat-mid: 0.02;
-  --mat-far: 0.05;
-}
-
 /* Three classes deep on purpose: the article's own figure rules are two
    classes plus an element, and a slide is a figure holding an img, so
    anything less specific loses to them. */
@@ -998,37 +941,17 @@ h6 {
 .fig-dark {
   display: none;
 }
-.dark .fig-light {
-  display: none;
-}
-.dark .fig-dark {
-  display: block;
-}
+
 /* Carousel slides pin their img to display:block at (0,3,1); out-specify it so
    the swap still wins inside a slide frame. */
 .article-content .media-carousel .media-carousel__frame > img.fig-dark {
   display: none;
 }
-.dark .article-content .media-carousel .media-carousel__frame > img.fig-light {
-  display: none;
-}
-.dark .article-content .media-carousel .media-carousel__frame > img.fig-dark {
-  display: block;
-}
+
 /* Same swap for clip twins — the frame > video rule pins display:block at a
    higher specificity than a bare .fig-dark, so out-specify it here too. */
 .article-content .media-carousel .media-carousel__frame > video.fig-dark {
   display: none;
-}
-.dark
-  .article-content
-  .media-carousel
-  .media-carousel__frame
-  > video.fig-light {
-  display: none;
-}
-.dark .article-content .media-carousel .media-carousel__frame > video.fig-dark {
-  display: block;
 }
 
 /* The caption lives inside the slide and travels with it — that is why a
@@ -1886,30 +1809,7 @@ select.md-field {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-.dark .feature-showcase {
-  --surface: #181a1e;
-  --surface-2: #1b1d22;
-  --surface-3: #23262b;
-  --ink: #e9eaec;
-  --muted: #b0b3b9;
-  --faint: #797d86;
-  --hair: #282b31;
-  --hair-2: #373b42;
-  --gdot: #2c3038;
-  --primary-soft: #94aaff1c;
-  --ci-blue: #28324c;
-  --ci-blue-ink: #cdd8f2;
-  --ci-line: #565d6a;
-  --ci-frame: #191d28;
-  --ci-frame-b: #333c52;
-  --l0: #222c44;
-  --l1: #26314e;
-  --l2: #2a3858;
-  --l3: #2e3e62;
-  --l4: #32446c;
-  --l5: #364a76;
-  --fs-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 24px -14px rgba(0, 0, 0, 0.6);
-}
+
 /* Diagram-only mode: the /work deep-dive supplies its own hero, metrics, and
    "Built with", so hide the showcase's built-in header and Models/Stack bands. */
 .feature-showcase.diagram .head,
@@ -1985,34 +1885,7 @@ select.md-field {
   overflow: visible;
   font-family: var(--font-inter), system-ui, sans-serif;
 }
-.dark .work-diagram {
-  --wd-bg: #15161a;
-  --wd-zone: #1c1d22;
-  --wd-zone-b: #2b2d34;
-  --wd-blue: #273b56;
-  --wd-blue-ink: #c3d7ef;
-  --wd-neutral: #2c2f39;
-  --wd-neutral-ink: #bcc1cc;
-  --wd-hub: #3a63d8;
-  --wd-ink: #e7e9ed;
-  --wd-muted: #a3a8b2;
-  --wd-faint: #6b7079;
-  --wd-line: #4b4f59;
-  --wd-tile: #dce2ee;
-  --wd-icc: #aebfd8;
-  --wd-field: #23252c;
-  --wd-tagbg: #2a2d36;
-  --wd-tagink: #aeb6c8;
-  --wd-offbg: #23262e;
-  --wd-paper: #24262e;
-  --wd-paper-b: #343845;
-  --wd-paper-ink: #e7e9ed;
-  --wd-paper-ink2: #a3a8b2;
-  --wd-paper-faint: #757b86;
-  --wd-paper-rule: #2f323b;
-  --wd-paper-g1: #464b57;
-  --wd-paper-g2: #363a44;
-}
+
 .work-diagram .wd-bg {
   fill: var(--wd-bg);
 }
@@ -2106,12 +1979,7 @@ select.md-field {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.dark .work-diagram .wd-bar {
-  fill: #31343d;
-}
-.dark .work-diagram .wd-abub {
-  fill: #2c2f38;
-}
+
 .work-diagram .wd-tile {
   fill: var(--wd-tile);
 }
