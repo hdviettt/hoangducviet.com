@@ -123,10 +123,19 @@ const MARK_COLORS: Record<string, string> = {
   redis: "#FF4438",
 };
 
-export function Mark({ id, className = "h-[14px] w-[14px]" }: { id: string; className?: string }) {
+export function Mark({
+  id,
+  className = "h-[14px] w-[14px]",
+  mono = false,
+}: { id: string; className?: string; mono?: boolean }) {
   const m = MARKS[id];
   if (!m) return null;
-  const color = MARK_COLORS[id];
+  // `mono` drops the brand hue and paints the mark in the surrounding text
+  // colour. Sixteen brand hues in one small row read as a sticker sheet; in a
+  // set, the shapes are what tell the tools apart, and one ink lets them read
+  // as a set. The coloured version stays the default for anywhere a logo
+  // appears on its own.
+  const color = mono ? undefined : MARK_COLORS[id];
   return (
     <svg
       viewBox={m.vb ?? "0 0 24 24"}

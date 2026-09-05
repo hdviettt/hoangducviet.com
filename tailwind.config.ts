@@ -10,8 +10,13 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', '"Google Sans"', "system-ui", "sans-serif"],
-        mono: ['var(--font-mono)', '"Roboto Mono"', "ui-monospace", "monospace"],
+        sans: ["var(--font-inter)", '"Google Sans"', "system-ui", "sans-serif"],
+        mono: [
+          "var(--font-mono)",
+          '"Roboto Mono"',
+          "ui-monospace",
+          "monospace",
+        ],
       },
       colors: {
         // ----- Shadcn aliases (kept so existing utilities keep working) -----
@@ -53,15 +58,19 @@ const config: Config = {
         "md-primary": "hsl(var(--md-sys-color-primary))",
         "md-on-primary": "hsl(var(--md-sys-color-on-primary))",
         "md-primary-container": "hsl(var(--md-sys-color-primary-container))",
-        "md-on-primary-container": "hsl(var(--md-sys-color-on-primary-container))",
+        "md-on-primary-container":
+          "hsl(var(--md-sys-color-on-primary-container))",
         "md-secondary": "hsl(var(--md-sys-color-secondary))",
         "md-on-secondary": "hsl(var(--md-sys-color-on-secondary))",
-        "md-secondary-container": "hsl(var(--md-sys-color-secondary-container))",
-        "md-on-secondary-container": "hsl(var(--md-sys-color-on-secondary-container))",
+        "md-secondary-container":
+          "hsl(var(--md-sys-color-secondary-container))",
+        "md-on-secondary-container":
+          "hsl(var(--md-sys-color-on-secondary-container))",
         "md-tertiary": "hsl(var(--md-sys-color-tertiary))",
         "md-on-tertiary": "hsl(var(--md-sys-color-on-tertiary))",
         "md-tertiary-container": "hsl(var(--md-sys-color-tertiary-container))",
-        "md-on-tertiary-container": "hsl(var(--md-sys-color-on-tertiary-container))",
+        "md-on-tertiary-container":
+          "hsl(var(--md-sys-color-on-tertiary-container))",
         "md-error": "hsl(var(--md-sys-color-error))",
         "md-on-error": "hsl(var(--md-sys-color-on-error))",
         "md-warning": "hsl(var(--md-sys-color-warning))",
@@ -72,23 +81,32 @@ const config: Config = {
         "md-on-surface": "hsl(var(--md-sys-color-on-surface))",
         "md-surface-variant": "hsl(var(--md-sys-color-surface-variant))",
         "md-on-surface-variant": "hsl(var(--md-sys-color-on-surface-variant))",
-        "md-surface-container-lowest": "hsl(var(--md-sys-color-surface-container-lowest))",
-        "md-surface-container-low": "hsl(var(--md-sys-color-surface-container-low))",
+        "md-surface-container-lowest":
+          "hsl(var(--md-sys-color-surface-container-lowest))",
+        "md-surface-container-low":
+          "hsl(var(--md-sys-color-surface-container-low))",
         "md-surface-container": "hsl(var(--md-sys-color-surface-container))",
-        "md-surface-container-high": "hsl(var(--md-sys-color-surface-container-high))",
-        "md-surface-container-highest": "hsl(var(--md-sys-color-surface-container-highest))",
+        "md-surface-container-high":
+          "hsl(var(--md-sys-color-surface-container-high))",
+        "md-surface-container-highest":
+          "hsl(var(--md-sys-color-surface-container-highest))",
         "md-outline": "hsl(var(--md-sys-color-outline))",
         "md-outline-variant": "hsl(var(--md-sys-color-outline-variant))",
+        // The inverse pair has existed as tokens since the M3 port but was
+        // never exposed as a utility. It is what a tooltip is made of: a
+        // surface that reads as foreground against the page in either theme.
+        "md-inverse-surface": "hsl(var(--md-sys-color-inverse-surface))",
+        "md-inverse-on-surface": "hsl(var(--md-sys-color-inverse-on-surface))",
       },
       borderRadius: {
         // ----- M3 shape scale -----
         none: "var(--md-sys-shape-corner-none)",
-        xs: "var(--md-sys-shape-corner-extra-small)",      // 4px
-        sm: "var(--md-sys-shape-corner-small)",            // 8px — button
-        md: "var(--md-sys-shape-corner-medium)",           // 12px — card (default)
-        lg: "var(--md-sys-shape-corner-medium)",           // alias kept for shadcn
-        xl: "var(--md-sys-shape-corner-large)",            // 16px
-        "2xl": "var(--md-sys-shape-corner-extra-large)",   // 28px — dialog
+        xs: "var(--md-sys-shape-corner-extra-small)", // 4px
+        sm: "var(--md-sys-shape-corner-small)", // 8px — button
+        md: "var(--md-sys-shape-corner-medium)", // 12px — card (default)
+        lg: "var(--md-sys-shape-corner-medium)", // alias kept for shadcn
+        xl: "var(--md-sys-shape-corner-large)", // 16px
+        "2xl": "var(--md-sys-shape-corner-extra-large)", // 28px — dialog
         "3xl": "var(--md-sys-shape-corner-extra-large)",
         full: "var(--md-sys-shape-corner-full)",
       },
@@ -101,8 +119,10 @@ const config: Config = {
       },
       transitionTimingFunction: {
         "md-emphasized": "var(--md-sys-motion-easing-emphasized)",
-        "md-emphasized-decelerate": "var(--md-sys-motion-easing-emphasized-decelerate)",
-        "md-emphasized-accelerate": "var(--md-sys-motion-easing-emphasized-accelerate)",
+        "md-emphasized-decelerate":
+          "var(--md-sys-motion-easing-emphasized-decelerate)",
+        "md-emphasized-accelerate":
+          "var(--md-sys-motion-easing-emphasized-accelerate)",
         "md-standard": "var(--md-sys-motion-easing-standard)",
       },
     },
