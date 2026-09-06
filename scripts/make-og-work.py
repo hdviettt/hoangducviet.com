@@ -69,6 +69,11 @@ def ink_box(png: Path) -> tuple[float, float, float, float]:
 def wrap(art: str, x: float, y: float, w: float, h: float) -> str:
     """Long hinh goc vao khung 1200x630, cat theo khung net da do."""
     art = art.strip()
+    # File nguon bat dau bang khai bao XML (can cho chu tieng Viet). Cat no ra
+    # truoc, khong thi `index(">")` lai tra ve cuoi khai bao chu khong phai
+    # cuoi the <svg>.
+    if art.startswith("<?xml"):
+        art = art[art.index("?>") + 2 :].lstrip()
     head, body = art[: art.index(">") + 1], art[art.index(">") + 1 :]
     for attr in ("width", "height", "viewBox"):
         head = re.sub(r'\s%s="[^"]*"' % attr, "", head)
