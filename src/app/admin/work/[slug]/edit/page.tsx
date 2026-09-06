@@ -38,7 +38,6 @@ export default async function EditWorkPage({ params }: Params) {
         initialData={{
           slug: p.slug,
           title: p.title,
-          tagline: p.tagline ?? "",
           description: p.description ?? "",
           content: p.content ?? "",
           thumbnail: p.thumbnail ?? "",

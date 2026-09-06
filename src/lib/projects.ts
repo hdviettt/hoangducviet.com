@@ -29,14 +29,17 @@ export interface ProjectPostRef {
 export interface ProjectChild {
   slug: string;
   title: string;
-  tagline: string | null;
+  description: string | null;
   buildStatus: string;
 }
 
 export interface Project {
   slug: string;
   title: string;
-  tagline: string | null;
+  // `tagline` van con la mot cot trong DB nhung khong con duoc doc o dau:
+  // the ngoai va trang trong deu dung `description`. Hai truong cho cung mot
+  // cau, mot cai co gioi han do dai va mot cai khong, la hai quy uoc cho mot
+  // viec — va no dan den the /work noi mot dang con trang du an noi mot dang.
   description: string | null;
   content: string | null;
   thumbnail: string | null;
@@ -68,7 +71,6 @@ function mapProject(row: ProjectRow, related?: ProjectPostRef[]): Project {
   return {
     slug: row.slug,
     title: row.title,
-    tagline: row.tagline,
     description: row.description,
     content: row.content,
     thumbnail: row.thumbnail,
@@ -101,7 +103,7 @@ async function attachChildren(list: Project[]): Promise<Project[]> {
     .select({
       slug: projects.slug,
       title: projects.title,
-      tagline: projects.tagline,
+      description: projects.description,
       buildStatus: projects.buildStatus,
       parentSlug: projects.parentSlug,
     })
@@ -119,7 +121,7 @@ async function attachChildren(list: Project[]): Promise<Project[]> {
       .map((c) => ({
         slug: c.slug,
         title: c.title,
-        tagline: c.tagline ?? null,
+        description: c.description ?? null,
         buildStatus: c.buildStatus,
       }));
   }
@@ -194,7 +196,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       .select({
         slug: projects.slug,
         title: projects.title,
-        tagline: projects.tagline,
+        description: projects.description,
         buildStatus: projects.buildStatus,
       })
       .from(projects)
@@ -204,7 +206,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       .orderBy(asc(projects.sortOrder));
     project.children = childRows.map((c) => ({
       ...c,
-      tagline: c.tagline ?? null,
+      description: c.description ?? null,
     }));
 
     // Parent (for a child), so the deep-dive can link up.

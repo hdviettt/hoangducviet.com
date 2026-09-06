@@ -22,7 +22,7 @@ export async function generateMetadata({
   if (!project) return { title: `Work - ${IDENTITY.name}` };
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
-  const description = project.tagline ?? project.description ?? "";
+  const description = project.description ?? "";
   return {
     title: `${project.title} - ${IDENTITY.name}`,
     description,

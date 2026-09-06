@@ -81,9 +81,9 @@ export default function FeaturedWork({ project }: { project: Project }) {
           </Link>
         </h3>
 
-        {project.tagline && (
-          <p className="mt-5 max-w-[38ch] text-[16px] leading-7 text-md-on-surface-variant">
-            {project.tagline}
+        {project.description && (
+          <p className="mt-5 text-[16px] leading-7 text-md-on-surface-variant">
+            {project.description}
           </p>
         )}
 

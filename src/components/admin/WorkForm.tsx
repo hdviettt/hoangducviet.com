@@ -1,15 +1,10 @@
 "use client";
 
-import DescriptionMeter from "@/components/admin/DescriptionMeter";
 import MediaPicker from "@/components/admin/MediaPicker";
 import RichEditor from "@/components/admin/RichEditor";
 import { useToast } from "@/components/admin/Toast";
 import { MARK_IDS } from "@/components/home/logo-marks";
-import type {
-  ProjectLogo,
-  ProjectMedia,
-  ProjectStackGroup,
-} from "@/db/schema";
+import type { ProjectLogo, ProjectMedia, ProjectStackGroup } from "@/db/schema";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -17,7 +12,6 @@ interface WorkFormProps {
   initialData?: {
     slug: string;
     title: string;
-    tagline: string;
     description: string;
     content: string;
     thumbnail: string;
@@ -76,7 +70,12 @@ function LogoRow({
         maxLength={2}
         className="md-field-dense w-14"
       />
-      <button type="button" onClick={onRemove} className={removeBtn} aria-label="Remove">
+      <button
+        type="button"
+        onClick={onRemove}
+        className={removeBtn}
+        aria-label="Remove"
+      >
         &times;
       </button>
     </div>
@@ -95,24 +94,40 @@ export default function WorkForm({
 
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [slug, setSlug] = useState(initialData?.slug ?? "");
-  const [tagline, setTagline] = useState(initialData?.tagline ?? "");
-  const [description, setDescription] = useState(initialData?.description ?? "");
+  const [description, setDescription] = useState(
+    initialData?.description ?? "",
+  );
   const [content, setContent] = useState(initialData?.content ?? "");
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
   const [parentSlug, setParentSlug] = useState(initialData?.parentSlug ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
-  const [buildStatus, setBuildStatus] = useState(initialData?.buildStatus ?? "live");
+  const [buildStatus, setBuildStatus] = useState(
+    initialData?.buildStatus ?? "live",
+  );
   const [featured, setFeatured] = useState(initialData?.featured ?? false);
-  const [sortOrder, setSortOrder] = useState(String(initialData?.sortOrder ?? 0));
-  const [models, setModels] = useState<ProjectLogo[]>(initialData?.models ?? []);
-  const [stack, setStack] = useState<ProjectStackGroup[]>(initialData?.stack ?? []);
+  const [sortOrder, setSortOrder] = useState(
+    String(initialData?.sortOrder ?? 0),
+  );
+  const [models, setModels] = useState<ProjectLogo[]>(
+    initialData?.models ?? [],
+  );
+  const [stack, setStack] = useState<ProjectStackGroup[]>(
+    initialData?.stack ?? [],
+  );
   const [media, setMedia] = useState<ProjectMedia[]>(initialData?.media ?? []);
-  const [postSlugs, setPostSlugs] = useState<string[]>(initialData?.postSlugs ?? []);
+  const [postSlugs, setPostSlugs] = useState<string[]>(
+    initialData?.postSlugs ?? [],
+  );
 
   const onTitle = (value: string) => {
     setTitle(value);
     if (!isEdit) {
-      setSlug(value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
+      setSlug(
+        value
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, ""),
+      );
     }
   };
   const togglePost = (s: string) =>
@@ -131,7 +146,6 @@ export default function WorkForm({
         body: JSON.stringify({
           title,
           slug,
-          tagline: tagline || null,
           description: description || null,
           content: content || null,
           thumbnail: thumbnail || null,
@@ -165,36 +179,59 @@ export default function WorkForm({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="md-field-label">title</label>
-          <input value={title} onChange={(e) => onTitle(e.target.value)} className="md-field" required />
+          <input
+            value={title}
+            onChange={(e) => onTitle(e.target.value)}
+            className="md-field"
+            required
+          />
         </div>
         <div>
           <label className="md-field-label">slug</label>
-          <input value={slug} onChange={(e) => setSlug(e.target.value)} className="md-field" required />
+          <input
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            className="md-field"
+            required
+          />
         </div>
       </div>
 
       <div>
-        <label className="md-field-label">tagline <span>(one-liner on the /work card)</span></label>
-        <textarea value={tagline} onChange={(e) => setTagline(e.target.value)} rows={2} className="md-field !leading-6" />
-        <DescriptionMeter value={tagline} />
-      </div>
-
-      <div>
-        <label className="md-field-label">description <span>(paragraph under the showcase title)</span></label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="md-field !leading-6" />
+        <label className="md-field-label">
+          description{" "}
+          <span>
+            (the card on /work and the paragraph under the title — one text, no
+            length limit)
+          </span>
+        </label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={4}
+          className="md-field !leading-6"
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div>
           <label className="md-field-label">status</label>
-          <select value={status} onChange={(e) => setStatus(e.target.value)} className="md-field">
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="md-field"
+          >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
           </select>
         </div>
         <div>
           <label className="md-field-label">build</label>
-          <select value={buildStatus} onChange={(e) => setBuildStatus(e.target.value)} className="md-field">
+          <select
+            value={buildStatus}
+            onChange={(e) => setBuildStatus(e.target.value)}
+            className="md-field"
+          >
             <option value="live">Live</option>
             <option value="wip">WIP</option>
             <option value="archived">Archived</option>
@@ -202,11 +239,21 @@ export default function WorkForm({
         </div>
         <div>
           <label className="md-field-label">sort order</label>
-          <input type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="md-field" />
+          <input
+            type="number"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="md-field"
+          />
         </div>
         <div className="flex items-end pb-2">
           <label className="inline-flex items-center gap-2 text-[15px] text-md-on-surface">
-            <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="h-4 w-4" />
+            <input
+              type="checkbox"
+              checked={featured}
+              onChange={(e) => setFeatured(e.target.checked)}
+              className="h-4 w-4"
+            />
             featured
           </label>
         </div>
@@ -240,30 +287,56 @@ export default function WorkForm({
             <LogoRow
               key={i}
               item={m}
-              onChange={(patch) => setModels((p) => p.map((x, idx) => (idx === i ? { ...x, ...patch } : x)))}
+              onChange={(patch) =>
+                setModels((p) =>
+                  p.map((x, idx) => (idx === i ? { ...x, ...patch } : x)),
+                )
+              }
               onRemove={() => setModels((p) => p.filter((_, idx) => idx !== i))}
             />
           ))}
         </div>
-        <button type="button" onClick={() => setModels((p) => [...p, { name: "" }])} className="md-btn md-btn-tonal md-btn-sm mt-2">
+        <button
+          type="button"
+          onClick={() => setModels((p) => [...p, { name: "" }])}
+          className="md-btn md-btn-tonal md-btn-sm mt-2"
+        >
           + model
         </button>
       </div>
 
       {/* Stack repeater (grouped) */}
       <div>
-        <label className="md-field-label">stack <span>(grouped by layer)</span></label>
+        <label className="md-field-label">
+          stack <span>(grouped by layer)</span>
+        </label>
         <div className="space-y-4">
           {stack.map((g, gi) => (
-            <div key={gi} className="rounded-xl border border-md-outline-variant p-3">
+            <div
+              key={gi}
+              className="rounded-xl border border-md-outline-variant p-3"
+            >
               <div className="mb-2 flex items-center gap-2">
                 <input
                   value={g.group}
-                  onChange={(e) => setStack((p) => p.map((x, idx) => (idx === gi ? { ...x, group: e.target.value } : x)))}
+                  onChange={(e) =>
+                    setStack((p) =>
+                      p.map((x, idx) =>
+                        idx === gi ? { ...x, group: e.target.value } : x,
+                      ),
+                    )
+                  }
                   placeholder="group (e.g. Backend)"
                   className="md-field-dense flex-1 font-medium"
                 />
-                <button type="button" onClick={() => setStack((p) => p.filter((_, idx) => idx !== gi))} className={removeBtn} aria-label="Remove group">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setStack((p) => p.filter((_, idx) => idx !== gi))
+                  }
+                  className={removeBtn}
+                  aria-label="Remove group"
+                >
                   &times;
                 </button>
               </div>
@@ -276,20 +349,42 @@ export default function WorkForm({
                       setStack((p) =>
                         p.map((x, idx) =>
                           idx === gi
-                            ? { ...x, items: x.items.map((y, j) => (j === ii ? { ...y, ...patch } : y)) }
+                            ? {
+                                ...x,
+                                items: x.items.map((y, j) =>
+                                  j === ii ? { ...y, ...patch } : y,
+                                ),
+                              }
                             : x,
                         ),
                       )
                     }
                     onRemove={() =>
-                      setStack((p) => p.map((x, idx) => (idx === gi ? { ...x, items: x.items.filter((_, j) => j !== ii) } : x)))
+                      setStack((p) =>
+                        p.map((x, idx) =>
+                          idx === gi
+                            ? {
+                                ...x,
+                                items: x.items.filter((_, j) => j !== ii),
+                              }
+                            : x,
+                        ),
+                      )
                     }
                   />
                 ))}
               </div>
               <button
                 type="button"
-                onClick={() => setStack((p) => p.map((x, idx) => (idx === gi ? { ...x, items: [...x.items, { name: "" }] } : x)))}
+                onClick={() =>
+                  setStack((p) =>
+                    p.map((x, idx) =>
+                      idx === gi
+                        ? { ...x, items: [...x.items, { name: "" }] }
+                        : x,
+                    ),
+                  )
+                }
                 className="md-btn md-btn-text md-btn-sm mt-2"
               >
                 + item
@@ -297,21 +392,38 @@ export default function WorkForm({
             </div>
           ))}
         </div>
-        <button type="button" onClick={() => setStack((p) => [...p, { group: "", items: [] }])} className="md-btn md-btn-tonal md-btn-sm mt-2">
+        <button
+          type="button"
+          onClick={() => setStack((p) => [...p, { group: "", items: [] }])}
+          className="md-btn md-btn-tonal md-btn-sm mt-2"
+        >
           + group
         </button>
       </div>
 
       {/* Media repeater */}
       <div>
-        <label className="md-field-label">media <span>(carousel; leave empty for a placeholder)</span></label>
+        <label className="md-field-label">
+          media <span>(carousel; leave empty for a placeholder)</span>
+        </label>
         <div className="space-y-3">
           {media.map((m, i) => (
-            <div key={i} className="rounded-xl border border-md-outline-variant p-3">
+            <div
+              key={i}
+              className="rounded-xl border border-md-outline-variant p-3"
+            >
               <div className="flex items-center gap-2">
                 <select
                   value={m.type}
-                  onChange={(e) => setMedia((p) => p.map((x, idx) => (idx === i ? { ...x, type: e.target.value as "image" | "video" } : x)))}
+                  onChange={(e) =>
+                    setMedia((p) =>
+                      p.map((x, idx) =>
+                        idx === i
+                          ? { ...x, type: e.target.value as "image" | "video" }
+                          : x,
+                      ),
+                    )
+                  }
                   className="md-field-dense w-28"
                 >
                   <option value="image">image</option>
@@ -319,42 +431,75 @@ export default function WorkForm({
                 </select>
                 <input
                   value={m.caption ?? ""}
-                  onChange={(e) => setMedia((p) => p.map((x, idx) => (idx === i ? { ...x, caption: e.target.value } : x)))}
+                  onChange={(e) =>
+                    setMedia((p) =>
+                      p.map((x, idx) =>
+                        idx === i ? { ...x, caption: e.target.value } : x,
+                      ),
+                    )
+                  }
                   placeholder="caption"
                   className="md-field-dense flex-1"
                 />
-                <button type="button" onClick={() => setMedia((p) => p.filter((_, idx) => idx !== i))} className={removeBtn} aria-label="Remove">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setMedia((p) => p.filter((_, idx) => idx !== i))
+                  }
+                  className={removeBtn}
+                  aria-label="Remove"
+                >
                   &times;
                 </button>
               </div>
               <div className="mt-2">
                 <MediaPicker
                   value={m.src}
-                  onChange={(v) => setMedia((p) => p.map((x, idx) => (idx === i ? { ...x, src: v } : x)))}
+                  onChange={(v) =>
+                    setMedia((p) =>
+                      p.map((x, idx) => (idx === i ? { ...x, src: v } : x)),
+                    )
+                  }
                   label="File"
                 />
               </div>
             </div>
           ))}
         </div>
-        <button type="button" onClick={() => setMedia((p) => [...p, { type: "image", src: "" }])} className="md-btn md-btn-tonal md-btn-sm mt-2">
+        <button
+          type="button"
+          onClick={() => setMedia((p) => [...p, { type: "image", src: "" }])}
+          className="md-btn md-btn-tonal md-btn-sm mt-2"
+        >
           + media
         </button>
       </div>
 
       {/* Long-form writeup (optional) */}
       <div>
-        <label className="md-field-label">writeup <span>(optional, shown on the deep-dive)</span></label>
-        <RichEditor content={content} onChange={setContent} outputFormat="html" />
+        <label className="md-field-label">
+          writeup <span>(optional, shown on the deep-dive)</span>
+        </label>
+        <RichEditor
+          content={content}
+          onChange={setContent}
+          outputFormat="html"
+        />
       </div>
 
       {/* Thumbnail */}
-      <MediaPicker value={thumbnail} onChange={setThumbnail} label="Thumbnail" />
+      <MediaPicker
+        value={thumbnail}
+        onChange={setThumbnail}
+        label="Thumbnail"
+      />
 
       {/* Backing writing */}
       {allPosts.length > 0 && (
         <div>
-          <label className="md-field-label">related articles <span>(posts and collection parts)</span></label>
+          <label className="md-field-label">
+            related articles <span>(posts and collection parts)</span>
+          </label>
           <div className="max-h-48 divide-y divide-md-outline-variant overflow-y-auto rounded-2xl border border-md-outline-variant">
             {allPosts.map((post) => (
               <button
@@ -375,10 +520,18 @@ export default function WorkForm({
       )}
 
       <div className="flex gap-3">
-        <button type="submit" disabled={saving} className="md-btn md-btn-filled">
+        <button
+          type="submit"
+          disabled={saving}
+          className="md-btn md-btn-filled"
+        >
           {saving ? "saving..." : isEdit ? "Update project" : "Create project"}
         </button>
-        <button type="button" onClick={() => router.back()} className="md-btn md-btn-outlined">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="md-btn md-btn-outlined"
+        >
           Cancel
         </button>
       </div>

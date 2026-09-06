@@ -15,7 +15,7 @@ export default async function AdminWorkPage() {
     .select({
       slug: projects.slug,
       title: projects.title,
-      tagline: projects.tagline,
+      description: projects.description,
       status: projects.status,
       buildStatus: projects.buildStatus,
       featured: projects.featured,
@@ -28,7 +28,7 @@ export default async function AdminWorkPage() {
     .groupBy(
       projects.slug,
       projects.title,
-      projects.tagline,
+      projects.description,
       projects.status,
       projects.buildStatus,
       projects.featured,
@@ -43,7 +43,10 @@ export default async function AdminWorkPage() {
         title="Work"
         count={rows.length}
         action={
-          <Link href="/admin/work/new" className="md-btn md-btn-filled md-btn-sm">
+          <Link
+            href="/admin/work/new"
+            className="md-btn md-btn-filled md-btn-sm"
+          >
             New project
           </Link>
         }
@@ -53,7 +56,10 @@ export default async function AdminWorkPage() {
         <EmptyState
           title="No projects yet"
           hint={
-            <Link href="/admin/work/new" className="text-md-primary hover:underline">
+            <Link
+              href="/admin/work/new"
+              className="text-md-primary hover:underline"
+            >
               New project
             </Link>
           }
@@ -67,7 +73,7 @@ export default async function AdminWorkPage() {
                 key={p.slug}
                 href={`/admin/work/${p.slug}/edit`}
                 title={p.title}
-                description={p.tagline}
+                description={p.description}
                 muted={isDraft}
                 meta={
                   <>
@@ -76,14 +82,22 @@ export default async function AdminWorkPage() {
                     <span>
                       {p.links} {p.links === 1 ? "link" : "links"}
                     </span>
-                    {p.featured && <span className="text-md-primary">Featured</span>}
+                    {p.featured && (
+                      <span className="text-md-primary">Featured</span>
+                    )}
                     {isDraft && <span>Draft</span>}
-                    <span className="tabular-nums">{adminDate(p.dateCreated)}</span>
+                    <span className="tabular-nums">
+                      {adminDate(p.dateCreated)}
+                    </span>
                   </>
                 }
                 actions={
                   <>
-                    <StatusToggle slug={p.slug} status={p.status} apiPath="work" />
+                    <StatusToggle
+                      slug={p.slug}
+                      status={p.status}
+                      apiPath="work"
+                    />
                     <DeleteButton slug={p.slug} name={p.title} apiPath="work" />
                   </>
                 }

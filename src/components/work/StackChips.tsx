@@ -45,6 +45,7 @@ const NAME_TO_MARK: Array<[RegExp, string]> = [
   [/unsloth/, "unsloth"],
   [/(^|\W)mcp($|\W)|model context protocol/, "mcp"],
   [/google doc/, "googledocs"],
+  [/typescript/, "typescript"],
 ];
 
 function resolveMark(it: ProjectLogo): string | undefined {

@@ -19,7 +19,10 @@ export async function GET() {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
 
@@ -33,7 +36,6 @@ export async function POST(request: Request) {
       .values({
         slug: body.slug,
         title: body.title,
-        tagline: body.tagline || null,
         description: body.description || null,
         content: body.content || null,
         thumbnail: body.thumbnail || null,
@@ -69,6 +71,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     console.error("Error creating project:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

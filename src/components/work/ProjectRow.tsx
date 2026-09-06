@@ -7,7 +7,7 @@ import Link from "next/link";
 export interface ChildRowData {
   slug: string;
   title: string;
-  tagline: string | null;
+  description: string | null;
   buildStatus: string;
 }
 
@@ -20,9 +20,9 @@ export function ChildRow({ child }: { child: ChildRowData }) {
       <h4 className="text-[17px] font-medium leading-[1.2] tracking-[-0.01em] text-md-on-surface transition-colors group-hover:text-primary md:text-[18px]">
         {child.title}
       </h4>
-      {child.tagline && (
+      {child.description && (
         <p className="mt-1 max-w-[62ch] text-[13.5px] leading-[1.5] text-md-on-surface-variant">
-          {child.tagline}
+          {child.description}
         </p>
       )}
     </Link>
