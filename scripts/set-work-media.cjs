@@ -19,31 +19,31 @@ const dry = process.argv.includes("--dry");
 const MEDIA = {
   "agentic-ai-platform": {
     src: "/work/fld-agentic-ai-platform.svg",
-    caption: "One workspace, and the catalogue of solutions running on it",
+    caption: "One workspace where people and agents pick up the same tasks",
   },
   "mini-search-engine": {
     src: "/work/fld-mini-search-engine.svg",
-    caption: "The results page, and an answer written from my own index",
+    caption: "The results page, and AI Mode answering a follow-up from my own index",
   },
   "agentic-presentation-system": {
     src: "/work/fld-agentic-presentation-system.svg",
-    caption: "A brief and a data file on the left, the deck they become on the right",
+    caption: "The agent writing slide three, inside the deck it is building",
   },
   "cms-publishing-pipeline": {
     src: "/work/fld-cms-publishing-pipeline.svg",
-    caption: "A draft, the checks it passes, and the page it lands on",
+    caption: "One model call maps the CMS; every check after it is code",
   },
   "content-seo-ai": {
     src: "/work/fld-content-seo-ai.svg",
-    caption: "The draft coming out line by line, with the checklist ticking in the margin",
+    caption: "The section the agent is writing, and the checklist running beside it",
   },
   "keyword-clustering": {
     src: "/work/fld-keyword-clustering.svg",
-    caption: "Raw keywords on the left, named groups on the right, and the two nothing would take",
+    caption: "Raw keywords, the pipeline that groups them, and the map it produces",
   },
   "seo-quoting-agent": {
     src: "/work/fld-seo-quoting-agent.svg",
-    caption: "The quote itself: priced line by line, down to the total",
+    caption: "The agent pricing one line, and the quote it is assembling",
   },
 };
 
