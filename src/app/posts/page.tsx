@@ -1,20 +1,51 @@
 import FeedBlocks from "@/components/posts/FeedBlocks";
 import { getGlobalMetadata } from "@/lib/global";
+import { profileImages } from "@/lib/og";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { type FeedItem, getFeedItems } from "@/lib/posts";
+import { getProfile } from "@/lib/profile";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const global = await getGlobalMetadata();
+    const [global, profileData] = await Promise.all([
+      getGlobalMetadata(),
+      getProfile(),
+    ]);
     const siteTitle =
       global && global.length > 0 ? global[0].title : "Hoang Duc Viet";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
+    const title = `Articles - ${siteTitle}`;
+    const description = "Archive of all posts and series.";
+    // The archive had no openGraph block at all, so sharing it produced a bare
+    // link. It has no artwork of its own; the portrait is what the homepage
+    // uses and what this page is an index of.
+    const images = profileImages(
+      profileData?.[0]?.image,
+      baseUrl,
+      siteTitle || "",
+    );
     return {
-      title: `Articles - ${siteTitle}`,
-      description: "Archive of all posts and series.",
+      title,
+      description,
       alternates: { canonical: "/posts" },
+      openGraph: {
+        title,
+        description,
+        url: `${baseUrl}/posts`,
+        siteName: siteTitle || "",
+        type: "website",
+        images,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: images.map((i) => i.url),
+      },
     };
   } catch {
     return { title: "Articles" };

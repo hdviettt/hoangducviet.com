@@ -20,14 +20,36 @@ export function socialImagePath(thumbnail?: string | null): string | null {
   return clean.endsWith(".svg") ? null : clean;
 }
 
-/** Absolute og:image entry, or an empty list when there is nothing shareable. */
+/** Absolute og:image entry, or an empty list when there is nothing shareable.
+ *
+ * `slug` is the fallback: a post with no thumbnail at all still has a PNG
+ * rendered at /og/<slug>.png by render-og.cjs, and without this it shared as a
+ * blank card. That was true of one post on the live site — the picture existed
+ * and nothing pointed at it. */
 export function socialImages(
   thumbnail: string | null | undefined,
   baseUrl: string,
   alt: string,
+  slug?: string,
 ) {
-  const path = socialImagePath(thumbnail);
+  const path = socialImagePath(thumbnail) ?? (slug ? `/og/${slug}.png` : null);
   if (!path) return [];
   const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
   return [{ url, width: OG_WIDTH, height: OG_HEIGHT, alt }];
+}
+
+/** Card image for pages that have no artwork of their own — /about and the
+ * writing archive — using the same portrait the homepage shares with.
+ *
+ * No width/height here: the portrait is not 1200x630 and declaring a size the
+ * file does not have makes crawlers letterbox or crop it. */
+export function profileImages(
+  image: string | null | undefined,
+  baseUrl: string,
+  alt: string,
+) {
+  if (!image) return [];
+  return [
+    { url: image.startsWith("http") ? image : `${baseUrl}${image}`, alt },
+  ];
 }

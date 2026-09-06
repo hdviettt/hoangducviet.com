@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 
 import PostDetail from "@/components/posts/PostDetail";
 import { getGlobalMetadata } from "@/lib/global";
-import { getPostBySlug, getPosts } from "@/lib/posts";
 import { socialImages } from "@/lib/og";
+import { getPostBySlug, getPosts } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
@@ -52,7 +52,12 @@ export async function generateMetadata({
       process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
     // Covers are SVG, which social crawlers refuse to render. Share the PNG
     // twin from /og/ instead so the card is not blank.
-    const ogImages = socialImages(post.thumbnail, baseUrl, post.title || "");
+    const ogImages = socialImages(
+      post.thumbnail,
+      baseUrl,
+      post.title || "",
+      post.slug,
+    );
     // Every post canonicalizes at /posts/[slug]. Series membership no longer
     // creates a nested URL — the series page simply links here.
     const canonicalPath = `/posts/${params.postSlug}`;

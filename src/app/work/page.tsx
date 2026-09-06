@@ -18,6 +18,23 @@ export function generateMetadata(): Metadata {
       title: `Work - ${IDENTITY.name}`,
       description,
       url: `${baseUrl}/work`,
+      siteName: IDENTITY.name,
+      // Built by scripts/make-og-work.py from one of the project drawings.
+      // Without it this page shared as a blank card.
+      images: [
+        {
+          url: `${baseUrl}/og/work.png`,
+          width: 1200,
+          height: 630,
+          alt: `Work - ${IDENTITY.name}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Work - ${IDENTITY.name}`,
+      description,
+      images: [`${baseUrl}/og/work.png`],
     },
   };
 }

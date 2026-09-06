@@ -2,6 +2,7 @@ import Resume from "@/components/about/Resume";
 import ProfileHero from "@/components/layout/ProfileHero";
 import { IDENTITY } from "@/lib/identity";
 import { createAboutPageSchema } from "@/lib/jsonld";
+import { profileImages } from "@/lib/og";
 import { getProfile } from "@/lib/profile";
 import type { Metadata } from "next";
 
@@ -11,6 +12,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const title = `About - ${IDENTITY.name}`;
+  // Same portrait the homepage shares with. A page about a person that shares
+  // with no picture is the one card where the picture is the whole point.
+  let images: ReturnType<typeof profileImages> = [];
+  try {
+    const profileData = await getProfile();
+    images = profileImages(profileData?.[0]?.image, baseUrl, IDENTITY.name);
+  } catch {
+    // Metadata must not take the page down when the DB is unreachable.
+  }
   return {
     title,
     description: IDENTITY.description,
@@ -24,11 +34,13 @@ export async function generateMetadata(): Promise<Metadata> {
       firstName: IDENTITY.givenName,
       lastName: IDENTITY.familyName,
       username: IDENTITY.username,
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: IDENTITY.description,
+      images: images.map((i) => i.url),
     },
   };
 }
