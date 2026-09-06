@@ -57,10 +57,6 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
         />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
-        />
       </head>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">
         <GoogleAnalytics gaId="G-GGK8FWGCPX" />
