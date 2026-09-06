@@ -45,7 +45,6 @@ export default async function EditWorkPage({ params }: Params) {
           status: p.status,
           buildStatus: p.buildStatus,
           featured: p.featured,
-          sortOrder: p.sortOrder,
           stack: p.stack ?? [],
           models: p.models ?? [],
           media: p.media ?? [],

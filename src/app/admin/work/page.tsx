@@ -1,8 +1,6 @@
-import AdminRow, { adminDate } from "@/components/admin/AdminRow";
-import DeleteButton from "@/components/admin/DeleteButton";
 import EmptyState from "@/components/admin/EmptyState";
 import PageHeader from "@/components/admin/PageHeader";
-import StatusToggle from "@/components/admin/StatusToggle";
+import WorkList from "@/components/admin/WorkList";
 import { db } from "@/db";
 import { projectPosts, projects } from "@/db/schema";
 import { asc, eq, sql } from "drizzle-orm";
@@ -65,46 +63,20 @@ export default async function AdminWorkPage() {
           }
         />
       ) : (
-        <div className="border-t border-md-outline-variant stagger-list">
-          {rows.map((p) => {
-            const isDraft = p.status !== "published";
-            return (
-              <AdminRow
-                key={p.slug}
-                href={`/admin/work/${p.slug}/edit`}
-                title={p.title}
-                description={p.description}
-                muted={isDraft}
-                meta={
-                  <>
-                    <span className="tabular-nums">#{p.sortOrder}</span>
-                    <span>{p.buildStatus}</span>
-                    <span>
-                      {p.links} {p.links === 1 ? "link" : "links"}
-                    </span>
-                    {p.featured && (
-                      <span className="text-md-primary">Featured</span>
-                    )}
-                    {isDraft && <span>Draft</span>}
-                    <span className="tabular-nums">
-                      {adminDate(p.dateCreated)}
-                    </span>
-                  </>
-                }
-                actions={
-                  <>
-                    <StatusToggle
-                      slug={p.slug}
-                      status={p.status}
-                      apiPath="work"
-                    />
-                    <DeleteButton slug={p.slug} name={p.title} apiPath="work" />
-                  </>
-                }
-              />
-            );
-          })}
-        </div>
+        <WorkList
+          items={rows.map((p) => ({
+            slug: p.slug,
+            title: p.title,
+            description: p.description,
+            status: p.status,
+            buildStatus: p.buildStatus,
+            featured: p.featured,
+            // Dates cross to the client as strings; a Date would not survive
+            // the serialization boundary.
+            dateCreated: p.dateCreated ? p.dateCreated.toISOString() : null,
+            links: p.links,
+          }))}
+        />
       )}
     </div>
   );

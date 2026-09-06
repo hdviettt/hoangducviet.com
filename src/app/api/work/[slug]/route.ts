@@ -76,7 +76,9 @@ export async function PUT(request: Request, { params }: Params) {
         status: body.status,
         buildStatus: body.buildStatus,
         featured: !!body.featured,
-        sortOrder: Number(body.sortOrder) || 0,
+        ...(body.sortOrder === undefined
+          ? {}
+          : { sortOrder: Number(body.sortOrder) || 0 }),
         dateUpdated: new Date(),
       })
       .where(eq(projects.slug, params.slug))

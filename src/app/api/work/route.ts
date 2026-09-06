@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { projectPosts, projects } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
-import { asc } from "drizzle-orm";
+import { asc, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 // Admin API for projects (the portfolio/Work content type). Distinct from
@@ -31,6 +31,12 @@ export async function POST(request: Request) {
     await requireAuth();
     const body = await request.json();
 
+    // Khong con o nhap sort order: du an moi noi vao cuoi, roi keo len neu can.
+    const last = await db
+      .select({ max: sql<number>`coalesce(max(${projects.sortOrder}), 0)` })
+      .from(projects);
+    const nextOrder = Number(last[0]?.max ?? 0) + 1;
+
     const result = await db
       .insert(projects)
       .values({
@@ -50,7 +56,7 @@ export async function POST(request: Request) {
         status: body.status || "draft",
         buildStatus: body.buildStatus || "live",
         featured: !!body.featured,
-        sortOrder: Number(body.sortOrder) || 0,
+        sortOrder: Number(body.sortOrder) || nextOrder,
       })
       .returning();
 

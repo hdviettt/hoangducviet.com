@@ -19,7 +19,6 @@ interface WorkFormProps {
     status: string;
     buildStatus: string;
     featured: boolean;
-    sortOrder: number;
     stack: ProjectStackGroup[];
     models: ProjectLogo[];
     media: ProjectMedia[];
@@ -105,9 +104,6 @@ export default function WorkForm({
     initialData?.buildStatus ?? "live",
   );
   const [featured, setFeatured] = useState(initialData?.featured ?? false);
-  const [sortOrder, setSortOrder] = useState(
-    String(initialData?.sortOrder ?? 0),
-  );
   const [models, setModels] = useState<ProjectLogo[]>(
     initialData?.models ?? [],
   );
@@ -153,7 +149,6 @@ export default function WorkForm({
           status,
           buildStatus,
           featured,
-          sortOrder,
           models,
           stack,
           media,
@@ -236,15 +231,6 @@ export default function WorkForm({
             <option value="wip">WIP</option>
             <option value="archived">Archived</option>
           </select>
-        </div>
-        <div>
-          <label className="md-field-label">sort order</label>
-          <input
-            type="number"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="md-field"
-          />
         </div>
         <div className="flex items-end pb-2">
           <label className="inline-flex items-center gap-2 text-[15px] text-md-on-surface">
