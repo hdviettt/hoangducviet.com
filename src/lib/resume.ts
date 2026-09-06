@@ -37,11 +37,11 @@ export const EXPERIENCE: Company[] = [
         start: "2025-08",
         end: "2026-08",
         highlights: [
-          "Founded and led an AI team of 5 delivering production AI systems.",
-          "Built a human-agent collaboration platform serving 120 people, with over 20 AI solutions across agents, LLM workflows and machine learning.",
-          "Set the platform's system standards: nonhuman identity, observability, evaluation, human-in-the-loop, feedback-as-a-feature, cost tracking.",
-          "Delivered a 2x time reduction across the SEO production chain; internal linking and content-outline generation up to 5x faster, at the quality of senior staff.",
-          "Trained 80% of the company on agentic AI (Claude Code), with more than 50 measurable outcomes after training.",
+          "Founded the AI team and led five people.",
+          "Built the platform 120 people work on, with over twenty AI solutions running on it: agents, LLM workflows and machine learning.",
+          "Wrote the standards every agent runs under: nonhuman identity, observability, evals, human-in-the-loop, feedback as a feature, cost tracking.",
+          "Halved the time the SEO production chain takes. Internal linking and content outlines run up to five times faster, at the quality of senior staff.",
+          "Trained 80% of the company to work with agentic AI, and more than fifty measurable outcomes came out of it.",
         ],
       },
       {
@@ -49,14 +49,14 @@ export const EXPERIENCE: Company[] = [
         type: "Full-time",
         start: "2025-05",
         end: "2025-08",
-        note: "Built the first production AI systems for the SEO chain; the AI team formed around this work.",
+        note: "Built the first production AI systems for the SEO chain. The AI team formed around this work.",
       },
       {
         title: "CEO Operations Assistant",
         type: "Full-time",
         start: "2024-12",
         end: "2025-05",
-        note: "Worked with the CEO on daily operations and quarterly planning, ran market-intelligence work that shaped the company's AI moves, and raised operational quality through process optimization and automation (Larksuite, n8n). Promoted into the AI role from here.",
+        note: "Daily operations and quarterly planning with the CEO, plus the market research that shaped where the company put AI first. Promoted into the AI role from here.",
       },
       {
         title: "Startup Operations",
@@ -144,9 +144,10 @@ export const EDUCATION: School[] = [
   },
 ];
 
-// What the CV closes with, and what the site never said. A visitor who likes
-// the work needs to know whether you are reachable for it.
+// What the CV closes with, said in a way that means something. "Ambitious
+// applications of AI in exciting niches" is a sentence any of ten thousand
+// people could have written; naming what the domain has to contain is not.
 export const LOOKING_FOR =
-  "Now looking for ambitious applications of AI in exciting niches.";
+  "Now looking for a domain with enough mechanism to take apart, where AI is the spearhead and the business outcome is the point.";
 
 export const CV_URL = "/hoang-duc-viet-cv.pdf";
