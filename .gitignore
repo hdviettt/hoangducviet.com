@@ -82,3 +82,4 @@ scripts/seo-history-inline/
 /scripts/figure2.py
 /scripts/make-covers-*.py
 /scripts/verify-figs.cjs
+scripts/_*.json

@@ -46,7 +46,15 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // slice stops a fifth from silently breaking the panel.
   const metrics = project.metrics.slice(0, 4);
   const kids = project.children?.length ?? 0;
-  const eyebrow = kids > 0 ? `Platform · ${kids} agents inside` : "Project";
+  // So agent that su, khong phai so trang con. Truoc day eyebrow dem
+  // `children.length` va in ra "Platform · 4 agents inside", trong khi nen
+  // tang do chay 19 agent — bon cai kia chi la bon agent duoc viet rieng mot
+  // trang. Tu ban CV doc sang thi con so 4 lam nho di dung 5 lan.
+  const agentCount = project.metrics.find((m) =>
+    /agents?/i.test(m.label),
+  )?.value;
+  const eyebrow =
+    kids > 0 ? `Platform · ${agentCount ?? kids} agents` : "Project";
   const stack = flattenStack(project.stack, project.techTags);
   // Khong anh, khong clip, khong so lieu thi khong co cot phai. Thieu cai nay,
   // mot du an bi xoa het metrics trong CMS se render ra mot <dl> rong, tuc la

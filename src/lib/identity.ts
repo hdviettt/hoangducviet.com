@@ -26,7 +26,7 @@ export const IDENTITY = {
   email: "viethd2704@gmail.com",
   employer: { name: "SEONGON", url: "https://seongon.com" },
   description:
-    "AI leader who ships production systems: a search engine built from scratch, an agentic deck-builder, and a company-wide AI platform serving 117 people across 30 teams.",
+    "AI leader who ships production systems: a search engine built from scratch, an agentic deck-builder, and a company-wide AI platform serving 120 people across 30 teams.",
   knowsAbout: [
     "Agentic SEO",
     "Search Engine Optimization",

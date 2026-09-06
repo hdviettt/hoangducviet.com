@@ -7,7 +7,7 @@ import {
   SITE_ORIGIN,
   WEBSITE_ID,
 } from "./identity";
-import { CERTIFICATIONS } from "./resume";
+import { CERTIFICATIONS, EDUCATION } from "./resume";
 
 // The homepage entity graph — one connected @graph that declares this site as
 // the canonical home of the Person entity. WebSite → ProfilePage → Person →
@@ -99,7 +99,18 @@ export function createAboutPageSchema(params?: { description?: string }) {
         url: SITE_ORIGIN,
         jobTitle: IDENTITY.jobTitle,
         description,
-        alumniOf: { "@id": ORG_ID },
+        // Truong hoc dung nghia cua alumniOf. SEONGON van o lai vi trang nay
+        // noi ve ca hai, nhung mot Person hoc o dau la thu Google doi chieu
+        // duoc voi cac ho so khac — va la thu site nay truoc gio khong noi.
+        alumniOf: [
+          { "@id": ORG_ID },
+          ...EDUCATION.map((e) => ({
+            "@type": "EducationalOrganization",
+            name: e.school,
+            ...(e.url && { url: e.url }),
+          })),
+        ],
+        homeLocation: { "@type": "Place", name: "Hanoi, Vietnam" },
         knowsAbout: [...IDENTITY.knowsAbout],
         hasCredential: CERTIFICATIONS.map((c) => ({
           "@type": "EducationalOccupationalCredential",

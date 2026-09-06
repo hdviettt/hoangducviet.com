@@ -55,6 +55,7 @@ export default async function ProjectDeepDivePage({
   // Co nguon moi tinh la co media: mot dong luu hut voi src rong van dem la 1.
   // Media dau tien di len lam hero; nhung cai con lai moi vao carousel. Mot
   // carousel mot slide la mot carousel khong co gi de truot.
+  const metrics = project.metrics.slice(0, 4);
   const shown = project.media.filter((m) => m.src?.trim());
   const hero = shown[0];
   const rest = shown.slice(1);
@@ -169,6 +170,29 @@ export default async function ProjectDeepDivePage({
             </figcaption>
           )}
         </figure>
+      )}
+
+      {/* ===== Bang so =====
+
+          Cac con so nay da nam san trong DB tu lau nhung khong hien o dau ca:
+          FeaturedWork chi ve chung KHI du an khong co anh, ma gio du an nao
+          cung co anh — nen ca bo metrics vo hinh. Day la cho dung cua chung:
+          ngay duoi hero, truoc khi doc bat cu chu nao. */}
+      {metrics.length > 0 && (
+        <section className="mt-11 border-t border-md-outline-variant pt-8 md:mt-12">
+          <dl className="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-4">
+            {metrics.map((m) => (
+              <div key={m.label}>
+                <dd className="text-[30px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[36px]">
+                  {m.value}
+                </dd>
+                <dt className="mt-3 text-[13.5px] leading-[1.45] text-md-on-surface-variant">
+                  {m.label}
+                </dt>
+              </div>
+            ))}
+          </dl>
+        </section>
       )}
 
       {/* ===== Built with: the stack, up top ===== */}

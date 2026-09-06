@@ -1,6 +1,12 @@
 import { Icon } from "@/components/ui/Icon";
 import { SOCIAL_PROFILES } from "@/lib/identity";
-import { EXPERIENCE } from "@/lib/resume";
+import {
+  CERTIFICATIONS,
+  CV_URL,
+  EDUCATION,
+  EXPERIENCE,
+  LOOKING_FOR,
+} from "@/lib/resume";
 import Image from "next/image";
 import type { ReactNode } from "react";
 
@@ -62,8 +68,12 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-// Experience — the "proof" half of the About page. Server-rendered (good for
-// crawlers); tenure durations are computed live so they never go stale.
+// The "proof" half of the About page: what you are looking for, the CV itself,
+// then experience, education and certifications. Everything the printed CV
+// carries and the site used to leave out — a reader arriving from the CV (it
+// prints this domain on line one) previously found a thinner page than the one
+// that sent them. Server-rendered for crawlers; tenure durations are computed
+// live so they never go stale.
 export default function Resume() {
   const now = new Date();
 
@@ -72,6 +82,21 @@ export default function Resume() {
     // phan Experience tut ve mep trai trong khi ca nua trang tren can giua —
     // do o 1440px: tieu su bat dau tu 441, Experience tu 198.
     <div className="mx-auto max-w-[560px] mt-16 md:mt-20">
+      <section className="mb-14 md:mb-16 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
+        <p className="text-[17px] leading-[28px] text-md-on-surface">
+          {LOOKING_FOR}
+        </p>
+        <a
+          href={CV_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="md-btn md-btn-outlined md-btn-pill mt-6 no-underline"
+        >
+          <Icon name="picture_as_pdf" size={20} aria-hidden="true" />
+          Download CV
+        </a>
+      </section>
+
       <section className="animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
         <SectionLabel>Experience</SectionLabel>
         <div className="space-y-12">
@@ -142,6 +167,18 @@ export default function Resume() {
                               {role.note}
                             </p>
                           )}
+                          {role.highlights && (
+                            <ul className="mt-2.5 space-y-1.5">
+                              {role.highlights.map((h) => (
+                                <li
+                                  key={h}
+                                  className="relative pl-4 md-body-medium text-md-on-surface-variant before:absolute before:left-0 before:top-[10px] before:h-1 before:w-1 before:rounded-full before:bg-md-outline"
+                                >
+                                  {h}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         </li>
                       );
                     })}
@@ -161,6 +198,63 @@ export default function Resume() {
           Full experience on LinkedIn
           <Icon name="open_in_new" size={16} />
         </a>
+      </section>
+
+      <section className="mt-16 md:mt-20 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
+        <SectionLabel>Education</SectionLabel>
+        <div className="space-y-8">
+          {EDUCATION.map((e) => (
+            <div key={e.school}>
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="md-body-large font-medium text-md-on-surface leading-snug">
+                  {e.url ? (
+                    <a
+                      href={e.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary transition-colors"
+                    >
+                      {e.school}
+                    </a>
+                  ) : (
+                    e.school
+                  )}
+                </h3>
+                <span className="shrink-0 md-body-small text-md-on-surface-variant tabular-nums">
+                  {e.start} — {e.end}
+                </span>
+              </div>
+              <p className="mt-1 md-body-medium text-md-on-surface-variant">
+                {e.qualification}
+                {e.location ? ` · ${e.location}` : ""}
+              </p>
+              {e.note && (
+                <p className="mt-1 md-body-medium text-md-on-surface-variant">
+                  {e.note}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-16 md:mt-20 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
+        <SectionLabel>Certifications</SectionLabel>
+        <ul className="space-y-4">
+          {CERTIFICATIONS.map((c) => (
+            <li
+              key={c.name}
+              className="flex items-baseline justify-between gap-4"
+            >
+              <span className="md-body-large text-md-on-surface leading-snug">
+                {c.name}
+              </span>
+              <span className="shrink-0 md-body-small text-md-on-surface-variant">
+                {c.issuer}
+              </span>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );
