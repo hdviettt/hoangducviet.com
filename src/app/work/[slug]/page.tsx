@@ -5,6 +5,7 @@ import FeaturedClip from "@/components/work/FeaturedClip";
 import { ChildRow } from "@/components/work/ProjectRow";
 import { Chips } from "@/components/work/StackChips";
 import { IDENTITY } from "@/lib/identity";
+import { socialImages } from "@/lib/og";
 import { getProjectBySlug } from "@/lib/projects";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -23,6 +24,10 @@ export async function generateMetadata({
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
   const description = project.description ?? "";
+  // The project's own drawing, as a raster twin. All seven pages shared as a
+  // bare link before this: their media is SVG, which every crawler drops.
+  const artwork = project.media.find((m) => m.type === "image")?.src;
+  const images = socialImages(artwork, baseUrl, project.title);
   return {
     title: `${project.title} - ${IDENTITY.name}`,
     description,
@@ -31,7 +36,15 @@ export async function generateMetadata({
       title: project.title,
       description,
       url: `${baseUrl}/work/${project.slug}`,
+      siteName: IDENTITY.name,
       type: "article",
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description,
+      images: images.map((i) => i.url),
     },
   };
 }

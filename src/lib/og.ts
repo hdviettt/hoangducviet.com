@@ -16,6 +16,12 @@ export function socialImagePath(thumbnail?: string | null): string | null {
   if (clean.startsWith("/covers/") && clean.endsWith(".svg")) {
     return `/og/${clean.slice("/covers/".length, -".svg".length)}.png`;
   }
+  // Project drawings are SVG for the same reason covers are, and share the
+  // same twin rule: /work/<name>.svg -> /og/<name>.png, built by
+  // scripts/make-og-work.py.
+  if (clean.startsWith("/work/") && clean.endsWith(".svg")) {
+    return `/og/${clean.slice("/work/".length, -".svg".length)}.png`;
+  }
   // Uploaded raster thumbnails are already shareable.
   return clean.endsWith(".svg") ? null : clean;
 }

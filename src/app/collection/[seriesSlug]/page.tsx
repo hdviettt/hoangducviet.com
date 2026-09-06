@@ -3,6 +3,7 @@ import { ViewCount } from "@/components/posts/ViewCount";
 import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
 import { createBreadcrumbSchema, createSeriesSchema } from "@/lib/jsonld";
+import { socialImages } from "@/lib/og";
 import { getPostViewCounts } from "@/lib/posthog-server";
 import { getSeriesBySlug, getSeriesList } from "@/lib/series";
 import type { Metadata } from "next";
@@ -42,11 +43,13 @@ export async function generateMetadata({
       globalData && globalData.length > 0 ? globalData[0].title : "Blog";
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";
-    const thumbnailUrl = seriesItem.thumbnail
-      ? seriesItem.thumbnail.startsWith("http")
-        ? seriesItem.thumbnail
-        : `${baseUrl}${seriesItem.thumbnail}`
-      : null;
+    // Was pointing straight at the stored .svg, which crawlers drop; the card
+    // image is the PNG twin in /og/.
+    const images = socialImages(
+      seriesItem.thumbnail,
+      baseUrl,
+      seriesItem.title ?? "",
+    );
     const seriesUrl = `${baseUrl}/collection/${params.seriesSlug}`;
     const description = seriesItem.summary || "";
 
@@ -60,15 +63,13 @@ export async function generateMetadata({
         url: seriesUrl,
         siteName: siteTitle,
         type: "website",
-        images: thumbnailUrl
-          ? [{ url: thumbnailUrl, alt: seriesItem.title }]
-          : [],
+        images,
       },
       twitter: {
         card: "summary_large_image",
         title: seriesItem.title,
         description,
-        images: thumbnailUrl ? [thumbnailUrl] : [],
+        images: images.map((i) => i.url),
       },
     };
   } catch (_error) {
