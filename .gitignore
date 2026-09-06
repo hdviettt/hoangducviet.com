@@ -79,6 +79,8 @@ scripts/seo-history-inline/
 /scripts/_tmp_*.cjs
 /scripts/dbcheck.cjs
 /scripts/dump-*.cjs
+# ...tru cong cu doc hinh trong bai, no nam trong quy trinh ve lai
+!/scripts/dump-figures.cjs
 /scripts/figure2.py
 /scripts/make-covers-*.py
 # ...tru bo sinh bia dang dung, no la nguon that cua public/covers
