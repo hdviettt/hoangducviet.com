@@ -107,7 +107,9 @@ export default function FileExplorer({ children }: FileExplorerProps) {
             Hoang Duc Viet
           </Link>
 
-          <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+          {/* Nav nam canh wordmark. `ml-auto` la thu toi them vao khi go nut doi
+              theme, va no day ca cum sang phai — mot hoi quy toi tu tao ra. */}
+          <nav className="flex items-center gap-4 sm:gap-6">
             {navItems.map((item) => {
               const active = item.match(pathname);
               return (

@@ -1,6 +1,7 @@
 import { feedRowDate } from "@/components/posts/FeedRow";
 import { Icon } from "@/components/ui/Icon";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
+import FeaturedClip from "@/components/work/FeaturedClip";
 import { ChildRow } from "@/components/work/ProjectRow";
 import { Chips } from "@/components/work/StackChips";
 import { IDENTITY } from "@/lib/identity";
@@ -52,7 +53,11 @@ export default async function ProjectDeepDivePage({
   if (!project) notFound();
 
   // Co nguon moi tinh la co media: mot dong luu hut voi src rong van dem la 1.
-  const hasMedia = project.media.some((m) => m.src?.trim());
+  // Media dau tien di len lam hero; nhung cai con lai moi vao carousel. Mot
+  // carousel mot slide la mot carousel khong co gi de truot.
+  const shown = project.media.filter((m) => m.src?.trim());
+  const hero = shown[0];
+  const rest = shown.slice(1);
   const hasChildren = !!project.children && project.children.length > 0;
   const hasPosts = !!project.posts && project.posts.length > 0;
   const hasStack = project.models.length > 0 || project.stack.length > 0;
@@ -129,6 +134,39 @@ export default async function ProjectDeepDivePage({
         )}
       </header>
 
+      {/* ===== Hero: featured media, ngay duoi tieu de va to het cot =====
+
+          Truoc day media nam sau ca phan stack, va no la mot carousel bi khoa
+          be rong. Trang bai cua Google dat anh ngay duoi tieu de va cho no
+          chiem tron cot — do la thu bao cho nguoi doc biet du an nay trong ra
+          sao truoc khi ho phai doc bat cu dong nao. */}
+      {hero && (
+        <figure className="mt-10 md:mt-12">
+          <div className="overflow-hidden rounded-2xl bg-md-surface-container-low">
+            {hero.type === "video" ? (
+              <FeaturedClip
+                src={hero.src}
+                label={hero.caption || project.title}
+                className="aspect-[16/9] w-full object-cover"
+              />
+            ) : (
+              <img
+                src={hero.src}
+                alt={hero.caption || project.title}
+                loading="eager"
+                decoding="async"
+                className="aspect-[16/9] w-full object-cover"
+              />
+            )}
+          </div>
+          {hero.caption && (
+            <figcaption className="mt-3 text-[14px] leading-6 text-md-on-surface-variant">
+              {hero.caption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+
       {/* ===== Built with: the stack, up top ===== */}
       {hasStack && (
         <section className="mt-11 border-t border-md-outline-variant pt-8 md:mt-12">
@@ -147,21 +185,19 @@ export default async function ProjectDeepDivePage({
       )}
 
       {/* ===== Media: carousel of real screenshots and clips ===== */}
-      {hasMedia && (
+      {rest.length > 0 && (
         <div
           className={`work-carousel mt-12 md:mt-14 ${
-            project.media.length > 1 ? "" : "work-carousel--one"
+            rest.length > 1 ? "" : "work-carousel--one"
           }`}
         >
           <MediaCarousel
-            items={project.media
-              .filter((m) => m.src?.trim())
-              .map((m) => ({
-                src: m.src,
-                caption: m.caption,
-                type: m.type,
-                fit: "cover",
-              }))}
+            items={rest.map((m) => ({
+              src: m.src,
+              caption: m.caption,
+              type: m.type,
+              fit: "cover",
+            }))}
             ratio="16 / 9"
             mat="ambient"
             label={`${project.title} media`}

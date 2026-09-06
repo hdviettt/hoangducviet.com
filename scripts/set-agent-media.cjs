@@ -17,39 +17,39 @@ const { Pool } = require("pg");
 
 const MEDIA = {
   "mini-search-engine": {
-    type: "video",
-    src: "/work/search-engine-demo.mp4",
-    caption: "A query running through the engine, Explore mode",
+    type: "image",
+    src: "/work/r3d-mini-search-engine.webp",
+    caption: "A field of crawled pages, and the three that come out ranked",
   },
   "agentic-ai-platform": {
     type: "image",
-    src: "/work/agent-platform.webp",
-    caption: "The agent library, every agent running on the platform",
+    src: "/work/r3d-agentic-ai-platform.webp",
+    caption: "Nineteen agents standing on one runtime",
   },
   "agentic-presentation-system": {
     type: "image",
-    src: "/work/presentation-agent.webp",
-    caption: "The brief that becomes a deck",
+    src: "/work/r3d-agentic-presentation-system.webp",
+    caption: "One brief, and the deck it fans out into",
   },
   "cms-publishing-pipeline": {
     type: "image",
-    src: "/work/agent-cms-publishing-pipeline.webp",
-    caption: "Agent for posting articles on the website",
+    src: "/work/r3d-cms-publishing-pipeline.webp",
+    caption: "A draft, the rule it has to clear, the page that comes out",
   },
   "content-seo-ai": {
     type: "image",
-    src: "/work/agent-content-seo-ai.webp",
-    caption: "SEO Outline Agent, and the research agent that feeds it",
+    src: "/work/r3d-content-seo-ai.webp",
+    caption: "A stack of drafts, and the one that stood up",
   },
   "keyword-clustering": {
     type: "image",
-    src: "/work/agent-keyword-clustering.webp",
-    caption: "SEO Keyword Agent, grouping keywords into thematic clusters",
+    src: "/work/r3d-keyword-clustering.webp",
+    caption: "Sixty keywords, three clusters, and two it refused to place",
   },
   "seo-quoting-agent": {
     type: "image",
-    src: "/work/agent-seo-quoting-agent.webp",
-    caption: "Agent provides SEO production quotes",
+    src: "/work/r3d-seo-quoting-agent.webp",
+    caption: "Seven line items, and the gate every one has to reach",
   },
 };
 
