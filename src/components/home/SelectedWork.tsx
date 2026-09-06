@@ -19,8 +19,12 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
   const topLevel = projects.filter((p) => !p.parentSlug);
   if (topLevel.length === 0) return null;
 
+  // `pb`, khong phai `mb`: le duoi cua muc nay va le tren cua muc Articles la
+  // hai le ke nhau nen chung triet tieu, chi con cai lon hon. Padding thi cong
+  // them that. Do truoc khi sua: tren nut 89px, duoi 72px — nut nghieng ve
+  // phia Articles nen doc ra la cua Articles.
   return (
-    <section id="work" className="scroll-mt-8">
+    <section id="work" className="scroll-mt-8 pb-8 md:pb-12">
       <div className="max-w-[820px]">
         <h2 className="text-[28px] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[36px] lg:text-[40px]">
           Selected work
@@ -40,19 +44,21 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
             <FeaturedWork project={p} />
           </div>
         ))}
-      </div>
 
-      {/* Ba du an tren day la nhung cai duoc chon; /work con cac agent con nua.
-          Nut nay nam NGOAI `work-breakout` de no thang hang voi tieu de muc,
-          chu khong thang voi mep dai rong — dai rong la cua khoi anh, khong
-          phai cua muc. */}
-      <Link
-        href="/work"
-        className="md-btn md-btn-outlined md-btn-pill md-btn-lg mt-12 no-underline md:mt-14"
-      >
-        All work
-        <Icon name="arrow_forward" size={20} aria-hidden="true" />
-      </Link>
+        {/* Trong `work-breakout`, khong phai ngoai.
+            Dat ngoai thi no can theo cot chu 1044, tuc la thang hang voi muc
+            "Articles" ben duoi chu khong thang voi chinh cac khoi work no
+            thuoc ve — do o 2000px: nut o 349, con chu cua khoi work o 202. Ket
+            hop voi khoang trong phia tren lon hon phia duoi, no doc ra la mot
+            phan cua Articles. */}
+        <Link
+          href="/work"
+          className="md-btn md-btn-outlined md-btn-pill md-btn-lg mt-2 self-start no-underline"
+        >
+          All work
+          <Icon name="arrow_forward" size={20} aria-hidden="true" />
+        </Link>
+      </div>
     </section>
   );
 }
