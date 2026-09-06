@@ -23,7 +23,7 @@ const MEDIA = {
   },
   "mini-search-engine": {
     src: "/work/fld-mini-search-engine.svg",
-    caption: "A few terms hit almost every page; one term's posting list, joined",
+    caption: "The results page, and an answer written from my own index",
   },
   "agentic-presentation-system": {
     src: "/work/fld-agentic-presentation-system.svg",
@@ -31,7 +31,7 @@ const MEDIA = {
   },
   "cms-publishing-pipeline": {
     src: "/work/fld-cms-publishing-pipeline.svg",
-    caption: "One model call at onboarding, then zero for every article after it",
+    caption: "A draft, the checks it passes, and the page it lands on",
   },
   "content-seo-ai": {
     src: "/work/fld-content-seo-ai.svg",

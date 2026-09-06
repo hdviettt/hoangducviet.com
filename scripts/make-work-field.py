@@ -74,6 +74,57 @@ def ellipse(cx, cy, rx, ry, op=1.0, sw=None, dash=None, rot=0):
             f'stroke-width="{sw or SW}"{d}{t}/>')
 
 
+def arrow(x0, x1, y, op=0.5, sw=None):
+    w = sw or SW * 0.9
+    h = 8.5
+    return (seg(x0, y, x1, y, op, w)
+            + seg(x1 - h, y - h * 0.66, x1, y, op, w)
+            + seg(x1 - h, y + h * 0.66, x1, y, op, w))
+
+
+def spark(cx, cy, s=11, op=0.95, sw=None):
+    """Ngoi sao bon canh — dau hieu cua model. Chi xuat hien o dung hai cho
+    trong ca bo: cau tra loi AI, va buoc duy nhat co model trong duong ong."""
+    d = (f"M{cx:.1f},{cy - s:.1f} Q{cx + s * .17:.1f},{cy - s * .17:.1f} "
+         f"{cx + s:.1f},{cy:.1f} Q{cx + s * .17:.1f},{cy + s * .17:.1f} "
+         f"{cx:.1f},{cy + s:.1f} Q{cx - s * .17:.1f},{cy + s * .17:.1f} "
+         f"{cx - s:.1f},{cy:.1f} Q{cx - s * .17:.1f},{cy - s * .17:.1f} "
+         f"{cx:.1f},{cy - s:.1f} Z")
+    return (f'<path d="{d}" fill="{INK}" fill-opacity="{op * 0.9:.2f}" '
+            f'stroke="{INK}" stroke-opacity="{op:.2f}" '
+            f'stroke-width="{sw or SW * 0.8}" stroke-linejoin="round"/>')
+
+
+def check(cx, cy, s=5.4, op=0.85, sw=None):
+    w = sw or SW * 0.9
+    return (seg(cx - s, cy, cx - s * 0.2, cy + s * 0.72, op, w)
+            + seg(cx - s * 0.2, cy + s * 0.72, cx + s, cy - s * 0.78, op, w))
+
+
+def magnifier(cx, cy, r=10, op=0.85, sw=None):
+    w = sw or SW
+    return (f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" '
+            f'stroke="{INK}" stroke-opacity="{op:.2f}" stroke-width="{w}"/>'
+            + seg(cx + r * .72, cy + r * .72, cx + r * 1.55, cy + r * 1.55,
+                  op, w))
+
+
+def picture(x, y, w, h, op=0.45):
+    """Khung anh: mat troi va mot dinh nui kin. Hai dinh de mo thi doc ra
+    thanh bieu do duong — dung hinh, sai nghia."""
+    peak = (f"M{x + w * .30:.1f},{y + h - 10:.1f} L{x + w * .52:.1f},"
+            f"{y + h * .20:.1f} L{x + w * .74:.1f},{y + h - 10:.1f} Z")
+    return "".join([
+        rect(x, y, w, h, op, SW * 0.9, r=4),
+        f'<circle cx="{x + w * .17:.1f}" cy="{y + h * .28:.1f}" r="7.5" '
+        f'fill="none" stroke="{INK}" stroke-opacity="{op:.2f}" '
+        f'stroke-width="{SW * .85}"/>',
+        f'<path d="{peak}" fill="{INK}" fill-opacity="{op * .28:.2f}" '
+        f'stroke="{INK}" stroke-opacity="{op:.2f}" stroke-width="{SW * .9}" '
+        f'stroke-linejoin="round"/>',
+    ])
+
+
 def svg(body):
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" '
@@ -87,33 +138,42 @@ def svg(body):
 
 
 def search():
-    """Ma tran thua cua inverted index. Hang xep theo tan suat, nen mat do tu
-    no ve ra cai nem Zipf: vai tu trung gan moi tai lieu, phan lon trung gan
-    nhu khong cai nao. Mot hang duoc noi lien: mot posting list."""
-    rng = np.random.default_rng(11)
-    COLS, ROWS = 34, 15
-    cw, ch = AW / COLS, AH / ROWS
+    """Trang ket qua that, ve dung thu nguoi dung nhin thay: o tim kiem voi
+    cau da go, cau tra loi AI co trich nguon nam tren, roi cac ket qua ben
+    duoi. Ban truoc ve ma tran thua cua chi muc — dung ve nguyen ly, nhung
+    khong ai nhin vao ma doan ra day la mot cong cu tim kiem."""
     b = []
-    for r in range(ROWS):
-        k = 1 - r / (ROWS - 1)
-        dens = max(0.02, 1.02 * k ** 1.9)
-        rad = 2.4 + 3.8 * k
-        op = 0.30 + 0.66 * k
-        for c in range(COLS):
-            if rng.random() < dens:
-                b.append(dot(M + c * cw + cw / 2, M + r * ch + ch / 2,
-                             rad, op))
-    # mot posting list trong vung thua
-    r = 8
-    cols = [3, 9, 14, 21, 27, 31]
-    y = M + r * ch + ch / 2
-    for i in range(len(cols) - 1):
-        b.append(seg(M + cols[i] * cw + cw / 2, y,
-                     M + cols[i + 1] * cw + cw / 2, y, 0.75, SW * 0.8))
-    for c in cols:
-        b.append(dot(M + c * cw + cw / 2, y, 6.0, 1.0))
-    return "".join(b)
+    # o tim kiem, keo het chieu ngang
+    b.append(rect(M, M, AW, 50, 0.95, SW * 1.4, r=25))
+    b.append(magnifier(M + 34, M + 25, 10, 0.8))
+    qx = M + 64
+    b.append(seg(qx, M + 25, qx + AW * 0.40, M + 25, 0.8, SW * 1.7))
+    b.append(seg(qx + AW * 0.40 + 12, M + 12, qx + AW * 0.40 + 12, M + 38,
+                 0.5, SW * 1.2))
 
+    # cau tra loi AI: khoi duy nhat co nen, va ngoi sao la dau hieu
+    py, ph = M + 72, 122
+    b.append(rect(M, py, AW, ph, 0.9, SW * 1.3, fill="0.045", r=16))
+    b.append(spark(M + 32, py + 30, 11, 0.95))
+    for i, (a, z) in enumerate(((0.075, 0.70), (0.030, 0.95), (0.030, 0.78))):
+        b.append(seg(M + AW * a, py + 30 + i * 23, M + AW * z, py + 30 + i * 23,
+                     0.42, SW))
+    # nguon trich: cau tra loi dat tren chinh chi muc ben duoi
+    for i in range(3):
+        b.append(rect(M + 26 + i * 64, py + ph - 36, 54, 21, 0.7, SW * 0.95,
+                      r=10))
+
+    # ket qua: cham favicon, dong dia chi, tieu de dam, hai dong trich
+    for k, (uw, tw, s1, s2) in enumerate(((0.15, 0.58, 0.93, 0.74),
+                                          (0.11, 0.46, 0.86, 0.0))):
+        y = M + 220 + k * 98
+        b.append(dot(M + 9, y, 6.5, 0.5, hollow=True))
+        b.append(seg(M + 24, y, M + 24 + AW * uw, y, 0.45, SW * 0.9))
+        b.append(seg(M, y + 25, M + AW * tw, y + 25, 1.0, SW * 2.1))
+        b.append(seg(M, y + 49, M + AW * s1, y + 49, 0.32, SW * 0.95))
+        if s2:
+            b.append(seg(M, y + 69, M + AW * s2, y + 69, 0.32, SW * 0.95))
+    return "".join(b)
 
 def keywords():
     """Cung mot dam diem, hai lan: o vi tri deu tap ban dau va o vi tri sau khi
@@ -156,23 +216,64 @@ def keywords():
 
 
 def publishing():
-    """So loi goi model theo thoi gian: mot xung o buoc dau, roi bang khong,
-    mai mai. Bai duoc xuat ban van chay tiep — cac vach nho tren duong khong."""
-    b = []
-    base = M + AH * 0.72
-    b.append(seg(M, base, M + AW, base, 0.55, SW * 0.9))
-    # xung: mot lan duy nhat
-    x0 = M + AW * 0.055
-    b.append(seg(x0, base, x0, M + AH * 0.06, 1.0, SW * 1.9))
-    b.append(dot(x0, M + AH * 0.06, 9.0, 1.0))
-    # duong khong keo dai: cac vach nho la cac bai, khong vach nao nhac len
-    n = 42
-    for i in range(n):
-        x = M + AW * (0.13 + 0.87 * i / (n - 1))
-        op = 0.85 - 0.5 * (i / (n - 1))
-        b.append(seg(x, base, x, base - 11, op, SW * 0.85))
-    return "".join(b)
+    """Duong ong that, doc tu trai sang phai: ban thao trong Google Docs, cac
+    buoc kiem o giua, va o cuoi la bai da nam tren trang. Dung mot buoc co
+    model — ve bang ngoi sao, khung net dut; sau buoc do la code chay het.
 
+    Ban truoc ve so lan goi model theo thoi gian: mot xung roi bang khong mai
+    mai. Dung ve luan diem, nhung noi "duong ong xuat ban" ma ve mot duong
+    thang thi khong ai doan ra."""
+    b = []
+    mid = M + AH / 2
+
+    # 1. ban thao
+    dw, dh = 104, 142
+    dy = mid - dh / 2
+    b.append(rect(M, dy, dw, dh, 0.5, SW))
+    b.append(seg(M + dw - 24, dy, M + dw, dy + 24, 0.5, SW * 0.9))
+    for i, f in enumerate((0.64, 0.80, 0.70, 0.82, 0.54)):
+        b.append(seg(M + 15, dy + 48 + i * 18, M + 15 + (dw - 30) * f,
+                     dy + 48 + i * 18, 0.30, SW * 0.85))
+    b.append(arrow(M + dw + 14, M + dw + 54, mid, 0.45))
+
+    # 2. cac buoc kiem; buoc thu hai la buoc duy nhat co model
+    sx, scol = M + dw + 68, 132
+    rows, rh, gap = 6, 16, 12
+    top = mid - (rows * rh + (rows - 1) * gap) / 2
+    for i in range(rows):
+        y = top + i * (rh + gap)
+        op = 0.75 - 0.055 * i
+        if i == 1:
+            b.append(spark(sx + rh / 2, y + rh / 2, 10.5, 1.0, SW * 0.85))
+            op = 1.0
+        else:
+            b.append(rect(sx, y, rh, rh, op, SW * 0.95, r=3))
+            b.append(check(sx + rh / 2, y + rh / 2, 5, op))
+        b.append(seg(sx + rh + 13, y + rh / 2, sx + scol, y + rh / 2,
+                     op * 0.5, SW * 0.9))
+    b.append(arrow(sx + scol + 16, sx + scol + 56, mid, 0.45))
+
+    # 3. bai viet da len trang — vat chinh: to nhat, dam nhat
+    ax = sx + scol + 78
+    aw = M + AW - ax
+    ay, ah = M + 4, AH - 8
+    ix, iw = ax + 26, aw - 52
+    b.append(rect(ax, ay, aw, ah, 1.0, SW * 1.9, r=8))
+    b.append(seg(ax, ay + 42, ax + aw, ay + 42, 0.45, SW))
+    for i in range(3):
+        b.append(dot(ax + 22 + i * 17, ay + 21, 4.5, 0.4))
+    b.append(rect(ax + 82, ay + 11, aw * 0.54, 20, 0.3, SW * 0.9, r=10))
+    b.append(seg(ix, ay + 78, ix + iw * 0.88, ay + 78, 1.0, SW * 2.6))
+    b.append(seg(ix, ay + 106, ix + iw * 0.56, ay + 106, 1.0, SW * 2.6))
+    b.append(seg(ix, ay + 132, ix + iw * 0.40, ay + 132, 0.34, SW * 0.9))
+    b.append(picture(ix, ay + 150, iw, 64, 0.45))
+    b.append(seg(ix, ay + 244, ix + iw * 0.44, ay + 244, 0.9, SW * 1.9))
+    for i, f in enumerate((0.98, 0.90)):
+        b.append(seg(ix, ay + 266 + i * 18, ix + iw * f, ay + 266 + i * 18,
+                     0.30, SW * 0.9))
+    b.append(seg(ix, ay + 312, ix + iw * 0.32, ay + 312, 0.9, SW * 1.9))
+    b.append(seg(ix, ay + 334, ix + iw * 0.94, ay + 334, 0.30, SW * 0.9))
+    return "".join(b)
 
 def content():
     """Bon kien truc, cung mot checklist muoi hai muc, va phan giu duoc cua moi
