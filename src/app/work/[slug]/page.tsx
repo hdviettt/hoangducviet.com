@@ -141,7 +141,11 @@ export default async function ProjectDeepDivePage({
           chiem tron cot — do la thu bao cho nguoi doc biet du an nay trong ra
           sao truoc khi ho phai doc bat cu dong nao. */}
       {hero && (
-        <figure className="mt-10 md:mt-12">
+        // `work-breakout` keo hinh rong ra 1320px, vuot ca cot chu 880 lan
+        // khung 1044 cua vo trang. Do tren bai cua Google: cot chu ~808px, anh
+        // ~1305px — anh rong gap 1.6 lan cot chu. Bang dung cot chu thi no
+        // khong bao gio "khong lo" duoc, du co keo cao den may.
+        <figure className="work-breakout mt-10 md:mt-12">
           <div className="overflow-hidden rounded-2xl bg-md-surface-container-low">
             {hero.type === "video" ? (
               <FeaturedClip
