@@ -39,6 +39,12 @@ const NAME_TO_MARK: Array<[RegExp, string]> = [
   [/(^|\W)e2b/, "e2b"],
   [/tavily/, "tavily"],
   [/dataforseo/, "dataforseo"],
+  [/qwen/, "qwen"],
+  [/grok|(^|\W)xai/, "grok"],
+  [/n8n/, "n8n"],
+  [/unsloth/, "unsloth"],
+  [/(^|\W)mcp($|\W)|model context protocol/, "mcp"],
+  [/google doc/, "googledocs"],
 ];
 
 function resolveMark(it: ProjectLogo): string | undefined {
