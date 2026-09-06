@@ -82,8 +82,13 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
             className="inline-flex items-center gap-2 rounded-[11px] border border-md-outline-variant bg-md-surface-container-high px-3 py-[7px] text-[12.5px] font-medium leading-none text-md-on-surface shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
           >
             {mark ? (
+              // `mono` giong het hang dia o trang chu. Truoc day chip o trang
+              // du an dung mau thuong hieu con dia o ngoai dung mot muc, nen
+              // cung mot bo cong cu doc ra la hai bo khac nhau khi nguoi doc
+              // bam tu ngoai vao trong.
               <Mark
                 id={mark}
+                mono
                 className="h-[16px] w-[16px] text-md-on-surface"
               />
             ) : (
