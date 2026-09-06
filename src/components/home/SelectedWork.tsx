@@ -1,5 +1,7 @@
+import { Icon } from "@/components/ui/Icon";
 import FeaturedWork from "@/components/work/FeaturedWork";
 import type { Project } from "@/lib/projects";
+import Link from "next/link";
 
 /**
  * Homepage "Selected work": the featured (top-level) projects, one split
@@ -39,6 +41,18 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
           </div>
         ))}
       </div>
+
+      {/* Ba du an tren day la nhung cai duoc chon; /work con cac agent con nua.
+          Nut nay nam NGOAI `work-breakout` de no thang hang voi tieu de muc,
+          chu khong thang voi mep dai rong — dai rong la cua khoi anh, khong
+          phai cua muc. */}
+      <Link
+        href="/work"
+        className="md-btn md-btn-outlined md-btn-pill md-btn-lg mt-12 no-underline md:mt-14"
+      >
+        All work
+        <Icon name="arrow_forward" size={20} aria-hidden="true" />
+      </Link>
     </section>
   );
 }
