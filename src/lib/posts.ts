@@ -68,6 +68,11 @@ export async function getPosts(
   }));
 }
 
+// Mot slug khong co bai la 404; mot loi CSDL la 500. Hai thu do phai phan
+// biet duoc o cho goi, nen "khong tim thay" co kieu rieng — neu khong thi mot
+// lan Postgres tra loi cham cung tra ve 404 cho moi bai viet that.
+export class PostNotFoundError extends Error {}
+
 export async function getPostBySlug(slug: string): Promise<Post> {
   if (!slug) throw new Error("Invalid slug");
 
@@ -78,7 +83,7 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     .limit(1);
 
   if (!result || result.length === 0) {
-    throw new Error(`Post with slug "${slug}" not found`);
+    throw new PostNotFoundError(`Post with slug "${slug}" not found`);
   }
 
   return mapPost(result[0]);

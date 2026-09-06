@@ -8,6 +8,7 @@ import { getPostViewCounts } from "@/lib/posthog-server";
 import { getSeriesBySlug, getSeriesList } from "@/lib/series";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -90,15 +91,9 @@ export default async function SeriesPage({ params }: SeriesParams) {
     console.error("Error fetching series:", error);
   }
 
-  if (!seriesItem) {
-    return (
-      <div className="p-8">
-        <div className="text-md-on-surface-variant">
-          This series doesn't exist.
-        </div>
-      </div>
-    );
-  }
+  // Truoc day cho la mot khoi chu tra ve HTTP 200: voi Google, /collection/
+  // + bat ky chuoi nao cung la mot trang co that.
+  if (!seriesItem) notFound();
 
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://hoangducviet.com";

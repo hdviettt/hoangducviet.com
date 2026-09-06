@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import MarkdownContent from "@/components/content/MarkdownContent";
 import { feedRowDate } from "@/components/posts/FeedRow";
@@ -13,6 +14,7 @@ import { getLikeState } from "@/lib/likes";
 import { socialImagePath } from "@/lib/og";
 import { getPostViewCount } from "@/lib/posthog-server";
 import {
+  PostNotFoundError,
   getAdjacentPosts,
   getPostBySlug,
   getPostForPreview,
@@ -40,26 +42,30 @@ export default async function PostDetail({
   let seriesAssoc: { slug: string; title: string } | null = null;
   let seriesCtx: Awaited<ReturnType<typeof getSeriesContext>> = null;
 
+  // Lay bai TRUOC, mot minh. Truoc day ca bon truy van nam chung mot
+  // Promise.all trong mot try/catch, nen mot loi CSDL bat ky cung ra cung mot
+  // man hinh "khong co bai nay" — va man hinh do tra ve 200, tuc la Google
+  // ghi nhan moi URL rac duoi /posts/ nhu mot trang that.
   try {
-    [data, adjacentPosts, seriesAssoc, seriesCtx] = await Promise.all([
-      // getPostBySlug throws when a slug isn't a published post; the preview
-      // fetch returns any status (null if missing). Both leave `data` falsy
-      // for the not-found branch below.
-      preview ? getPostForPreview(postSlug) : getPostBySlug(postSlug),
+    data = preview
+      ? await getPostForPreview(postSlug)
+      : await getPostBySlug(postSlug);
+  } catch (error) {
+    // Khong co bai -> 404 that. Hong that -> nem tiep, de thanh 500.
+    if (!(error instanceof PostNotFoundError)) throw error;
+  }
+  if (!data) notFound();
+
+  // Cac truy van phu: thieu thi trang van doc duoc, nen khong duoc phep lam
+  // hong ca trang.
+  try {
+    [adjacentPosts, seriesAssoc, seriesCtx] = await Promise.all([
       getAdjacentPosts(postSlug),
       getSeriesForPost(postSlug),
       getSeriesContext(postSlug),
     ]);
   } catch (error) {
-    console.error("Error fetching post:", error);
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-full flex items-center justify-center">
-        <p className="text-muted-foreground">This post doesn't exist.</p>
-      </div>
-    );
+    console.error("Error fetching post context:", error);
   }
 
   const anonId = getAnonId();
