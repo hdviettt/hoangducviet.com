@@ -23,11 +23,11 @@ const MEDIA = {
   },
   "mini-search-engine": {
     src: "/work/fld-mini-search-engine.svg",
-    caption: "The results page, and AI Mode answering a follow-up from my own index",
+    caption: "The answer, the sources it stands on, and a box to ask the next question",
   },
   "agentic-presentation-system": {
     src: "/work/fld-agentic-presentation-system.svg",
-    caption: "The agent writing slide three, inside the deck it is building",
+    caption: "One prompt and two data files, and the slide the agent is drafting",
   },
   "cms-publishing-pipeline": {
     src: "/work/fld-cms-publishing-pipeline.svg",
@@ -35,15 +35,15 @@ const MEDIA = {
   },
   "content-seo-ai": {
     src: "/work/fld-content-seo-ai.svg",
-    caption: "The section the agent is writing, and the checklist running beside it",
+    caption: "The section the agent is writing, and the edit it is suggesting",
   },
   "keyword-clustering": {
     src: "/work/fld-keyword-clustering.svg",
-    caption: "Raw keywords, the pipeline that groups them, and the map it produces",
+    caption: "What a keyword turns into at each step, and the map at the end",
   },
   "seo-quoting-agent": {
     src: "/work/fld-seo-quoting-agent.svg",
-    caption: "The agent pricing one line, and the quote it is assembling",
+    caption: "The agent pricing one group, and the quote it is assembling",
   },
 };
 
