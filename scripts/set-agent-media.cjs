@@ -1,58 +1,90 @@
-// Gan anh featured tam cho bon agent con.
+// Gan featured media cho ca bay du an.
 //
-// Chi ghi khi `media` dang RONG. Day la anh cho cho, nen no khong duoc phep de
-// len thu Viet tu up qua CMS — chay lai bao nhieu lan cung khong lam mat gi.
+// Moi anh o day deu la anh chup that: thu vien agent cua platform va tung the
+// agent cat ra tu do, ban ghi man hinh cua search engine, va man hinh dau cua
+// presentation agent. Khong co hinh ve nao.
 //
-//   node scripts/set-agent-media.cjs                          # local
+// In ra media cu truoc khi ghi, va ghi ca vao mot file JSON canh script, de
+// quay lai duoc neu can.
+//
+//   node scripts/set-agent-media.cjs --dry        # xem truoc, khong ghi
+//   node scripts/set-agent-media.cjs              # local
 //   railway run --service database node scripts/set-agent-media.cjs
-//   ... them --force de ghi de ca khi da co media
 
+const fs = require("node:fs");
+const path = require("node:path");
 const { Pool } = require("pg");
 
 const MEDIA = {
-  "keyword-clustering": {
-    src: "/work/agent-keyword-clustering.webp",
-    caption: "Keywords embedded and grouped, and the ones it refused to place",
+  "mini-search-engine": {
+    type: "video",
+    src: "/work/search-engine-demo.mp4",
+    caption: "A query running through the engine, Explore mode",
+  },
+  "agentic-ai-platform": {
+    type: "image",
+    src: "/work/agent-platform.webp",
+    caption: "The agent library, every agent running on the platform",
+  },
+  "agentic-presentation-system": {
+    type: "image",
+    src: "/work/presentation-agent.webp",
+    caption: "The brief that becomes a deck",
   },
   "cms-publishing-pipeline": {
+    type: "image",
     src: "/work/agent-cms-publishing-pipeline.webp",
-    caption: "A draft, the rules, and the page that comes out",
+    caption: "Agent for posting articles on the website",
   },
   "content-seo-ai": {
+    type: "image",
     src: "/work/agent-content-seo-ai.webp",
-    caption: "Four generations: workflow, fine-tuned, reasoning agent, app-agent hybrid",
+    caption: "SEO Outline Agent, and the research agent that feeds it",
+  },
+  "keyword-clustering": {
+    type: "image",
+    src: "/work/agent-keyword-clustering.webp",
+    caption: "SEO Keyword Agent, grouping keywords into thematic clusters",
   },
   "seo-quoting-agent": {
+    type: "image",
     src: "/work/agent-seo-quoting-agent.webp",
-    caption: "The quote table, and the invariant gate every number passes",
+    caption: "Agent provides SEO production quotes",
   },
 };
 
-const force = process.argv.includes("--force");
+const dry = process.argv.includes("--dry");
 
 async function main() {
   const pool = new Pool({
     connectionString: process.env.DATABASE_PUBLIC_URL || process.env.DATABASE_URL,
     ssl: process.env.DATABASE_PUBLIC_URL ? { rejectUnauthorized: false } : false,
   });
+
+  const before = await pool.query(
+    "select slug, media from projects where slug = any($1)",
+    [Object.keys(MEDIA)],
+  );
+  const backup = Object.fromEntries(before.rows.map((r) => [r.slug, r.media]));
+  console.log("--- media cu ---");
+  for (const [slug, m] of Object.entries(backup)) console.log(slug, JSON.stringify(m));
+
+  if (dry) {
+    console.log("--- --dry: khong ghi gi ---");
+    await pool.end();
+    return;
+  }
+
+  const file = path.join(__dirname, `_media-backup-${Date.now()}.json`);
+  fs.writeFileSync(file, JSON.stringify(backup, null, 2));
+  console.log(`\nsao luu -> ${path.basename(file)}\n--- ghi ---`);
+
   for (const [slug, m] of Object.entries(MEDIA)) {
-    const cur = await pool.query(
-      "select coalesce(jsonb_array_length(media), 0) n from projects where slug = $1",
-      [slug],
+    const r = await pool.query(
+      "update projects set media = $2::jsonb where slug = $1",
+      [slug, JSON.stringify([m])],
     );
-    if (!cur.rows.length) {
-      console.log(`${slug}: khong tim thay`);
-      continue;
-    }
-    if (cur.rows[0].n > 0 && !force) {
-      console.log(`${slug}: da co ${cur.rows[0].n} media, bo qua`);
-      continue;
-    }
-    await pool.query("update projects set media = $2::jsonb where slug = $1", [
-      slug,
-      JSON.stringify([{ type: "image", src: m.src, caption: m.caption }]),
-    ]);
-    console.log(`${slug}: dat ${m.src}`);
+    console.log(`${slug}: ${r.rowCount ? m.src : "KHONG TIM THAY"}`);
   }
   await pool.end();
 }

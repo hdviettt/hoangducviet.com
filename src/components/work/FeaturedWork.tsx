@@ -34,7 +34,12 @@ export default function FeaturedWork({ project }: { project: Project }) {
     : null;
   // Thu tu nguon anh, va day la hop dong voi CMS: thumbnail thang neu co, roi
   // den media dau tien (anh hay clip deu duoc), cuoi cung moi la bang so.
-  const hero = project.media[0];
+  // Media dau tien CO NGUON. Mot dong `{src: "", type: "video"}` — CMS luu hut
+  // khi nguoi dung them dong media roi chua gan file — van la mot phan tu that
+  // trong mang, nen `media[0]` nhan no, roi khoi featured render mot the video
+  // khong co nguon va cot phai trong tron. Do dung la thu da xay ra voi
+  // agentic-ai-platform tren prod.
+  const hero = project.media.find((m) => m.src?.trim());
   const clip = hero?.type === "video" ? hero : null;
   const shot = hero?.type === "image" ? hero : null;
   // Four is what every project carries and what the 2x2 grid is built for; the

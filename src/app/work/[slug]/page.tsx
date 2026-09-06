@@ -51,7 +51,8 @@ export default async function ProjectDeepDivePage({
   const project = await getProjectBySlug(params.slug);
   if (!project) notFound();
 
-  const hasMedia = project.media.length > 0;
+  // Co nguon moi tinh la co media: mot dong luu hut voi src rong van dem la 1.
+  const hasMedia = project.media.some((m) => m.src?.trim());
   const hasChildren = !!project.children && project.children.length > 0;
   const hasPosts = !!project.posts && project.posts.length > 0;
   const hasStack = project.models.length > 0 || project.stack.length > 0;
@@ -153,12 +154,14 @@ export default async function ProjectDeepDivePage({
           }`}
         >
           <MediaCarousel
-            items={project.media.map((m) => ({
-              src: m.src,
-              caption: m.caption,
-              type: m.type,
-              fit: "cover",
-            }))}
+            items={project.media
+              .filter((m) => m.src?.trim())
+              .map((m) => ({
+                src: m.src,
+                caption: m.caption,
+                type: m.type,
+                fit: "cover",
+              }))}
             ratio="16 / 9"
             mat="ambient"
             label={`${project.title} media`}

@@ -1,21 +1,32 @@
-"""Anh featured tam cho bon agent con, lay tu chinh cover bai viet cua chung.
+"""Anh featured cho platform va bon agent con, cat tu thu vien agent that.
 
-Bon du an con chua co media nao, nen khoi featured cua chung rot ve bang so.
-Thay vi ve them mot bo hinh thu bay, dung lai dung cai da co: moi agent deu co
-mot bai viet, va moi bai viet deu co mot cover trong bo hinh dang chay tren
-blog. Cung bang mau, cung ngon ngu ve, va lien quan truc tiep ve noi dung.
+Nguon la mot anh Viet tu up qua CMS — `agentplatform.png`, anh chup thu vien
+agent cua chinh platform: 2282x1121, moi the la mot agent that dang chay. No da
+nam san trong media library nhung khong duoc gan vao du an nao, vi dong media
+cua `agentic-ai-platform` luu hut thanh `{"src": "", "type": "video"}` — mot the
+video khong co nguon. Do la ly do khoi featured cua platform tren prod trong
+tron chu khong phai vi thieu hinh.
 
-Ba viec o day, deu la viec ma dung SVG goc se lam sai:
+Nen o day khong ve gi ca. Platform lay ca thu vien; moi agent con lay dung the
+cua chinh no, kem mot the ben canh de con doc ra boi canh.
 
-1. LAY BAN PNG, KHONG PHAI SVG. Cover SVG co animation lap vo han. O khe hero
-   canh mot khoi chu tinh, ba hinh cung chay la ba thu tranh mat nguoi doc.
-   `render-og.cjs` da xuat san ban PNG dung o khung cuoi cua animation.
-2. CAT VE 16:9. Cover la 1200x630 (1.905), khe hero la 16:9 (1.778). De nguyen
-   thi `object-cover` tu cat hai ben, va no cat mu — cat o day thi kiem duoc.
-3. XUAT WEBP. PNG cua cover nang 240-355KB moi cai vi toan vung mau phang lon.
-   WebP chat luong 90 xuong con mot phan muoi ma khong thay khac.
+Toa do the do bang cach do ranh trang giua cac the, khong gan cung: anh chup lai
+o kich thuoc khac thi mot bo toa do cung se lech im lang.
 
     python scripts/make-agent-media.py
+
+Hai anh con lai cua bo featured khong sinh o day vi chung khong can cat theo
+luoi — chung chi can dung dinh dang. Ca hai nam san tren R2, va day la lenh:
+
+    B=https://pub-21eb6bdd475e49679838e54eabfd619a.r2.dev
+
+    # ban ghi man hinh search engine: GIF 2.0MB -> MP4 753KB
+    curl -s -o /tmp/d.gif $B/1774660284404-20260328081046_rec_.gif
+    ffmpeg -i /tmp/d.gif -movflags +faststart -pix_fmt yuv420p       -vf "scale=1600:-2:flags=lanczos" -c:v libx264 -preset slow -crf 26       -an public/work/search-engine-demo.mp4
+
+    # man hinh dau presentation agent: PNG 789KB -> WebP 92KB, cat sat le
+    curl -s -o /tmp/p.png $B/1788647728847-presentation-agent.png
+    # roi cat theo vien muc va dem ve 16:9 nhu `to_ratio` duoi day
 """
 from __future__ import annotations
 
@@ -26,99 +37,93 @@ import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-OG = ROOT / "og"
-SRC = ROOT / "public" / "og"
+SRC = ROOT / "scripts" / "_src" / "agentplatform.png"
 OUT = ROOT / "public" / "work"
-
-# agent -> bai viet cua chinh no
-PAIRS = {
-    "cms-publishing-pipeline":
-        "a-cms-adaptable-llm-pipeline-for-seo-compliant-content-publishing",
-    "content-seo-ai": "a-brief-history-of-seo-content-writing-with-ai",
-    "keyword-clustering": "agentic-keyword-clustering",
-    "seo-quoting-agent": "a-wrong-quote-that-looks-like-a-right-one",
-}
-
 RATIO = 16 / 9
 
-
-def ink_crop(im: Image.Image) -> Image.Image:
-    """Cat sat phan co muc, roi mo rong ra dung 16:9.
-
-    Bo cover nay ve cho khung og 1200x630 nen quanh net ve luon con mot vanh
-    nen. Vanh do nam trong file thi o khe hero no bien thanh khoang trong, va
-    net ve doc ra nho di — dung cai loi vua tim thay o anh nguoi dung tu up.
-
-    Nen khong phai trang tuyet doi ma la mot gradient rat nhat, nen "co muc"
-    do bang do lech so voi mau nen lay tu vien anh, khong phai bang nguong
-    trang co dinh."""
-    a = np.asarray(im).astype(int)
-    edge = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]])
-    bg = np.median(edge, axis=0)
-    ink = np.abs(a - bg).sum(2) > 18
-    ys, xs = np.nonzero(ink)
-    if len(xs) == 0:
-        return im
-    pad = round(im.width * 0.02)
-    l = max(int(xs.min()) - pad, 0)
-    r = min(int(xs.max()) + pad, im.width)
-    t = max(int(ys.min()) - pad, 0)
-    b = min(int(ys.max()) + pad, im.height)
-
-    # Mo rong ve 16:9 bang cach lay them nen, khong cat vao noi dung.
-    w, h = r - l, b - t
-    if w / h < RATIO:
-        want = round(h * RATIO)
-        l = max(l - (want - w) // 2, 0)
-        r = min(l + want, im.width)
-        l = max(r - want, 0)
-    else:
-        want = round(w / RATIO)
-        t = max(t - (want - h) // 2, 0)
-        b = min(t + want, im.height)
-        t = max(b - want, 0)
-    out = im.crop((l, t, r, b))
-
-    # Con thieu bao nhieu thi day them bang chinh hang pixel o mep.
-    #
-    # Khong the de nguyen 1.905: khe hero la 16:9 va no dung `object-cover`,
-    # nen bay phan tram be ngang bi cat mu o hai ben — o tam quoting agent do
-    # dung la cai panel ben phai. Cung khong the day bang mot mau phang, vi
-    # nen cua bo cover nay la gradient, va mot mang phang canh gradient thi lo
-    # duong noi. Nhan doi hang mep thi gradient chay tiep.
-    return pad_to_ratio(out)
+# slug -> (hang, cot, so cot lay kem, ten the that tren anh)
+CARDS = {
+    "seo-quoting-agent": (0, 0, 2, "Agent provides SEO production quotes"),
+    "cms-publishing-pipeline": (0, 1, 2, "Agent for posting articles on the website"),
+    "content-seo-ai": (1, 1, 2, "SEO Outline Agent + SEO Project Research Agent"),
+    "keyword-clustering": (1, 3, 2, "SEO Keyword Agent"),
+}
 
 
-def pad_to_ratio(im: Image.Image) -> Image.Image:
-    if abs(im.width / im.height - RATIO) < 0.005:
+def runs(mask, least=6):
+    out, start = [], None
+    for i, v in enumerate(mask):
+        if v and start is None:
+            start = i
+        elif not v and start is not None:
+            if i - start >= least:
+                out.append((start + i) // 2)
+            start = None
+    if start is not None and len(mask) - start >= least:
+        out.append((start + len(mask)) // 2)
+    return out
+
+
+def columns(im: Image.Image) -> list[int]:
+    """Ranh doc giua cac cot: dai pixel trang tuyet doi chay suot chieu cao."""
+    a = np.asarray(im.convert("L")).astype(int)
+    return runs((a > 246).mean(axis=0) > 0.97)
+
+
+# Ranh ngang thi khong do duoc: nen trang cua the va nen trang cua trang la mot
+# mau, nen khong co tin hieu nao tach chung. Hai moc duoi do bang mat tren dung
+# tam anh nay, va `assert` ben duoi giu cho no khong am tham lech khi anh doi.
+SIZE = (2282, 1121)
+ROW_SPANS = ((8, 492), (508, 978))
+
+
+def to_ratio(im: Image.Image) -> Image.Image:
+    """Dem ve dung 16:9 bang cach nhan doi hang pixel o mep.
+
+    Khe featured dung `object-cover`, nen mot anh lech ti le se bi cat mu o hai
+    ben — dem o day thi kiem duoc bang mat."""
+    w, h = im.size
+    if abs(w / h - RATIO) < 0.005:
         return im
     a = np.asarray(im)
-    if im.width / im.height > RATIO:
-        need = round(im.width / RATIO) - im.height
-        top, bot = need // 2, need - need // 2
-        a = np.concatenate(
-            [np.repeat(a[:1], top, 0), a, np.repeat(a[-1:], bot, 0)], axis=0)
+    if w / h > RATIO:
+        need = round(w / RATIO) - h
+        t, b = need // 2, need - need // 2
+        a = np.concatenate([np.repeat(a[:1], t, 0), a, np.repeat(a[-1:], b, 0)], 0)
     else:
-        need = round(im.height * RATIO) - im.width
-        lft, rgt = need // 2, need - need // 2
-        a = np.concatenate(
-            [np.repeat(a[:, :1], lft, 1), a, np.repeat(a[:, -1:], rgt, 1)], axis=1)
+        need = round(h * RATIO) - w
+        l, r = need // 2, need - need // 2
+        a = np.concatenate([np.repeat(a[:, :1], l, 1), a, np.repeat(a[:, -1:], r, 1)], 1)
     return Image.fromarray(a)
 
 
-
 def main() -> int:
+    if not SRC.exists():
+        print(f"THIEU {SRC}")
+        return 1
     OUT.mkdir(parents=True, exist_ok=True)
-    for slug, cover in PAIRS.items():
-        src = SRC / f"{cover}.png"
-        if not src.exists():
-            print(f"THIEU {src.name} — chay `node scripts/render-og.cjs` truoc")
-            return 1
-        im = ink_crop(Image.open(src).convert("RGB"))
+    im = Image.open(SRC).convert("RGB")
+    assert (im.width, im.height) == SIZE, (
+        f"anh nguon doi kich thuoc ({im.width}x{im.height}), do lai ROW_SPANS")
+    # Danh sach do duoc CHINH LA canh cua cac the — khong chen them moc 0 vao
+    # dau, khong thi moi o lech mot cot va anh cat ra la agent ben canh.
+    cx = columns(im)
+    print(f"nguon {im.width}x{im.height}  canh cot {cx}")
+
+    full = to_ratio(im)
+    full.save(OUT / "agent-platform.webp", "WEBP", quality=88, method=6)
+    print(f"agent-platform.webp  {full.width}x{full.height}  "
+          f"{(OUT / 'agent-platform.webp').stat().st_size // 1024}KB  <- ca thu vien")
+
+    for slug, (r, c, span, name) in CARDS.items():
+        top, bot = ROW_SPANS[r]
+        right = cx[min(c + span, len(cx) - 1)]
+        crop = to_ratio(im.crop((cx[c], top, right, bot)))
+        assert crop.width > 700, f"{slug}: cat hut, chi rong {crop.width}px"
         dst = OUT / f"agent-{slug}.webp"
-        im.save(dst, "WEBP", quality=90, method=6)
-        print(f"{dst.relative_to(ROOT)}  {im.size[0]}x{im.size[1]}  "
-              f"{dst.stat().st_size // 1024}KB  <- {cover}")
+        crop.save(dst, "WEBP", quality=90, method=6)
+        print(f"{dst.name}  {crop.width}x{crop.height}  "
+              f"{dst.stat().st_size // 1024}KB  <- {name}")
     return 0
 
 
