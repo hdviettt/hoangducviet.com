@@ -81,5 +81,7 @@ scripts/seo-history-inline/
 /scripts/dump-*.cjs
 /scripts/figure2.py
 /scripts/make-covers-*.py
+# ...tru bo sinh bia dang dung, no la nguon that cua public/covers
+!/scripts/make-covers-doodle.py
 /scripts/verify-figs.cjs
 scripts/_*.json
