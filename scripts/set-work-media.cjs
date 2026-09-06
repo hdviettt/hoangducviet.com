@@ -19,7 +19,7 @@ const dry = process.argv.includes("--dry");
 const MEDIA = {
   "agentic-ai-platform": {
     src: "/work/fld-agentic-ai-platform.svg",
-    caption: "Nineteen agents on one unbroken line, and the newest one arriving",
+    caption: "One workspace, and the catalogue of solutions running on it",
   },
   "mini-search-engine": {
     src: "/work/fld-mini-search-engine.svg",
@@ -27,7 +27,7 @@ const MEDIA = {
   },
   "agentic-presentation-system": {
     src: "/work/fld-agentic-presentation-system.svg",
-    caption: "Sixteen geometry rules around the slide, and the model outside them",
+    caption: "A brief and a data file on the left, the deck they become on the right",
   },
   "cms-publishing-pipeline": {
     src: "/work/fld-cms-publishing-pipeline.svg",
@@ -35,15 +35,15 @@ const MEDIA = {
   },
   "content-seo-ai": {
     src: "/work/fld-content-seo-ai.svg",
-    caption: "Four architectures, and how much of the checklist each one held",
+    caption: "The draft coming out line by line, with the checklist ticking in the margin",
   },
   "keyword-clustering": {
     src: "/work/fld-keyword-clustering.svg",
-    caption: "Where every point was equidistant, and where density put them",
+    caption: "Raw keywords on the left, named groups on the right, and the two nothing would take",
   },
   "seo-quoting-agent": {
     src: "/work/fld-seo-quoting-agent.svg",
-    caption: "Nine steps, seven of them arithmetic, two with the model caged",
+    caption: "The quote itself: priced line by line, down to the total",
   },
 };
 
