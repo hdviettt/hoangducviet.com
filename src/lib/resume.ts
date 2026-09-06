@@ -4,6 +4,14 @@
 // months in Resume.tsx, so "1 yr", "2 yrs 1 mo", "4 mos" stay current on their
 // own — no manual editing when a month rolls over.
 
+// Mot dong ket qua. `proof` la thu mot ban CV giay khong lam duoc: cau noi
+// "toi da xay cai nay" nam ngay canh trang mo ta chinh cai do, bam vao doc
+// duoc. Chi gan khi that su co trang chung minh — khong co thi de trong.
+export interface Highlight {
+  text: string;
+  proof?: { label: string; slug: string };
+}
+
 export interface Role {
   title: string;
   type: string; // Full-time / Internship / Apprenticeship
@@ -13,7 +21,7 @@ export interface Role {
   // Ket qua cua vai tro, lay tu CV. Mot dong mot y — o day la cho duy nhat
   // tren site noi ve phan lanh dao: quy mo doi, muc tiet kiem thoi gian, so
   // nguoi da dao tao. Trang work noi ve co che, muc nay noi ve ket qua.
-  highlights?: string[];
+  highlights?: Highlight[];
 }
 
 export interface Company {
@@ -37,11 +45,21 @@ export const EXPERIENCE: Company[] = [
         start: "2025-08",
         end: "2026-08",
         highlights: [
-          "Founded the AI team and led five people.",
-          "Built the platform 120 people work on, with over twenty AI solutions running on it: agents, LLM workflows and machine learning.",
-          "Wrote the standards every agent runs under: nonhuman identity, observability, evals, human-in-the-loop, feedback as a feature, cost tracking.",
-          "Halved the time the SEO production chain takes. Internal linking and content outlines run up to five times faster, at the quality of senior staff.",
-          "Trained 80% of the company to work with agentic AI, and more than fifty measurable outcomes came out of it.",
+          { text: "Founded the AI team and led five people." },
+          {
+            text: "Built the platform 120 people work on, with over twenty AI solutions running on it: agents, LLM workflows and machine learning.",
+            proof: { label: "The platform", slug: "agentic-ai-platform" },
+          },
+          {
+            text: "Wrote the standards every agent runs under: nonhuman identity, observability, evals, human-in-the-loop, feedback as a feature, cost tracking.",
+          },
+          {
+            text: "Halved the time the SEO production chain takes. Internal linking and content outlines run up to five times faster, at the quality of senior staff.",
+            proof: { label: "The writing agent", slug: "content-seo-ai" },
+          },
+          {
+            text: "Trained 80% of the company to work with agentic AI, and more than fifty measurable outcomes came out of it.",
+          },
         ],
       },
       {
@@ -116,6 +134,9 @@ export const CERTIFICATIONS: Certification[] = [
 // while an undergraduate.
 export interface School {
   school: string;
+  // Moc thang that, chi bieu do dung. `start`/`end` la chuoi de doc
+  // ("2027 (expected)") nen khong tinh toan duoc.
+  span?: { from: string; to: string };
   url?: string;
   qualification: string;
   location?: string;
@@ -127,6 +148,7 @@ export interface School {
 export const EDUCATION: School[] = [
   {
     school: "Foreign Trade University",
+    span: { from: "2023-09", to: "2027-06" },
     url: "https://www.ftu.edu.vn/",
     qualification: "B.A., International Business",
     location: "Hanoi",
@@ -147,7 +169,31 @@ export const EDUCATION: School[] = [
 // What the CV closes with, said in a way that means something. "Ambitious
 // applications of AI in exciting niches" is a sentence any of ten thousand
 // people could have written; naming what the domain has to contain is not.
+// Nhung con so trong CV, dat thanh mot bang o dau trang. Tat ca deu lay
+// nguyen tu CV — khong suy ra, khong lam tron len.
+export interface Stat {
+  value: string;
+  label: string;
+}
+
+export const STATS: Stat[] = [
+  { value: "120", label: "people use the platform I built, across 30 teams" },
+  { value: "20+", label: "AI solutions running on it in production" },
+  { value: "5", label: "people in the AI team I founded and led" },
+  { value: "80%", label: "of the company trained to work with agentic AI" },
+];
+
 export const LOOKING_FOR =
   "Now looking for a domain with enough mechanism to take apart, where AI is the spearhead and the business outcome is the point.";
 
 export const CV_URL = "/hoang-duc-viet-cv.pdf";
+
+// Mot vai tro co mot dinh danh duy nhat, dung o ca hai cho: o vuong tren bieu
+// do va muc tuong ung trong danh sach ben duoi. Bam vao thanh la nhay xuong
+// dung vai tro do — bieu do tro thanh muc luc chu khong phai hinh trang tri.
+export function roleId(title: string): string {
+  return `role-${title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}`;
+}
