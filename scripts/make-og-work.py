@@ -29,7 +29,7 @@ OUT = ROOT / "public" / "og"
 CHROME = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 
 # Hinh goc ve tren khung 960x540; the ngoai 1200x630 la kich thuoc og:image.
-ART_W, ART_H = 960, 540
+ART_W, ART_H = 960, 640
 OG_W, OG_H = 1200, 630
 # Le trang quanh net. Rong hon mot chut o hai ben vi khung og be ngang hon 16:9.
 PAD_X, PAD_Y = 84, 62

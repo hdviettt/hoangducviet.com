@@ -128,7 +128,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
             <FeaturedClip
               src={clip.src}
               label={clip.caption || project.title}
-              className="aspect-[16/9] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
+              className="aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
             />
           </Link>
         ) : shot ? (
@@ -140,7 +140,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
               alt={shot.caption || project.title}
               loading="lazy"
               decoding="async"
-              className="aspect-[16/9] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
+              className="aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
             />
           </Link>
         ) : (

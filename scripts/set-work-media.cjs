@@ -19,7 +19,7 @@ const dry = process.argv.includes("--dry");
 const MEDIA = {
   "agentic-ai-platform": {
     src: "/work/fld-agentic-ai-platform.svg",
-    caption: "One workspace where people and agents pick up the same tasks",
+    caption: "The library of solutions, and the profile of the one that is running",
   },
   "mini-search-engine": {
     src: "/work/fld-mini-search-engine.svg",
@@ -27,7 +27,7 @@ const MEDIA = {
   },
   "agentic-presentation-system": {
     src: "/work/fld-agentic-presentation-system.svg",
-    caption: "One prompt and two data files, and the slide the agent is drafting",
+    caption: "One prompt and two spreadsheets, and the slide the agent is drafting",
   },
   "cms-publishing-pipeline": {
     src: "/work/fld-cms-publishing-pipeline.svg",
