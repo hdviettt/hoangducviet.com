@@ -203,7 +203,8 @@ def cms_by_hand():
         b.append(seg(12, 62 + i * 18, 12 + 60 * f, 62 + i * 18, 0.28,
                      SW * 0.8))
     t.append(text(42, 162, "Google Doc", 11.5, 0.6, 500, anchor="middle"))
-    t.append(text(42, 178, "30 pages, 20 images", 10, 0.4, anchor="middle"))
+    # Can giua o x=42 thi dong nay thua ra ngoai le trai; neo trai o 0.
+    t.append(text(0, 178, "30 pages, 20 images", 10, 0.4))
     b.append(arrow(96, 136, 88, 0.4))
     t.append(text(148, 82, "Copy-paste into the CMS", 13.5, 0.85, 500))
     t.append(text(148, 102, "raw HTML, styling lost", 11.5, 0.45))
@@ -490,9 +491,10 @@ def ce_funnel():
                       fill="0.05" if last else None))
         t.append(text(200, y + 25, name, 13.5, 0.95 if last else 0.75, 500,
                       anchor="middle"))
-        # mo ta dat ben phai: no dai hon cai hop o hai tang duoi
-        t.append(text(420, y + 18, how, 12, 0.5))
-        t.append(text(420, y + 36, label, 12, 0.8, 500, mono=True))
+        # mo ta dat ben phai: no dai hon cai hop o hai tang duoi. O x=420
+        # thi dong dai nhat cham dung mep 640, nen lui ve 412 va thu chu.
+        t.append(text(412, y + 18, how, 11.5, 0.5))
+        t.append(text(412, y + 36, label, 12, 0.8, 500, mono=True))
         if not last:
             b.append(down(200, y + 40, y + 84, 0.35))
     t.append(text(0, 16, "SLOWER AND SMARTER, ONE STAGE AT A TIME", 11, 0.35,
@@ -1560,11 +1562,13 @@ def wq_build():
     b.append(rect(462, 36, 178, 46, 0.6, SW * 1.1, r=8))
     b.append(spark(486, 59, 8, 0.9, SW * 0.75))
     t.append(text(502, 64, "the agent", 12.5, 0.85, 500))
-    t.append(text(462, 98, "navigates, never computes a number", 10.5, 0.55))
+    # Dong nay bat dau o 462 va dai 183px, tuc vuot qua 640.
+    t.append(text(462, 98, "navigates, never computes", 10.5, 0.55))
+    t.append(text(462, 112, "a number itself", 10.5, 0.55))
     for i, tool in enumerate(("get_quote", "run_step", "set_route")):
-        cb, ct = chip(462 + i * 58, 112, 54, 22, "", 9.5, 0.4, 0.6)
+        cb, ct = chip(462 + i * 58, 126, 54, 22, "", 9.5, 0.4, 0.6)
         b.append(cb)
-        t.append(text(462 + i * 58 + 27, 127, tool, 8, 0.6, anchor="middle",
+        t.append(text(462 + i * 58 + 27, 141, tool, 8, 0.6, anchor="middle",
                       mono=True))
     t.append(text(0, 168, "NINE DETERMINISTIC STEPS", 10.5, 0.4, 500))
     steps = ("input", "check kw", "rankings", "pick rivals", "cluster",

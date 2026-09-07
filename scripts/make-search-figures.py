@@ -18,8 +18,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from doodle import (  # noqa: E402
-    SW, arc, arrow, article_svg, chip, dot, ellipse, magnifier, person, rect,
-    seg, sheet, spark, text,
+    SW, arc, arrow, article_svg, caret_block, chip, dot, ellipse, magnifier,
+    person, rect, seg, sheet, spark, text,
 )
 
 OUT = Path(__file__).resolve().parent / "_search-figures.json"
@@ -140,34 +140,41 @@ def browser(x, y, w, h, op=0.5):
 # =========================================================== web-crawling (3)
 
 def wc_without_with():
-    """Khong co may tim kiem thi phai biet URL. Co roi thi go y dinh.
+    """Khong co may tim kiem thi phai biet san dia chi. Co roi thi go y dinh.
 
-    Ban cu ve hai hop chu nhat mau khac nhau. Ban nay ve dung hai giao dien:
-    mot thanh dia chi trong voi mot dau hoi, va mot o tim kiem co ket qua."""
+    Ban truoc dung hai khung 300 va 400 tren mot canvas 640, nen mot nua hinh
+    bo trong va cac dong chu chu thich troi ra le phai — trong do dong "already
+    know" bi cat cut o mep khung. Bay gio ca hai bang deu rong het 640, va moi
+    cau chu thich nam duoi bang cua no thay vi ben canh."""
     b, t = [], []
     t.append(cap(16, "WITHOUT A SEARCH ENGINE"))
-    b.append(browser(0, 30, 300, 150))
-    b.append(rect(14, 44, 214, 26, 0.45, SW * 0.9, r=13))
+    b.append(browser(0, 30, 640, 112))
+    b.append(rect(14, 44, 500, 26, 0.45, SW * 0.9, r=13))
     t.append(text(26, 61, "https://", 10, 0.35, mono=True))
-    t.append(text(72, 62, "?", 17, 0.75, 600))
-    t.append(text(244, 62, "you must", 10, 0.45))
-    t.append(text(244, 74, "already know", 10, 0.45))
-    for i, u in enumerate(("yonex.com/rackets/az900",
-                           "badmintonhq.co/gear",
-                           "lining.com/products/blade")):
-        r_, x_ = urlbox(14, 84 + i * 30, 214, u, 0.28)
-        b.append(r_)
-        t.append(x_)
-    t.append(text(0, 200, "The sites exist. Nothing points you at them.", 11,
-                 0.5))
+    b.append(caret_block(80, 53, 0.55))
+    t.append(text(626, 61, "no query box", 9.5, 0.4, anchor="end"))
+    t.append(text(320, 108, "?", 26, 0.55, 600, anchor="middle"))
+    t.append(text(320, 130, "nothing loads until you type an exact address",
+                  10, 0.4, anchor="middle"))
 
-    b.append(rule(224))
-    t.append(cap(252, "WITH A SEARCH ENGINE"))
-    b.append(browser(0, 266, 400, 232))
-    b.append(rect(14, 280, 372, 30, 0.9, SW * 1.4, r=15))
-    b.append(magnifier(34, 295, 7, 0.8, SW * 0.9))
-    t.append(text(50, 300, "badminton racket", 12.5, 0.95, 500, mono=True))
-    t.append(text(14, 332, "About 4,120,000 results", 9.5, 0.35))
+    t.append(text(0, 168, "The pages that answer you already exist:", 11,
+                  0.55))
+    for i, u in enumerate(("yonex.com/rackets/az900", "badmintonhq.co/gear",
+                           "lining.com/products/blade")):
+        x = i * 214
+        b.append(rect(x, 180, 200, 26, 0.3, SW * 0.9, r=5))
+        t.append(text(x + 12, 197, u, 9, 0.45, mono=True))
+    t.append(text(0, 228, "You just have to know which one, and how it is "
+                  "spelled.", 12, 0.65))
+
+    b.append(rule(256))
+    t.append(cap(284, "WITH A SEARCH ENGINE"))
+    b.append(browser(0, 298, 640, 250))
+    b.append(rect(14, 312, 500, 32, 0.9, SW * 1.4, r=16))
+    b.append(magnifier(36, 328, 7, 0.8, SW * 0.9))
+    t.append(text(54, 333, "badminton racket", 12.5, 0.95, 500, mono=True))
+    t.append(text(626, 333, "a query", 9.5, 0.45, anchor="end"))
+    t.append(text(14, 364, "About 4,120,000 results", 9.5, 0.35))
     res = (("yonex.com > rackets > az900", "Astrox 99 Pro Badminton Racket",
             "Head-heavy frame for steep smashes. In stock, ships today."),
            ("badmintonhq.co > gear", "Best Badminton Rackets 2026",
@@ -175,42 +182,48 @@ def wc_without_with():
            ("lining.com > products", "Li-Ning Blade Series",
             "Carbon shaft, 4U weight, even balance for all-round play."))
     for i, (url, title, snip) in enumerate(res):
-        y = 350 + i * 48
+        y = 384 + i * 52
         t.append(text(14, y, url, 9, 0.4, mono=True))
-        t.append(text(14, y + 15, title, 11.5, 0.95, 500))
-        t.append(text(14, y + 29, snip, 9.5, 0.45))
-    t.append(text(414, 300, "you type", 10.5, 0.5))
-    t.append(text(414, 314, "what you want,", 10.5, 0.7, 500))
-    t.append(text(414, 328, "not where it is", 10.5, 0.7, 500))
-    t.append(text(414, 356, "ranked, so the", 10.5, 0.45))
-    t.append(text(414, 370, "first one is", 10.5, 0.45))
-    t.append(text(414, 384, "usually enough", 10.5, 0.45))
-    return "".join(b), "".join(t), 512, 640
+        t.append(text(14, y + 15, title, 12, 0.95, 500))
+        t.append(text(14, y + 30, snip, 9.5, 0.45))
+        if i == 0:
+            b.append(rect(496, y - 10, 130, 22, 0.6, SW * 0.9, r=11))
+            t.append(text(561, y + 5, "ranked first", 9, 0.7, 500,
+                          anchor="middle"))
+    t.append(text(0, 574, "You type what you want. Which of the three you see "
+                  "first is the engine's answer,", 12, 0.65))
+    t.append(text(0, 594, "not something you had to know.", 12, 0.9, 500))
+    return "".join(b), "".join(t), 608, 640
 
 
 def wc_two_steps():
-    """Bang duoc dung truoc, roi cau hoi moi doi chieu voi no."""
+    """Bang duoc dung truoc, roi cau hoi moi doi chieu voi no.
+
+    Hai cho hong o ban truoc. Mot: "the table" la mot o rieng rong 108px ep
+    sat mep phai, trong khi chinh cai bang ngay ben duoi moi la thu no goi
+    ten — nen bo o do di, va lay dong tieu de cua bang lam ten. Hai: ba dong
+    BM25/PageRank/BERT nam NGOAI o "ranking engine", noi vao bang mot cai
+    cuong 10px, doc ra nhu ba dong roi; gio chung nam trong o."""
     b, t = [], []
-    t.append(cap(16, "STEP 1 - BUILD THE TABLE, BEFORE ANYONE SEARCHES"))
+    t.append(cap(16, "STEP 1 - BUILT BEFORE ANYONE SEARCHES"))
     stages = (("the web", "billions of pages"), ("crawler", "downloads them"),
               ("indexer", "organises the text"))
-    for i, (name, sub) in enumerate(stages):
-        x = i * 168
-        bb, tt = box(x, 32, 140, 46, name, sub)
+    for i, (name, sub_) in enumerate(stages):
+        x = i * 225
+        bb, tt = box(x, 32, 190, 50, name, sub_)
         b.append(bb)
         t.append(tt)
         if i < 2:
-            b.append(arrow(x + 144, x + 164, 55, 0.4))
-    b.append(arrow(508, 528, 55, 0.4))
-    bb, tt = box(532, 32, 108, 46, "the table", strong=True, tsize=12)
-    b.append(bb)
-    t.append(tt)
+            b.append(arrow(x + 194, x + 221, 57, 0.4))
+    b.append(down(320, 84, 106, 0.4))
 
-    b.append(rect(0, 96, 640, 118, 0.55, SW * 1.2, r=8, fill="0.03"))
-    t.append(text(14, 116, "url", 9.5, 0.4, 600, mono=True))
-    t.append(text(210, 116, "what it is about", 9.5, 0.4, 600, mono=True))
-    t.append(text(556, 116, "rank", 9.5, 0.4, 600, mono=True))
-    b.append(seg(14, 124, 626, 124, 0.22, SW * 0.7))
+    b.append(rect(0, 112, 640, 150, 0.95, SW * 1.4, r=8, fill="0.03"))
+    t.append(text(14, 134, "the table", 13, 0.95, 500))
+    t.append(text(84, 134, "one row per page, built once", 10, 0.45))
+    b.append(seg(14, 146, 626, 146, 0.2, SW * 0.7))
+    t.append(text(14, 164, "url", 9.5, 0.4, 600, mono=True))
+    t.append(text(210, 164, "what it is about", 9.5, 0.4, 600, mono=True))
+    t.append(text(556, 164, "rank", 9.5, 0.4, 600, mono=True))
     rows = (("yonex.com/rackets", "badminton, racket, carbon, pro series",
              "8.4"),
             ("badmintonhq.co/gear", "racket, review, best, shuttlecock",
@@ -218,88 +231,107 @@ def wc_two_steps():
             ("wikipedia.org/tennis", "tennis, history, sport, court, ball",
              "2.0"))
     for i, (u, c, r_) in enumerate(rows):
-        y = 144 + i * 22
+        y = 186 + i * 22
         t.append(text(14, y, u, 9.5, 0.75, mono=True))
         t.append(text(210, y, c, 9.5, 0.5))
         t.append(text(556, y, r_, 9.5, 0.75, mono=True))
-    t.append(text(14, 206, "... and about a billion more rows", 9.5, 0.35))
+    t.append(text(14, 248, "... and about a billion more rows", 9.5, 0.35))
 
-    b.append(rule(238))
-    t.append(cap(266, "STEP 2 - MATCH THE QUERY, WHEN SOMEONE SEARCHES"))
-    b.append(rect(0, 282, 200, 32, 0.9, SW * 1.3, r=16))
-    b.append(magnifier(20, 298, 6.5, 0.75, SW * 0.85))
-    t.append(text(36, 303, "badminton racket", 11.5, 0.9, 500, mono=True))
-    b.append(arrow(206, 246, 298, 0.4))
-    bb, tt = box(252, 276, 176, 44, "ranking engine", strong=True)
-    b.append(bb)
-    t.append(tt)
+    b.append(rule(290))
+    t.append(cap(318, "STEP 2 - WHEN SOMEONE SEARCHES"))
+    # Khoi nay tung duoc day xuong 18px bang cach thay tung con so mot, va
+    # duong ke ngang thi tut vao dung dong PageRank trong khi cot ket qua o
+    # ben phai khong tut theo. Viet lai bang toa do tuong minh.
+    b.append(rect(0, 352, 190, 32, 0.9, SW * 1.3, r=16))
+    b.append(magnifier(20, 368, 6.5, 0.75, SW * 0.85))
+    t.append(text(36, 373, "badminton racket", 10.5, 0.9, 500, mono=True))
+    b.append(arrow(196, 216, 368, 0.4))
+
+    b.append(rect(222, 322, 200, 124, 0.95, SW * 1.6, r=8, fill="0.04"))
+    t.append(text(322, 346, "ranking engine", 12, 0.95, 500,
+                  anchor="middle"))
+    b.append(seg(236, 356, 408, 356, 0.2, SW * 0.7))
     for i, (nm, what) in enumerate((("BM25", "does the word appear"),
                                     ("PageRank", "who links to it"),
                                     ("BERT", "does it mean the same"))):
-        y = 336 + i * 22
-        t.append(text(252, y, nm, 10, 0.8, 500, mono=True))
-        t.append(text(320, y, what, 10, 0.45))
-    b.append(seg(340, 320, 340, 330, 0.25, SW * 0.8))
-    b.append(arrow(434, 470, 298, 0.4))
+        y = 378 + i * 22
+        t.append(text(236, y, nm, 9.5, 0.85, 500, mono=True))
+        t.append(text(300, y, what, 9, 0.5))
+    b.append(arrow(428, 448, 368, 0.4))
+
     for i in range(3):
-        y = 276 + i * 30
-        b.append(rect(476, y, 164, 24, 0.9 - i * 0.22, SW * (1.4 - i * 0.25),
-                      r=5, fill="0.07" if i == 0 else None))
-        t.append(text(486, y + 16, f"#{i + 1}", 9.5, 0.6, 600, mono=True))
-        t.append(text(508, y + 16, ("yonex.com/rackets", "badmintonhq.co/gear",
-                                    "lining.com/products")[i], 9.5,
+        y = 331 + i * 38
+        b.append(rect(456, y, 184, 30, 0.95 - i * 0.22,
+                      SW * (1.4 - i * 0.25), r=5,
+                      fill="0.07" if i == 0 else None))
+        t.append(text(468, y + 20, f"#{i + 1}", 9.5, 0.6, 600, mono=True))
+        t.append(text(492, y + 20, ("yonex.com/rackets", "badmintonhq.co/gear",
+                                    "lining.com/products")[i], 9,
                       0.85 - i * 0.2, mono=True))
-    t.append(text(0, 400, "The table is built once, in advance. The query "
-                  "only reads it.", 12, 0.65))
-    return "".join(b), "".join(t), 414, 640
+    t.append(text(0, 480, "The table is built once, in advance. A query never "
+                  "touches the web —", 12, 0.65))
+    t.append(text(0, 500, "it only reads the table.", 12, 0.9, 500))
+    return "".join(b), "".join(t), 514, 640
 
 
 def wc_depth():
     """Do sau cua cuoc bo: mot hat giong, roi lien ket cua no, roi lien ket
-    cua chung."""
+    cua chung.
+
+    Ban truoc co ba loi. Nhan "depth 2" nam DUOI hang no goi ten. Chin o o
+    hang duoi deu ghi mot chu "url" — goi ten thay vi ve, dung cai loi da phai
+    sua o cho khac. Va khoi cot ben duoi lap lai y nguyen ba nhan depth 0/1/2
+    da co o tren. Gio so trang di thang vao nhan cua tung hang, chin o mang
+    duong dan that, va khoi cot bien mat."""
     b, t = [], []
     t.append(cap(16, "ONE SEED, THEN EVERYTHING IT POINTS AT"))
-    b.append(dot(320, 62, 26, 0.95, hollow=True, sw=SW * 1.7))
-    b.append(dot(320, 62, 16, 0.10))
-    t.append(text(320, 66, "seed", 11, 0.95, 500, anchor="middle"))
-    t.append(text(24, 66, "depth 0", 10.5, 0.5, 500))
-    t.append(text(24, 80, "1 page", 10, 0.35, mono=True))
+    LX, TX, TW = 0, 100, 540
 
-    d1 = ("semrush.com/blog", "moz.com/seo-guide", "ahrefs.com/tools",
-          "google.com/search/docs")
-    for i, u in enumerate(d1):
-        x = 32 + i * 152
-        b.append(diag(320, 90, x + 68, 132, 0.4, SW * 1.1))
-        b.append(rect(x, 138, 136, 26, 0.6, SW * 1.05, r=5))
-        t.append(text(x + 68, 155, u, 9, 0.7, anchor="middle", mono=True))
-    t.append(text(24, 128, "depth 1", 10.5, 0.5, 500))
+    rows = ((44, "depth 0", "1 page"), (150, "depth 1", "about 20 pages"),
+            (250, "depth 2", "about 400 pages"))
+    for y, nm, n in rows:
+        t.append(text(LX, y + 14, nm, 11, 0.6, 500))
+        t.append(text(LX, y + 29, n, 9.5, 0.4, mono=True))
 
-    t.append(text(24, 250, "depth 2", 10.5, 0.5, 500))
-    for i in range(4):
-        px = 32 + i * 152 + 68
-        n = 3 if i < 3 else 2
-        for j in range(n):
-            x = 32 + i * 152 + j * 46 + (0 if n == 3 else 22)
-            b.append(diag(px, 168, x + 20, 206, 0.22, SW * 0.85))
-            b.append(rect(x, 212, 40, 22, 0.3, SW * 0.9, r=4))
-            t.append(text(x + 20, 227, "url", 8.5, 0.4, anchor="middle",
-                          mono=True))
-    t.append(text(596, 227, "...", 12, 0.35, anchor="middle"))
+    seed_x, seed_y = TX + TW / 2, 58
+    b.append(dot(seed_x, seed_y, 25, 0.95, hollow=True, sw=SW * 1.7))
+    t.append(text(seed_x, seed_y + 4, "seed", 11, 0.95, 500,
+                  anchor="middle"))
 
-    b.append(rule(262))
-    for i, (lbl, n, wdt) in enumerate((("depth 0", "1 page", 0.02),
-                                       ("depth 1", "~20 pages", 0.16),
-                                       ("depth 2", "~400 pages", 1.0))):
-        y = 288 + i * 34
-        t.append(text(0, y + 14, lbl, 10.5, 0.55, 500))
-        b.append(bar(72, y, 420, 20, wdt, 0.9 if i == 2 else 0.55))
-        t.append(text(504, y + 14, n, 10.5, 0.8 if i == 2 else 0.5,
+    d1 = (("semrush.com", "/blog"), ("moz.com", "/seo-guide"),
+          ("ahrefs.com", "/tools"), ("google.com", "/search/docs"))
+    d1x = []
+    for i, (dom, path) in enumerate(d1):
+        x = TX + i * 138
+        d1x.append(x + 62)
+        b.append(diag(seed_x, seed_y + 27, x + 62, 146, 0.35, SW * 1.05))
+        b.append(rect(x, 152, 124, 34, 0.7, SW * 1.15, r=5))
+        t.append(text(x + 62, 167, dom, 9.5, 0.85, 500, anchor="middle",
                       mono=True))
-    t.append(text(0, 404, "Each page carries links, and each of those carries "
-                  "more.", 12, 0.65))
-    t.append(text(0, 424, "A page nothing links to may never be reached at "
+        t.append(text(x + 62, 180, path, 8.5, 0.5, anchor="middle",
+                      mono=True))
+
+    # Cac duong dan nay tung dai hon roi bi cat con 9 ky tu khi ve, ra
+    # "/soo-basi" va "/link-exp". Chon duong dan von da du ngan.
+    d2 = (("/seo-101", "/keywords"), ("/beginner", "/links"),
+          ("/backlink", "/audit"), ("/crawling", "/sitemaps"))
+    for i, pair in enumerate(d2):
+        for j, path in enumerate(pair):
+            x = TX + i * 138 + j * 66
+            b.append(diag(d1x[i], 188, x + 28, 248, 0.22, SW * 0.9))
+            b.append(rect(x, 254, 56, 26, 0.4, SW * 0.95, r=4))
+            t.append(text(x + 28, 270, path, 7.5, 0.55, anchor="middle",
+                          mono=True))
+    # Dau ba cham tung dat o TX+TW+6 = 646, tuc ngoai khung. Nhan
+    # "about 400 pages" ben trai da noi dieu no dinh noi, nen bo.
+
+    b.append(rule(310))
+    t.append(text(0, 336, "Each page carries links, and each of those carries "
+                  "more. Twenty at each step", 12, 0.65))
+    t.append(text(0, 356, "is four hundred after two.", 12, 0.65))
+    t.append(text(0, 384, "A page nothing links to may never be reached at "
                   "all.", 12, 0.9, 500))
-    return "".join(b), "".join(t), 438, 640
+    return "".join(b), "".join(t), 398, 640
 
 
 # ================================================== designing-the-crawler (3)

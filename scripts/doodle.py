@@ -218,16 +218,21 @@ def figure_file_svg(strokes, labels="", w=640, h=320):
     """Hinh roi, nam trong bai qua the <img> — nghia la no giu duoc chu thich
     tu alt, thu ma mot khoi ```render``` khong co.
 
-    Vi la mot tai lieu doc lap, no khong doc duoc bien CSS cua trang. Nhung no
-    CO the tu doc `prefers-color-scheme` cua chinh minh, nen o day dat mau bang
-    mot khoi <style> va khong ve nen: hinh noi trong nen cua bai o ca hai che
-    do, thay vi la mot mieng trang giua trang toi."""
+    Vi la mot tai lieu doc lap, no khong doc duoc bien CSS cua trang, nen mau
+    phai in cung. Khong ve nen, de hinh noi tren nen cua bai.
+
+    Truoc day khoi <style> nay co mot nhanh `prefers-color-scheme:dark` doi
+    muc sang #8FB2FF. Do la loi: blog khong he co che do toi — khong co
+    ThemeProvider, khong co nut doi, va `--md-sys-color-surface` chi duoc dinh
+    nghia mot lan tren :root la mau trang. Mot the <img> thi lai tra loi thiet
+    dat cua HE DIEU HANH nguoi doc, doc lap voi trang. Ket qua: ai de may o
+    che do toi thi thay muoi lam hinh nay ve bang xanh nhat tren nen trang,
+    gan nhu khong doc noi. Bo nhanh do di."""
     return (
         '<?xml version="1.0" encoding="UTF-8"?>'
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
         f'width="{w}" height="{h}" role="img" stroke-linejoin="round">'
-        '<style>svg{color:#004AEF}'
-        '@media (prefers-color-scheme:dark){svg{color:#8FB2FF}}</style>'
+        '<style>svg{color:#004AEF}</style>'
         f'{defs("rough")}<g filter="url(#rough)">{strokes}</g>{labels}</svg>'
     )
 
