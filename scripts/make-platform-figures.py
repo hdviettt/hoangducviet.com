@@ -185,7 +185,11 @@ def request_sequence():
 
 def encodings():
     """Cung mot quy trinh, hai cach ma hoa. Chi cach ma hoa doi; phan biet
-    nghe duoc thi khong."""
+    nghe duoc thi khong.
+
+    Chan trang truoc day cam cung o y=262 trong khi cot phai co bon dong, dong
+    cuoi ket thuc o y=259 — hai dong chu chay de len nhau va dong ket bi day
+    ra sat day khung. Bay gio chan trang tinh tu SO DONG, va khung cao theo."""
     b, t = [], []
     t.append(text(0, 16, "ONE PROCEDURE, TWO ENCODINGS", 12, 0.42, 500))
     cols = (("Encoding A", "conversation-first",
@@ -201,9 +205,12 @@ def encodings():
               ("scan_patterns.py", "one model call per client, at setup")),
              "Right when every step stopped needing judgment.",
              "Variance ran out.", True))
+    rows_max = max(len(c[2]) for c in cols)
+    foot_y = 128 + (rows_max - 1) * 38 + 17 + 30
+    panel_h = foot_y + 34 - 40
     for i, (name, kind, rows, foot1, foot2, hero) in enumerate(cols):
         x = 4 + i * 462
-        b.append(rect(x, 40, 426, 250, 0.95 if hero else 0.5,
+        b.append(rect(x, 40, 426, panel_h, 0.95 if hero else 0.5,
                       SW * (1.6 if hero else 1.0), r=10,
                       fill="0.04" if hero else None))
         t.append(text(x + 22, 72, name, 16, 0.95 if hero else 0.88, 500))
@@ -217,11 +224,13 @@ def encodings():
             if gone:
                 b.append(seg(x + 20, y - 4, x + 22 + len(fname) * 7.4, y - 4,
                              0.5, SW))
-        t.append(text(x + 22, 262, foot1, 11, 0.5))
-        t.append(text(x + 22, 278, foot2, 11, 0.5))
+        b.append(seg(x + 22, foot_y - 20, x + 404, foot_y - 20, 0.18,
+                     SW * 0.7))
+        t.append(text(x + 22, foot_y, foot1, 11, 0.5))
+        t.append(text(x + 22, foot_y + 16, foot2, 11, 0.5))
         if i == 0:
-            b.append(arrow(434, 456, 165, 0.45))
-    return figure_file_svg("".join(b), "".join(t), W, 302)
+            b.append(arrow(434, 456, 40 + panel_h / 2, 0.45))
+    return figure_file_svg("".join(b), "".join(t), W, foot_y + 44)
 
 
 def where_it_runs():
@@ -285,19 +294,19 @@ def bill_of_materials():
                           0.55, anchor="middle"))
             t.append(text(x + 200, 348, "built once, in May, for everyone "
                           "after", 11, 0.4, anchor="middle"))
+        # "the only new work" tung nam o y=344, dung cao do voi dong "built
+        # once, in May, ..." va cham vao duoi cua no. Bay gio no la mot tieu
+        # de rieng cho hai o ben duoi, va hai o ay tut xuong de lay cho.
+        if not first:
+            t.append(text(x, 366, "the only new work", 11.5, 0.75, 500))
         for i, part in enumerate(own):
-            y = 322 + i * 30 if first else 372 + i * 30
+            y = 322 + i * 30 if first else 396 + i * 30
             b.append(rect(x, y - 15, 400, 25, 0.95, SW * 1.5, r=5,
                           fill="0.08"))
             t.append(text(x + 12, y + 3, part, 12, 0.95, 500))
-        if not first and i == 1:
-            b.append(seg(x + 404, y - 3, x + 424, y - 3, 0.5, SW * 0.9))
-        if not first:
-            t.append(text(x + 400, 344, "the only new work", 11.5, 0.75, 500,
-                          anchor="end"))
-    t.append(text(0, 452, "A platform is not what makes agents possible. It is "
+    t.append(text(0, 462, "A platform is not what makes agents possible. It is "
                   "what makes the twentieth one boring.", 14, 0.85, 500))
-    return figure_file_svg("".join(b), "".join(t), W, 468)
+    return figure_file_svg("".join(b), "".join(t), W, 478)
 
 
 FIGURES = {

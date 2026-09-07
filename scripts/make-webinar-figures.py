@@ -324,7 +324,7 @@ def guideline_rewrite():
     khac. Bien do cho phep von van o do, chi la khong ai viet no ra."""
     b, t = [], []
     t.append(text(0, 18, "OLD GUIDELINE  ·  WRITTEN FOR PEOPLE", 11, 0.4, 500))
-    b.append(panel(6, 32, W - 12, 46))
+    b.append(panel(10, 32, W - 20, 46))
     t.append(text(20, 62, '"Articles must not exceed 1,000 words."', 15, 0.85,
                   500, mono=True))
     readers = (("Editor", ("Gets a 1,050-word draft. Cutting it would drop a",
@@ -336,22 +336,24 @@ def guideline_rewrite():
                           "for an exception."),
                 "Cuts the required section. Broken.", False))
     for i, (who, lines, verdict, ok) in enumerate(readers):
-        x = i * 470
-        b.append(panel(x, 96, 430, 132))
+        # cot phai tung bat dau o 470 va rong 430, tuc cham dung mep 900; net
+        # va bo loc rough day them 4px nua ra ngoai viewBox.
+        x = 10 + i * 460
+        b.append(panel(x, 96, 420, 132))
         t.append(text(x + 20, 124, who, 13.5, 0.85, 500))
         for k, line in enumerate(lines):
             t.append(text(x + 20, 148 + k * 20, line, 11, 0.55))
         t.append(text(x + 20, 214, verdict, 11.5, 0.9, 500))
         if ok:
-            b.append(check(x + 400, 208, 8, 0.9, SW * 1.3))
+            b.append(check(x + 390, 208, 8, 0.9, SW * 1.3))
         else:
-            b.append(seg(x + 392, 200, x + 408, 216, 0.8, SW * 1.4))
-            b.append(seg(x + 408, 200, x + 392, 216, 0.8, SW * 1.4))
+            b.append(seg(x + 382, 200, x + 398, 216, 0.8, SW * 1.4))
+            b.append(seg(x + 398, 200, x + 382, 216, 0.8, SW * 1.4))
     b.append(seg(450, 236, 450, 258, 0.35, SW * 0.9))
     b.append(seg(444, 251, 450, 258, 0.35, SW * 0.9))
     b.append(seg(456, 251, 450, 258, 0.35, SW * 0.9))
     t.append(text(0, 288, "NEW GUIDELINE  ·  WRITTEN FOR BOTH", 11, 0.4, 500))
-    b.append(panel(6, 300, W - 12, 70, hero=True))
+    b.append(panel(10, 300, W - 20, 70, hero=True))
     t.append(text(20, 330, '"Articles target 1,000 words. Up to 10% over is',
                   15, 0.95, 500, mono=True))
     t.append(text(20, 354, ' acceptable if cutting would drop a required '

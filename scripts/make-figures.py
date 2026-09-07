@@ -25,7 +25,7 @@ from pathlib import Path
 
 from doodle import (
     SW, arrow, article_svg, caret_block, check, chip, dot, ellipse, hashf,
-    magnifier, rect, seg, sheet, spark, text,
+    magnifier, person, rect, seg, sheet, spark, text,
 )
 
 OUT = Path(__file__).resolve().parent / "_figures.json"
@@ -295,9 +295,14 @@ def cms_architecture():
 
 def cms_calls():
     """So lan goi model theo so bai. Mot kien truc cong don, mot kien truc dung
-    lai o mot."""
+    lai o mot.
+
+    Ban truoc dat duong "onboarding only" cach truc hoanh dung 12px va viet
+    nhan cua no BEN DUOI truc, nen ca hai doc ra nhu mot cai truc day len.
+    Ban nay nang duong len 22px, danh dau diem xuat phat, va keo ca hai nhan
+    ve cung phia phai o dung do cao cua duong no noi den."""
     b, t = [], []
-    ox, oy, ww, hh = 40, 176, 420, 140
+    ox, oy, ww, hh = 40, 190, 400, 150
     b.append(seg(ox, oy, ox + ww, oy, 0.35, SW * 0.9))
     b.append(seg(ox, oy, ox, oy - hh, 0.35, SW * 0.9))
     for frac, label in ((0.5, "200"), (1.0, "400")):
@@ -307,16 +312,21 @@ def cms_calls():
                       anchor="middle"))
     t.append(text(ox + ww / 2, oy + 40, "articles published", 11, 0.4,
                   anchor="middle"))
+
     b.append(seg(ox, oy, ox + ww, oy - hh, 1.0, SW * 2.2))
-    t.append(text(ox + ww + 14, oy - hh + 4, "a model in each article", 12,
+    t.append(text(ox + ww + 14, oy - hh + 2, "a model in each article", 12,
                   0.9, 500))
-    t.append(text(ox + ww + 14, oy - hh + 22, "about 400 calls", 12, 0.5,
+    t.append(text(ox + ww + 14, oy - hh + 19, "about 400 calls", 12, 0.5,
                   mono=True))
-    b.append(seg(ox, oy - 12, ox + ww, oy - 12, 1.0, SW * 2.2))
-    t.append(text(ox + ww + 14, oy - 8, "onboarding only", 12, 0.9, 500))
-    t.append(text(ox + ww + 14, oy + 10, "1 call, frozen", 12, 0.5, mono=True))
+
+    flat = oy - 26
+    b.append(seg(ox, flat, ox + ww, flat, 1.0, SW * 2.2))
+    b.append(dot(ox, flat, 5, 0.9))
+    t.append(text(ox + ww + 14, flat - 4, "onboarding only", 12, 0.9, 500))
+    t.append(text(ox + ww + 14, flat + 13, "1 call, frozen", 12, 0.5,
+                  mono=True))
     t.append(text(0, 24, "MODEL CALLS", 11, 0.35, 500))
-    return "".join(b), "".join(t), 240, 640
+    return "".join(b), "".join(t), 250, 640
 
 
 def cms_drift():
@@ -642,22 +652,29 @@ def ce_gap():
 
 
 def hist_three_people():
-    """Truoc khi co bat cu thu gi: ba tram, ba nguoi."""
+    """Truoc khi co bat cu thu gi: ba tram, ba nguoi.
+
+    Ban truoc ve nguoi bang mot vong tron rong — do la goi ten, khong phai ve.
+    `person()` them vong cung vai, va do la toan bo su khac biet giua mot hinh
+    tron va mot con nguoi."""
     b, t = [], []
-    for i, (name, who) in enumerate((("outline", "a strategist"),
-                                     ("article", "a writer"),
-                                     ("edit", "an editor"))):
+    for i, (name, who, does) in enumerate(
+            (("outline", "a strategist", "decides the shape"),
+             ("article", "a writer", "writes every line"),
+             ("edit", "an editor", "cuts and approves"))):
         x = 40 + i * 190
         b.append(rect(x, 30, 148, 62, 0.5, SW * 1.1, r=8))
         t.append(text(x + 74, 60, name, 14, 0.85, 500, anchor="middle"))
-        b.append(dot(x + 74, 116, 15, 0.45, hollow=True))
-        t.append(text(x + 74, 152, who, 11, 0.45, anchor="middle"))
+        b.append(seg(x + 74, 92, x + 74, 108, 0.25, SW * 0.8, dash="4 5"))
+        b.append(person(x + 74, 122, 15, 0.6))
+        t.append(text(x + 74, 168, who, 11.5, 0.6, 500, anchor="middle"))
+        t.append(text(x + 74, 183, does, 10, 0.4, anchor="middle"))
         if i < 2:
             b.append(arrow(x + 150, x + 186, 61, 0.4))
     t.append(text(0, 16, "BEFORE ANY OF THIS", 11, 0.35, 500))
-    t.append(text(310, 186, "Three stations, three people.", 12.5, 0.6, 500,
+    t.append(text(310, 216, "Three stations, three people.", 12.5, 0.6, 500,
                   anchor="middle"))
-    return "".join(b), "".join(t), 202, 640
+    return "".join(b), "".join(t), 232, 640
 
 
 def hist_chain():
@@ -819,43 +836,101 @@ def hist_frozen():
 
 
 def hist_chain_vs_agent():
-    """Chuoi va agent, canh nhau. Ben trai code giu quyen; ben phai model giu
-    quyen va lap cho toi khi dat muc tieu."""
-    b, t = [], []
-    for side in (0, 1):
-        x = side * 330
-        agent = side == 1
-        b.append(rect(x, 30, 290, 176, 0.35 if not agent else 0.9,
-                      SW * (1.0 if not agent else 1.5), r=10,
-                      fill="0.04" if agent else None))
-        t.append(text(x + 145, 54, "the agent" if agent else "the chain", 13.5,
-                      0.95 if agent else 0.7, 500, anchor="middle"))
-        if agent:
-            b.append(rect(x + 90, 78, 110, 40, 0.9, SW * 1.3, r=8))
-            b.append(spark(x + 112, 98, 8, 0.9, SW * 0.75))
-            t.append(text(x + 128, 102, "model", 12, 0.9, 500))
-            b.append(ellipse(x + 145, 150, 74, 30, 0.55, SW, dash="7 6"))
-            t.append(text(x + 145, 155, "loop", 11.5, 0.6, anchor="middle"))
-            b.append(seg(x + 145, 118, x + 145, 120, 0.4, SW))
-            t.append(text(x + 145, 194, "the model drives, until the goal",
-                          10.5, 0.5, anchor="middle"))
-        else:
-            for i, (kind, lbl) in enumerate((("c", "code"), ("m", "model"),
-                                             ("c", "code"), ("m", "model"))):
-                cx = x + 32 + i * 62
-                if kind == "m":
-                    b.append(rect(cx, 100, 46, 34, 0.6, SW, r=6))
-                    b.append(spark(cx + 23, 117, 7, 0.7, SW * 0.7))
-                else:
-                    b.append(rect(cx, 100, 46, 34, 0.35, SW * 0.9, r=6))
-                    t.append(text(cx + 23, 121, "code", 10, 0.45,
-                                  anchor="middle"))
-                if i < 3:
-                    b.append(arrow(cx + 48, cx + 60, 117, 0.3))
-            t.append(text(x + 145, 194, "code drives, model at fixed points",
-                          10.5, 0.5, anchor="middle"))
-    return "".join(b), "".join(t), 218, 640
+    """Chuoi va agent, canh nhau.
 
+    Ban truoc ve ben phai bang mot hinh bau duc co chu "loop" o trong. Do la
+    GOI TEN cai vong lap, khong phai ve no: khong thay tool nao, khong thay
+    vong quay o dau, khong thay luc nao thi thoat. Ban nay ve dung ba nut cua
+    vong — nghi, lam, nhin — noi thanh mot vong kin co dau mui ten, cac cong
+    cu treo duoi nut "lam", va mot loi ra chi mo khi muc tieu dat."""
+    b, t = [], []
+
+    # --- ben trai: chuoi. Code giu quyen, model duoc goi o cho co dinh.
+    b.append(rect(0, 30, 236, 250, 0.4, SW, r=10))
+    t.append(text(118, 56, "the chain", 13.5, 0.7, 500, anchor="middle"))
+    seqn = (("code", False), ("model", True), ("code", False), ("model", True),
+            ("out", False))
+    for i, (kind, is_model) in enumerate(seqn):
+        y = 78 + i * 38
+        b.append(rect(76, y, 84, 28, 0.6 if is_model else 0.4,
+                      SW * (1.2 if is_model else 0.95), r=6,
+                      fill="0.05" if is_model else None))
+        if is_model:
+            b.append(spark(94, y + 14, 7, 0.8, SW * 0.7))
+            t.append(text(108, y + 19, kind, 10.5, 0.75))
+        else:
+            t.append(text(118, y + 19, kind, 10.5, 0.5, anchor="middle"))
+        if i < len(seqn) - 1:
+            b.append(seg(118, y + 28, 118, y + 38, 0.3, SW * 0.85))
+            b.append(seg(114, y + 33, 118, y + 38, 0.3, SW * 0.85))
+            b.append(seg(122, y + 33, 118, y + 38, 0.3, SW * 0.85))
+    t.append(text(118, 296, "the order was written before it ran", 10.5, 0.5,
+                  anchor="middle"))
+
+    # --- ben phai: agent. Vong lap duoc VE, khong duoc goi ten.
+    ax = 264
+    b.append(rect(ax, 30, 376, 250, 0.95, SW * 1.6, r=10, fill="0.035"))
+    t.append(text(ax + 188, 56, "the agent", 13.5, 0.95, 500,
+                  anchor="middle"))
+    b.append(rect(ax + 14, 68, 228, 28, 0.9, SW * 1.3, r=14, fill="0.08"))
+    t.append(text(ax + 128, 87, "goal: every checklist item passes", 10.5,
+                  0.95, 500, anchor="middle"))
+    b.append(rect(ax + 262, 68, 100, 28, 0.6, SW * 1.1, r=14, dash="5 5"))
+    b.append(check(ax + 282, 82, 6, 0.7, SW * 1.1))
+    t.append(text(ax + 300, 87, "done", 10.5, 0.7, 500))
+
+    # ba nut cua vong, dat thanh tam giac
+    nodes = ((ax + 188, 132, 108, 30, "reason"),
+             (ax + 78, 208, 96, 30, "act"),
+             (ax + 296, 208, 96, 30, "observe"))
+    for nx, ny, nw, nh, label in nodes:
+        b.append(rect(nx - nw / 2, ny - nh / 2, nw, nh, 0.9, SW * 1.3, r=7))
+        t.append(text(nx, ny + 5, label, 11.5, 0.95, 500, anchor="middle"))
+
+    def hop(a, c, bulge):
+        """Mot canh cua vong, cong nhe, co dau mui ten o dau den."""
+        x0, y0 = nodes[a][0], nodes[a][1]
+        x1, y1 = nodes[c][0], nodes[c][1]
+        dx, dy = x1 - x0, y1 - y0
+        L = (dx * dx + dy * dy) ** 0.5
+        ux, uy = dx / L, dy / L
+        sx, sy = x0 + ux * 54, y0 + uy * 34
+        ex, ey = x1 - ux * 54, y1 - uy * 34
+        mx = (sx + ex) / 2 - uy * bulge
+        my = (sy + ey) / 2 + ux * bulge
+        out = [f'<path d="M{sx:.1f},{sy:.1f} Q{mx:.1f},{my:.1f} '
+               f'{ex:.1f},{ey:.1f}" fill="none" stroke="currentColor" '
+               f'stroke-opacity="0.65" stroke-width="{SW}" '
+               f'stroke-linecap="round"/>']
+        # dau mui ten huong theo tiep tuyen cuoi cung
+        tx, ty = ex - mx, ey - my
+        tl = (tx * tx + ty * ty) ** 0.5
+        tx, ty = tx / tl, ty / tl
+        for s in (1, -1):
+            out.append(seg(ex - tx * 11 - s * ty * 6, ey - ty * 11 + s * tx * 6,
+                           ex, ey, 0.65, SW))
+        return "".join(out)
+
+    b.append(hop(0, 1, 16))
+    b.append(hop(1, 2, 16))
+    b.append(hop(2, 0, 16))
+
+    # cong cu treo duoi nut "act": cai vong nay cham vao the gioi that
+    for i, tool in enumerate(("count_words", "read_outline", "check_links")):
+        cx = ax + 22 + i * 118
+        b.append(rect(cx, 246, 106, 22, 0.45, SW * 0.9, r=11))
+        t.append(text(cx + 53, 261, tool, 9, 0.6, anchor="middle", mono=True))
+        b.append(seg(cx + 53, 246, ax + 78, 224, 0.22, SW * 0.7))
+
+    # loi ra: mot net dut duy nhat, va no chi mo khi muc tieu dat
+    b.append(seg(ax + 242, 126, ax + 300, 100, 0.45, SW * 0.9, dash="5 6"))
+    b.append(seg(ax + 292, 100, ax + 300, 100, 0.45, SW * 0.9))
+    b.append(seg(ax + 298, 108, ax + 300, 100, 0.45, SW * 0.9))
+    t.append(text(ax + 250, 118, "only when it passes", 9, 0.5))
+
+    t.append(text(ax + 188, 296, "nobody wrote the order; it is decided each "
+                  "turn", 10.5, 0.55, anchor="middle"))
+    return "".join(b), "".join(t), 310, 640
 
 def hist_frameworks():
     """Duong di qua cac framework. Cai nao cung thu, va chi hai cai cuoi o
@@ -1086,30 +1161,35 @@ def hist_rewrite_rule():
 
 def hist_what_stayed():
     """Cai gi viet ra duoc thi agent lam. Cai gi con lai trong dau nguoi thi
-    van o do — va do la cho giao dien dang dung."""
+    van o do — va do la cho giao dien dang dung.
+
+    Ben trai la o tick: viec da thanh thu tuc. Ben phai truoc day cung la mot
+    vong tron rong, doc ra nhu mot o tick CHUA tick — nguoc han y. Doi thanh
+    `person()` thi hai cot noi dung hai loai viec, khong phai hai trang thai
+    cua mot loai."""
     b, t = [], []
-    b.append(rect(0, 30, 290, 200, 0.5, SW * 1.1, r=10))
+    b.append(rect(0, 30, 290, 214, 0.5, SW * 1.1, r=10))
     t.append(text(16, 56, "the procedure, as written down", 12, 0.7, 500))
     for i in range(6):
-        y = 84 + i * 24
+        y = 88 + i * 24
         b.append(rect(16, y - 12, 16, 16, 0.6, SW, r=3))
         b.append(check(24, y - 4, 5, 0.7))
         b.append(seg(44, y - 4, 44 + (200 - i * 14), y - 4, 0.3, SW * 0.9))
-    t.append(text(16, 246, "the agent runs all of it", 11, 0.5))
+    t.append(text(16, 262, "the agent runs all of it", 11, 0.5))
 
-    b.append(rect(330, 30, 290, 200, 0.95, SW * 1.5, r=10, fill="0.04"))
+    b.append(rect(330, 30, 290, 214, 0.95, SW * 1.5, r=10, fill="0.04"))
     t.append(text(346, 56, "what stayed in people", 12, 0.95, 500))
     for i, line in enumerate((
             "this client is touchy about that word",
             "this outline is over, and that is fine",
             "this brief says one thing and means another")):
-        y = 92 + i * 44
-        b.append(dot(346, y - 4, 7, 0.5, hollow=True))
-        t.append(text(362, y, line, 10.5, 0.6))
-        t.append(text(362, y + 18, "a person decides", 10, 0.4, 500))
-    t.append(text(346, 246, "and that is where the interface now sits", 11,
+        y = 96 + i * 50
+        b.append(person(358, y - 12, 11, 0.6))
+        t.append(text(380, y - 4, line, 10.5, 0.65))
+        t.append(text(380, y + 11, "a person decides", 10, 0.4, 500))
+    t.append(text(346, 262, "and that is where the interface now sits", 11,
                   0.5))
-    return "".join(b), "".join(t), 262, 640
+    return "".join(b), "".join(t), 278, 640
 
 
 # ------------------------------ an-ml-and-llm-pipeline-for-keyword-... (12)
@@ -1353,28 +1433,46 @@ def kc_bisection():
 
 def kc_refinement():
     """Sau khi phan cum, moi diem duoc hoi lai mot lan: no gan tam cum nao hon.
-    Cum dang giu no duoc cong mot chut thien vi, de khong ai nhay lung tung."""
+    Cum dang giu no duoc cong mot chut thien vi, de khong ai nhay lung tung.
+
+    Ba lan hong lien tiep o day deu la mot loi: dat chu dung len net. Caption
+    de len cau ket, roi net dan ket thuc trong ellipse, roi nhan phu "to A"
+    nam dung tren duong A-X. Ban nay bo han nhan phu — hinh ve da noi ro dau
+    la A dau la B — va moi con so nam HAN phia tren duong cua no, o khoang
+    giua ellipse va diem X, cho khong co gi khac."""
     b, t = [], []
     t.append(text(0, 16, "REFINEMENT", 11, 0.4, 500))
-    ax, ay, bx, by = 150, 150, 470, 118
-    b.append(ellipse(ax, ay, 96, 62, 0.4, SW, dash="8 8"))
-    b.append(ellipse(bx, by, 96, 62, 0.4, SW, dash="8 8"))
+    ax, ay, rx, ry = 116, 150, 88, 50
+    bx, by = 524, 108
+    b.append(ellipse(ax, ay, rx, ry, 0.4, SW, dash="8 8"))
+    b.append(ellipse(bx, by, rx, ry, 0.4, SW, dash="8 8"))
     b.append(dot(ax, ay, 7, 0.6))
     b.append(dot(bx, by, 7, 0.6))
-    t.append(text(ax, ay + 84, "cluster A, where X sits now", 11, 0.5,
+    t.append(text(ax, ay + ry + 26, "cluster A", 12, 0.6, 500,
                   anchor="middle"))
-    t.append(text(bx, by + 84, "cluster B", 11, 0.5, anchor="middle"))
-    px, py = 300, 138
+    t.append(text(ax, ay + ry + 41, "where X sits now", 10.5, 0.45,
+                  anchor="middle"))
+    t.append(text(bx, by - ry - 30, "cluster B", 12, 0.6, 500,
+                  anchor="middle"))
+    t.append(text(bx, by - ry - 15, "the nearer centre", 10.5, 0.45,
+                  anchor="middle"))
+
+    px, py = 320, 132
+    b.append(seg(px - 11, py + 6, ax + rx + 4, ay - 4, 0.35, SW * 0.9))
+    t.append(text(257, 126, "0.72", 12.5, 0.55, 600, anchor="middle",
+                  mono=True))
+    b.append(seg(px + 11, py - 6, bx - rx - 4, by + 6, 0.9, SW * 1.5))
+    t.append(text(384, 98, "0.85", 12.5, 0.95, 600, anchor="middle",
+                  mono=True))
+
     b.append(dot(px, py, 9, 0.95, hollow=True, sw=SW * 1.5))
-    t.append(text(px, py - 20, "point X", 11.5, 0.85, 500, anchor="middle"))
-    b.append(seg(px - 10, py, ax + 10, ay, 0.4, SW * 0.9))
-    b.append(seg(px + 10, py, bx - 10, by, 0.85, SW * 1.4))
-    t.append(text(220, 158, "0.72", 12, 0.5, 600, mono=True))
-    t.append(text(390, 114, "0.85", 12, 0.9, 600, mono=True))
-    t.append(text(0, 236, "0.72 + 0.05 for staying put is still under 0.85.",
+    t.append(text(px, py + 32, "point X", 11.5, 0.85, 500, anchor="middle"))
+
+    b.append(seg(0, 262, 640, 262, 0.15, SW * 0.7))
+    t.append(text(0, 286, "0.72 + 0.05 for staying put is still under 0.85.",
                   12.5, 0.6))
-    t.append(text(0, 258, "X moves to cluster B.", 12.5, 0.9, 500))
-    return "".join(b), "".join(t), 272, 640
+    t.append(text(0, 308, "X moves to cluster B.", 12.5, 0.9, 500))
+    return "".join(b), "".join(t), 322, 640
 
 
 def kc_labeling():
@@ -2221,48 +2319,92 @@ def ms_one_layout():
 
 def pr_graph():
     """Do thi PageRank: kich thuoc nut chinh la thu hang, va mui ten chi VAO
-    trang duoc tro toi."""
+    trang duoc tro toi.
+
+    Hai dieu phai dung cung luc. Mot: hai nut lon can cho, nen chung nam o hai
+    goc doi dien va phan tram viet TRONG ruot chung. Hai: nhan cua nut nho
+    khong duoc nam tren duong dan vao chinh no — nen cho dat nhan duoc TINH,
+    theo huong trung binh cua moi canh cham vao nut, roi dat ve phia nguoc
+    lai. Truoc day moi nhan deu dong cung ben duoi, va nut nao co canh di len
+    tu duoi thi nhan bi duong xuyen qua."""
     b, t = [], []
-    nodes = {"B": (0.10, 0.30, 38.4), "C": (0.34, 0.62, 34.3),
-             "D": (0.30, 0.16, 3.9), "E": (0.56, 0.34, 8.1),
-             "F": (0.74, 0.66, 3.9), "A": (0.84, 0.20, 3.3),
-             "G": (0.52, 0.86, 1.6), "H": (0.90, 0.86, 1.6)}
+    import math as _m
+    nodes = {"B": (0.13, 0.26, 38.4), "C": (0.44, 0.74, 34.3),
+             "D": (0.36, 0.09, 3.9), "E": (0.60, 0.40, 8.1),
+             "F": (0.80, 0.62, 3.9), "A": (0.90, 0.16, 3.3),
+             "G": (0.17, 0.83, 1.6), "H": (0.94, 0.88, 1.6)}
     edges = (("D", "B"), ("E", "B"), ("F", "B"), ("A", "B"), ("G", "C"),
              ("H", "C"), ("E", "C"), ("B", "C"), ("C", "E"), ("A", "E"))
-    P = {k: (30 + x * 560, 30 + y * 220, 10 + v * 1.5)
+    P = {k: (34 + x * 560, 34 + y * 300, 10 + v * 1.45)
          for k, (x, y, v) in nodes.items()}
-    import math as _m
     for u, v in edges:
         x0, y0, r0 = P[u]
         x1, y1, r1 = P[v]
         dx, dy = x1 - x0, y1 - y0
         L = _m.hypot(dx, dy)
         ux, uy = dx / L, dy / L
-        b.append(seg(x0 + ux * (r0 + 6), y0 + uy * (r0 + 6),
-                     x1 - ux * (r1 + 12), y1 - uy * (r1 + 12), 0.3, SW * 0.9))
-        hx, hy = x1 - ux * (r1 + 12), y1 - uy * (r1 + 12)
+        hx, hy = x1 - ux * (r1 + 11), y1 - uy * (r1 + 11)
+        b.append(seg(x0 + ux * (r0 + 6), y0 + uy * (r0 + 6), hx, hy, 0.3,
+                     SW * 0.9))
         b.append(seg(hx - ux * 12 - uy * 6, hy - uy * 12 + ux * 6, hx, hy, 0.3,
                      SW * 0.9))
         b.append(seg(hx - ux * 12 + uy * 6, hy - uy * 12 - ux * 6, hx, hy, 0.3,
                      SW * 0.9))
+
+    segs = []
+    for u, v in edges:
+        x0, y0, r0 = P[u]
+        x1, y1, r1 = P[v]
+        segs.append((x0, y0, x1, y1))
+
+    def label_pos(k, r, pad=18):
+        """Cho dat nhan phan tram cua mot nut nho: xa MOI canh nhat.
+
+        Xet cac canh cham vao chinh nut la chua du. Nhan cua E tung bi mot
+        duong khong lien quan gi toi E — canh F->B — di xuyen qua, vi no chi
+        tinh cac lang gieng cua E. Bay gio moi huong ung vien duoc cham bang
+        khoang cach toi DOAN THANG gan nhat trong ca do thi."""
+        x, y, _ = P[k]
+
+        def d2seg(px, py, x0, y0, x1, y1):
+            dx, dy = x1 - x0, y1 - y0
+            L2 = dx * dx + dy * dy or 1
+            t = max(0.0, min(1.0, ((px - x0) * dx + (py - y0) * dy) / L2))
+            return _m.hypot(px - x0 - t * dx, py - y0 - t * dy)
+
+        best, best_clear = (x, y + r + pad + 4), -1.0
+        for i in range(24):
+            a = i * _m.pi / 12
+            lx = x + _m.cos(a) * (r + pad)
+            ly = y + _m.sin(a) * (r + pad)
+            if not (24 <= lx <= 616 and 30 <= ly <= 360):
+                continue
+            clear = min(d2seg(lx, ly, *sg) for sg in segs)
+            if clear > best_clear:
+                best_clear, best = clear, (lx, ly + 4)
+        return best
+
     for k, (x, y, r) in P.items():
         big = r > 40
         b.append(dot(x, y, r, 1.0 if big else 0.5, hollow=True,
                      sw=SW * (1.8 if big else 1.1)))
         if big:
-            b.append(dot(x, y, r * 0.6, 0.12))
-        t.append(text(x, y + 5, k, 13 if big else 11, 0.95 if big else 0.6,
-                      500, anchor="middle"))
-        t.append(text(x, y + r + 16, f"{nodes[k][2]}%", 11 if big else 10,
-                      0.9 if big else 0.45, 600 if big else 400,
-                      anchor="middle", mono=True))
-    t.append(text(0, 284, "B is large because C points at it, and C is large "
+            b.append(dot(x, y, r * 0.62, 0.10))
+            t.append(text(x, y - 2, k, 17, 0.95, 600, anchor="middle"))
+            t.append(text(x, y + 20, f"{nodes[k][2]}%", 12.5, 0.8, 600,
+                          anchor="middle", mono=True))
+        else:
+            t.append(text(x, y + 4, k, 11, 0.6, 500, anchor="middle"))
+            lx, ly = label_pos(k, r)
+            t.append(text(lx, ly, f"{nodes[k][2]}%", 10, 0.45,
+                          anchor="middle", mono=True))
+    t.append(text(0, 16, "RANK IS THE SIZE OF THE NODE", 11, 0.35, 500))
+    b.append(seg(0, 376, 640, 376, 0.15, SW * 0.7))
+    t.append(text(0, 400, "B is large because C points at it, and C is large "
                   "because B does.", 12.5, 0.65))
-    t.append(text(0, 304, "The definition is circular, and that is exactly "
+    t.append(text(0, 420, "The definition is circular, and that is exactly "
                   "what makes it hard to game.", 12.5, 0.65))
-    return "".join(b), "".join(t), 318, 640
-
-
+    return "".join(b), "".join(t), 434, 640
 FIGURES = {
     "a-cms-adaptable-llm-pipeline-for-seo-compliant-content-publishing": [
         cms_by_hand, cms_architecture, cms_calls, cms_drift, cms_layers,

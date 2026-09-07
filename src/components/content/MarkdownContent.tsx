@@ -156,21 +156,11 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
           // image's intrinsic aspect ratio. Hardcoding 800×600 via Next/Image
           // warped vertical screenshots and panoramic captures.
           const s = src || "";
-          // Two diagram sets ship light + dark twins named `<fig>-dark.<ext>`:
-          // the baked `fig-*.webp` set (see concepts/flow.py, FIG_THEME=dark)
-          // and the hand-authored `webinar-*.svg` set. A figure that matches
-          // gets both variants stacked so CSS can swap them per theme.
-          // Screenshots, photos and the single-bake `platform-*.svg` diagrams
-          // stay one image. Prefix-scoped on purpose: an <img> cannot ask the
-          // filesystem whether a twin exists, so only sets known to have one
-          // may opt in.
-          const twinned =
-            (s.startsWith("/figures/fig-") && s.endsWith(".webp")) ||
-            (s.startsWith("/figures/webinar-") && s.endsWith(".svg"));
-          const themed = twinned && !/-dark\.(webp|svg)$/.test(s);
-          const darkSrc = themed
-            ? s.replace(/\.(webp|svg)$/, "-dark.$1")
-            : null;
+          // Diagrams under /figures/ are single files that answer
+          // prefers-color-scheme themselves, so there is no light/dark twin to
+          // pick between. There used to be a `fig-*.webp` set that shipped two
+          // bakes; it was replaced by inline figures and deleted, and the
+          // twinning code that outlived it never reached the JSX anyway.
           const imgClass =
             "w-full h-auto rounded-[var(--md-sys-shape-corner-large-increased)]";
           return (

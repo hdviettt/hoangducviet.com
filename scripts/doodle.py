@@ -130,6 +130,26 @@ def check(cx, cy, s=5.4, op=0.85, sw=None):
             + seg(cx - s * 0.2, cy + s * 0.72, cx + s, cy - s * 0.78, op, w))
 
 
+def person(cx, cy, s=13, op=0.6, sw=None):
+    """Mot nguoi: dau va vai.
+
+    Mot vong tron rong khong noi duoc "nguoi" — no chi la mot vong tron, va
+    hai hinh da dung no de goi ten con nguoi thay vi ve ho. Vong cung vai la
+    ca su khac biet: them mot net thi hinh doc duoc, thieu no thi khong.
+    `cy` la tam dau; ca hinh cao khoang 2.1*s.
+    """
+    w = sw or SW * 0.95
+    r = s * 0.40
+    # `arc` chay THEO CHIEU KIM DONG HO tu a0 den a1, voi 0 la 12 gio. Vai la
+    # nua TREN cua mot vong tron nam duoi dau, nen phai di qua moc 0 — 288 den
+    # 72. Lan dau viet 200->340, tuc chay qua ben trai va len tren, va ra mot
+    # cai moc cau chu khong phai mot bo vai.
+    return (f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" '
+            f'stroke="currentColor" stroke-opacity="{op:.2f}" '
+            f'stroke-width="{w}"/>'
+            + arc(cx, cy + r * 2.55, s * 0.80, 288, 72, op, w))
+
+
 def magnifier(cx, cy, r=10, op=0.85, sw=None):
     w = sw or SW
     return (f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="none" '
