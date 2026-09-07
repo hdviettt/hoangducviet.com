@@ -39,8 +39,8 @@ def three_shapes():
             ("Agent", "you set the goal, it picks the steps",
              (("Publish this article well", None),), True))
     for i, (name, sub, steps, agent) in enumerate(cols):
-        x = i * 306
-        b.append(panel(x, 40, 288, 248, agent))
+        x = 4 + i * 300
+        b.append(panel(x, 40, 284, 248, agent))
         t.append(text(x + 20, 70, name, 16, 0.95 if agent else 0.75, 500))
         t.append(text(x + 20, 90, sub, 11, 0.5))
         if agent:
@@ -122,7 +122,7 @@ def account_vs_platform():
     do xay mot lan roi dung chung."""
     b, t = [], []
     t.append(text(0, 18, "WHAT ONE PERSON NEEDS", 11, 0.4, 500))
-    b.append(panel(0, 32, 300, 74))
+    b.append(panel(4, 32, 296, 74))
     t.append(text(20, 60, "One chatbot account", 14, 0.8, 500))
     t.append(text(20, 80, "paid monthly, open it and go", 11, 0.5))
     t.append(text(20, 96, "nothing to build", 11, 0.5))
@@ -140,7 +140,7 @@ def account_vs_platform():
     t.append(text(732, 212, "jobs after that", 11, 0.45))
     for i in range(3):
         b.append(seg(i * 240 + 110, 220, i * 240 + 110, 244, 0.35, SW * 0.9))
-    b.append(panel(0, 248, W, 168, hero=True))
+    b.append(panel(4, 248, W - 8, 168, hero=True))
     t.append(text(20, 274, "SHARED PLATFORM  ·  BUILT ONCE, REUSED BY EVERY "
                   "JOB", 11, 0.85, 500))
     cols = (("Data and tools", ("internal data sources",
@@ -225,7 +225,7 @@ def silent_failure():
               "Nobody checked the figures.",
               "The voice is off-brand."), False))):
         x = side * 470
-        b.append(panel(x, 32, 430, 264, hero=not loud))
+        b.append(panel(x, 32, 426, 264, hero=not loud))
         t.append(text(x + 20, 60, kind, 12, 0.9, 500))
         cb, ct = chip(x + 280, 44, 132, 24, when, 10, 0.6, 0.8)
         b.append(cb)
@@ -251,7 +251,7 @@ def start_from_output():
     b, t = [], []
     t.append(text(0, 18, "MAP WHAT PEOPLE PRODUCE, NOT HOW THEY WORK", 11,
                   0.4, 500))
-    b.append(panel(0, 34, 430, 118))
+    b.append(panel(4, 34, 426, 118))
     t.append(text(20, 58, "THE USUAL WAY", 10, 0.4, 500))
     for k in range(4):
         b.append(rect(20 + k * 66, 72, 54, 28, 0.4, SW, r=5))
@@ -259,7 +259,7 @@ def start_from_output():
     t.append(text(20 + 4 * 66 + 27, 92, "?", 13, 0.5, anchor="middle"))
     t.append(text(20, 122, "Lay out the steps first. Work out the output "
                   "later.", 11, 0.55))
-    b.append(panel(470, 34, 430, 118, hero=True))
+    b.append(panel(466, 34, 426, 118, hero=True))
     t.append(text(490, 58, "THE WAY WE DO IT", 10, 0.6, 500))
     b.append(rect(490, 68, 96, 36, 0.95, SW * 1.5, r=7, fill="0.08"))
     t.append(text(538, 91, "the output", 11, 0.95, 500, anchor="middle"))
@@ -324,7 +324,7 @@ def guideline_rewrite():
     khac. Bien do cho phep von van o do, chi la khong ai viet no ra."""
     b, t = [], []
     t.append(text(0, 18, "OLD GUIDELINE  ·  WRITTEN FOR PEOPLE", 11, 0.4, 500))
-    b.append(panel(0, 32, W, 46))
+    b.append(panel(6, 32, W - 12, 46))
     t.append(text(20, 62, '"Articles must not exceed 1,000 words."', 15, 0.85,
                   500, mono=True))
     readers = (("Editor", ("Gets a 1,050-word draft. Cutting it would drop a",
@@ -351,7 +351,7 @@ def guideline_rewrite():
     b.append(seg(444, 251, 450, 258, 0.35, SW * 0.9))
     b.append(seg(456, 251, 450, 258, 0.35, SW * 0.9))
     t.append(text(0, 288, "NEW GUIDELINE  ·  WRITTEN FOR BOTH", 11, 0.4, 500))
-    b.append(panel(0, 300, W, 70, hero=True))
+    b.append(panel(6, 300, W - 12, 70, hero=True))
     t.append(text(20, 330, '"Articles target 1,000 words. Up to 10% over is',
                   15, 0.95, 500, mono=True))
     t.append(text(20, 354, ' acceptable if cutting would drop a required '

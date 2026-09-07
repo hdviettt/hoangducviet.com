@@ -57,8 +57,8 @@ def primitives():
                "about the work."),
               "Google Docs, WordPress, Ahrefs", "21 connectors", False))
     for i, (name, role, lines, path, count, hero) in enumerate(parts):
-        x = i * 306
-        b.append(rect(x, 40, 288, 214, 0.95 if hero else 0.5,
+        x = 4 + i * 300
+        b.append(rect(x + 2, 40, 284, 214, 0.95 if hero else 0.5,
                       SW * (1.7 if hero else 1.0), r=10,
                       fill="0.05" if hero else None))
         t.append(text(x + 24, 74, name, 19, 0.95 if hero else 0.88, 500))
@@ -68,7 +68,7 @@ def primitives():
         t.append(text(x + 24, 208, path, 11, 0.62, mono=True))
         t.append(text(x + 24, 232, count, 11, 0.5))
         if i < 2:
-            b.append(arrow(x + 290, x + 304, 148, 0.55))
+            b.append(arrow(x + 286, x + 298, 148, 0.55))
     t.append(text(0, 290, "Delete the agent and the work survives. Delete the "
                   "skill and there is nothing left.", 13.5, 0.65))
     return figure_file_svg("".join(b), "".join(t), W, 304)
@@ -152,7 +152,7 @@ def request_sequence():
              ("Run history", "Postgres"))
     xs = []
     for i, (name, sub) in enumerate(lanes):
-        x = 60 + i * 156
+        x = 70 + i * 152
         xs.append(x)
         paid = name == "Agent SDK"
         b.append(rect(x - 66, 40, 132, 46, 0.95 if paid else 0.5,
@@ -202,8 +202,8 @@ def encodings():
              "Right when every step stopped needing judgment.",
              "Variance ran out.", True))
     for i, (name, kind, rows, foot1, foot2, hero) in enumerate(cols):
-        x = i * 470
-        b.append(rect(x, 40, 430, 250, 0.95 if hero else 0.5,
+        x = 4 + i * 462
+        b.append(rect(x, 40, 426, 250, 0.95 if hero else 0.5,
                       SW * (1.6 if hero else 1.0), r=10,
                       fill="0.04" if hero else None))
         t.append(text(x + 22, 72, name, 16, 0.95 if hero else 0.88, 500))
@@ -220,7 +220,7 @@ def encodings():
         t.append(text(x + 22, 262, foot1, 11, 0.5))
         t.append(text(x + 22, 278, foot2, 11, 0.5))
         if i == 0:
-            b.append(arrow(436, 462, 165, 0.45))
+            b.append(arrow(434, 456, 165, 0.45))
     return figure_file_svg("".join(b), "".join(t), W, 302)
 
 
@@ -241,7 +241,7 @@ def where_it_runs():
     b.append(seg(0, 126, W, 126, 0.22, SW * 0.8))
     t.append(text(0, 154, "HOW THEY EXECUTE", 12, 0.42, 500))
     total = 103
-    bx, bw = 0, W
+    bx, bw = 4, W - 8
     left = bw * 51 / total
     b.append(rect(bx, 172, left, 44, 0.95, SW * 1.5, r=6, fill="0.16"))
     b.append(rect(bx + left + 6, 172, bw - left - 6, 44, 0.5, SW, r=6))

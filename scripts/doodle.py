@@ -100,11 +100,16 @@ def ellipse(cx, cy, rx, ry, op=1.0, sw=None, dash=None):
 
 
 def arrow(x0, x1, y, op=0.5, sw=None):
+    """Mui ten nam ngang. Dau mui ten phai mo NGUOC VE PHIA DUOI — ban truoc
+    cua ham nay luon dat hai net o `x1 - h`, nen moi mui ten chay tu phai sang
+    trai deu co dau quay nguoc lai. Ba muoi chin cho goi, va no sai o tat ca
+    cac cho chay nguoc."""
     w = sw or SW * 0.9
     h = 8.5
+    d = 1 if x1 >= x0 else -1
     return (seg(x0, y, x1, y, op, w)
-            + seg(x1 - h, y - h * 0.66, x1, y, op, w)
-            + seg(x1 - h, y + h * 0.66, x1, y, op, w))
+            + seg(x1 - d * h, y - h * 0.66, x1, y, op, w)
+            + seg(x1 - d * h, y + h * 0.66, x1, y, op, w))
 
 
 def spark(cx, cy, s=11, op=0.95, sw=None):
