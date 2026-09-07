@@ -59,7 +59,8 @@ export const CLAIMS: Claim[] = [
     figures: ["9 parts", "built, then written up"],
     proof: {
       label: "Building a mini search engine",
-      href: "/series/building-a-mini-search-engine",
+      // URL chuan la /collection/; /series/ chi con la mot redirect 308.
+      href: "/collection/building-a-mini-search-engine",
     },
   },
 ];
