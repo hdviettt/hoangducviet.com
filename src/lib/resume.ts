@@ -166,25 +166,15 @@ export const EDUCATION: School[] = [
   },
 ];
 
-// What the CV closes with, said in a way that means something. "Ambitious
-// applications of AI in exciting niches" is a sentence any of ten thousand
-// people could have written; naming what the domain has to contain is not.
-// Nhung con so trong CV, dat thanh mot bang o dau trang. Tat ca deu lay
-// nguyen tu CV — khong suy ra, khong lam tron len.
-export interface Stat {
-  value: string;
-  label: string;
-}
-
-export const STATS: Stat[] = [
-  { value: "120", label: "people use the platform I built, across 30 teams" },
-  { value: "20+", label: "AI solutions running on it in production" },
-  { value: "5", label: "people in the AI team I founded and led" },
-  { value: "80%", label: "of the company trained to work with agentic AI" },
-];
-
-export const LOOKING_FOR =
-  "Now looking for a domain with enough mechanism to take apart, where AI is the spearhead and the business outcome is the point.";
+// STATS va LOOKING_FOR tung song o day va da bi go.
+//
+// STATS la bang bon con so mo dau trang About cu. Chung khong bien mat: moi
+// con so gio nam duoi mot cau khang dinh no chong lung, trong CLAIMS o
+// `lib/about.ts`, canh mot duong dan sang trang chung minh no. Mot con so tran
+// khong tu noi duoc y nghia va khong ai kiem duoc.
+//
+// LOOKING_FOR la mot cau nghieng duy nhat; no da thanh ca mot muc, voi bon bo
+// loc quyet dinh viet ro ra (FILTERS).
 
 export const CV_URL = "/hoang-duc-viet-cv.pdf";
 

@@ -35,7 +35,7 @@ function abs(ym: string): number {
 }
 
 const MAX_W = 880;
-const H = 178;
+const H = 226;
 const PAD = 2;
 
 export default function CareerShape() {
@@ -110,9 +110,9 @@ export default function CareerShape() {
     years.push(y);
   }
 
-  const eduY = 52;
-  const jobY = 106;
-  const barH = 30;
+  const eduY = 60;
+  const jobY = 132;
+  const barH = 42;
 
   const grow = (delay: number) => ({
     transform: shown ? "scaleX(1)" : "scaleX(0)",
@@ -175,10 +175,10 @@ export default function CareerShape() {
             height={barH}
             rx={8}
             fill="currentColor"
-            fillOpacity={0.1}
+            fillOpacity={0.09}
             stroke="currentColor"
-            strokeOpacity={0.3}
-            strokeWidth={1.25}
+            strokeOpacity={0.45}
+            strokeWidth={1.5}
             style={grow(0)}
           />
         </g>
@@ -232,7 +232,7 @@ export default function CareerShape() {
                   {last && w > 96 && (
                     <text
                       x={rx0 + 13}
-                      y={jobY + barH / 2 + 4.5}
+                      y={jobY + barH / 2 + 5}
                       fontSize={12.5}
                       fontWeight={500}
                       className="fill-md-surface"
@@ -272,8 +272,9 @@ export default function CareerShape() {
       </svg>
 
       <p className="mx-auto mt-5 max-w-[560px] md-body-medium text-md-on-surface-variant">
-        Every role below sits inside the university bar above. None of it was
-        after graduation.
+        Five roles in two years, ending in the one that ran longest. All of it
+        inside a degree that is not finished yet — the dotted line is today, not
+        graduation.
       </p>
     </div>
   );

@@ -1,4 +1,4 @@
-import Resume from "@/components/about/Resume";
+import AboutBody from "@/components/about/AboutBody";
 import ProfileHero from "@/components/layout/ProfileHero";
 import type { ProjectLogo } from "@/db/schema";
 import { IDENTITY } from "@/lib/identity";
@@ -92,9 +92,11 @@ export default async function AboutPage() {
     // Khong co CSDL thi trang van len, chi thieu muc Toolkit.
   }
 
-  // The story is whatever you set in /admin → Settings (about body). No code
-  // fallback: empty ("<p></p>" or blank) => no story section. Settings is the
-  // single source of truth, so deleting it there actually removes it here.
+  // Cau chuyen tung lay tu /admin -> Settings (about body). Gia tri that su o
+  // do la "<p></p>", nen trang About chua bao gio hien mot doan nao noi nguoi
+  // nay la ai — phan thu vi nhat cua trang bi mot o cai dat trong nuot mat.
+  // Bay gio no nam trong `lib/about.ts`. Neu Settings co noi dung that thi no
+  // van duoc uu tien va chen len tren.
   const aboutText = profile?.aboutHtml?.replace(/<[^>]*>/g, "").trim();
   const bodyHtml = aboutText ? (profile!.aboutHtml as string) : "";
   const jsonLd = createAboutPageSchema();
@@ -125,8 +127,8 @@ export default async function AboutPage() {
         </section>
       )}
 
-      {/* Proof — experience, certifications, focus */}
-      <Resume toolkit={toolkit} />
+      {/* Cau chuyen, bang chung, dieu dang tim, roi moi den ho so. */}
+      <AboutBody toolkit={toolkit} />
     </div>
   );
 }

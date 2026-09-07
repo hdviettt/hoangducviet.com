@@ -2,14 +2,19 @@ import CareerShape from "@/components/about/CareerShape";
 import { Icon } from "@/components/ui/Icon";
 import { KitDots } from "@/components/work/StackChips";
 import type { ProjectLogo } from "@/db/schema";
+import {
+  CERTS_LINE,
+  CLAIMS,
+  FILTERS,
+  LOOKING_FOR_LEAD,
+  STORY,
+} from "@/lib/about";
 import { SOCIAL_PROFILES } from "@/lib/identity";
 import {
   CERTIFICATIONS,
   CV_URL,
   EDUCATION,
   EXPERIENCE,
-  LOOKING_FOR,
-  STATS,
   roleId,
 } from "@/lib/resume";
 import Image from "next/image";
@@ -74,22 +79,26 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-// Cot chu: cung 560px va cung tam voi tieu su phia tren. Cac khoi do hoa —
-// bang so va bieu do thoi gian — duoc rong het 880px cua muc nay, vi chung la
-// thu duy nhat tren trang can be ngang de doc duoc.
+/** Cot chu hep, dung cho phan ho so. */
 function Column({ children }: { children: ReactNode }) {
   return <div className="mx-auto max-w-[560px]">{children}</div>;
 }
 
-// The About page as a live version of the CV, not a transcription of it.
+// Trang About, viet nhu mot LAP LUAN chu khong phai mot ban kiem ke.
 //
-// Ba thu ma to giay khong lam duoc, va la ly do trang nay ton tai:
-//   1. Do dai thoi gian duoc VE ra theo ty le, nen doc duoc ngay ai o dau bao
-//      lau — va thay duoc ca hai chong len nhau (CareerShape).
-//   2. Mot cau tuyen bo co the bam vao de sang thang trang mo ta chinh cai no
-//      noi toi (`proof` trong resume.ts).
-//   3. Moi con so thoi gian tu tinh lai theo dong ho that, khong bao gio cu.
-export default function Resume({
+// Ban truoc chay theo dung thu tu cua LinkedIn: bang so, kinh nghiem, tui cong
+// cu, hoc van, chung chi. Doc het thi biet nguoi nay da lam gi, nhung khong
+// biet vi sao nen tin, va khong biet ho dang di dau — trong khi bang chung cho
+// ca hai deu nam san tren chinh site nay.
+//
+// Thu tu moi bam theo dung cach Viet viet bai: neu y -> dan chung -> he qua.
+//   1. Cau chuyen — ba doan, va doan giua la cau lam doi nghia ca trang.
+//   2. Bieu do su nghiep — duoc keo len lam neo thi giac, vi chinh no chung
+//      minh cau do.
+//   3. Ba cau khang dinh, moi cau kem duong dan sang trang chung minh no.
+//   4. Dieu dang tim, viet cho nguoi doc dang can quyet dinh co lien he khong.
+//   5. Ho so — van con, nhung xuong cuoi, vi no la phan it thuyet phuc nhat.
+export default function AboutBody({
   toolkit,
 }: {
   toolkit?: { models: ProjectLogo[]; stack: ProjectLogo[] };
@@ -97,51 +106,110 @@ export default function Resume({
   const now = new Date();
 
   return (
-    <div className="mx-auto max-w-[880px] mt-16 md:mt-20">
-      <Column>
-        <section className="animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
-          <p className="text-[17px] leading-[28px] text-md-on-surface">
-            {LOOKING_FOR}
+    <div className="mx-auto max-w-[880px] mt-14 md:mt-16">
+      {/* ---------------------------------------------------------- 1. story */}
+      <section className="mx-auto max-w-[620px] animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
+        {STORY.map((p, i) => (
+          <p
+            key={p.slice(0, 40)}
+            className={
+              i === 1
+                ? "mt-6 text-[19px] leading-[31px] font-medium text-md-on-surface"
+                : "mt-6 first:mt-0 text-[17px] leading-[29px] text-md-on-surface-variant"
+            }
+          >
+            {p}
           </p>
+        ))}
+      </section>
+
+      {/* ------------------------------------------------- 2. career shape */}
+      {/* Doan thu hai o tren noi "moi vai tro nam trong thanh dai hoc"; day la
+          cho chung minh no. Truoc kia bieu do nay bi ket giua bang so va danh
+          sach kinh nghiem, mo nhat va cao 20px. */}
+      <section className="mt-12 md:mt-14">
+        <CareerShape />
+      </section>
+
+      {/* --------------------------------------------------------- 3. claims */}
+      <section className="mt-16 border-t border-md-outline-variant pt-12 md:mt-20">
+        <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
+          {CLAIMS.map((c) => (
+            <div key={c.claim}>
+              <h3 className="text-[19px] leading-[27px] font-medium tracking-[-0.01em] text-md-on-surface">
+                {c.claim}
+              </h3>
+              <p className="mt-3 text-[14.5px] leading-[23px] text-md-on-surface-variant">
+                {c.body}
+              </p>
+              <ul className="mt-4 space-y-1">
+                {c.figures.map((f) => (
+                  <li
+                    key={f}
+                    className="text-[13px] leading-[20px] text-md-on-surface tabular-nums"
+                  >
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={c.proof.href}
+                className="mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-primary no-underline hover:underline"
+              >
+                {c.proof.label}
+                <Icon name="arrow_forward" size={15} aria-hidden="true" />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------- 4. looking for */}
+      <section className="mt-16 border-t border-md-outline-variant pt-12 md:mt-20">
+        <SectionLabel>What I am looking for</SectionLabel>
+        <p className="max-w-[620px] text-[19px] leading-[31px] text-md-on-surface">
+          {LOOKING_FOR_LEAD}
+        </p>
+        <dl className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
+          {FILTERS.map((f) => (
+            <div key={f.title}>
+              <dt className="text-[15px] font-medium leading-[22px] text-md-on-surface">
+                {f.title}
+              </dt>
+              <dd className="mt-1.5 text-[14.5px] leading-[23px] text-md-on-surface-variant">
+                {f.body}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <div className="mt-10 flex flex-wrap items-center gap-3">
           <a
             href={CV_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="md-btn md-btn-outlined md-btn-pill mt-6 no-underline"
+            className="md-btn md-btn-outlined md-btn-pill no-underline"
           >
             <Icon name="picture_as_pdf" size={20} aria-hidden="true" />
             Download CV
           </a>
-        </section>
-      </Column>
-
-      {/* Bang so, dung dung ngon ngu cua bang so tren trang du an: con so to,
-          nhan nho ben duoi. Hai trang noi ve cung mot cong viec thi phai trinh
-          bay so lieu giong nhau. */}
-      <section className="mt-14 border-t border-md-outline-variant pt-9 md:mt-16">
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-9 md:grid-cols-4">
-          {STATS.map((s) => (
-            <div key={s.label}>
-              <dd className="text-[34px] font-normal leading-none tracking-[-0.02em] text-md-on-surface tabular-nums sm:text-[40px]">
-                {s.value}
-              </dd>
-              <dt className="mt-3 text-[13.5px] leading-[1.45] text-md-on-surface-variant">
-                {s.label}
-              </dt>
-            </div>
-          ))}
-        </dl>
+          <a
+            href={LINKEDIN}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="md-btn md-btn-text md-btn-pill no-underline"
+          >
+            LinkedIn
+            <Icon name="open_in_new" size={16} aria-hidden="true" />
+          </a>
+        </div>
       </section>
 
-      <section className="mt-16 md:mt-20">
+      {/* --------------------------------------------------------- 5. record */}
+      <section className="mt-16 border-t border-md-outline-variant pt-12 md:mt-20">
         <Column>
-          <SectionLabel>Experience</SectionLabel>
-        </Column>
+          <SectionLabel>The record</SectionLabel>
 
-        <CareerShape />
-
-        <Column>
-          <div className="mt-12 space-y-12">
+          <div className="space-y-12">
             {EXPERIENCE.map((company) => {
               const earliest = company.roles[company.roles.length - 1].start;
               const latestEnd = company.roles[0].end;
@@ -222,8 +290,6 @@ export default function Resume({
                                   >
                                     {h.text}
                                     {h.proof && (
-                                      // Cai mot to CV khong lam duoc: doc xong
-                                      // cau nay thi mo duoc chinh thu no noi toi.
                                       <Link
                                         href={`/work/${h.proof.slug}`}
                                         className="ml-2 inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-md-outline-variant px-2.5 py-0.5 align-[1px] text-[12.5px] font-medium text-md-on-surface no-underline transition-colors hover:border-primary hover:text-primary"
@@ -250,38 +316,7 @@ export default function Resume({
             })}
           </div>
 
-          <a
-            href={LINKEDIN}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-flex items-center gap-1.5 md-label-large text-md-on-surface-variant hover:text-primary transition-colors"
-          >
-            Full experience on LinkedIn
-            <Icon name="open_in_new" size={16} />
-          </a>
-        </Column>
-      </section>
-
-      <Column>
-        {toolkit && (toolkit.models.length > 0 || toolkit.stack.length > 0) && (
-          <section className="mt-16 md:mt-20">
-            <SectionLabel>Toolkit</SectionLabel>
-            <KitDots
-              models={toolkit.models}
-              stack={toolkit.stack}
-              maxModels={9}
-              maxStack={20}
-            />
-            <p className="mt-6 md-body-medium text-md-on-surface-variant">
-              Read off the project pages, ordered by how many of them use it.
-              Nothing here is a tool I have only read about.
-            </p>
-          </section>
-        )}
-
-        <section className="mt-16 md:mt-20">
-          <SectionLabel>Education</SectionLabel>
-          <div className="space-y-8">
+          <div className="mt-12 space-y-8">
             {EDUCATION.map((e) => (
               <div key={e.school}>
                 <div className="flex items-baseline justify-between gap-4">
@@ -315,37 +350,33 @@ export default function Resume({
               </div>
             ))}
           </div>
-        </section>
 
-        <section className="mt-16 md:mt-20">
-          <SectionLabel>Certifications</SectionLabel>
-          <ul className="space-y-5">
-            {CERTIFICATIONS.map((c) => (
-              <li
-                key={c.name}
-                className="flex items-baseline justify-between gap-4"
-              >
-                <div className="min-w-0">
-                  <span className="md-body-large text-md-on-surface leading-snug">
-                    {c.name}
-                  </span>
-                  {/* Ma tra cuu: mot chung chi khong kem ma thi khong ai kiem
-                      duoc. CV in ra co ma nay, trang web thi truoc gio giau. */}
-                  {c.credentialId && (
-                    <p className="mt-0.5 font-mono text-[12px] leading-4 text-md-on-surface-variant">
-                      {c.credentialId}
-                    </p>
-                  )}
-                </div>
-                <span className="shrink-0 md-body-small text-md-on-surface-variant">
-                  {c.issuer}
-                  {c.date ? ` · ${c.date}` : ""}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </Column>
+          {/* Chung chi gom thanh mot dong. Ban truoc ket ca trang bang danh
+              sach nam chung chi — ket bang credential la tu mau thuan voi mot
+              trang ca doan tren deu dua vao so lieu cu the. */}
+          {CERTIFICATIONS.length > 0 && (
+            <p className="mt-12 md-body-medium text-md-on-surface-variant">
+              {CERTS_LINE}
+            </p>
+          )}
+
+          {toolkit &&
+            (toolkit.models.length > 0 || toolkit.stack.length > 0) && (
+              <div className="mt-12">
+                <KitDots
+                  models={toolkit.models}
+                  stack={toolkit.stack}
+                  maxModels={6}
+                  maxStack={12}
+                />
+                <p className="mt-5 md-body-medium text-md-on-surface-variant">
+                  Read off the project pages, ordered by how many of them use
+                  it. Nothing here is a tool I have only read about.
+                </p>
+              </div>
+            )}
+        </Column>
+      </section>
     </div>
   );
 }
