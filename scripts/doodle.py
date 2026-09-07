@@ -189,6 +189,24 @@ def cover_svg(strokes, labels="", w=1200, h=630):
     return work_svg(strokes, labels, w, h)
 
 
+def figure_file_svg(strokes, labels="", w=640, h=320):
+    """Hinh roi, nam trong bai qua the <img> — nghia la no giu duoc chu thich
+    tu alt, thu ma mot khoi ```render``` khong co.
+
+    Vi la mot tai lieu doc lap, no khong doc duoc bien CSS cua trang. Nhung no
+    CO the tu doc `prefers-color-scheme` cua chinh minh, nen o day dat mau bang
+    mot khoi <style> va khong ve nen: hinh noi trong nen cua bai o ca hai che
+    do, thay vi la mot mieng trang giua trang toi."""
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
+        f'width="{w}" height="{h}" role="img" stroke-linejoin="round">'
+        '<style>svg{color:#004AEF}'
+        '@media (prefers-color-scheme:dark){svg{color:#8FB2FF}}</style>'
+        f'{defs("rough")}<g filter="url(#rough)">{strokes}</g>{labels}</svg>'
+    )
+
+
 def article_svg(uid, strokes, labels="", w=640, h=320, maxw=None):
     """Hinh trong long bai viet.
 
