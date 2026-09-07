@@ -73,10 +73,17 @@ def clashes(svg):
 
 def main():
     total = 0
-    for path in sorted(ROOT.glob("scripts/_figures.json")):
+    # `_figures.json` la { slug: [svg, ...] }; `_search-figures.json` la
+    # { slug: [{src, svg}, ...] }. Ca hai deu la hinh se len trang, nen ca
+    # hai deu phai qua cung mot cua.
+    for name in ("_figures.json", "_search-figures.json"):
+        path = ROOT / "scripts" / name
+        if not path.exists():
+            continue
         data = json.loads(path.read_text(encoding="utf-8"))
         for slug, arr in data.items():
-            for i, svg in enumerate(arr):
+            for i, item in enumerate(arr):
+                svg = item["svg"] if isinstance(item, dict) else item
                 for ox, oy, a, b in clashes(svg):
                     total += 1
                     print(f"{slug}#{i}  {ox}x{oy}px  "

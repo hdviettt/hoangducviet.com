@@ -131,10 +131,14 @@ def main():
         for p in sorted((ROOT / "public" / "figures").glob("webinar-*.svg")):
             report_file(p.name, p.read_text(encoding="utf-8"), tmp)
         print("== hinh trong bai ==")
-        jf = ROOT / "scripts" / "_figures.json"
-        if jf.exists():
-            for slug, svgs in json.loads(jf.read_text(encoding="utf-8")).items():
-                for i, svg in enumerate(svgs):
+        for name in ("_figures.json", "_search-figures.json"):
+            jf = ROOT / "scripts" / name
+            if not jf.exists():
+                continue
+            data = json.loads(jf.read_text(encoding="utf-8"))
+            for slug, arr in data.items():
+                for i, item in enumerate(arr):
+                    svg = item["svg"] if isinstance(item, dict) else item
                     report_inline(f"{slug} #{i}", svg, tmp)
 
 
