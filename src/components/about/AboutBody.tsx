@@ -100,28 +100,47 @@ function Column({ children }: { children: ReactNode }) {
 //   5. Ho so — van con, nhung xuong cuoi, vi no la phan it thuyet phuc nhat.
 export default function AboutBody({
   toolkit,
+  storyFromCms = false,
 }: {
   toolkit?: { models: ProjectLogo[]; stack: ProjectLogo[] };
+  /**
+   * True khi /admin -> Settings -> Body co noi dung that. Luc do trang da tu
+   * render doan do o tren roi, nen `STORY` trong code phai im.
+   *
+   * Thieu co nay thi dien vao CMS se ra HAI cau chuyen chong nhau — loi do
+   * chinh toi vua tao ra khi chuyen story tu CSDL vao code ma van de nguyen
+   * nhanh render cu.
+   */
+  storyFromCms?: boolean;
 }) {
   const now = new Date();
 
   return (
-    <div className="mx-auto max-w-[880px] mt-14 md:mt-16">
+    <div
+      className={
+        storyFromCms
+          ? "mx-auto max-w-[880px] mt-12 md:mt-14"
+          : "mx-auto max-w-[880px] mt-14 md:mt-16"
+      }
+    >
       {/* ---------------------------------------------------------- 1. story */}
-      <section className="mx-auto max-w-[620px] animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
-        {STORY.map((p, i) => (
-          <p
-            key={p.slice(0, 40)}
-            className={
-              i === 1
-                ? "mt-6 text-[19px] leading-[31px] font-medium text-md-on-surface"
-                : "mt-6 first:mt-0 text-[17px] leading-[29px] text-md-on-surface-variant"
-            }
-          >
-            {p}
-          </p>
-        ))}
-      </section>
+      {/* CMS thang: go vao Settings -> Body thi doan trong code nhuong cho. */}
+      {!storyFromCms && (
+        <section className="mx-auto max-w-[620px] animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
+          {STORY.map((p, i) => (
+            <p
+              key={p.slice(0, 40)}
+              className={
+                i === 1
+                  ? "mt-6 text-[19px] leading-[31px] font-medium text-md-on-surface"
+                  : "mt-6 first:mt-0 text-[17px] leading-[29px] text-md-on-surface-variant"
+              }
+            >
+              {p}
+            </p>
+          ))}
+        </section>
+      )}
 
       {/* ------------------------------------------------- 2. career shape */}
       {/* Doan thu hai o tren noi "moi vai tro nam trong thanh dai hoc"; day la

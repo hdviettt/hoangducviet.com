@@ -119,16 +119,16 @@ export default async function AboutPage() {
       {/* Expanded story — no divider, same dark tone as the hero bio so the two
           read as one continuous block. Hidden entirely when the body is empty. */}
       {bodyHtml && (
-        <section className="mx-auto max-w-[560px] mt-2 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards">
+        <section className="mx-auto max-w-[620px] mt-14 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
           <div
-            className="text-md-on-surface [&_p]:text-[17px] [&_p]:leading-[28px] [&_p]:mb-5 [&_p:last-child]:mb-0 [&_strong]:font-medium [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
+            className="text-md-on-surface-variant [&_p]:text-[17px] [&_p]:leading-[29px] [&_p]:mb-6 [&_p:last-child]:mb-0 [&_strong]:text-[19px] [&_strong]:leading-[31px] [&_strong]:font-medium [&_strong]:text-md-on-surface [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
             dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
         </section>
       )}
 
       {/* Cau chuyen, bang chung, dieu dang tim, roi moi den ho so. */}
-      <AboutBody toolkit={toolkit} />
+      <AboutBody toolkit={toolkit} storyFromCms={Boolean(bodyHtml)} />
     </div>
   );
 }
