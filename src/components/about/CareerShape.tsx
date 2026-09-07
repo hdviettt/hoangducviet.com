@@ -40,7 +40,6 @@ const PAD = 2;
 
 export default function CareerShape() {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
   // Mot don vi cua viewBox = mot pixel tren man hinh. Neu de he toa do co
   // dinh 880 roi cho SVG co gian, chu 12.5 don vi rot xuong con 5px tren dien
   // thoai. Do lai be ngang that va ve theo no thi co chu luon dung bang so da
@@ -56,29 +55,6 @@ export default function CareerShape() {
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    // Ai tat hieu ung thi ve thang ket qua cuoi, khong doi cuon toi.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setShown(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setShown(true);
-            io.disconnect();
-          }
-        }
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
   }, []);
 
   const uni = EDUCATION.find((e) => e.span);
@@ -114,13 +90,10 @@ export default function CareerShape() {
   const jobY = 132;
   const barH = 42;
 
-  const grow = (delay: number) => ({
-    transform: shown ? "scaleX(1)" : "scaleX(0)",
-    transformOrigin: "left" as const,
-    transformBox: "fill-box" as const,
-    transition: "transform 900ms cubic-bezier(.2,.75,.25,1)",
-    transitionDelay: `${delay}ms`,
-  });
+  // Hoat anh thuan CSS. Xem `.career-bar` trong globals.css: thanh nghi o
+  // trang thai da ve xong, hoat anh chi keo no tu 0 len. Nghia la khong co JS
+  // thi bieu do van day du, thay vi rong.
+  const grow = (delay: number) => ({ animationDelay: `${delay}ms` });
 
   return (
     <div ref={ref} className="mt-8">
@@ -179,6 +152,7 @@ export default function CareerShape() {
             stroke="currentColor"
             strokeOpacity={0.45}
             strokeWidth={1.5}
+            className="career-bar"
             style={grow(0)}
           />
         </g>
@@ -210,7 +184,7 @@ export default function CareerShape() {
                 href={`#${roleId(role.title)}`}
                 className="cursor-pointer [&_rect]:transition-opacity hover:[&_rect]:opacity-75"
               >
-                <g style={grow(160 + i * 90)}>
+                <g className="career-bar" style={grow(160 + i * 90)}>
                   {/* Ten vai tro nam trong `title` de tro chuot doc duoc, va de
                     trinh doc man hinh khong chi thay mot o mau. */}
                   <title>{`${role.title}, ${role.start} to ${role.end ?? "now"}`}</title>

@@ -3139,3 +3139,24 @@ select.md-field {
   font-size: 12px;
   font-weight: 600;
 }
+
+/* Bieu do su nghiep tren trang About.
+   Thanh NGHI o trang thai da ve xong; hoat anh chay tu scaleX(0) len nho
+   `backwards`. Ban truoc gan hien/an vao mot bien state do JS dat, nen khi JS
+   chua chay (SSR, trinh thu thap, hydrate cham) ca bieu do rong tuech — chi
+   con truc va nhan. */
+@keyframes career-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.career-bar {
+  transform-origin: left;
+  transform-box: fill-box;
+  animation: career-grow 900ms cubic-bezier(0.2, 0.75, 0.25, 1) backwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .career-bar {
+    animation: none;
+  }
+}

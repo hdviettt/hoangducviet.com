@@ -13,32 +13,32 @@
 
 const { Client } = require("pg");
 
-const BODY = `I joined an SEO agency as an operations intern. Two years later I left behind the AI platform it now runs on: 120 people across 30 teams, twenty-odd agents, LLM workflows and machine-learning systems in production. I founded the AI team that built it and led five people.
+const BODY = `I joined an SEO agency as an operations intern. Two years later I left, and the company still runs on the AI platform I built while I was there: 120 people across 30 teams, more than twenty agents, LLM workflows and machine-learning systems in production. I started the AI team behind it and led five people.
 
-**I am twenty. I have not finished my degree.**
+**I am twenty, and I am still an undergraduate.**
 
-Model quality was never the constraint. What broke things sat around the model: who answers for an agent that publishes something wrong, how anyone finds out it went wrong, and what counts as correct in a domain the model has never worked in. That last question is domain knowledge. A better model does not answer it.
+Model quality was never the constraint. The hard problems were all around the model: who is responsible when an agent publishes something wrong, how anyone finds out that it did, and what counts as correct in a field the model has never worked in. Answering that last one takes domain knowledge, and a better model will not supply it.
 
 \`\`\`widget:career
 {}
 \`\`\`
 
-## Three things I would say again
+## What actually mattered
 
-**The platform came before the tools.** Single sign-on, a data warehouse reading the whole company, one shared theme. That layer went in first. The twenty-odd solutions on top were cheap to build because it already existed. 120 people, 30 teams, 20+ solutions in production. [See the platform](/work/agentic-ai-platform)
+**Build the platform before the tools.** Single sign-on, a data warehouse covering the whole company, one shared theme. That foundation went in first, which is the only reason the twenty-odd solutions on top were cheap to build. 120 people, 30 teams, more than 20 solutions in production. [See the platform](/work/agentic-ai-platform)
 
-**The model was the easy part.** Most of what I shipped was standards and plumbing: nonhuman identity, observability, evals, human-in-the-loop, cost tracking. That is where the work went. 80% of the company trained, 50+ measurable outcomes. [Why our AI team failed](/posts/why-our-ai-team-failed)
+**The model was the easy part.** Most of what I shipped was standards and plumbing: nonhuman identity, observability, evals, human-in-the-loop, cost tracking. That is where the time went. 80% of the company trained, more than 50 measurable outcomes. [Why our AI team failed](/posts/why-our-ai-team-failed)
 
-**Domain knowledge decides what correct means.** So I built a search engine from scratch. Crawler, inverted index, BM25, PageRank, a BERT reranker. Then I wrote up every part. You cannot point AI at search without knowing how ranking works. [Building a mini search engine](/collection/building-a-mini-search-engine)
+**You need the domain to judge the output.** So I built a search engine from scratch: crawler, inverted index, BM25, PageRank, a BERT reranker. Then I wrote up how each piece works. You cannot direct AI at search without understanding how ranking happens. [Building a mini search engine](/collection/building-a-mini-search-engine)
 
 ## What I am looking for
 
-I have done the agent-building job. What I want next is a domain with enough mechanism in it to take apart, where AI is the spearhead and the business outcome is the point.
+I have already built agents for a living. What I want next is an industry with enough machinery to be worth taking apart, where AI is the edge and the business result is the goal.
 
-- **Mechanism over novelty.** Enough moving parts that understanding them is an advantage. Wrapping an API in a chat box teaches you nothing.
-- **AI as the spearhead.** The deliverable is a business result. AI is how it gets there before the incumbent can move.
-- **It has to compound.** Work that stacks on the SEO and marketing domain I already know. Starting from zero throws away the only edge I have.
-- **It has to move.** Short feedback loops. I have no patience for a five-year payoff that teaches you nothing in the meantime.
+- **Depth over novelty.** Enough moving parts that understanding them is an advantage. Wrapping an API in a chat window teaches you nothing.
+- **AI as the edge.** What I deliver is a business result. AI is how it arrives before the incumbent can react.
+- **It has to compound.** Work that builds on the SEO and marketing knowledge I already have. Starting from zero would waste my only advantage.
+- **It has to move fast.** Short feedback loops. I have no patience for a five-year payoff that teaches me nothing along the way.
 `;
 
 const dry = process.argv.includes("--dry");

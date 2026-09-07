@@ -30,20 +30,20 @@ export interface Claim {
 // khong lam duoc.
 export const CLAIMS: Claim[] = [
   {
-    claim: "The platform came before the tools.",
+    claim: "Build the platform before the tools.",
     body:
-      "Single sign-on, a data warehouse reading the whole company, one shared " +
-      "theme. That layer went in first. The twenty-odd solutions on top were " +
-      "cheap to build because it already existed.",
-    figures: ["120 people", "30 teams", "20+ solutions in production"],
-    proof: { label: "The platform", href: "/work/agentic-ai-platform" },
+      "Single sign-on, a data warehouse covering the whole company, one " +
+      "shared theme. That foundation went in first, which is the only reason " +
+      "the twenty-odd solutions on top were cheap to build.",
+    figures: ["120 people", "30 teams", "more than 20 in production"],
+    proof: { label: "See the platform", href: "/work/agentic-ai-platform" },
   },
   {
     claim: "The model was the easy part.",
     body:
       "Most of what I shipped was standards and plumbing: nonhuman identity, " +
       "observability, evals, human-in-the-loop, cost tracking. That is where " +
-      "the work went.",
+      "the time went.",
     figures: ["80% of the company trained", "50+ measurable outcomes"],
     proof: {
       label: "Why our AI team failed",
@@ -51,11 +51,12 @@ export const CLAIMS: Claim[] = [
     },
   },
   {
-    claim: "Domain knowledge decides what correct means.",
+    claim: "You need the domain to judge the output.",
     body:
-      "So I built a search engine from scratch. Crawler, inverted index, " +
-      "BM25, PageRank, a BERT reranker. Then I wrote up every part. You " +
-      "cannot point AI at search without knowing how ranking works.",
+      "So I built a search engine from scratch: crawler, inverted index, " +
+      "BM25, PageRank, a BERT reranker. Then I wrote up how each piece " +
+      "works. You cannot direct AI at search without understanding how " +
+      "ranking happens.",
     figures: ["9 parts", "built, then written up"],
     proof: {
       label: "Building a mini search engine",
@@ -75,16 +76,17 @@ export const CLAIMS: Claim[] = [
 // van hanh, di ra sau hai nam — thu ma tieu su khong noi, va cung la dung thu
 // bieu do ngay ben duoi ve ra.
 export const STORY: string[] = [
-  "I joined an SEO agency as an operations intern. Two years later I left " +
-    "behind the AI platform it now runs on: 120 people across 30 teams, " +
-    "twenty-odd agents, LLM workflows and machine-learning systems in " +
-    "production. I founded the AI team that built it and led five people.",
-  "I am twenty. I have not finished my degree.",
-  "Model quality was never the constraint. What broke things sat around the " +
-    "model: who answers for an agent that publishes something wrong, how " +
-    "anyone finds out it went wrong, and what counts as correct in a domain " +
-    "the model has never worked in. That last question is domain knowledge. " +
-    "A better model does not answer it.",
+  "I joined an SEO agency as an operations intern. Two years later I left, " +
+    "and the company still runs on the AI platform I built while I was " +
+    "there: 120 people across 30 teams, more than twenty agents, LLM " +
+    "workflows and machine-learning systems in production. I started the AI " +
+    "team behind it and led five people.",
+  "I am twenty, and I am still an undergraduate.",
+  "Model quality was never the constraint. The hard problems were all around " +
+    "the model: who is responsible when an agent publishes something wrong, " +
+    "how anyone finds out that it did, and what counts as correct in a field " +
+    "the model has never worked in. Answering that last one takes domain " +
+    "knowledge, and a better model will not supply it.",
 ];
 
 export interface Filter {
@@ -96,34 +98,34 @@ export interface Filter {
 // Muc nay thay cho mot dong nghieng duy nhat o ban truoc; no la muc huu ich
 // nhat trang doi voi nguoi dang can quyet dinh co nen lien he hay khong.
 export const LOOKING_FOR_LEAD =
-  "I have done the agent-building job. What I want next is a domain with " +
-  "enough mechanism in it to take apart, where AI is the spearhead and the " +
-  "business outcome is the point.";
+  "I have already built agents for a living. What I want next is an industry " +
+  "with enough machinery to be worth taking apart, where AI is the edge and " +
+  "the business result is the goal.";
 
 export const FILTERS: Filter[] = [
   {
-    title: "Mechanism over novelty",
+    title: "Depth over novelty",
     body:
-      "Enough moving parts that understanding them is an advantage. Wrapping " +
-      "an API in a chat box teaches you nothing.",
+      "Enough moving parts that understanding them is an advantage. " +
+      "Wrapping an API in a chat window teaches you nothing.",
   },
   {
-    title: "AI as the spearhead",
+    title: "AI as the edge",
     body:
-      "The deliverable is a business result. AI is how it gets there before " +
-      "the incumbent can move.",
+      "What I deliver is a business result. AI is how it arrives before the " +
+      "incumbent can react.",
   },
   {
     title: "It has to compound",
     body:
-      "Work that stacks on the SEO and marketing domain I already know. " +
-      "Starting from zero throws away the only edge I have.",
+      "Work that builds on the SEO and marketing knowledge I already have. " +
+      "Starting from zero would waste my only advantage.",
   },
   {
-    title: "It has to move",
+    title: "It has to move fast",
     body:
       "Short feedback loops. I have no patience for a five-year payoff that " +
-      "teaches you nothing in the meantime.",
+      "teaches me nothing along the way.",
   },
 ];
 
