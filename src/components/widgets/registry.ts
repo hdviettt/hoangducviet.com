@@ -12,15 +12,9 @@ export const widgetRegistry: Record<string, WidgetInfo> = {
     icon: "+-",
     defaultProps: { label: "Counter", initial: 0, step: 1 },
   },
-  career: {
-    name: "Career shape",
-    description: "Roles drawn to scale inside the university span",
-    icon: "|-|",
-    defaultProps: {},
-  },
-  record: {
-    name: "The record",
-    description: "Experience, education and certifications from resume.ts",
+  credentials: {
+    name: "Credentials",
+    description: "CV download and certifications, with credential IDs",
     icon: "CV",
     defaultProps: {},
   },

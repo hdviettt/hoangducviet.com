@@ -1,99 +1,20 @@
-// Professional history shown on the About page. Static on purpose — it changes
-// rarely and doesn't belong in the post DB. Transcribed from LinkedIn
-// (linkedin.com/in/hdviet). Durations are computed live from these start/end
-// months in Resume.tsx, so "1 yr", "2 yrs 1 mo", "4 mos" stay current on their
-// own — no manual editing when a month rolls over.
+// Nhung su kien co ich khi la DU LIEU chu khong phai chu.
+//
+// Truoc day file nay con giu ca bang kinh nghiem chep tay tu LinkedIn, va no
+// duoc do thang ra trang About. Phan do da bo: cau chuyen gio Viet tu viet
+// tren CMS. Con lai dung hai thu, va moi thu deu con o day vi mot ly do cu the:
+//
+//   CERTIFICATIONS  jsonld.ts phat thanh Person -> hasCredential. Viet thanh
+//                   chu trong bai thi du lieu co cau truc do bien mat. Widget
+//                   `credentials` cung doc tu day.
+//   EDUCATION       jsonld.ts phat thanh Person -> alumniOf. Khong hien tren
+//                   trang nua.
+//
+// Khong co gi o day tu dong hien ra. Trang About chi ve nhung gi o Body tren
+// CMS, cong widget nao duoc dat vao.
 
-// Mot dong ket qua. `proof` la thu mot ban CV giay khong lam duoc: cau noi
-// "toi da xay cai nay" nam ngay canh trang mo ta chinh cai do, bam vao doc
-// duoc. Chi gan khi that su co trang chung minh — khong co thi de trong.
-export interface Highlight {
-  text: string;
-  proof?: { label: string; slug: string };
-}
-
-export interface Role {
-  title: string;
-  type: string; // Full-time / Internship / Apprenticeship
-  start: string; // "YYYY-MM"
-  end?: string; // "YYYY-MM"; omit for a current (Present) role
-  note?: string;
-  // Ket qua cua vai tro, lay tu CV. Mot dong mot y — o day la cho duy nhat
-  // tren site noi ve phan lanh dao: quy mo doi, muc tiet kiem thoi gian, so
-  // nguoi da dao tao. Trang work noi ve co che, muc nay noi ve ket qua.
-  highlights?: Highlight[];
-}
-
-export interface Company {
-  company: string;
-  url: string;
-  logo: string; // path under /public
-  location?: string;
-  roles: Role[]; // newest first
-}
-
-export const EXPERIENCE: Company[] = [
-  {
-    company: "SEONGON",
-    url: "https://seongon.com",
-    logo: "/seongon-mark.png",
-    location: "Hanoi, Vietnam · On-site",
-    roles: [
-      {
-        title: "Artificial Intelligence Leader",
-        type: "Full-time",
-        start: "2025-08",
-        end: "2026-08",
-        highlights: [
-          { text: "Founded the AI team and led five people." },
-          {
-            text: "Built the platform 120 people work on, with over twenty AI solutions running on it: agents, LLM workflows and machine learning.",
-            proof: { label: "The platform", slug: "agentic-ai-platform" },
-          },
-          {
-            text: "Wrote the standards every agent runs under: nonhuman identity, observability, evals, human-in-the-loop, feedback as a feature, cost tracking.",
-          },
-          {
-            text: "Halved the time the SEO production chain takes. Internal linking and content outlines run up to five times faster, at the quality of senior staff.",
-            proof: { label: "The writing agent", slug: "content-seo-ai" },
-          },
-          {
-            text: "Trained 80% of the company to work with agentic AI, and more than fifty measurable outcomes came out of it.",
-          },
-        ],
-      },
-      {
-        title: "AI Software Developer",
-        type: "Full-time",
-        start: "2025-05",
-        end: "2025-08",
-        note: "Built the first production AI systems for the SEO chain. The AI team formed around this work.",
-      },
-      {
-        title: "CEO Operations Assistant",
-        type: "Full-time",
-        start: "2024-12",
-        end: "2025-05",
-        note: "Daily operations and quarterly planning with the CEO, plus the market research that shaped where the company put AI first. Promoted into the AI role from here.",
-      },
-      {
-        title: "Startup Operations",
-        type: "Apprenticeship",
-        start: "2024-09",
-        end: "2024-12",
-      },
-      {
-        title: "Startup Idea Creator Intern",
-        type: "Internship",
-        start: "2024-07",
-        end: "2024-09",
-      },
-    ],
-  },
-];
-
-// Rendered on the About page and fed to the About-page JSON-LD
-// (Person → hasCredential). Kept in the CV's order.
+// Fed to the About-page JSON-LD (Person → hasCredential), and rendered by the
+// `credentials` widget. Kept in the CV's order.
 export interface Certification {
   name: string;
   issuer: string;
@@ -101,6 +22,10 @@ export interface Certification {
   // khong co, va bat buoc chung thi phai bia ra.
   date?: string;
   credentialId?: string;
+  // Trang tra cuu cua don vi cap, neu co. Co `url` thi ten chung chi thanh
+  // duong dan bam duoc — mot chung chi kiem duoc khac han mot chung chi chi
+  // duoc ke ra. Chua chung chi nao dien; khong tu doan URL.
+  url?: string;
 }
 
 export const CERTIFICATIONS: Certification[] = [
@@ -129,13 +54,9 @@ export const CERTIFICATIONS: Certification[] = [
   { name: "Data Analysis with Python", issuer: "freeCodeCamp" },
 ];
 
-// Education. The site never said any of this, which hid the one fact that
-// makes the rest of the page read differently: all of the work above was done
-// while an undergraduate.
+// Chi dung cho JSON-LD (Person → alumniOf). Khong hien tren trang.
 export interface School {
   school: string;
-  // Moc thang that, chi bieu do dung. `start`/`end` la chuoi de doc
-  // ("2027 (expected)") nen khong tinh toan duoc.
   span?: { from: string; to: string };
   url?: string;
   qualification: string;
@@ -166,24 +87,4 @@ export const EDUCATION: School[] = [
   },
 ];
 
-// STATS va LOOKING_FOR tung song o day va da bi go.
-//
-// STATS la bang bon con so mo dau trang About cu. Chung khong bien mat: moi
-// con so gio nam duoi mot cau khang dinh no chong lung, trong CLAIMS o
-// `lib/about.ts`, canh mot duong dan sang trang chung minh no. Mot con so tran
-// khong tu noi duoc y nghia va khong ai kiem duoc.
-//
-// LOOKING_FOR la mot cau nghieng duy nhat; no da thanh ca mot muc, voi bon bo
-// loc quyet dinh viet ro ra (FILTERS).
-
 export const CV_URL = "/hoang-duc-viet-cv.pdf";
-
-// Mot vai tro co mot dinh danh duy nhat, dung o ca hai cho: o vuong tren bieu
-// do va muc tuong ung trong danh sach ben duoi. Bam vao thanh la nhay xuong
-// dung vai tro do — bieu do tro thanh muc luc chu khong phai hinh trang tri.
-export function roleId(title: string): string {
-  return `role-${title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")}`;
-}

@@ -3140,50 +3140,29 @@ select.md-field {
   font-weight: 600;
 }
 
-/* Bieu do su nghiep tren trang About.
-   Thanh NGHI o trang thai da ve xong; hoat anh chay tu scaleX(0) len nho
-   `backwards`. Ban truoc gan hien/an vao mot bien state do JS dat, nen khi JS
-   chua chay (SSR, trinh thu thap, hydrate cham) ca bieu do rong tuech — chi
-   con truc va nhan. */
-@keyframes career-grow {
-  from {
-    transform: scaleX(0);
-  }
-}
-.career-bar {
-  transform-origin: left;
-  transform-box: fill-box;
-  animation: career-grow 900ms cubic-bezier(0.2, 0.75, 0.25, 1) backwards;
-}
-@media (prefers-reduced-motion: reduce) {
-  .career-bar {
-    animation: none;
-  }
-}
-
-/* Khoi ho so (widget `record`) nam trong .article-content, nen thua toan bo
+/* Khoi giay to (widget `credentials`) nam trong .article-content, nen thua toan bo
    kieu chu cua bai viet: <ol> moc so thu tu, <ul> moc dau cham trong khi tung
    dong da tu ve dau cham rieng, va <h3> phong len 22px thanh tieu de muc.
    Tra ba thu do ve trung tinh; kieu chu that su do chinh component dat. */
-.article-content .about-record ul,
-.article-content .about-record ol {
+.article-content .about-credentials ul,
+.article-content .about-credentials ol {
   margin-bottom: 0;
   padding-left: 0;
   list-style: none;
 }
-.article-content .about-record ul li::marker,
-.article-content .about-record ol li::marker {
+.article-content .about-credentials ul li::marker,
+.article-content .about-credentials ol li::marker {
   content: "";
 }
-.article-content .about-record li {
+.article-content .about-credentials li {
   margin-bottom: 0;
 }
-.article-content .about-record h3 {
+.article-content .about-credentials h3 {
   font-size: 16px;
   line-height: 1.4;
   margin-top: 0;
   margin-bottom: 0;
 }
-.article-content .about-record p {
+.article-content .about-credentials p {
   margin-bottom: 0;
 }
