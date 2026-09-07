@@ -18,6 +18,12 @@ export const widgetRegistry: Record<string, WidgetInfo> = {
     icon: "|-|",
     defaultProps: {},
   },
+  record: {
+    name: "The record",
+    description: "Experience, education and certifications from resume.ts",
+    icon: "CV",
+    defaultProps: {},
+  },
 };
 
 // Note: `carousel` is deliberately absent. It has its own editor node (see

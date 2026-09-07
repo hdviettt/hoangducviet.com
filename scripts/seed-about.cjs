@@ -39,6 +39,12 @@ I have already built agents for a living. What I want next is an industry with e
 - **AI as the edge.** What I deliver is a business result. AI is how it arrives before the incumbent can react.
 - **It has to compound.** Work that builds on the SEO and marketing knowledge I already have. Starting from zero would waste my only advantage.
 - **It has to move fast.** Short feedback loops. I have no patience for a five-year payoff that teaches me nothing along the way.
+
+## The record
+
+\`\`\`widget:record
+{}
+\`\`\`
 `;
 
 const dry = process.argv.includes("--dry");

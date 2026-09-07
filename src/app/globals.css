@@ -3160,3 +3160,30 @@ select.md-field {
     animation: none;
   }
 }
+
+/* Khoi ho so (widget `record`) nam trong .article-content, nen thua toan bo
+   kieu chu cua bai viet: <ol> moc so thu tu, <ul> moc dau cham trong khi tung
+   dong da tu ve dau cham rieng, va <h3> phong len 22px thanh tieu de muc.
+   Tra ba thu do ve trung tinh; kieu chu that su do chinh component dat. */
+.article-content .about-record ul,
+.article-content .about-record ol {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+}
+.article-content .about-record ul li::marker,
+.article-content .about-record ol li::marker {
+  content: "";
+}
+.article-content .about-record li {
+  margin-bottom: 0;
+}
+.article-content .about-record h3 {
+  font-size: 16px;
+  line-height: 1.4;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.article-content .about-record p {
+  margin-bottom: 0;
+}

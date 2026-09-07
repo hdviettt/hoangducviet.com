@@ -6,6 +6,7 @@ const registry: Record<string, ComponentType<any>> = {
   video: dynamic(() => import("./Video")),
   carousel: dynamic(() => import("./MediaCarousel")),
   career: dynamic(() => import("../about/CareerShape")),
+  record: dynamic(() => import("../about/Record")),
 };
 
 export default registry;
