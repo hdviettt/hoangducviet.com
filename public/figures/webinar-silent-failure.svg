@@ -1,80 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="s10" font-family="Inter, Helvetica Neue, Helvetica, Arial, sans-serif" viewBox="0 0 864 580" role="img" aria-label="Two failures side by side. Ordinary software raises an error at 09:12 and the article never publishes, so the fault is visible and someone fixes it. The AI publishes a confident, finished article at 09:12 that is missing a required section, carries unchecked figures and is off-brand. No alarm goes off on the right.">
-<style>
-/* --- Kiểm chứng Agent --- */
-#s10 .lead{fill:#101E33;font-size:14.5px;font-weight:600;letter-spacing:-.01em}
-#s10 .vr{stroke:#E8ECF2;stroke-width:1.2;fill:none}
-#s10 .pl{fill:#94A3B4;font-size:10.5px;font-weight:700;letter-spacing:.14em}
-#s10 .pl.b{fill:#004AEF}
-#s10 .mock{fill:#EDF2F8;stroke:#C2CFDD;stroke-width:1.3}
-#s10 .mock.c{fill:#FFFFFF}
-#s10 .mt{fill:#101E33;font-size:15px;font-weight:700;letter-spacing:-.015em}
-#s10 .mn{fill:#44566E;font-size:12.5px}
-#s10 .stamp{fill:#94A3B4;font-size:9.5px;font-weight:700;letter-spacing:.12em}
-#s10 .stamp.ok{fill:#004AEF}
-#s10 .hd{fill:#101E33;opacity:.82}
-#s10 .li{fill:#DFE6EE}
-#s10 .tag{fill:#94A3B4;font-size:9.3px;font-weight:700;letter-spacing:.14em}
-#s10 .tag.b{fill:#004AEF}
-#s10 .ds{fill:#44566E;font-size:12.5px}
-#s10 .ch{fill:#FFFFFF;stroke:#C2CFDD;stroke-width:1.3}
-#s10 .ch.no{fill:none;stroke:#C2CFDD;stroke-width:1.3;stroke-dasharray:5 4}
-#s10 .cht{fill:#101E33;font-size:12.5px;font-weight:500}
-#s10 .close{fill:#101E33;font-size:13.5px;font-weight:600}
-#s10 .ic{fill:none;stroke:#004AEF;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
-#s10 .ic.o{stroke:#94A3B4}
-.s10_ic{fill:none;stroke:#004AEF;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
-.s10_ic.s10_o{stroke:#94A3B4}
-</style>
-<rect width="864" height="580" fill="#FFFFFF"/>
-
-
-  <defs>
-    <g id="s10-k-alert" class="s10_ic s10_hi"><path d="M10 3.2 18 16.8H2z"></path><path d="M10 8v4"></path><path d="M10 14.4v.2"></path></g>
-    <g id="s10-k-check" class="s10_ic s10_hi"><circle cx="10" cy="10" r="7.6"></circle><path d="M6.5 10.2 9 12.7l4.6-5"></path></g>
-    <g id="k-alert-o" class="s10_ic s10_o"><path d="M10 3.2 18 16.8H2z"></path><path d="M10 8v4"></path><path d="M10 14.4v.2"></path></g>
-  </defs>
-
-  <text class="lead" x="432" y="40" text-anchor="middle">Both of these are failures. They reach you in completely different ways.</text>
-
-  <path class="vr" d="M430 76V500"></path>
-
-  <text class="pl" x="28" y="96">ORDINARY SOFTWARE</text>
-  <rect class="mock" x="28" y="112" width="386" height="120" rx="12"></rect>
-  <g transform="translate(52 140) scale(1.3)"><use href="#s10-k-alert"></use></g>
-  <text class="mt" x="90" y="152">The article did not publish.</text>
-  <text class="mn" x="90" y="174">CMS connection failed. Code 502.</text>
-  <text class="stamp" x="52" y="212">ALERTED AT 09:12</text>
-
-  <text class="tag" x="28" y="278">WHAT YOU GET</text>
-  <text class="ds" x="28" y="300">An error, at the moment it happens.</text>
-  <text class="ds" x="28" y="318">The article is not live.</text>
-  <text class="tag" x="28" y="356">WHAT IS WRONG</text>
-  <rect class="ch" x="28" y="370" width="386" height="36" rx="10"></rect>
-  <g transform="translate(44 378)"><use href="#s10-k-check"></use></g>
-  <text class="cht" x="74" y="393">Visible. Someone goes and fixes it.</text>
-
-  <text class="pl b" x="446" y="96">AI</text>
-  <rect class="mock c" x="446" y="112" width="386" height="120" rx="12"></rect>
-  <rect class="hd" x="470" y="134" width="196" height="12" rx="6"></rect>
-  <rect class="li" x="470" y="160" width="330" height="7" rx="3.5"></rect>
-  <rect class="li" x="470" y="176" width="330" height="7" rx="3.5"></rect>
-  <rect class="li" x="470" y="192" width="236" height="7" rx="3.5"></rect>
-  <g transform="translate(470 202)"><use href="#s10-k-check"></use></g>
-  <text class="stamp ok" x="498" y="217">PUBLISHED AT 09:12</text>
-
-  <text class="tag" x="446" y="278">WHAT YOU GET</text>
-  <text class="ds" x="446" y="300">A finished article, written with total confidence.</text>
-  <text class="ds" x="446" y="318">The article is live.</text>
-  <text class="tag b" x="446" y="356">WHAT IS WRONG</text>
-  <rect class="ch no" x="446" y="370" width="386" height="36" rx="10"></rect>
-  <g transform="translate(462 378)"><use href="#k-alert-o"></use></g>
-  <text class="cht" x="492" y="393">A required section is missing</text>
-  <rect class="ch no" x="446" y="414" width="386" height="36" rx="10"></rect>
-  <g transform="translate(462 422)"><use href="#k-alert-o"></use></g>
-  <text class="cht" x="492" y="437">Nobody checked the figures</text>
-  <rect class="ch no" x="446" y="458" width="386" height="36" rx="10"></rect>
-  <g transform="translate(462 466)"><use href="#k-alert-o"></use></g>
-  <text class="cht" x="492" y="481">The voice is off-brand</text>
-
-  <text class="close" x="432" y="548" text-anchor="middle">Nothing rings on the right. It does not crash, it just quietly gets worse.</text>
-</svg>
+<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 310" width="900" height="310" role="img" stroke-linejoin="round"><style>svg{color:#004AEF}@media (prefers-color-scheme:dark){svg{color:#8FB2FF}}</style><defs>
+  <filter id="rough" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="turbulence" baseFrequency="0.016" numOctaves="2"
+                  seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"
+                       xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs><g filter="url(#rough)"><rect x="0.0" y="32.0" width="430.0" height="264.0" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="3.0"/><rect x="280.0" y="44.0" width="132.0" height="24.0" rx="12.0" fill="none" stroke="currentColor" stroke-opacity="0.60" stroke-width="2.7"/><path d="M22.0,91.0 L34.0,103.0" fill="none" stroke="currentColor" stroke-opacity="0.70" stroke-width="3.5999999999999996" stroke-linecap="round"/><path d="M34.0,91.0 L22.0,103.0" fill="none" stroke="currentColor" stroke-opacity="0.70" stroke-width="3.5999999999999996" stroke-linecap="round"/><path d="M22.0,117.0 L34.0,129.0" fill="none" stroke="currentColor" stroke-opacity="0.70" stroke-width="3.5999999999999996" stroke-linecap="round"/><path d="M34.0,117.0 L22.0,129.0" fill="none" stroke="currentColor" stroke-opacity="0.70" stroke-width="3.5999999999999996" stroke-linecap="round"/><rect x="470.0" y="32.0" width="430.0" height="264.0" rx="10" fill="currentColor" fill-opacity="0.04" stroke="currentColor" stroke-opacity="0.95" stroke-width="4.800000000000001"/><rect x="750.0" y="44.0" width="132.0" height="24.0" rx="12.0" fill="none" stroke="currentColor" stroke-opacity="0.60" stroke-width="2.7"/><circle cx="498.0" cy="97.0" r="6.0" fill="#FFFFFF" stroke="currentColor" stroke-opacity="0.50" stroke-width="2.55"/><circle cx="498.0" cy="123.0" r="6.0" fill="#FFFFFF" stroke="currentColor" stroke-opacity="0.50" stroke-width="2.55"/><circle cx="498.0" cy="149.0" r="6.0" fill="#FFFFFF" stroke="currentColor" stroke-opacity="0.50" stroke-width="2.55"/></g><text x="20.0" y="60.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="500" fill="currentColor" fill-opacity="0.90" text-anchor="start" xml:space="preserve">ORDINARY SOFTWARE</text><text x="346.0" y="59.6" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="400" fill="currentColor" fill-opacity="0.80" text-anchor="middle" xml:space="preserve">ALERTED AT 09:12</text><text x="44.0" y="101.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.75" text-anchor="start" xml:space="preserve">The article did not publish.</text><text x="44.0" y="127.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.75" text-anchor="start" xml:space="preserve">CMS connection failed. Code 502.</text><text x="20.0" y="206.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="500" fill="currentColor" fill-opacity="0.35" text-anchor="start" xml:space="preserve">WHAT YOU GET</text><text x="20.0" y="226.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.70" text-anchor="start" xml:space="preserve">An error, at the moment it happens.</text><text x="20.0" y="256.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="500" fill="currentColor" fill-opacity="0.35" text-anchor="start" xml:space="preserve">WHAT IS WRONG</text><text x="20.0" y="276.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.70" text-anchor="start" xml:space="preserve">Visible. Someone goes and fixes it.</text><text x="490.0" y="60.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="500" fill="currentColor" fill-opacity="0.90" text-anchor="start" xml:space="preserve">AI</text><text x="816.0" y="59.6" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="400" fill="currentColor" fill-opacity="0.80" text-anchor="middle" xml:space="preserve">PUBLISHED AT 09:12</text><text x="514.0" y="101.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.75" text-anchor="start" xml:space="preserve">A required section is missing.</text><text x="514.0" y="127.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.75" text-anchor="start" xml:space="preserve">Nobody checked the figures.</text><text x="514.0" y="153.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.75" text-anchor="start" xml:space="preserve">The voice is off-brand.</text><text x="490.0" y="206.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="500" fill="currentColor" fill-opacity="0.35" text-anchor="start" xml:space="preserve">WHAT YOU GET</text><text x="490.0" y="226.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.70" text-anchor="start" xml:space="preserve">A finished article, written with total confidence.</text><text x="490.0" y="256.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="500" fill="currentColor" fill-opacity="0.35" text-anchor="start" xml:space="preserve">WHAT IS WRONG</text><text x="490.0" y="276.0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="currentColor" fill-opacity="0.70" text-anchor="start" xml:space="preserve">Invisible until a reader or a client finds it.</text></svg>
