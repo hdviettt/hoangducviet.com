@@ -143,10 +143,12 @@ export default function AdminSettingsPage() {
           <div className="space-y-3">
             <div>
               <label className="md-field-label">Body</label>
+              {/* Markdown, khong phai HTML — giong het o soan noi dung bai
+                  viet, nen moi thu dung duoc o bai viet cung dung duoc o day:
+                  tieu de, danh sach, bang, khoi ```render```, va widget. */}
               <RichEditor
                 content={profileAboutHtml}
                 onChange={setProfileAboutHtml}
-                outputFormat="html"
               />
             </div>
           </div>

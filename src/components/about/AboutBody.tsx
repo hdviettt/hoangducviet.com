@@ -84,73 +84,33 @@ function Column({ children }: { children: ReactNode }) {
   return <div className="mx-auto max-w-[560px]">{children}</div>;
 }
 
-// Trang About, viet nhu mot LAP LUAN chu khong phai mot ban kiem ke.
+// Ban du phong, dung khi /admin -> Settings -> Body con trong.
 //
-// Ban truoc chay theo dung thu tu cua LinkedIn: bang so, kinh nghiem, tui cong
-// cu, hoc van, chung chi. Doc het thi biet nguoi nay da lam gi, nhung khong
-// biet vi sao nen tin, va khong biet ho dang di dau — trong khi bang chung cho
-// ca hai deu nam san tren chinh site nay.
-//
-// Thu tu moi bam theo dung cach Viet viet bai: neu y -> dan chung -> he qua.
-//   1. Cau chuyen — ba doan, va doan giua la cau lam doi nghia ca trang.
-//   2. Bieu do su nghiep — duoc keo len lam neo thi giac, vi chinh no chung
-//      minh cau do.
-//   3. Ba cau khang dinh, moi cau kem duong dan sang trang chung minh no.
-//   4. Dieu dang tim, viet cho nguoi doc dang can quyet dinh co lien he khong.
-//   5. Ho so — van con, nhung xuong cuoi, vi no la phan it thuyet phuc nhat.
-export default function AboutBody({
-  toolkit,
-  storyFromCms = false,
-}: {
-  toolkit?: { models: ProjectLogo[]; stack: ProjectLogo[] };
-  /**
-   * True khi /admin -> Settings -> Body co noi dung that. Luc do trang da tu
-   * render doan do o tren roi, nen `STORY` trong code phai im.
-   *
-   * Thieu co nay thi dien vao CMS se ra HAI cau chuyen chong nhau — loi do
-   * chinh toi vua tao ra khi chuyen story tu CSDL vao code ma van de nguyen
-   * nhanh render cu.
-   */
-  storyFromCms?: boolean;
-}) {
-  const now = new Date();
-
+// Sau khi than trang About chuyen sang markdown sua duoc tu CMS, ba muc nay
+// khong con la nguon chinh nua. Giu lai de trang khong bao gio rong tuech, va
+// de con mot ban mau cho biet trang nay dinh noi gi.
+function Fallback() {
   return (
-    <div
-      className={
-        storyFromCms
-          ? "mx-auto max-w-[880px] mt-12 md:mt-14"
-          : "mx-auto max-w-[880px] mt-14 md:mt-16"
-      }
-    >
-      {/* ---------------------------------------------------------- 1. story */}
-      {/* CMS thang: go vao Settings -> Body thi doan trong code nhuong cho. */}
-      {!storyFromCms && (
-        <section className="mx-auto max-w-[620px] animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
-          {STORY.map((p, i) => (
-            <p
-              key={p.slice(0, 40)}
-              className={
-                i === 1
-                  ? "mt-6 text-[19px] leading-[31px] font-medium text-md-on-surface"
-                  : "mt-6 first:mt-0 text-[17px] leading-[29px] text-md-on-surface-variant"
-              }
-            >
-              {p}
-            </p>
-          ))}
-        </section>
-      )}
+    <>
+      <section className="mx-auto max-w-[620px]">
+        {STORY.map((p, i) => (
+          <p
+            key={p.slice(0, 40)}
+            className={
+              i === 1
+                ? "mt-6 text-[19px] leading-[31px] font-medium text-md-on-surface"
+                : "mt-6 first:mt-0 text-[17px] leading-[29px] text-md-on-surface-variant"
+            }
+          >
+            {p}
+          </p>
+        ))}
+      </section>
 
-      {/* ------------------------------------------------- 2. career shape */}
-      {/* Doan thu hai o tren noi "moi vai tro nam trong thanh dai hoc"; day la
-          cho chung minh no. Truoc kia bieu do nay bi ket giua bang so va danh
-          sach kinh nghiem, mo nhat va cao 20px. */}
       <section className="mt-12 md:mt-14">
         <CareerShape />
       </section>
 
-      {/* --------------------------------------------------------- 3. claims */}
       <section className="mt-16 border-t border-md-outline-variant pt-12 md:mt-20">
         <div className="grid gap-x-10 gap-y-12 md:grid-cols-3">
           {CLAIMS.map((c) => (
@@ -183,7 +143,6 @@ export default function AboutBody({
         </div>
       </section>
 
-      {/* ---------------------------------------------------- 4. looking for */}
       <section className="mt-16 border-t border-md-outline-variant pt-12 md:mt-20">
         <SectionLabel>What I am looking for</SectionLabel>
         <p className="max-w-[620px] text-[19px] leading-[31px] text-md-on-surface">
@@ -201,27 +160,50 @@ export default function AboutBody({
             </div>
           ))}
         </dl>
-        <div className="mt-10 flex flex-wrap items-center gap-3">
-          <a
-            href={CV_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="md-btn md-btn-outlined md-btn-pill no-underline"
-          >
-            <Icon name="picture_as_pdf" size={20} aria-hidden="true" />
-            Download CV
-          </a>
-          <a
-            href={LINKEDIN}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="md-btn md-btn-text md-btn-pill no-underline"
-          >
-            LinkedIn
-            <Icon name="open_in_new" size={16} aria-hidden="true" />
-          </a>
-        </div>
       </section>
+    </>
+  );
+}
+
+// Trang About, viet nhu mot LAP LUAN chu khong phai mot ban kiem ke.
+//
+// Ban truoc chay theo dung thu tu cua LinkedIn: bang so, kinh nghiem, tui cong
+// cu, hoc van, chung chi. Doc het thi biet nguoi nay da lam gi, nhung khong
+// biet vi sao nen tin, va khong biet ho dang di dau — trong khi bang chung cho
+// ca hai deu nam san tren chinh site nay.
+//
+// Thu tu moi bam theo dung cach Viet viet bai: neu y -> dan chung -> he qua.
+//   1. Cau chuyen — ba doan, va doan giua la cau lam doi nghia ca trang.
+//   2. Bieu do su nghiep — duoc keo len lam neo thi giac, vi chinh no chung
+//      minh cau do.
+//   3. Ba cau khang dinh, moi cau kem duong dan sang trang chung minh no.
+//   4. Dieu dang tim, viet cho nguoi doc dang can quyet dinh co lien he khong.
+//   5. Ho so — van con, nhung xuong cuoi, vi no la phan it thuyet phuc nhat.
+export default function AboutBody({
+  toolkit,
+  hasBody = false,
+}: {
+  toolkit?: { models: ProjectLogo[]; stack: ProjectLogo[] };
+  /**
+   * True khi /admin -> Settings -> Body co chu. Luc do trang da render than
+   * bai o tren roi, nen ban du phong trong code phai im — neu khong se ra hai
+   * cau chuyen chong nhau.
+   */
+  hasBody?: boolean;
+}) {
+  const now = new Date();
+
+  return (
+    <div
+      className={
+        hasBody
+          ? "mx-auto max-w-[880px] mt-4"
+          : "mx-auto max-w-[880px] mt-14 md:mt-16"
+      }
+    >
+      {/* Khi o Body con trong, ba muc nay la ban du phong lay tu lib/about.ts
+          — de trang khong bao gio rong. Co chu trong CMS thi chung im lang. */}
+      {!hasBody && <Fallback />}
 
       {/* --------------------------------------------------------- 5. record */}
       <section className="mt-16 border-t border-md-outline-variant pt-12 md:mt-20">

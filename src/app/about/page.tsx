@@ -1,4 +1,5 @@
 import AboutBody from "@/components/about/AboutBody";
+import MarkdownContent from "@/components/content/MarkdownContent";
 import ProfileHero from "@/components/layout/ProfileHero";
 import type { ProjectLogo } from "@/db/schema";
 import { IDENTITY } from "@/lib/identity";
@@ -92,13 +93,15 @@ export default async function AboutPage() {
     // Khong co CSDL thi trang van len, chi thieu muc Toolkit.
   }
 
-  // Cau chuyen tung lay tu /admin -> Settings (about body). Gia tri that su o
-  // do la "<p></p>", nen trang About chua bao gio hien mot doan nao noi nguoi
-  // nay la ai — phan thu vi nhat cua trang bi mot o cai dat trong nuot mat.
-  // Bay gio no nam trong `lib/about.ts`. Neu Settings co noi dung that thi no
-  // van duoc uu tien va chen len tren.
-  const aboutText = profile?.aboutHtml?.replace(/<[^>]*>/g, "").trim();
-  const bodyHtml = aboutText ? (profile!.aboutHtml as string) : "";
+  // Than trang About giong het than mot bai viet: markdown trong CSDL, sua o
+  // /admin -> Settings -> Body, render qua dung MarkdownContent va dung lop
+  // .article-content. Nghia la moi thu dung duoc trong bai viet cung dung duoc
+  // o day — tieu de, danh sach, bang, khoi ```render```, va widget
+  // ```widget:career``` de dat bieu do su nghiep vao bat cu cho nao.
+  //
+  // `lib/about.ts` o lai lam ban du phong: xoa sach o Body thi no quay lai.
+  const body = (profile?.aboutHtml ?? "").trim();
+  const hasBody = body.replace(/<[^>]*>/g, "").trim().length > 0;
   const jsonLd = createAboutPageSchema();
 
   return (
@@ -116,19 +119,17 @@ export default async function AboutPage() {
         imageUrl={profile?.image ?? null}
       />
 
-      {/* Expanded story — no divider, same dark tone as the hero bio so the two
-          read as one continuous block. Hidden entirely when the body is empty. */}
-      {bodyHtml && (
-        <section className="mx-auto max-w-[620px] mt-14 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
-          <div
-            className="text-md-on-surface-variant [&_p]:text-[17px] [&_p]:leading-[29px] [&_p]:mb-6 [&_p:last-child]:mb-0 [&_strong]:text-[19px] [&_strong]:leading-[31px] [&_strong]:font-medium [&_strong]:text-md-on-surface [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline"
-            dangerouslySetInnerHTML={{ __html: bodyHtml }}
-          />
+      {/* Than bai, dung ong render cua bai viet. */}
+      {hasBody && (
+        <section className="mx-auto mt-14 max-w-[720px] px-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
+          <div className="article-content">
+            <MarkdownContent content={body} />
+          </div>
         </section>
       )}
 
       {/* Cau chuyen, bang chung, dieu dang tim, roi moi den ho so. */}
-      <AboutBody toolkit={toolkit} storyFromCms={Boolean(bodyHtml)} />
+      <AboutBody toolkit={toolkit} hasBody={hasBody} />
     </div>
   );
 }

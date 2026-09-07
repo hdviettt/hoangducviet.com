@@ -12,6 +12,12 @@ export const widgetRegistry: Record<string, WidgetInfo> = {
     icon: "+-",
     defaultProps: { label: "Counter", initial: 0, step: 1 },
   },
+  career: {
+    name: "Career shape",
+    description: "Roles drawn to scale inside the university span",
+    icon: "|-|",
+    defaultProps: {},
+  },
 };
 
 // Note: `carousel` is deliberately absent. It has its own editor node (see
