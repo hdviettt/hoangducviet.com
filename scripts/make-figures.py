@@ -1112,6 +1112,1157 @@ def hist_what_stayed():
     return "".join(b), "".join(t), 262, 640
 
 
+# ------------------------------ an-ml-and-llm-pipeline-for-keyword-... (12)
+
+
+def kc_pipeline():
+    """Tam chang cua duong ong, va chang duy nhat co model la chang dat ten."""
+    b, t = [], []
+    stages = (("Your keywords", "raw, unsorted", False),
+              ("Vietnamese tokenization", "underthesea", False),
+              ("Embeddings", "3,072 dimensions", False),
+              ("Dimensionality reduction", "down to 30", False),
+              ("HDBSCAN", "density-based", False),
+              ("Post-process and refine", "outliers, oversized clusters",
+               False),
+              ("Labelling", "one cheap model call", True),
+              ("Visualisation", "2D and 3D", False))
+    for i, (name, sub, model) in enumerate(stages):
+        y = 10 + i * 44
+        b.append(rect(0, y, 34, 32, 0.45, SW * 0.95, r=6))
+        t.append(text(17, y + 21, str(i + 1), 12, 0.6, 500, anchor="middle",
+                      mono=True))
+        b.append(rect(46, y, 420, 32, 0.95 if model else 0.5,
+                      SW * (1.5 if model else 1.0), r=7,
+                      fill="0.05" if model else None))
+        if model:
+            b.append(spark(66, y + 16, 8, 0.95, SW * 0.75))
+            t.append(text(82, y + 21, name, 13, 0.95, 500))
+        else:
+            t.append(text(60, y + 21, name, 13, 0.72))
+        t.append(text(478, y + 21, sub, 11, 0.42))
+        if i < len(stages) - 1:
+            b.append(seg(17, y + 32, 17, y + 44, 0.3, SW * 0.85))
+    return "".join(b), "".join(t), 366, 640
+
+
+def kc_tokenization():
+    """Tieng Viet viet roi tung am tiet, nen bon am tiet co the la mot tu hoac
+    bon tu. Tach sai thi moi thu phia sau deu sai."""
+    b, t = [], []
+    t.append(text(0, 16, "INPUT", 10.5, 0.4, 500))
+    t.append(text(0, 44, '"dien thoai thong minh"', 17, 0.9, 500, mono=True))
+    for i, syl in enumerate(("dien", "thoai", "thong", "minh")):
+        x = i * 96
+        b.append(rect(x, 62, 84, 34, 0.4, SW, r=6, dash="6 6"))
+        t.append(text(x + 42, 84, syl, 12.5, 0.6, anchor="middle", mono=True))
+    t.append(text(400, 84, "four syllables, ambiguous", 11.5, 0.45))
+    b.append(seg(180, 108, 180, 134, 0.35, SW * 0.9))
+    b.append(seg(175, 127, 180, 134, 0.35, SW * 0.9))
+    b.append(seg(185, 127, 180, 134, 0.35, SW * 0.9))
+    t.append(text(0, 166, "OUTPUT", 10.5, 0.4, 500))
+    for i, (word, syls) in enumerate((("dien_thoai", 2), ("thong_minh", 2))):
+        x = i * 190
+        b.append(rect(x, 182, 176, 38, 0.95, SW * 1.5, r=7, fill="0.06"))
+        t.append(text(x + 88, 206, word, 13.5, 0.95, 500, anchor="middle",
+                      mono=True))
+        t.append(text(x + 88, 238, "one word", 11, 0.5, anchor="middle"))
+    t.append(text(400, 206, "properly tokenized", 11.5, 0.6, 500))
+    return "".join(b), "".join(t), 254, 640
+
+
+def kc_embeddings():
+    """Moi tu khoa thanh mot day 3,072 so. Hai tu gan nghia cho ra hai day gan
+    nhau; mot tu khac han cho ra mot day khac han."""
+    b, t = [], []
+    t.append(text(0, 16, "text-embedding-3-large", 11.5, 0.5, 500, mono=True))
+    rows = (('"laptop"', "0.023  -0.041  0.018  0.092 ...", True),
+            ('"may tinh"', "0.019  -0.038  0.021  0.089 ...", True),
+            ('"banh mi"', "-0.052  0.067  -0.031  0.041 ...", False))
+    for i, (kw, vec, near) in enumerate(rows):
+        y = 46 + i * 62
+        t.append(text(0, y + 24, kw, 13, 0.85, 500, mono=True))
+        b.append(rect(112, y, 330, 40, 0.85 if near else 0.45,
+                      SW * (1.3 if near else 1.0), r=6,
+                      fill="0.06" if near else None))
+        t.append(text(126, y + 18, vec, 10.5, 0.6, mono=True))
+        t.append(text(126, y + 33, "3,072 numbers", 9.5, 0.4))
+    b.append(rect(462, 46, 3, 102, 0.85, SW * 0.8))
+    t.append(text(474, 92, "nearly the", 11.5, 0.75, 500))
+    t.append(text(474, 108, "same vector", 11.5, 0.75, 500))
+    b.append(rect(462, 170, 3, 40, 0.35, SW * 0.8))
+    t.append(text(474, 194, "nothing alike", 11.5, 0.45))
+    return "".join(b), "".join(t), 232, 640
+
+
+def kc_cosine():
+    """Do gan nghia do bang mot con so duy nhat: cosine giua hai vector."""
+    b, t = [], []
+    t.append(text(0, 16, "COSINE SIMILARITY", 11, 0.4, 500))
+    rows = (('"laptop"', '"may tinh"', 0.89, "very similar"),
+            ('"laptop"', '"ban phim"', 0.73, "related, both tech"),
+            ('"laptop"', '"banh mi"', 0.12, "nothing in common"))
+    for i, (a, c, v, note) in enumerate(rows):
+        y = 48 + i * 64
+        t.append(text(0, y + 6, a, 13, 0.8, 500, mono=True))
+        t.append(text(196, y + 6, c, 13, 0.8, 500, mono=True))
+        b.append(seg(84, y, 188, y, 0.25, SW * 0.9))
+        b.append(hbar(320, y - 12, 200 * v, 20, v, 0.9 if v > 0.5 else 0.4,
+                      "0.16" if v > 0.5 else "0.05"))
+        t.append(text(320 + 200 * v + 12, y + 3, f"{v:.2f}", 12.5,
+                      0.9 if v > 0.5 else 0.45, 600, mono=True))
+        t.append(text(320, y + 26, note, 10.5, 0.4))
+    return "".join(b), "".join(t), 228, 640
+
+
+def kc_umap():
+    """3,072 chieu khong the phan cum truc tiep. UMAP nen xuong 30 chieu ma giu
+    nguyen hinh dang cua du lieu."""
+    b, t = [], []
+    for i in range(3072 // 96):
+        b.append(seg(i * 12, 40, i * 12, 84, 0.5, SW * 0.9))
+    t.append(text(0, 24, "3,072 DIMENSIONS", 12, 0.85, 500))
+    b.append(seg(190, 110, 190, 142, 0.4, SW))
+    b.append(seg(184, 134, 190, 142, 0.4, SW))
+    b.append(seg(196, 134, 190, 142, 0.4, SW))
+    t.append(text(206, 132, "UMAP", 13.5, 0.9, 500))
+    t.append(text(206, 150, "about 99% smaller, same structure", 11.5, 0.5))
+    for i in range(30 // 6):
+        b.append(seg(i * 12, 176, i * 12, 220, 0.9, SW * 1.3))
+    t.append(text(0, 244, "30 DIMENSIONS", 12, 0.85, 500))
+    return "".join(b), "".join(t), 262, 640
+
+
+def kc_hdbscan():
+    """HDBSCAN phan cum theo MAT DO, nen no khong bat buoc phai xep moi diem
+    vao mot cum. Diem qua thua thi duoc de yen."""
+    b, t = [], []
+    t.append(text(0, 16, "DENSITY-BASED CLUSTERING", 11, 0.4, 500))
+    for gi, (cx, cy, rx_, ry_, n, label) in enumerate((
+            (0.24, 0.48, 0.16, 0.30, 22, "dense cluster A"),
+            (0.62, 0.42, 0.15, 0.28, 19, "dense cluster B"))):
+        ccx, ccy = cx * 640, 40 + cy * 190
+        b.append(ellipse(ccx, ccy, rx_ * 640, ry_ * 190, 0.45, SW, dash="8 8"))
+        for i in range(n):
+            a = hashf(i, gi) * 6.2832
+            r = 0.4 + 0.55 * hashf(i + 30, gi)
+            import math as _m
+            b.append(dot(ccx + _m.cos(a) * rx_ * 640 * r,
+                         ccy + _m.sin(a) * ry_ * 190 * r, 5, 0.85))
+        t.append(text(ccx, ccy - ry_ * 190 - 12, label, 12, 0.8, 500,
+                      anchor="middle"))
+    for ox, oy in ((0.86, 0.24), (0.92, 0.68), (0.44, 0.88)):
+        b.append(dot(ox * 640, 40 + oy * 190, 6, 0.7, hollow=True))
+    t.append(text(556, 240, "outliers, left alone", 11, 0.5, anchor="end"))
+    t.append(text(0, 268, "It is not required to place every point. That is "
+                  "the point.", 12.5, 0.6))
+    return "".join(b), "".join(t), 282, 640
+
+
+def kc_eom_vs_leaf():
+    """Hai cach cat cay phan cum. EOM cho phep cum to nho khac nhau; Leaf lay
+    het la nen cum deu nhau va nho hon."""
+    b, t = [], []
+    for side, (name, note1, note2, leaf) in enumerate((
+            ("EOM selection", "varied density levels",
+             "allows mixed cluster sizes", False),
+            ("Leaf selection", "all leaf nodes selected",
+             "uniform, most granular", True))):
+        x = side * 330
+        b.append(rect(x, 30, 290, 206, 0.95 if leaf else 0.4,
+                      SW * (1.5 if leaf else 1.0), r=10,
+                      fill="0.04" if leaf else None))
+        t.append(text(x + 145, 56, name, 13.5, 0.95 if leaf else 0.7, 500,
+                      anchor="middle"))
+        root = (x + 145, 78)
+        mid = ((x + 90, 118), (x + 200, 118))
+        leaves = ((x + 62, 158), (x + 118, 158), (x + 172, 158),
+                  (x + 228, 158))
+        for m in mid:
+            b.append(seg(root[0], root[1] + 8, m[0], m[1] - 8, 0.35, SW * 0.9))
+        for i, lf in enumerate(leaves):
+            b.append(seg(mid[i // 2][0], mid[i // 2][1] + 8, lf[0], lf[1] - 8,
+                         0.35, SW * 0.9))
+        b.append(dot(root[0], root[1], 8, 0.4, hollow=True))
+        for i, m in enumerate(mid):
+            picked = not leaf and i == 0
+            b.append(dot(m[0], m[1], 9, 0.95 if picked else 0.35,
+                         hollow=not picked))
+        for i, lf in enumerate(leaves):
+            picked = leaf or i >= 2
+            b.append(dot(lf[0], lf[1], 9, 0.95 if picked else 0.35,
+                         hollow=not picked))
+            t.append(text(lf[0], lf[1] + 26, "ABCD"[i], 10.5, 0.5,
+                          anchor="middle"))
+        t.append(text(x + 145, 208, note1, 10.5, 0.5, anchor="middle"))
+        t.append(text(x + 145, 224, note2, 10.5, 0.4, anchor="middle"))
+    t.append(text(0, 262, "EOM may swallow B and C into one cluster. Leaf "
+                  "never does.", 12.5, 0.6))
+    return "".join(b), "".join(t), 276, 640
+
+
+def kc_outlier():
+    """Mot diem lac loai duoc hoi lai nam hang xom gan nhat. Da so thang, nhung
+    chi khi do gan vuot nguong."""
+    b, t = [], []
+    t.append(text(0, 16, "OUTLIER REASSIGNMENT", 11, 0.4, 500))
+    cx, cy = 170, 130
+    b.append(dot(cx, cy, 9, 0.95, hollow=True, sw=SW * 1.5))
+    t.append(text(cx, cy - 22, "the outlier", 11, 0.7, 500, anchor="middle"))
+    neigh = ((-70, -40, "A"), (-30, -66, "A"), (52, -30, "B"), (-64, 44, "A"),
+             (40, 52, "B"))
+    for dx, dy, grp in neigh:
+        b.append(seg(cx, cy, cx + dx, cy + dy, 0.28, SW * 0.85, dash="4 5"))
+        b.append(dot(cx + dx, cy + dy, 6.5, 0.85 if grp == "A" else 0.45))
+        t.append(text(cx + dx, cy + dy + 20, grp, 10.5,
+                      0.75 if grp == "A" else 0.4, anchor="middle"))
+    t.append(text(300, 96, "five nearest neighbours", 12.5, 0.8, 500))
+    t.append(text(300, 118, "three from A, two from B", 11.5, 0.5))
+    t.append(text(300, 148, "majority vote: A", 12.5, 0.9, 500))
+    b.append(rect(300, 168, 300, 44, 0.5, SW, r=8, dash="6 6"))
+    t.append(text(314, 186, "but only if similarity > 0.3", 11.5, 0.6))
+    t.append(text(314, 202, "otherwise it stays an outlier", 11, 0.42))
+    return "".join(b), "".join(t), 236, 640
+
+
+def kc_bisection():
+    """Mot cum qua to thi khong dung duoc. Cat doi bang k-means, va cat tiep
+    neu van con to."""
+    b, t = [], []
+    t.append(text(0, 16, "RECURSIVE BISECTION", 11, 0.4, 500))
+    b.append(rect(190, 34, 260, 46, 0.95, SW * 1.5, r=8, fill="0.06"))
+    t.append(text(320, 62, "one cluster, 500 keywords", 12.5, 0.95, 500,
+                  anchor="middle"))
+    b.append(seg(320, 80, 320, 100, 0.35, SW * 0.9))
+    cb, ct = chip(266, 100, 108, 26, "k-means, k=2", 10.5, 0.5, 0.7)
+    b.append(cb)
+    t.append(ct)
+    b.append(seg(320, 126, 320, 142, 0.35, SW * 0.9))
+    b.append(seg(150, 142, 490, 142, 0.35, SW * 0.9))
+    for i, x in enumerate((150, 490)):
+        b.append(seg(x, 142, x, 162, 0.35, SW * 0.9))
+        b.append(seg(x - 5, 155, x, 162, 0.35, SW * 0.9))
+        b.append(seg(x + 5, 155, x, 162, 0.35, SW * 0.9))
+        b.append(rect(x - 90, 166, 180, 42, 0.6, SW * 1.1, r=8))
+        t.append(text(x, 192, "250 keywords", 12, 0.7, anchor="middle"))
+        b.append(seg(x, 208, x, 226, 0.3, SW * 0.85, dash="5 5"))
+        t.append(text(x, 244, "still too big?", 10.5, 0.45, anchor="middle"))
+        t.append(text(x, 260, "split again", 10.5, 0.45, anchor="middle"))
+    return "".join(b), "".join(t), 276, 640
+
+
+def kc_refinement():
+    """Sau khi phan cum, moi diem duoc hoi lai mot lan: no gan tam cum nao hon.
+    Cum dang giu no duoc cong mot chut thien vi, de khong ai nhay lung tung."""
+    b, t = [], []
+    t.append(text(0, 16, "REFINEMENT", 11, 0.4, 500))
+    ax, ay, bx, by = 150, 150, 470, 118
+    b.append(ellipse(ax, ay, 96, 62, 0.4, SW, dash="8 8"))
+    b.append(ellipse(bx, by, 96, 62, 0.4, SW, dash="8 8"))
+    b.append(dot(ax, ay, 7, 0.6))
+    b.append(dot(bx, by, 7, 0.6))
+    t.append(text(ax, ay + 84, "cluster A, where X sits now", 11, 0.5,
+                  anchor="middle"))
+    t.append(text(bx, by + 84, "cluster B", 11, 0.5, anchor="middle"))
+    px, py = 300, 138
+    b.append(dot(px, py, 9, 0.95, hollow=True, sw=SW * 1.5))
+    t.append(text(px, py - 20, "point X", 11.5, 0.85, 500, anchor="middle"))
+    b.append(seg(px - 10, py, ax + 10, ay, 0.4, SW * 0.9))
+    b.append(seg(px + 10, py, bx - 10, by, 0.85, SW * 1.4))
+    t.append(text(220, 158, "0.72", 12, 0.5, 600, mono=True))
+    t.append(text(390, 114, "0.85", 12, 0.9, 600, mono=True))
+    t.append(text(0, 236, "0.72 + 0.05 for staying put is still under 0.85.",
+                  12.5, 0.6))
+    t.append(text(0, 258, "X moves to cluster B.", 12.5, 0.9, 500))
+    return "".join(b), "".join(t), 272, 640
+
+
+def kc_labeling():
+    """Cho duy nhat model duoc goi: dat ten cho cum. No khong quyet dinh cum
+    gom nhung gi — viec do da xong tu truoc."""
+    b, t = [], []
+    t.append(text(0, 16, "CLUSTER LABELLING", 11, 0.4, 500))
+    b.append(rect(0, 34, 270, 150, 0.5, SW * 1.1, r=8))
+    t.append(text(16, 60, "cluster #7", 12.5, 0.8, 500, mono=True))
+    for i, kw in enumerate(("mua laptop dell", "may tinh xach tay gia re",
+                            "laptop gaming asus", "notebook hp pavilion")):
+        t.append(text(16, 88 + i * 24, kw, 11, 0.5))
+    b.append(arrow(280, 316, 108, 0.4))
+    b.append(rect(326, 66, 314, 86, 0.95, SW * 1.5, r=10, fill="0.05"))
+    b.append(spark(350, 92, 9, 0.95, SW * 0.8))
+    t.append(text(366, 97, "one cheap model call", 12.5, 0.95, 500))
+    t.append(text(342, 122, '"Create a concise 2-5 word label..."', 11, 0.5,
+                  mono=True))
+    b.append(seg(483, 152, 483, 176, 0.35, SW * 0.9))
+    b.append(seg(478, 169, 483, 176, 0.35, SW * 0.9))
+    b.append(seg(488, 169, 483, 176, 0.35, SW * 0.9))
+    b.append(rect(326, 182, 314, 40, 0.95, SW * 1.6, r=8))
+    t.append(text(483, 207, "Laptop & May Tinh Xach Tay", 13, 0.95, 500,
+                  anchor="middle"))
+    t.append(text(0, 250, "The model names the cluster. It never decides what "
+                  "is in it.", 12.5, 0.6))
+    return "".join(b), "".join(t), 264, 640
+
+
+def kc_presets():
+    """Bon bo tham so san. Chung khong doi thuat toan, chung doi cau tra loi
+    cho cau hoi "cum bao to thi goi la mot cum"."""
+    b, t = [], []
+    t.append(text(0, 16, "CLUSTERING PRESETS", 11, 0.4, 500))
+    presets = (("BALANCED", "the default", "medium, well-separated", 3, 6,
+                False),
+               ("BROAD", "fewer, bigger", "comprehensive grouping", 2, 9,
+                False),
+               ("GRANULAR", "many, smaller", "specific subtopics", 6, 3,
+                False),
+               ("STRICT", "high coherence", "keeps uncertain ones out", 3, 4,
+                True))
+    for i, (name, sub, note, groups, per, strict) in enumerate(presets):
+        x = i * 160
+        b.append(rect(x, 34, 146, 200, 0.95 if strict else 0.45,
+                      SW * (1.5 if strict else 1.0), r=9,
+                      fill="0.04" if strict else None))
+        t.append(text(x + 73, 58, name, 12, 0.95 if strict else 0.72, 500,
+                      anchor="middle"))
+        t.append(text(x + 73, 76, sub, 10.5, 0.45, anchor="middle"))
+        import math as _m
+        for g in range(groups):
+            gx = x + 34 + (g % 2) * 76
+            gy = 106 + (g // 2) * 44
+            b.append(ellipse(gx, gy, 30, 17, 0.4, SW * 0.9, dash="5 5"))
+            for k in range(per):
+                a = hashf(k, g + i * 7) * 6.2832
+                r = 0.35 + 0.5 * hashf(k + 20, g + i * 7)
+                b.append(dot(gx + _m.cos(a) * 30 * r, gy + _m.sin(a) * 17 * r,
+                             3.4, 0.8))
+        if strict:
+            for k, (ox, oy) in enumerate(((18, 208), (58, 216), (110, 210))):
+                b.append(dot(x + ox, oy, 4.4, 0.7, hollow=True))
+            t.append(text(x + 73, 230, "outliers kept out", 9.5, 0.5,
+                          anchor="middle"))
+        t.append(text(x + 73, 254, note, 10, 0.42, anchor="middle"))
+    return "".join(b), "".join(t), 268, 640
+
+
+# ------------------------------------------ a-wrong-quote-... (4, nhap)
+
+
+def wq_build():
+    """Ung dung giu trang thai, mot dong mot buoc. Agent chi dieu huong giua
+    cac buoc — no khong bao gio tu tinh mot con so nao."""
+    b, t = [], []
+    t.append(text(0, 16, "HOW THE QUOTING AGENT IS BUILT", 11, 0.4, 500))
+    b.append(rect(0, 36, 140, 46, 0.5, SW, r=8))
+    t.append(text(70, 64, "operator", 12.5, 0.7, anchor="middle"))
+    b.append(arrow(146, 176, 59, 0.4))
+    b.append(rect(182, 36, 250, 46, 0.95, SW * 1.5, r=8, fill="0.05"))
+    t.append(text(307, 58, "the app", 13, 0.95, 500, anchor="middle"))
+    t.append(text(307, 74, "holds the state, one row per step", 10, 0.5,
+                  anchor="middle"))
+    b.append(rect(462, 36, 178, 46, 0.6, SW * 1.1, r=8))
+    b.append(spark(486, 59, 8, 0.9, SW * 0.75))
+    t.append(text(502, 64, "the agent", 12.5, 0.85, 500))
+    t.append(text(462, 98, "navigates, never computes a number", 10.5, 0.55))
+    for i, tool in enumerate(("get_quote", "run_step", "set_route")):
+        cb, ct = chip(462 + i * 58, 112, 54, 22, "", 9.5, 0.4, 0.6)
+        b.append(cb)
+        t.append(text(462 + i * 58 + 27, 127, tool, 8, 0.6, anchor="middle",
+                      mono=True))
+    t.append(text(0, 168, "NINE DETERMINISTIC STEPS", 10.5, 0.4, 500))
+    steps = ("input", "check kw", "rankings", "pick rivals", "cluster",
+             "volume", "effort", "rate card", "assemble")
+    for i, name in enumerate(steps):
+        x = i * 70
+        b.append(rect(x, 182, 62, 44, 0.5, SW, r=6))
+        t.append(text(x + 31, 202, str(i + 1), 10, 0.45, anchor="middle",
+                      mono=True))
+        t.append(text(x + 31, 218, name, 9, 0.6, anchor="middle"))
+        if i < 8:
+            b.append(seg(x + 63, 204, x + 69, 204, 0.25, SW * 0.8))
+    b.append(seg(307, 82, 307, 176, 0.3, SW * 0.9, dash="6 6"))
+    return "".join(b), "".join(t), 244, 640
+
+
+def wq_workbench():
+    """Cai cuoi cung o lai khong phai mot khung chat: no la mot cai bang tra
+    cuu, va nguoi sua thang trong bang."""
+    b, t = [], []
+    b.append(rect(0, 20, 640, 250, 1.0, SW * 1.6, r=10))
+    b.append(seg(0, 56, 640, 56, 0.3, SW))
+    t.append(text(16, 44, "SEO Production Quote", 13, 0.85, 500))
+    tabs = ("Run", "Quote", "Rivals", "Commitment", "Keywords", "Assumptions")
+    x = 16
+    for i, tab in enumerate(tabs):
+        on = i == 1
+        t.append(text(x, 80, tab, 11, 0.9 if on else 0.4, 500 if on else 400))
+        if on:
+            b.append(seg(x - 2, 90, x + len(tab) * 6.6, 90, 0.9, SW * 1.1))
+        x += len(tab) * 6.6 + 24
+    t.append(text(560, 80, "edit in the table", 10, 0.4, anchor="end"))
+    cols = ((16, "Item"), (330, "Qty"), (420, "Unit"), (560, "Cost"))
+    for cx, label in cols:
+        t.append(text(cx, 116, label, 9.5, 0.35, 500))
+    b.append(seg(0, 124, 640, 124, 0.2, SW * 0.8))
+    rows = (("Content", None, None, None, True),
+            ("New blog posts", "62", "post", "148.800.000", False),
+            ("Product posts", "28", "post", "89.600.000", False),
+            ("Off-page", None, None, None, True),
+            ("Guest posts", "18", "link", "54.000.000", False),
+            ("Technical", "1", "audit", "18.000.000", True))
+    for i, (name, qty, unit, cost, group) in enumerate(rows):
+        y = 148 + i * 22
+        t.append(text(16 + (0 if group else 14), y, name, 11,
+                      0.85 if group else 0.55, 500 if group else 400))
+        for cx, val in ((330, qty), (420, unit)):
+            if val:
+                t.append(text(cx, y, val, 10.5, 0.5))
+        if cost:
+            t.append(text(624, y, cost, 10.5, 0.7, anchor="end", mono=True))
+    return "".join(b), "".join(t), 286, 640
+
+
+def wq_silent():
+    """Mot buoc tra ve rong. Buoc sau khong phan biet duoc "khong co du lieu"
+    voi "du lieu bang khong", nen ca lan chay van bao la xong."""
+    b, t = [], []
+    b.append(rect(0, 20, 640, 210, 1.0, SW * 1.6, r=10))
+    b.append(seg(0, 54, 640, 54, 0.3, SW))
+    t.append(text(16, 42, "Quote", 12.5, 0.85, 500))
+    cb, ct = chip(540, 28, 88, 24, "9/9 done", 10.5, 0.7, 0.85)
+    b.append(cb)
+    t.append(ct)
+    rows = (("Content", "62", "148.800.000", False),
+            ("Product posts", "28", "89.600.000", False),
+            ("Off-page (booking)", "", "", True),
+            ("Technical", "1", "18.000.000", False),
+            ("Personnel", "3", "42.000.000", False))
+    for i, (name, qty, cost, gone) in enumerate(rows):
+        y = 82 + i * 26
+        if gone:
+            b.append(rect(8, y - 15, 624, 24, 0.0, SW, fill="0.06", r=5))
+        t.append(text(16, y, name, 11.5, 0.35 if gone else 0.7))
+        if gone:
+            t.append(text(200, y, "returned [ ]", 11, 0.9, 500, mono=True))
+        else:
+            t.append(text(360, y, qty, 11, 0.5))
+            t.append(text(624, y, cost, 11, 0.7, anchor="end", mono=True))
+    b.append(seg(360, 218, 624, 218, 0.35, SW * 0.9))
+    t.append(text(360, 218 + 0, "", 10, 0.4))
+    t.append(text(16, 218, "QUOTE TOTAL", 11.5, 0.85, 500))
+    t.append(text(624, 218, "298.400.000", 13, 0.95, 600, anchor="end",
+                  mono=True))
+    t.append(text(0, 262, "A whole block, gone, and the run never noticed.",
+                  13, 0.9, 500))
+    return "".join(b), "".join(t), 276, 640
+
+
+def wq_gate():
+    """Cai cong phai hoi "buoc nay co ton tai khong", khong phai "gia tri cua
+    no co that khong". Mot payload rong la that ve mat Python."""
+    b, t = [], []
+    for x, label in ((190, "full payload"), (330, "empty payload"),
+                     (480, "missing step")):
+        t.append(text(x, 20, label, 10.5, 0.4, 500, anchor="middle"))
+        t.append(text(x, 38, {"full payload": "{ price, links }",
+                              "empty payload": "{ }",
+                              "missing step": "(absent)"}[label], 10, 0.45,
+                      anchor="middle", mono=True))
+    b.append(seg(0, 52, 640, 52, 0.22, SW * 0.8))
+    rows = (("v1 · truthiness", "if not stages.get(step):",
+             ("passes", "passes, slips through", "fires"), False),
+            ("v2 · presence", "if step not in stages:",
+             ("passes", "fires", "fires"), True))
+    for i, (name, code, verdicts, good) in enumerate(rows):
+        y = 84 + i * 78
+        if good:
+            b.append(rect(-8, y - 26, 656, 66, 0.0, SW, fill="0.05", r=8))
+        t.append(text(0, y, name, 12, 0.9 if good else 0.6, 500))
+        t.append(text(0, y + 20, code, 11, 0.6, mono=True))
+        for k, v in enumerate(verdicts):
+            cx = (190, 330, 480)[k]
+            bad = "slips" in v
+            t.append(text(cx, y + 6, v, 10.5, 0.9 if bad or good else 0.5,
+                          500 if bad else 400, anchor="middle"))
+            if bad:
+                b.append(seg(cx - 58, y + 12, cx + 58, y + 12, 0.7, SW * 1.1))
+    t.append(text(0, 246, "A test we ran backwards is what caught it.", 12.5,
+                  0.6))
+    return "".join(b), "".join(t), 260, 640
+
+
+# ------------------------------------------ adding-a-data-analyst (2, nhap)
+
+
+def da_sees():
+    """Cai agent thuc su nhin thay: ba cot, ba dong mau. Ca file co khoang muoi
+    nghin dong ma no khong bao gio cham vao."""
+    b, t = [], []
+    t.append(text(0, 16, "WHAT THE AGENT SEES", 11, 0.4, 500))
+    b.append(rect(0, 32, 320, 132, 0.9, SW * 1.4, r=8, fill="0.04"))
+    for x, label in ((16, "column"), (140, "type"), (220, "sample")):
+        t.append(text(x, 54, label, 9.5, 0.35, 500))
+    b.append(seg(0, 62, 320, 62, 0.2, SW * 0.8))
+    for i, (c, ty, sa) in enumerate((("month", "text", "2026-03"),
+                                     ("revenue", "number", "128,400"),
+                                     ("channel", "text", "organic"))):
+        y = 86 + i * 26
+        t.append(text(16, y, c, 11, 0.75, mono=True))
+        t.append(text(140, y, ty, 11, 0.45))
+        t.append(text(220, y, sa, 11, 0.6, mono=True))
+    t.append(text(0, 184, "three columns, three sample rows", 11, 0.5))
+    t.append(text(360, 16, "WHAT IS IN THE FILE", 11, 0.4, 500))
+    b.append(rect(360, 32, 280, 132, 0.35, SW, r=8, dash="6 6"))
+    for i in range(11):
+        b.append(seg(376, 50 + i * 11, 624 - (i % 3) * 30, 50 + i * 11, 0.2,
+                     SW * 0.8))
+    t.append(text(360, 184, "about ten thousand rows, continuing down", 11,
+                  0.5))
+    t.append(text(0, 218, "No system computes an average by looking at three "
+                  "rows.", 12.5, 0.85, 500))
+    return "".join(b), "".join(t), 232, 640
+
+
+def da_ladder():
+    """Bon buoc, va dieu quan trong nhat la buoc cuoi: tinh trong code, khong
+    bao gio uoc luong tu mau."""
+    b, t = [], []
+    steps = (("Look", "tabs, columns, size"), ("Read a little",
+                                               "a few rows, the format"),
+             ("Read it properly", "the range that matters"),
+             ("Compute", "in code, then answer"))
+    for i, (name, sub) in enumerate(steps):
+        x = i * 160
+        last = i == 3
+        b.append(rect(x, 40, 146, 62, 0.95 if last else 0.5,
+                      SW * (1.5 if last else 1.0), r=8,
+                      fill="0.05" if last else None))
+        t.append(text(x + 73, 66, name, 12.5, 0.95 if last else 0.75, 500,
+                      anchor="middle"))
+        t.append(text(x + 73, 84, sub, 10, 0.45, anchor="middle"))
+        if i < 3:
+            b.append(arrow(x + 148, x + 158, 71, 0.35))
+    b.append(seg(560, 102, 560, 126, 0.35, SW * 0.9))
+    b.append(seg(560, 126, 60, 126, 0.35, SW * 0.9, dash="6 6"))
+    b.append(seg(60, 126, 60, 106, 0.35, SW * 0.9))
+    b.append(seg(55, 114, 60, 106, 0.35, SW * 0.9))
+    b.append(seg(65, 114, 60, 106, 0.35, SW * 0.9))
+    t.append(text(310, 144, "if a figure needs a second look", 11, 0.5,
+                  anchor="middle"))
+    t.append(text(0, 184, "Never read a number off a sample when the whole "
+                  "column is right there.", 12.5, 0.85, 500))
+    return "".join(b), "".join(t), 198, 640
+
+
+# --------------------------------------- adding-an-seo-specialist (4, nhap)
+
+
+def seo_tool():
+    """Chuyen gia SEO la mot CONG CU cua deck agent, khong phai mot dong nghiep.
+    No tra loi cau hoi va khong bao gio duoc cam but."""
+    b, t = [], []
+    b.append(rect(0, 40, 220, 90, 0.95, SW * 1.5, r=10, fill="0.05"))
+    b.append(spark(26, 70, 9, 0.95, SW * 0.8))
+    t.append(text(42, 75, "deck agent", 13.5, 0.95, 500))
+    t.append(text(16, 100, "runs the loop", 11, 0.5))
+    for i, tool in enumerate(("add_slide", "edit_slide", "set_theme",
+                              "ask_specialist")):
+        y = 40 + i * 34
+        hero = i == 3
+        b.append(rect(266, y, 150, 26, 0.95 if hero else 0.45,
+                      SW * (1.4 if hero else 0.95), r=13,
+                      fill="0.06" if hero else None))
+        t.append(text(341, y + 18, tool, 10.5, 0.95 if hero else 0.55,
+                      500 if hero else 400, anchor="middle", mono=True))
+        b.append(seg(222, 85, 262, y + 13, 0.25, SW * 0.8))
+    b.append(arrow(422, 460, 155, 0.5))
+    b.append(rect(466, 118, 174, 74, 0.6, SW * 1.2, r=10))
+    b.append(spark(492, 146, 8, 0.7, SW * 0.75))
+    t.append(text(508, 151, "SEO expert", 12.5, 0.8, 500))
+    t.append(text(482, 176, "its own model", 10.5, 0.5))
+    t.append(text(466, 210, "cannot write the deck", 11, 0.55))
+    t.append(text(0, 246, "A question out, an answer back. The deck agent "
+                  "never learns it is a model.", 12.5, 0.6))
+    return "".join(b), "".join(t), 260, 640
+
+
+def seo_ladder():
+    """Bon tang, va khong tang nao dang de tan cong khi tang duoi no chua
+    dung."""
+    b, t = [], []
+    t.append(text(0, 16, "EACH LAYER ONLY MATTERS ONCE THE ONE BELOW HOLDS",
+                  11, 0.4, 500))
+    layers = (("Title and snippet earn the click", "polish", False),
+              ("Content answers the query", "substance", False),
+              ("Structure is real: headings, landmarks", "shape", False),
+              ("A crawler can read the page at all", "foundation", True))
+    for i, (name, tag, base) in enumerate(layers):
+        y = 40 + i * 54
+        b.append(rect(60, y, 480, 44, 0.95 if base else 0.5,
+                      SW * (1.5 if base else 1.0), r=8,
+                      fill="0.05" if base else None))
+        t.append(text(80, y + 27, name, 12.5, 0.95 if base else 0.7,
+                      500 if base else 400))
+        t.append(text(520, y + 27, tag, 10.5, 0.4, anchor="end"))
+        if base:
+            b.append(check(34, y + 20, 8, 0.9, SW * 1.3))
+        else:
+            b.append(dot(34, y + 22, 8, 0.3, hollow=True))
+    b.append(seg(566, 60, 566, 240, 0.4, SW * 0.9))
+    b.append(seg(561, 72, 566, 60, 0.4, SW * 0.9))
+    b.append(seg(571, 72, 566, 60, 0.4, SW * 0.9))
+    t.append(text(578, 156, "checked", 10.5, 0.5))
+    t.append(text(578, 172, "bottom up", 10.5, 0.5))
+    t.append(text(0, 274, "You cannot skip up a rung. Optimising the title of "
+                  "a page a crawler cannot read is nothing.", 12, 0.6))
+    return "".join(b), "".join(t), 288, 640
+
+
+def seo_bound():
+    """Mot con so go tay va mot con so buoc vao o tinh trong duoi giong het
+    nhau. Chi mot trong hai co the sai ma moi buoc kiem van qua."""
+    b, t = [], []
+    for side, (kind, val, label, note1, note2, safe) in enumerate((
+            ("typed", "54%", "organic revenue",
+             "identical whether right or wrong;",
+             "the one error every check survives", False),
+            ("bound", "{$bind}", "contract total",
+             "read out of the sheet at build time;",
+             "cannot be mistyped, cannot go stale", True))):
+        x = side * 330
+        b.append(rect(x, 34, 288, 108, 0.95 if safe else 0.5,
+                      SW * (1.5 if safe else 1.0), r=10,
+                      fill="0.05" if safe else None))
+        t.append(text(x + 20, 58, kind, 10.5, 0.5, 500, mono=True))
+        t.append(text(x + 144, 100, val, 28, 0.95, 600, anchor="middle",
+                      mono=(side == 1)))
+        t.append(text(x + 144, 124, label, 10.5, 0.5, anchor="middle"))
+        t.append(text(x, 164, note1, 11, 0.55))
+        t.append(text(x, 182, note2, 11, 0.55))
+    b.append(seg(0, 210, 640, 210, 0.2, SW * 0.8))
+    t.append(text(0, 236, "And when a real total will not fit its tile:", 12,
+                  0.6))
+    for i, (what, ok) in enumerate((("trim it, so a different number ships",
+                                     False),
+                                    ("refuse, and keep the truth", True))):
+        y = 264 + i * 30
+        if ok:
+            b.append(check(10, y - 4, 8, 0.9, SW * 1.3))
+        else:
+            b.append(seg(4, y - 10, 18, y + 4, 0.6, SW * 1.2))
+            b.append(seg(18, y - 10, 4, y + 4, 0.6, SW * 1.2))
+        t.append(text(32, y, what, 12, 0.9 if ok else 0.45, 500 if ok else 400))
+    return "".join(b), "".join(t), 312, 640
+
+
+def seo_config():
+    """Cho mot nguoi khong phai ky su chinh chuyen gia: huong dan, tai lieu
+    tham chieu, model, bat tat, va mot cho de thu."""
+    b, t = [], []
+    t.append(text(0, 16, "WHERE A NON-ENGINEER CONFIGURES A SPECIALIST", 11,
+                  0.4, 500))
+    b.append(rect(0, 32, 640, 250, 1.0, SW * 1.6, r=10))
+    b.append(seg(0, 66, 640, 66, 0.3, SW))
+    t.append(text(16, 54, "/agents", 12, 0.55, mono=True))
+    t.append(text(100, 54, "SEO strategist", 12.5, 0.9, 500))
+    cb, ct = chip(556, 40, 68, 22, "on", 10.5, 0.7, 0.85)
+    b.append(cb)
+    t.append(ct)
+    t.append(text(16, 92, "INSTRUCTIONS", 9.5, 0.35, 500))
+    for i in range(3):
+        b.append(seg(16, 106 + i * 14, 16 + (300 - i * 40), 106 + i * 14, 0.25,
+                     SW * 0.85))
+    t.append(text(16, 172, "REFERENCE DOCUMENTS", 9.5, 0.35, 500))
+    for i, doc in enumerate(("brand-voice.md", "seo-rules.pdf", "past decks")):
+        cb, ct = chip(16 + i * 108, 182, 100, 24, doc, 9.5, 0.45, 0.65)
+        b.append(cb)
+        t.append(ct)
+    t.append(text(16, 236, "MODEL", 9.5, 0.35, 500))
+    cb, ct = chip(16, 246, 110, 24, "Claude", 10.5, 0.5, 0.7)
+    b.append(cb)
+    t.append(ct)
+    t.append(text(360, 92, "PLAYGROUND", 9.5, 0.35, 500))
+    b.append(rect(360, 102, 264, 34, 0.4, SW, r=8, fill="0.05"))
+    t.append(text(374, 124, "Is this title good for search?", 10.5, 0.6))
+    b.append(spark(374, 158, 8, 0.9, SW * 0.75))
+    t.append(text(390, 163, "Too vague. Lead with the metric.", 10.5, 0.7))
+    t.append(text(0, 306, "Nobody opens a repository to change how the "
+                  "specialist thinks.", 12.5, 0.6))
+    return "".join(b), "".join(t), 320, 640
+
+
+# ---------------------------------------------- agent-orchestration (4, nhap)
+
+
+def orch_wall():
+    """Nguoi doc noi chuyen voi orchestrator. Khong mot dong chat nao di qua
+    buc tuong — cac agent phia sau chi nhan viec."""
+    b, t = [], []
+    b.append(rect(0, 60, 110, 48, 0.5, SW, r=8))
+    t.append(text(55, 90, "reader", 12, 0.7, anchor="middle"))
+    b.append(arrow(116, 150, 84, 0.4))
+    b.append(rect(156, 48, 168, 72, 0.95, SW * 1.5, r=10, fill="0.05"))
+    b.append(spark(180, 78, 9, 0.95, SW * 0.8))
+    t.append(text(196, 83, "Orchestrator", 12.5, 0.95, 500))
+    t.append(text(172, 104, "holds the conversation", 10, 0.5))
+    b.append(seg(348, 24, 348, 258, 0.7, SW * 1.6, dash="9 7"))
+    t.append(text(348, 18, "none of the chat crosses this", 10, 0.55, 500,
+                  anchor="middle"))
+    for i, (name, sub) in enumerate((("Outline agent", "what the deck argues"),
+                                     ("Slide agent", "builds each slide"),
+                                     ("Specialists", "SEO, Data: advise only"))):
+        y = 40 + i * 62
+        b.append(rect(380, y, 260, 48, 0.55, SW * 1.1, r=8))
+        t.append(text(396, y + 22, name, 12, 0.8, 500))
+        t.append(text(396, y + 39, sub, 10, 0.45))
+        b.append(seg(330, 84, 376, y + 24, 0.28, SW * 0.85))
+    b.append(rect(0, 250, 640, 40, 0.9, SW * 1.4, r=8, fill="0.06"))
+    t.append(text(320, 275, "Engine  ·  computes every pixel", 12.5, 0.9, 500,
+                  anchor="middle"))
+    return "".join(b), "".join(t), 300, 640
+
+
+def orch_stream():
+    """Doi ca cau tra loi thi mot ket noi im lang ba tram giay se bi cat. Chay
+    dong thi tieu de ve trong khoang mot giay."""
+    b, t = [], []
+    for i, (name, first, dead, bad) in enumerate((
+            ("wait for the whole answer", 300, True, True),
+            ("stream the answer", 1, False, False))):
+        y = 40 + i * 96
+        t.append(text(0, y, name, 13, 0.9 if not bad else 0.6, 500))
+        b.append(seg(0, y + 26, 600, y + 26, 0.22, SW * 0.9))
+        if bad:
+            for k in range(20):
+                b.append(seg(k * 30, y + 26, k * 30 + 14, y + 26, 0.5,
+                             SW * 1.6))
+            b.append(seg(560, y + 12, 576, y + 40, 0.9, SW * 1.6))
+            b.append(seg(576, y + 12, 560, y + 40, 0.9, SW * 1.6))
+            t.append(text(600, y + 58, "300s abort", 11, 0.75, 500,
+                          anchor="end"))
+        else:
+            b.append(seg(0, y + 26, 600, y + 26, 0.95, SW * 1.8))
+            b.append(dot(14, y + 26, 7, 0.95))
+            t.append(text(14, y + 52, "headers at about 1s", 11, 0.75, 500))
+    t.append(text(0, 218, "And while it streams it is emitting signs of life "
+                  "the whole time.", 12.5, 0.6))
+    return "".join(b), "".join(t), 232, 640
+
+
+def orch_watchdogs():
+    """Ba con cho canh, ba lan giet nham. Cai cuoi cung tat mac dinh."""
+    b, t = [], []
+    t.append(text(0, 16, "THREE WATCHDOGS, THREE WRONG KILLS", 11, 0.4, 500))
+    rows = (("total time", "15 min", "killed the biggest working deck", False),
+            ("silence only", "512s", "killed a model that was thinking",
+             False),
+            ("part-type match", "650s", "killed a run building 58 slides",
+             False),
+            ("a hard cap only", "off by default", "as a backstop, nothing more",
+             True))
+    for i, (name, limit, what, keep) in enumerate(rows):
+        y = 48 + i * 56
+        if keep:
+            b.append(rect(-8, y - 26, 656, 46, 0.0, SW, fill="0.05", r=8))
+        t.append(text(0, y, name, 12.5, 0.95 if keep else 0.7, 500))
+        t.append(text(190, y, limit, 11.5, 0.6, mono=True))
+        t.append(text(300, y, what, 11.5, 0.85 if keep else 0.5))
+        if not keep:
+            b.append(seg(624, y - 8, 636, y + 4, 0.6, SW * 1.2))
+            b.append(seg(636, y - 8, 624, y + 4, 0.6, SW * 1.2))
+        else:
+            b.append(check(628, y - 2, 7, 0.9, SW * 1.2))
+    t.append(text(0, 278, "Silence and thinking look identical. Only the wire "
+                  "tells them apart.", 12.5, 0.6))
+    return "".join(b), "".join(t), 292, 640
+
+
+def orch_ownership():
+    """Lan chay thuoc ve BAI TRINH BAY, khong thuoc ve tab trinh duyet. Dong
+    tab lai roi mo ra thi ban noi lai duoc."""
+    b, t = [], []
+    t.append(text(0, 16, "GIVE THE RUN TO THE DECK, NOT TO THE BROWSER TAB",
+                  11, 0.4, 500))
+    for side, (title, mid, outcome, good) in enumerate((
+            ("owned by the HTTP request", "HTTP connection",
+             ("the tab reloads, the connection drops",
+              "the run dies, and Stop does nothing"), False),
+            ("owned by the deck", "the deck",
+             ("connections attach and detach",
+              "reload, close, come back: you rejoin"), True))):
+        x = side * 330
+        b.append(rect(x, 36, 288, 200, 0.95 if good else 0.45,
+                      SW * (1.5 if good else 1.0), r=10,
+                      fill="0.04" if good else None))
+        t.append(text(x + 144, 62, title, 12, 0.95 if good else 0.7, 500,
+                      anchor="middle"))
+        b.append(rect(x + 70, 80, 148, 34, 0.55, SW, r=7))
+        t.append(text(x + 144, 102, mid, 11, 0.6, anchor="middle"))
+        b.append(seg(x + 144, 114, x + 144, 138, 0.35, SW * 0.9,
+                     dash=None if good else "5 5"))
+        b.append(rect(x + 70, 138, 148, 34, 0.9, SW * 1.3, r=7,
+                      fill="0.06" if good else None))
+        t.append(text(x + 144, 160, "the run", 11.5, 0.9, 500,
+                      anchor="middle"))
+        for k, line in enumerate(outcome):
+            t.append(text(x + 144, 196 + k * 18, line, 10, 0.55,
+                          anchor="middle"))
+    t.append(text(0, 264, "Orphaned runs are marked interrupted on the next "
+                  "boot, and a client that rejoins is told so.", 12, 0.55))
+    return "".join(b), "".join(t), 278, 640
+
+
+# ------------------------------------------------- dynamic-outlines (3, nhap)
+
+
+def do_cards():
+    """Dan bai la nhung the co the doc va sua truoc khi bat cu slide nao duoc
+    dung."""
+    b, t = [], []
+    claims = ("Traffic fell 40% after three pages dropped out",
+              "Demand is seasonal, not shrinking",
+              "One rival took the category head term",
+              "Recovery rebuilds the category pages first")
+    for i, claim in enumerate(claims):
+        y = 24 + i * 58
+        b.append(rect(0, y, 520, 46, 0.6, SW * 1.1, r=8))
+        t.append(text(18, y + 22, claim, 12.5, 0.85))
+        t.append(text(18, y + 38, "one claim, one slide", 9.5, 0.4))
+        t.append(text(538, y + 28, f"0{i + 1}", 11, 0.4, mono=True))
+    b.append(rect(160, 268, 200, 36, 0.95, SW * 1.5, r=18, fill="0.06"))
+    t.append(text(260, 291, "Generate slides", 12, 0.95, 500,
+                  anchor="middle"))
+    t.append(text(376, 291, "built only on approval", 11, 0.5))
+    return "".join(b), "".join(t), 318, 640
+
+
+def do_typed():
+    """Truoc khi con so co the buoc vao o tinh, go tay la duong duy nhat. Dan
+    bai la cho re nhat de bat mot con so sai."""
+    b, t = [], []
+    b.append(rect(0, 30, 520, 60, 0.6, SW * 1.1, r=8))
+    t.append(text(18, 56, "Traffic fell", 13, 0.85))
+    b.append(rect(102, 38, 62, 26, 0.95, SW * 1.5, r=5, fill="0.09"))
+    t.append(text(133, 57, "40%", 13, 0.95, 600, anchor="middle", mono=True))
+    t.append(text(172, 56, "after three pages dropped out", 13, 0.85))
+    t.append(text(18, 78, "typed by the model, from memory", 9.5, 0.5))
+    b.append(seg(133, 92, 133, 122, 0.4, SW * 0.9, dash="5 6"))
+    t.append(text(133, 142, "the only cheap place to catch it", 11.5, 0.7,
+                  500, anchor="middle"))
+    b.append(rect(0, 168, 520, 60, 0.4, SW, r=8, dash="6 6"))
+    t.append(text(18, 194, "the sheet says", 12.5, 0.5))
+    t.append(text(122, 194, "38.4%", 12.5, 0.9, 600, mono=True))
+    t.append(text(18, 216, "nobody would have checked it on a finished slide",
+                  9.5, 0.5))
+    return "".join(b), "".join(t), 246, 640
+
+
+def do_depth():
+    """Kiem do day: no cham diem theo the O GIUA, vi mot bai duoc phep co mot
+    the thua, con mot bai co the giua mong thi la mot bai mong."""
+    b, t = [], []
+    t.append(text(0, 16, "DEPTH CHECK", 11, 0.4, 500))
+    cards = (("Demand is seasonal, not shrinking", "two sources under it",
+              True),
+             ("Recovery rebuilds the category pages", "one source", True),
+             ("A section on the market", "restates its neighbour", False),
+             ("One rival took the head term", "no evidence under it", False))
+    for i, (claim, note, ok) in enumerate(cards):
+        y = 40 + i * 52
+        b.append(rect(0, y, 470, 40, 0.9 if ok else 0.4,
+                      SW * (1.3 if ok else 1.0), r=7,
+                      fill=None, dash=None if ok else "6 6"))
+        t.append(text(16, y + 18, claim, 12, 0.9 if ok else 0.45))
+        t.append(text(16, y + 33, note, 9.5, 0.45))
+        if ok:
+            b.append(check(496, y + 18, 7, 0.85, SW * 1.2))
+        else:
+            t.append(text(496, y + 24, "refused", 11, 0.7, 500))
+    t.append(text(0, 268, "It judges by the median card. A deck is allowed one "
+                  "spare slide;", 12, 0.6))
+    t.append(text(0, 288, "a deck whose middle card is thin is just a thin "
+                  "deck.", 12, 0.6))
+    return "".join(b), "".join(t), 302, 640
+
+
+# ------------------------------------- why-ai-sucks-at-presentations (3)
+
+
+def wp_three_fights():
+    """Mot slide la ba tran danh cung luc. Cho ba vong tron chong nhau moi la
+    cho khong the giai bang cach lam tot tung cai mot."""
+    b, t = [], []
+    cx, cy, r = 320, 150, 96
+    centres = ((cx - 62, cy - 26), (cx + 62, cy - 26), (cx, cy + 62))
+    names = ("the data", "the argument", "the design")
+    subs = ("every figure right", "each slide earns its place",
+            "readable from the back")
+    for i, (px, py) in enumerate(centres):
+        b.append(dot(px, py, r, 0.55, hollow=True, sw=SW * 1.4))
+    for i, (px, py) in enumerate(centres):
+        lx = px + (-150 if i == 0 else (150 if i == 1 else 0))
+        ly = py + (-70 if i < 2 else 122)
+        t.append(text(lx, ly, names[i], 13.5, 0.9, 500, anchor="middle"))
+        t.append(text(lx, ly + 18, subs[i], 10.5, 0.5, anchor="middle"))
+    b.append(rect(cx - 44, cy + 4, 88, 56, 0.95, SW * 1.7, r=6, fill="0.10"))
+    t.append(text(cx, cy + 38, "one slide", 12, 0.95, 500, anchor="middle"))
+    t.append(text(0, 372, "Each one is solvable alone. The slide is where "
+                  "all three have to be true at once.", 12.5, 0.65))
+    return "".join(b), "".join(t), 386, 640
+
+
+def wp_wrong_number():
+    """Con so dung va con so sai trong giong het nhau. Model nhat mot dong tong
+    phu nam gan dau bang va dat no len slide o co bon muoi."""
+    b, t = [], []
+    t.append(text(0, 16, "THE SHEET", 10.5, 0.4, 500))
+    b.append(rect(0, 30, 260, 210, 0.5, SW * 1.1, r=8))
+    rows = (("Q1 organic", "128,400", False), ("Q1 paid", "46,200", False),
+            ("Subtotal Q1", "174,600", True), ("Q2 organic", "151,900", False),
+            ("Q2 paid", "52,800", False), ("Q3 organic", "168,300", False),
+            ("Q3 paid", "58,100", False), ("TOTAL", "605,700", False))
+    for i, (label, val, grabbed) in enumerate(rows):
+        y = 52 + i * 24
+        if grabbed:
+            b.append(rect(8, y - 14, 244, 22, 0.95, SW * 1.4, r=4,
+                          fill="0.09"))
+        t.append(text(16, y, label, 10.5, 0.9 if grabbed else 0.5,
+                      500 if grabbed else 400))
+        t.append(text(244, y, val, 10.5, 0.9 if grabbed else 0.5,
+                      anchor="end", mono=True))
+    b.append(seg(258, 100, 330, 128, 0.6, SW * 1.2))
+    b.append(seg(320, 118, 330, 128, 0.6, SW * 1.2))
+    b.append(seg(326, 112, 330, 128, 0.6, SW * 1.2))
+    t.append(text(268, 92, "grabbed", 10.5, 0.6, 500))
+    b.append(rect(350, 40, 290, 190, 1.0, SW * 1.7, r=8))
+    t.append(text(374, 76, "REVENUE", 10.5, 0.5, 500))
+    t.append(text(495, 148, "174,600", 40, 0.95, 600, anchor="middle"))
+    t.append(text(495, 176, "total for the year", 11.5, 0.5, anchor="middle"))
+    t.append(text(0, 268, "Nothing about the slide looks wrong. A right "
+                  "number and a wrong one are", 12.5, 0.65))
+    t.append(text(0, 288, "visually identical, and this one is off by a "
+                  "factor of three.", 12.5, 0.65))
+    return "".join(b), "".join(t), 302, 640
+
+
+def wp_unreadable():
+    """Mot bieu do dung moi luat van co the khong doc duoc. Ba muoi cot day mot
+    pixel troi tren mot slide trong, va moi phep kiem tu dong deu bao dat."""
+    b, t = [], []
+    b.append(rect(0, 30, 380, 210, 1.0, SW * 1.6, r=8))
+    base = 200
+    for i in range(30):
+        x = 40 + i * 10
+        h = 20 + 50 * abs(((i * 7) % 13) / 13 - 0.2)
+        b.append(seg(x, base, x, base - h, 0.85, SW * 0.35))
+    b.append(seg(34, base, 350, base, 0.35, SW * 0.8))
+    t.append(text(40, 66, "Revenue by week", 11, 0.6, 500))
+    t.append(text(40, 224, "thirty bars, about one pixel each", 9, 0.4))
+    checks = ("data is correct", "axes are labelled", "colours are on-brand",
+              "no text overflows", "contrast passes")
+    t.append(text(414, 52, "EVERY CHECK PASSES", 10.5, 0.5, 500))
+    for i, c in enumerate(checks):
+        y = 84 + i * 30
+        b.append(check(422, y - 4, 7, 0.9, SW * 1.2))
+        t.append(text(440, y, c, 11.5, 0.7))
+    t.append(text(414, 236, "and nobody can read it", 12, 0.9, 500))
+    return "".join(b), "".join(t), 260, 640
+
+
+# ------------------------------ making-ai-generated-slides-interactive (5)
+
+
+def ms_vocabulary():
+    """Agent chi viet duoc mot tu vung bo cuc rat hep. Moi pixel that la do mot
+    engine tinh, va model khong bao gio nhin thay engine do."""
+    b, t = [], []
+    t.append(text(0, 16, "WHAT THE AGENT WRITES", 10.5, 0.4, 500))
+    b.append(rect(0, 30, 250, 214, 0.5, SW * 1.1, r=8))
+    lines = (("col · gap lg", 0), ("statementBlock", 1), ("title + body", 2),
+             ("row · gap lg", 1), ("metricTile", 2), ("metricTile", 2),
+             ("chartCard", 2), ("series: volume", 3))
+    for i, (line, depth) in enumerate(lines):
+        t.append(text(16 + depth * 16, 56 + i * 24, line, 11, 0.7, mono=True))
+    b.append(arrow(258, 296, 130, 0.45))
+    b.append(rect(304, 100, 92, 60, 0.95, SW * 1.6, r=8, fill="0.06"))
+    t.append(text(350, 126, "ENGINE", 11.5, 0.95, 500, anchor="middle"))
+    t.append(text(350, 144, "computes", 10, 0.5, anchor="middle"))
+    t.append(text(350, 176, "the model never", 10, 0.45, anchor="middle"))
+    t.append(text(350, 192, "sees this", 10, 0.45, anchor="middle"))
+    b.append(arrow(404, 440, 130, 0.45))
+    t.append(text(448, 16, "WHAT THE READER SEES", 10.5, 0.4, 500))
+    b.append(rect(448, 30, 192, 214, 1.0, SW * 1.7, r=8))
+    t.append(text(468, 58, "MARKET", 9.5, 0.5, 500))
+    t.append(text(468, 86, "Search demand is", 13, 0.9, 500))
+    t.append(text(468, 104, "seasonal, not shrinking", 13, 0.9, 500))
+    t.append(text(468, 152, "2.1x", 26, 0.95, 600))
+    t.append(text(468, 170, "peak vs trough", 9.5, 0.45))
+    for i, v in enumerate((0.4, 0.62, 0.9, 0.7)):
+        b.append(rect(552 + i * 20, 216 - 40 * v, 14, 40 * v, 0.7, SW * 0.9,
+                      fill="0.14"))
+    return "".join(b), "".join(t), 258, 640
+
+
+def ms_slack():
+    """Chieu cao thua duoc phat cho nhung phan tu that su tot hon khi co them
+    cho, khong phai chia deu cho tat ca."""
+    b, t = [], []
+    for side, (title, note, tall) in enumerate((
+            ("A chart left at its floor", "nothing gave it the room", False),
+            ("The same chart, handed the slack", "the engine gave it to the "
+             "one that improves", True))):
+        x = side * 330
+        b.append(rect(x, 34, 290, 214, 0.95 if tall else 0.45,
+                      SW * (1.5 if tall else 1.0), r=8))
+        t.append(text(x + 16, 60, title, 12, 0.9 if tall else 0.6, 500))
+        h = 150 if tall else 56
+        b.append(rect(x + 20, 226 - h, 250, h, 0.6, SW, r=6))
+        base = 220
+        for i, v in enumerate((0.45, 0.7, 0.55, 0.95, 0.62)):
+            bh = (h - 24) * v
+            b.append(rect(x + 40 + i * 46, base - bh, 30, bh, 0.75,
+                          SW * 0.9, fill="0.14"))
+        if not tall:
+            b.append(rect(x + 20, 82, 250, 84, 0.3, SW * 0.9, r=6,
+                          dash="7 7"))
+            t.append(text(x + 145, 130, "left blank underneath", 10.5, 0.45,
+                          anchor="middle"))
+        t.append(text(x + 16, 266, note, 10.5, 0.5))
+    return "".join(b), "".join(t), 282, 640
+
+
+def ms_leading():
+    """Khoang dong tinh tu CHIEU CAO MUC THAT, khong tu co chu. Tieng Viet co
+    dau chong dau, nen mot dong bien thanh hai dong dinh nhau."""
+    b, t = [], []
+    for side, (title, lead, gap, ok) in enumerate((
+            ("Leading from font size", "1.12em", 2, False),
+            ("Leading from the ink", "1.321em", 13, True))):
+        x = side * 330
+        b.append(rect(x, 34, 290, 176, 0.95 if ok else 0.45,
+                      SW * (1.5 if ok else 1.0), r=8,
+                      fill="0.04" if ok else None))
+        t.append(text(x + 16, 60, title, 12, 0.9 if ok else 0.6, 500))
+        t.append(text(x + 200, 60, lead, 11, 0.7, 500, anchor="end",
+                      mono=True))
+        y1 = 110
+        y2 = y1 + 22 + gap
+        t.append(text(x + 20, y1, "Nhu cầu theo mùa,", 17, 0.9, 500))
+        t.append(text(x + 20, y2, "không thu hẹp", 17, 0.9, 500))
+        b.append(seg(x + 236, y1 - 12, x + 236, y2 + 4, 0.5, SW * 0.9))
+        t.append(text(x + 244, y1 + 10, "ink meets" if not ok else "clear gap",
+                      10, 0.6))
+        t.append(text(x + 16, 190, "two lines nearly touch" if not ok
+                      else "the gap the marks actually need", 10.5, 0.5))
+    t.append(text(0, 240, "Vietnamese stacks a mark above and a mark below the "
+                  "same letter.", 12.5, 0.65))
+    return "".join(b), "".join(t), 254, 640
+
+
+def ms_freeze():
+    """Khi mot nguoi keo mot phan tu, moi thu khac phai dung yen. Mot cong cu
+    tu chay lai duoi tay nguoi dung la mot cong cu khong tin duoc."""
+    b, t = [], []
+    for side, (title, note, frozen) in enumerate((
+            ("before", "drag one, the others reflow to fill the gap", False),
+            ("after the freeze", "only the one you grab moves", True))):
+        x = side * 330
+        b.append(rect(x, 40, 290, 150, 0.95 if frozen else 0.45,
+                      SW * (1.5 if frozen else 1.0), r=8,
+                      fill="0.04" if frozen else None))
+        t.append(text(x + 16, 30, title, 11.5, 0.9 if frozen else 0.55, 500))
+        offs = (0, 0, 0) if frozen else (0, -26, -26)
+        for i in range(3):
+            bx = x + 20 + i * 88
+            by = 74 + offs[i]
+            moved = i == 1
+            b.append(rect(bx, by, 76, 60, 0.95 if moved else 0.5,
+                          SW * (1.5 if moved else 1.0), r=6,
+                          fill="0.08" if moved else None))
+            if moved:
+                b.append(seg(bx + 38, by + 66, bx + 38, by + 84, 0.5,
+                             SW * 0.9, dash="4 5"))
+        t.append(text(x + 16, 210, note, 10.5, 0.55))
+    return "".join(b), "".join(t), 226, 640
+
+
+def ms_one_layout():
+    """Mot bo cuc, ve ra hai duong. Chung khong the lech nhau vi khong co gi de
+    lech KHOI — ca hai doc cung mot ket qua tinh."""
+    b, t = [], []
+    t.append(text(0, 16, "ONE LAYOUT, DRAWN TWO WAYS, SO THEY CANNOT DRIFT",
+                  11, 0.4, 500))
+    b.append(rect(230, 36, 180, 52, 0.95, SW * 1.7, r=8, fill="0.06"))
+    t.append(text(320, 60, "layout()", 14, 0.95, 500, anchor="middle",
+                  mono=True))
+    t.append(text(320, 78, "computed once", 10, 0.5, anchor="middle"))
+    b.append(seg(320, 88, 320, 106, 0.4, SW * 0.9))
+    b.append(seg(140, 106, 500, 106, 0.4, SW * 0.9))
+    for x in (140, 500):
+        b.append(seg(x, 106, x, 126, 0.4, SW * 0.9))
+        b.append(seg(x - 5, 119, x, 126, 0.4, SW * 0.9))
+        b.append(seg(x + 5, 119, x, 126, 0.4, SW * 0.9))
+    for x, name, uses in ((140, "interactive HTML",
+                           ("editor", "live viewer", "edit in place")),
+                          (500, "static SVG",
+                           ("thumbnail", "image", "PowerPoint"))):
+        b.append(rect(x - 130, 130, 260, 52, 0.6, SW * 1.2, r=8))
+        t.append(text(x, 162, name, 12.5, 0.85, 500, anchor="middle"))
+        for i, u in enumerate(uses):
+            cb, ct = chip(x - 120 + i * 82, 196, 74, 24, u, 9.5, 0.4, 0.6)
+            b.append(cb)
+            t.append(ct)
+    t.append(text(0, 258, "There is nothing to drift from: one layout, drawn "
+                  "twice.", 12.5, 0.65))
+    return "".join(b), "".join(t), 272, 640
+
+
+# ----------------------------------------------- ranking-with-pagerank (1)
+
+
+def pr_graph():
+    """Do thi PageRank: kich thuoc nut chinh la thu hang, va mui ten chi VAO
+    trang duoc tro toi."""
+    b, t = [], []
+    nodes = {"B": (0.10, 0.30, 38.4), "C": (0.34, 0.62, 34.3),
+             "D": (0.30, 0.16, 3.9), "E": (0.56, 0.34, 8.1),
+             "F": (0.74, 0.66, 3.9), "A": (0.84, 0.20, 3.3),
+             "G": (0.52, 0.86, 1.6), "H": (0.90, 0.86, 1.6)}
+    edges = (("D", "B"), ("E", "B"), ("F", "B"), ("A", "B"), ("G", "C"),
+             ("H", "C"), ("E", "C"), ("B", "C"), ("C", "E"), ("A", "E"))
+    P = {k: (30 + x * 560, 30 + y * 220, 10 + v * 1.5)
+         for k, (x, y, v) in nodes.items()}
+    import math as _m
+    for u, v in edges:
+        x0, y0, r0 = P[u]
+        x1, y1, r1 = P[v]
+        dx, dy = x1 - x0, y1 - y0
+        L = _m.hypot(dx, dy)
+        ux, uy = dx / L, dy / L
+        b.append(seg(x0 + ux * (r0 + 6), y0 + uy * (r0 + 6),
+                     x1 - ux * (r1 + 12), y1 - uy * (r1 + 12), 0.3, SW * 0.9))
+        hx, hy = x1 - ux * (r1 + 12), y1 - uy * (r1 + 12)
+        b.append(seg(hx - ux * 12 - uy * 6, hy - uy * 12 + ux * 6, hx, hy, 0.3,
+                     SW * 0.9))
+        b.append(seg(hx - ux * 12 + uy * 6, hy - uy * 12 - ux * 6, hx, hy, 0.3,
+                     SW * 0.9))
+    for k, (x, y, r) in P.items():
+        big = r > 40
+        b.append(dot(x, y, r, 1.0 if big else 0.5, hollow=True,
+                     sw=SW * (1.8 if big else 1.1)))
+        if big:
+            b.append(dot(x, y, r * 0.6, 0.12))
+        t.append(text(x, y + 5, k, 13 if big else 11, 0.95 if big else 0.6,
+                      500, anchor="middle"))
+        t.append(text(x, y + r + 16, f"{nodes[k][2]}%", 11 if big else 10,
+                      0.9 if big else 0.45, 600 if big else 400,
+                      anchor="middle", mono=True))
+    t.append(text(0, 284, "B is large because C points at it, and C is large "
+                  "because B does.", 12.5, 0.65))
+    t.append(text(0, 304, "The definition is circular, and that is exactly "
+                  "what makes it hard to game.", 12.5, 0.65))
+    return "".join(b), "".join(t), 318, 640
+
+
 FIGURES = {
     "a-cms-adaptable-llm-pipeline-for-seo-compliant-content-publishing": [
         cms_by_hand, cms_architecture, cms_calls, cms_drift, cms_layers,
@@ -1126,6 +2277,29 @@ FIGURES = {
         hist_loop, hist_checklist, hist_hybrid, hist_where_person,
         hist_seven_loops, hist_rewrite_rule, hist_what_stayed,
     ],
+    "an-ml-and-llm-pipeline-for-keyword-clustering-in-seo": [
+        kc_pipeline, kc_tokenization, kc_embeddings, kc_cosine, kc_umap,
+        kc_hdbscan, kc_eom_vs_leaf, kc_outlier, kc_bisection, kc_refinement,
+        kc_labeling, kc_presets,
+    ],
+    "a-wrong-quote-that-looks-like-a-right-one": [
+        wq_build, wq_workbench, wq_silent, wq_gate,
+    ],
+    "adding-a-data-analyst-agent": [da_sees, da_ladder],
+    "adding-an-seo-specialist-agent": [
+        seo_tool, seo_ladder, seo_bound, seo_config,
+    ],
+    "agent-orchestration": [
+        orch_wall, orch_stream, orch_watchdogs, orch_ownership,
+    ],
+    "dynamic-outlines": [do_cards, do_typed, do_depth],
+    "why-ai-sucks-at-presentations": [
+        wp_three_fights, wp_wrong_number, wp_unreadable,
+    ],
+    "making-ai-generated-slides-interactive": [
+        ms_vocabulary, ms_slack, ms_leading, ms_freeze, ms_one_layout,
+    ],
+    "ranking-with-pagerank": [pr_graph],
     "measuring-search-quality": [
         msq_by_intent, msq_kubernetes, msq_tokenizer, msq_reranker,
     ],
