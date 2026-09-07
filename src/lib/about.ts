@@ -30,20 +30,20 @@ export interface Claim {
 // khong lam duoc.
 export const CLAIMS: Claim[] = [
   {
-    claim: "A platform, not a pile of tools.",
+    claim: "The platform came before the tools.",
     body:
-      "The load-bearing layer went in first: single sign-on, a data warehouse " +
-      "reading the whole company, one shared theme. The twenty-odd solutions " +
-      "on top were only cheap to build because that layer already existed.",
+      "Single sign-on, a data warehouse reading the whole company, one shared " +
+      "theme. That layer went in first. The twenty-odd solutions on top were " +
+      "cheap to build because it already existed.",
     figures: ["120 people", "30 teams", "20+ solutions in production"],
     proof: { label: "The platform", href: "/work/agentic-ai-platform" },
   },
   {
-    claim: "The bottleneck was never the model.",
+    claim: "The model was the easy part.",
     body:
-      "Most of what I shipped was standards and plumbing — nonhuman identity, " +
-      "observability, evals, human-in-the-loop, cost tracking. The systems " +
-      "that failed did not fail because the model was not clever enough.",
+      "Most of what I shipped was standards and plumbing: nonhuman identity, " +
+      "observability, evals, human-in-the-loop, cost tracking. That is where " +
+      "the work went.",
     figures: ["80% of the company trained", "50+ measurable outcomes"],
     proof: {
       label: "Why our AI team failed",
@@ -53,9 +53,9 @@ export const CLAIMS: Claim[] = [
   {
     claim: "Domain knowledge decides what correct means.",
     body:
-      "So I built a search engine from scratch — crawler, inverted index, " +
-      "BM25, PageRank, a BERT reranker — and wrote up every part. You cannot " +
-      "point AI at search without knowing how ranking actually works.",
+      "So I built a search engine from scratch. Crawler, inverted index, " +
+      "BM25, PageRank, a BERT reranker. Then I wrote up every part. You " +
+      "cannot point AI at search without knowing how ranking works.",
     figures: ["9 parts", "built, then written up"],
     proof: {
       label: "Building a mini search engine",
@@ -75,17 +75,16 @@ export const CLAIMS: Claim[] = [
 // van hanh, di ra sau hai nam — thu ma tieu su khong noi, va cung la dung thu
 // bieu do ngay ben duoi ve ra.
 export const STORY: string[] = [
-  "I joined an SEO agency as an operations intern and left two years later " +
-    "having built the AI platform it now runs on: 120 people across 30 teams, " +
-    "more than twenty agents, LLM workflows and machine-learning systems in " +
-    "production. In between I founded its AI team and led five people.",
-  "I am twenty, and I have not finished my degree.",
-  "The useful thing I learned is that model quality was never the constraint. " +
-    "The systems that failed did not fail because the model was not clever " +
-    "enough. They failed on the parts nobody demos: who is accountable when an " +
-    "agent publishes something wrong, how anyone notices it went wrong at all, " +
-    "and what “correct” even means in a domain the model has never " +
-    "worked in. That last one is domain knowledge, and no better model supplies it.",
+  "I joined an SEO agency as an operations intern. Two years later I left " +
+    "behind the AI platform it now runs on: 120 people across 30 teams, " +
+    "twenty-odd agents, LLM workflows and machine-learning systems in " +
+    "production. I founded the AI team that built it and led five people.",
+  "I am twenty. I have not finished my degree.",
+  "Model quality was never the constraint. What broke things sat around the " +
+    "model: who answers for an agent that publishes something wrong, how " +
+    "anyone finds out it went wrong, and what counts as correct in a domain " +
+    "the model has never worked in. That last question is domain knowledge. " +
+    "A better model does not answer it.",
 ];
 
 export interface Filter {
@@ -97,28 +96,28 @@ export interface Filter {
 // Muc nay thay cho mot dong nghieng duy nhat o ban truoc; no la muc huu ich
 // nhat trang doi voi nguoi dang can quyet dinh co nen lien he hay khong.
 export const LOOKING_FOR_LEAD =
-  "I am not looking for another agent-building job. I am looking for a domain " +
-  "with enough mechanism in it to take apart, where AI is the spearhead and " +
-  "the business outcome is the point.";
+  "I have done the agent-building job. What I want next is a domain with " +
+  "enough mechanism in it to take apart, where AI is the spearhead and the " +
+  "business outcome is the point.";
 
 export const FILTERS: Filter[] = [
   {
     title: "Mechanism over novelty",
     body:
-      "Enough moving parts that understanding them is an advantage. I want to " +
-      "take something apart, not wrap an API in a chat box.",
+      "Enough moving parts that understanding them is an advantage. Wrapping " +
+      "an API in a chat box teaches you nothing.",
   },
   {
     title: "AI as the spearhead",
     body:
-      "The deliverable is a business result. AI is how it arrives before the " +
-      "incumbent can move, not the thing being sold.",
+      "The deliverable is a business result. AI is how it gets there before " +
+      "the incumbent can move.",
   },
   {
     title: "It has to compound",
     body:
-      "Work that stacks on the SEO and marketing domain I already know, " +
-      "rather than starting a new pile from zero.",
+      "Work that stacks on the SEO and marketing domain I already know. " +
+      "Starting from zero throws away the only edge I have.",
   },
   {
     title: "It has to move",

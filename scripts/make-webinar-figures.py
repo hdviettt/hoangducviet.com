@@ -201,8 +201,8 @@ def operating_blueprint():
         else:
             t.append(text(x + cw / 2, 246, "code is enough", 10, 0.4,
                           anchor="middle"))
-    for i, label in enumerate(("VALUE CHAIN — what the company sells",
-                               "PROCESS AS-IS — who does it today",
+    for i, label in enumerate(("VALUE CHAIN: what the company sells",
+                               "PROCESS AS-IS: who does it today",
                                "WHERE A MODEL BELONGS")):
         t.append(text(0, (32, 118, 204)[i], label, 9.5, 0.35, 500))
     return figure_file_svg("".join(b), "".join(t), W, 284)

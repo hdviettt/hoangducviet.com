@@ -128,9 +128,9 @@ def msq_tokenizer():
             b.append(rect(0, y - 22, 128, 34, 0.9, SW * 1.3, r=6))
             t.append(text(64, y + 1, val, 15, 0.95, 500, anchor="middle",
                           mono=True))
-            t.append(text(148, y - 6, "matches series, serious, serial —", 13,
+            t.append(text(148, y - 6, "matches series, serious, serial.", 13,
                           0.6))
-            t.append(text(148, y + 16, "and not the league you asked for.", 13,
+            t.append(text(148, y + 16, "Not the league you asked for.", 13,
                           0.6))
         else:
             t.append(text(0, y, val, 15, 0.95, 500, mono=True))

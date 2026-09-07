@@ -213,7 +213,7 @@ export default function CareerShape() {
                 <g style={grow(160 + i * 90)}>
                   {/* Ten vai tro nam trong `title` de tro chuot doc duoc, va de
                     trinh doc man hinh khong chi thay mot o mau. */}
-                  <title>{`${role.title} — ${role.start} to ${role.end ?? "now"}`}</title>
+                  <title>{`${role.title}, ${role.start} to ${role.end ?? "now"}`}</title>
                   <rect
                     x={rx0 + 1}
                     y={jobY}
@@ -273,8 +273,8 @@ export default function CareerShape() {
 
       <p className="mx-auto mt-5 max-w-[560px] md-body-medium text-md-on-surface-variant">
         Five roles in two years, ending in the one that ran longest. All of it
-        inside a degree that is not finished yet — the dotted line is today, not
-        graduation.
+        inside a degree that is still unfinished. The dotted line is today.
+        Graduation is 2027.
       </p>
     </div>
   );

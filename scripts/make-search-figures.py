@@ -269,7 +269,7 @@ def wc_two_steps():
                                     "lining.com/products")[i], 9,
                       0.85 - i * 0.2, mono=True))
     t.append(text(0, 480, "The table is built once, in advance. A query never "
-                  "touches the web —", 12, 0.65))
+                  "touches the web.", 12, 0.65))
     t.append(text(0, 500, "it only reads the table.", 12, 0.9, 500))
     return "".join(b), "".join(t), 514, 640
 
