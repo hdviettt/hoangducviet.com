@@ -1,6 +1,9 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  // Class-based, driven by ThemeProvider on <html>. Only /admin ever sets it,
+  // so the public site stays light regardless of the OS setting.
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -123,6 +126,14 @@ const config: Config = {
         "md-emphasized-accelerate":
           "var(--md-sys-motion-easing-emphasized-accelerate)",
         "md-standard": "var(--md-sys-motion-easing-standard)",
+      },
+      // Carbon's motion scale, which publishes the numbers this admin needs:
+      // fast for a state change on something you are pointing at, moderate for
+      // a panel that moves. Nothing above 400ms exists in this product, and
+      // nothing here is ever in the path between a keystroke and a glyph.
+      transitionDuration: {
+        fast: "110ms",
+        moderate: "240ms",
       },
     },
   },

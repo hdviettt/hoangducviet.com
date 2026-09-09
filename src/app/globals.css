@@ -148,6 +148,80 @@
     --article-code-bg: hsl(var(--md-sys-color-surface-variant));
     --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
   }
+
+  /* ------------------------------------------------------------------
+     Dark theme, admin only.
+
+     This redefines the same M3 role variables rather than introducing a
+     parallel set, so every `bg-md-*` / `text-md-*` utility already in the
+     components resolves correctly with no component changes at all. The
+     public site never gets `.dark` on <html>, so it stays light.
+
+     Surfaces are a five-step neutral ramp at hue 218-220, base #181B21.
+     Never #000: a pure black panel behind light text is the large-area
+     glare case, and the step differences are what mark a seam.
+
+     Body text lands at 11:1 against the surface rather than the 15-21:1
+     a #FFF-on-#000 pair would give. Peer-reviewed polarity work finds
+     light-on-dark reads slower regardless, so the reason to ship this is
+     glare in a dim room and preference, not an ergonomics claim.
+     ------------------------------------------------------------------ */
+  .dark {
+    --md-sys-color-primary: 222 100% 68%; /* #5B8CFF, the brand blue lightened */
+    --md-sys-color-on-primary: 220 17% 7%;
+    --md-sys-color-primary-container: 222 60% 24%;
+    --md-sys-color-on-primary-container: 222 100% 88%;
+
+    --md-sys-color-secondary: 217 12% 65%;
+    --md-sys-color-on-secondary: 220 17% 7%;
+    --md-sys-color-secondary-container: 219 16% 17%;
+    --md-sys-color-on-secondary-container: 217 17% 82%;
+
+    --md-sys-color-tertiary: 280 60% 72%;
+    --md-sys-color-on-tertiary: 220 17% 7%;
+    --md-sys-color-tertiary-container: 280 30% 26%;
+    --md-sys-color-on-tertiary-container: 280 60% 88%;
+
+    --md-sys-color-warning: 43 96% 56%;
+    --md-sys-color-scrim: 0 0% 0%;
+    --md-sys-color-error: 0 91% 71%;
+    --md-sys-color-on-error: 220 17% 7%;
+
+    --md-sys-color-background: 220 16% 11%;
+    --md-sys-color-on-background: 217 17% 82%;
+
+    --md-sys-color-surface: 220 16% 11%;
+    --md-sys-color-on-surface: 217 17% 82%;
+    --md-sys-color-surface-variant: 220 17% 14%;
+    --md-sys-color-on-surface-variant: 217 12% 65%;
+
+    --md-sys-color-surface-container-lowest: 220 17% 7%;
+    --md-sys-color-surface-container-low: 218 17% 9%;
+    --md-sys-color-surface-container: 220 16% 11%;
+    --md-sys-color-surface-container-high: 220 17% 14%;
+    --md-sys-color-surface-container-highest: 219 16% 17%;
+
+    /* Two border roles, not one. `outline` is operable (inputs, focus,
+       real edges) and clears WCAG 1.4.11's 3:1 at 3.24:1; `outline-variant`
+       is a decorative seam at 1.34:1 and must never be the only signal
+       separating two things. */
+    --md-sys-color-outline: 213 8% 43%;
+    --md-sys-color-outline-variant: 218 15% 20%;
+
+    --md-sys-color-inverse-surface: 217 17% 82%;
+    --md-sys-color-inverse-on-surface: 220 16% 11%;
+    --md-sys-color-inverse-primary: 221 100% 47%;
+
+    --article-heading: hsl(217 17% 88%);
+    --article-link: hsl(var(--md-sys-color-primary));
+    --article-link-hover: hsl(222 100% 74%);
+    --article-border: hsl(var(--md-sys-color-outline-variant));
+    --article-code-bg: hsl(218 17% 9%);
+    --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
+
+    --chart-1: #5b8cff;
+    --chart-2: #fb923c;
+  }
 }
 
 @layer base {
@@ -1470,33 +1544,171 @@ select.md-field {
    RICH EDITOR (Tiptap)
    ================================ */
 
+/* The editor surface carries BOTH `article-content` and `prose-editor`, so
+   anything set here overrides the published article's own rule and makes the
+   draft lie about the page.
+
+   Measured before this change: editor 16px / 28px leading with h2 at 22px,
+   against the published 17.5px / 25.375px with h2 at 32px. A 31% heading gap
+   on a blog whose posts are structured by declarative section headings means
+   the shape of a draft cannot be judged from the surface you draft on.
+
+   So this block now sets only what the editor legitimately needs to differ
+   on: the caret, the empty-state placeholder, and centring. Size, leading and
+   the heading scale are inherited from `.article-content` and must stay that
+   way. */
 .prose-editor {
-  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.75;
   color: hsl(var(--md-sys-color-on-surface));
+  caret-color: hsl(var(--md-sys-color-primary));
+}
+
+/* The measure, matched to the published page rather than re-derived.
+   `/posts/[slug]` wraps `.article-content` in `mx-auto max-w-[720px]`
+   (PostDetail.tsx), so 720px centred is the column a reader gets. The editor
+   uses the same number and the same centring.
+
+   Capping the CONTAINER matters: the per-element `.article-content > * {
+   max-width: 68ch }` rules resolve `ch` against each element's own font size,
+   so an h2 at 32px caps at 1388px while a paragraph at 17.5px caps at 771px.
+   Measured in the editor before this rule, headings ran 300px past the body
+   column on both sides. On the published page the 720px wrapper hides that;
+   here the wrapper is what fixes it. */
+.prose-editor,
+.editor-title {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* The ProseMirror surface carries `px-4` for caret and drag-handle room, so
+   the title block takes the same inset or the first line of the document sits
+   16px wider than the second. */
+.editor-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* ------------------------------------------------------------------
+   Fence cells: `render` and `widget:<name>`.
+
+   These two fences behave like notebook cells, and one of them is usually a
+   40-line wall of SVG path data sitting in the middle of a paragraph. This
+   post alone has nine, each 237px tall, which is most of a screen of
+   `<path d="M215.5,69.0 ...">` between two sentences.
+
+   Collapsed by default, expanded on focus, so clicking into one opens it and
+   moving away closes it again. Presentation only: this touches no node type
+   and no serialiser, so the fences still round-trip byte for byte. The full
+   Colab-style version, where the cell shows its rendered output and keeps the
+   source underneath, needs a custom node view and a markdown round-trip that
+   the current tiptap-markdown package cannot be assumed to survive.
+   ------------------------------------------------------------------ */
+.prose-editor pre:has(> code[class*="language-render"]),
+.prose-editor pre:has(> code[class*="language-widget"]) {
+  position: relative;
+  max-height: 7.5em;
+  overflow: hidden;
+  transition: max-height 240ms var(--md-sys-motion-easing-standard);
+}
+
+.prose-editor pre:has(> code[class*="language-render"])::after,
+.prose-editor pre:has(> code[class*="language-widget"])::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3em;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--article-code-bg) 85%
+  );
+}
+
+.prose-editor pre:has(> code[class*="language-render"])::before,
+.prose-editor pre:has(> code[class*="language-widget"])::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  padding: 2px 8px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--md-sys-color-primary));
+  background: hsl(var(--md-sys-color-surface-container-high));
+  border-bottom-left-radius: 8px;
+  pointer-events: none;
+}
+.prose-editor pre:has(> code[class*="language-render"])::before {
+  content: "render";
+}
+.prose-editor pre:has(> code[class*="language-widget"])::before {
+  content: "widget";
+}
+
+/* Click into it and it opens. Move away and it closes. No button, no state
+   to persist, and nothing to get out of step with the document. */
+.prose-editor pre:has(> code[class*="language-render"]):focus-within,
+.prose-editor pre:has(> code[class*="language-widget"]):focus-within {
+  max-height: none;
+}
+.prose-editor pre:has(> code[class*="language-render"]):focus-within::after,
+.prose-editor pre:has(> code[class*="language-widget"]):focus-within::after {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prose-editor pre:has(> code[class*="language-render"]),
+  .prose-editor pre:has(> code[class*="language-widget"]) {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Zen mode.
+
+   Driven by a data attribute on <html> rather than by React state, so the
+   navigation can disappear without the editor holding a reference to it or
+   the layout hoisting the state into a provider. VS Code's Zen Mode hides
+   the activity bar, the side bar, the status bar and the panel; this hides
+   the first two and dims the third rather than removing it, because the
+   save state is the one thing a writer still wants in the corner.
+   ------------------------------------------------------------------ */
+html[data-zen="1"] .admin-nav {
+  display: none;
+}
+html[data-zen="1"] .editor-topbar {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 110ms var(--md-sys-motion-easing-standard);
+}
+html[data-zen="1"] .editor-topbar:hover,
+html[data-zen="1"] .editor-topbar:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+html[data-zen="1"] .editor-statusbar {
+  opacity: 0.45;
+  transition: opacity 110ms var(--md-sys-motion-easing-standard);
+}
+html[data-zen="1"] .editor-statusbar:hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-zen="1"] .editor-topbar,
+  html[data-zen="1"] .editor-statusbar {
+    transition: none;
+  }
 }
 
 .prose-editor h1,
 .prose-editor h2,
 .prose-editor h3,
 .prose-editor h4 {
-  font-weight: 500;
-  color: hsl(var(--md-sys-color-on-surface));
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-}
-
-.prose-editor h1 {
-  font-size: 1.75em;
-}
-.prose-editor h2 {
-  font-size: 1.375em;
-  border-bottom: 1px solid hsl(var(--md-sys-color-outline-variant));
-  padding-bottom: 0.3em;
-}
-.prose-editor h3 {
-  font-size: 1.125em;
+  color: var(--article-heading);
 }
 
 .prose-editor p {

@@ -16,6 +16,11 @@ import {
   preprocessVideoInMarkdown,
 } from "@/components/admin/extensions/VideoExtension";
 import { widgetRegistry } from "@/components/widgets/registry";
+import {
+  OUTLINE_GOTO_EVENT,
+  type OutlineItem,
+  publishOutline,
+} from "@/lib/admin-events";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -320,35 +325,6 @@ function SlashMenu({
         </div>
       )}
     </div>
-  );
-}
-
-// ---- Toolbar Button ----
-
-function ToolbarButton({
-  onClick,
-  active,
-  children,
-  title,
-}: {
-  onClick: () => void;
-  active?: boolean;
-  children: React.ReactNode;
-  title: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={title}
-      className={`h-8 min-w-8 px-2 text-[13px] leading-[18px] rounded-lg transition-colors ${
-        active
-          ? "bg-md-surface-container text-md-on-surface font-medium"
-          : "text-md-on-surface-variant hover:bg-md-on-surface/5 hover:text-md-on-surface"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 
@@ -685,6 +661,63 @@ export default function RichEditor({
     }
   }, [editor]);
 
+  // Publish the heading list for the navigation panel and the palette.
+  // Debounced at 400ms: it walks the whole document, and on a 90,000-character
+  // post that is not something to do on every keystroke.
+  useEffect(() => {
+    if (!editor) return;
+    const emit = () => {
+      const items: OutlineItem[] = [];
+      editor.state.doc.descendants((node, pos) => {
+        if (node.type.name === "heading") {
+          items.push({
+            id: String(pos),
+            text: node.textContent || "Untitled heading",
+            level: Number(node.attrs.level) || 1,
+          });
+        }
+        return true;
+      });
+      publishOutline(items);
+    };
+    emit();
+    let t: ReturnType<typeof setTimeout> | null = null;
+    const onUpdate = () => {
+      if (t) clearTimeout(t);
+      t = setTimeout(emit, 400);
+    };
+    editor.on("update", onUpdate);
+    return () => {
+      editor.off("update", onUpdate);
+      if (t) clearTimeout(t);
+      publishOutline([]);
+    };
+  }, [editor]);
+
+  // Jump to a heading. The id is the ProseMirror position, so this survives
+  // duplicate heading text, which an anchor slug would not.
+  useEffect(() => {
+    if (!editor) return;
+    const onGoto = (e: Event) => {
+      const pos = Number((e as CustomEvent<string>).detail);
+      if (!Number.isFinite(pos)) return;
+      editor
+        .chain()
+        .focus()
+        .setTextSelection(pos + 1)
+        .run();
+      const at = editor.view.domAtPos(pos + 1);
+      const node = at?.node as Node | undefined;
+      const el =
+        node && node.nodeType === 1
+          ? (node as HTMLElement)
+          : (node?.parentElement ?? null);
+      el?.scrollIntoView({ block: "center", behavior: "smooth" });
+    };
+    window.addEventListener(OUTLINE_GOTO_EVENT, onGoto);
+    return () => window.removeEventListener(OUTLINE_GOTO_EVENT, onGoto);
+  }, [editor]);
+
   // Close slash menu on click outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -701,183 +734,15 @@ export default function RichEditor({
 
   return (
     <div ref={editorRef} className="relative flex flex-col h-full">
-      {/* Toolbar */}
-      <div className="flex items-center gap-0.5 pb-2 mb-4 border-b border-md-outline-variant bg-md-background overflow-x-auto sticky top-0 z-10 shrink-0">
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          active={editor.isActive("bold")}
-          title="Bold (Ctrl+B)"
-        >
-          B
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          active={editor.isActive("italic")}
-          title="Italic (Ctrl+I)"
-        >
-          I
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          active={editor.isActive("strike")}
-          title="Strikethrough"
-        >
-          <span className="line-through">S</span>
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          active={editor.isActive("code")}
-          title="Inline code"
-        >
-          {"</>"}
-        </ToolbarButton>
+      {/* The toolbar was removed here.
 
-        <span className="w-px h-5 bg-md-outline-variant mx-1" />
+          It was a full row above the text carrying seventeen buttons, every
+          one of which is also in the slash menu, the bubble menu, or a
+          keyboard shortcut. Three ways to do the same thing, one of them
+          permanently occupying the top of the writing surface.
 
-        <ToolbarButton
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-          active={editor.isActive("heading", { level: 1 })}
-          title="Heading 1"
-        >
-          H1
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          }
-          active={editor.isActive("heading", { level: 2 })}
-          title="Heading 2"
-        >
-          H2
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 3 }).run()
-          }
-          active={editor.isActive("heading", { level: 3 })}
-          title="Heading 3"
-        >
-          H3
-        </ToolbarButton>
-
-        <span className="w-px h-5 bg-md-outline-variant mx-1" />
-
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          active={editor.isActive("bulletList")}
-          title="Bullet list"
-        >
-          •
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          active={editor.isActive("orderedList")}
-          title="Numbered list"
-        >
-          1.
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          active={editor.isActive("blockquote")}
-          title="Blockquote"
-        >
-          {">"}
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          active={editor.isActive("codeBlock")}
-          title="Code block"
-        >
-          {"{ }"}
-        </ToolbarButton>
-
-        <span className="w-px h-5 bg-md-outline-variant mx-1" />
-
-        <ToolbarButton
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          title="Horizontal rule"
-        >
-          —
-        </ToolbarButton>
-        <ToolbarButton
-          onClick={() => {
-            const url = prompt("Enter link URL:");
-            if (url) {
-              editor.chain().focus().setLink({ href: url }).run();
-            }
-          }}
-          active={editor.isActive("link")}
-          title="Insert link"
-        >
-          {"\u{1F517}"}
-        </ToolbarButton>
-        <ToolbarButton onClick={openImagePicker} title="Insert image">
-          IMG
-        </ToolbarButton>
-        <ToolbarButton onClick={openVideoPicker} title="Insert video">
-          {"▶"}
-        </ToolbarButton>
-
-        {/* Table controls — visible when cursor is inside a table */}
-        {editor.isActive("table") && (
-          <>
-            <span className="w-px h-5 bg-md-outline-variant mx-1" />
-            <ToolbarButton
-              onClick={() => editor.chain().focus().addColumnBefore().run()}
-              title="Insert column before"
-            >
-              ←Col
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().addColumnAfter().run()}
-              title="Insert column after"
-            >
-              Col→
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().deleteColumn().run()}
-              title="Delete column"
-            >
-              ×Col
-            </ToolbarButton>
-            <span className="w-px h-5 bg-md-outline-variant mx-1" />
-            <ToolbarButton
-              onClick={() => editor.chain().focus().addRowBefore().run()}
-              title="Insert row above"
-            >
-              ↑Row
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().addRowAfter().run()}
-              title="Add row below"
-            >
-              Row↓
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().deleteRow().run()}
-              title="Delete row"
-            >
-              ×Row
-            </ToolbarButton>
-            <span className="w-px h-5 bg-md-outline-variant mx-1" />
-            <ToolbarButton
-              onClick={() => editor.chain().focus().toggleHeaderRow().run()}
-              title="Toggle header row"
-            >
-              TH
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor.chain().focus().deleteTable().run()}
-              title="Delete table"
-            >
-              ×Table
-            </ToolbarButton>
-          </>
-        )}
-      </div>
-
+          Selection-scoped formatting stays on the bubble menu, which is the
+          one case where a floating control genuinely beats a menu. */}
       {/* Editor Content */}
       <div ref={contentRef} className="flex-1 overflow-y-auto min-h-0 relative">
         <EditorContent editor={editor} />

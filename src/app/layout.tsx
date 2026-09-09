@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
 import ClientFileExplorer from "@/components/layout/ClientFileExplorer";
-import { PostHogProvider } from "@/components/providers/PostHogProvider";
+import SiteAnalytics from "@/components/providers/SiteAnalytics";
 import { getGlobalMetadata } from "@/lib/global";
 
 // Google Sans Flex — the variable font Google ships on deepmind.google (public
@@ -59,10 +58,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">
-        <GoogleAnalytics gaId="G-GGK8FWGCPX" />
-        <PostHogProvider>
+        <SiteAnalytics>
           <ClientFileExplorer>{children}</ClientFileExplorer>
-        </PostHogProvider>
+        </SiteAnalytics>
       </body>
     </html>
   );

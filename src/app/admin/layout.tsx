@@ -1,28 +1,64 @@
-import AdminHeader from "@/components/admin/AdminHeader";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminNav from "@/components/admin/AdminNav";
+import AdminShellClient from "@/components/admin/AdminShellClient";
+import ThemeProvider, {
+  THEME_INIT_SCRIPT,
+} from "@/components/admin/ThemeProvider";
 import { ToastProvider } from "@/components/admin/Toast";
+import { db } from "@/db";
+import { posts, series } from "@/db/schema";
+import { desc } from "drizzle-orm";
 
 export const metadata = {
   title: "Admin",
 };
 
-export default function AdminLayout({
+// The nav lists every post and collection, so the shell needs them on every
+// admin route. Two indexed reads of a table with tens of rows, fetched here
+// rather than in the client so the panel never renders a loading state.
+async function getNavData() {
+  try {
+    const [p, s] = await Promise.all([
+      db
+        .select({ slug: posts.slug, title: posts.title, status: posts.status })
+        .from(posts)
+        .orderBy(desc(posts.dateUpdated), desc(posts.dateCreated)),
+      db
+        .select({ slug: series.slug, title: series.title })
+        .from(series)
+        .orderBy(desc(series.dateCreated)),
+    ]);
+    return { navPosts: p, navSeries: s };
+  } catch {
+    // Build-time prerender can run without a reachable database.
+    return { navPosts: [], navSeries: [] };
+  }
+}
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { navPosts, navSeries } = await getNavData();
+
   return (
-    <ToastProvider>
-      <div className="flex h-screen bg-md-background font-sans text-md-on-background">
-        <AdminSidebar />
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          <AdminHeader />
-          {/* Same gutters and bottom air as the reader-facing <main>. */}
-          <main className="flex-1 overflow-y-auto page-transition px-5 sm:px-8 lg:px-14 xl:px-20 pb-16">
-            <div className="max-w-[1440px]">{children}</div>
-          </main>
-        </div>
-      </div>
-    </ToastProvider>
+    <>
+      {/* Applies the stored theme before first paint. Without it, every admin
+          navigation flashes the light palette for one frame. */}
+      <script
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: fixed literal, no input
+        dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+      />
+      <ThemeProvider>
+        <ToastProvider>
+          <div className="flex h-screen overflow-hidden bg-md-background font-sans text-md-on-background">
+            <AdminNav posts={navPosts} series={navSeries} />
+            <AdminShellClient posts={navPosts} series={navSeries}>
+              {children}
+            </AdminShellClient>
+          </div>
+        </ToastProvider>
+      </ThemeProvider>
+    </>
   );
 }

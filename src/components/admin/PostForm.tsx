@@ -5,6 +5,7 @@ import MediaPicker from "@/components/admin/MediaPicker";
 import RichEditor from "@/components/admin/RichEditor";
 import { useToast } from "@/components/admin/Toast";
 import { Icon } from "@/components/ui/Icon";
+import { CMD_EVENT } from "@/lib/admin-events";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -169,7 +170,11 @@ export default function PostForm({
         setSaveState("saved");
         setLastSavedAt(Date.now());
         setDirty(false);
-        router.refresh();
+        // Only an explicit save or a status change refreshes the server tree.
+        // Autosave fires every 1.5s while writing, and refreshing there meant
+        // refetching the whole RSC payload between keystrokes for a nav list
+        // that had not changed.
+        if (opts.explicit || opts.nextStatus) router.refresh();
       } catch {
         setSaveState("error");
         if (opts.explicit) toast("Network error", "error");
@@ -261,6 +266,101 @@ export default function PostForm({
     if (dirty && savedSlugRef.current) save();
   };
 
+  // ---- title box ----------------------------------------------------------
+  const titleRef = useRef<HTMLTextAreaElement>(null);
+
+  // Grow the title box to fit its own text. Runs on every title change and
+  // once on mount, because a post opened for editing arrives with its title
+  // already set.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: measures on title change
+  useEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [title]);
+
+  // ---- zen mode ----------------------------------------------------------
+  // Held on <html> rather than in state that the navigation would have to read,
+  // so the rail can vanish without the editor knowing the rail exists.
+  const [zen, setZen] = useState(false);
+  useEffect(() => {
+    document.documentElement.dataset.zen = zen ? "1" : "";
+    return () => {
+      document.documentElement.dataset.zen = "";
+    };
+  }, [zen]);
+
+  // Kept in a ref so the command and shortcut listeners below do not have to
+  // re-subscribe every time the draft changes.
+  const openPreviewRef = useRef<(m: "split" | "preview") => void>(() => {});
+  openPreviewRef.current = openPreview;
+
+  // ---- palette commands ---------------------------------------------------
+  useEffect(() => {
+    const onCmd = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail;
+      if (id === "save") save({ explicit: true });
+      else if (id === "publish")
+        save({
+          explicit: true,
+          nextStatus: status === "published" ? "draft" : "published",
+        });
+      else if (id === "zen") setZen((z) => !z);
+      else if (id === "split") openPreviewRef.current("split");
+      else if (id === "preview") openPreviewRef.current("preview");
+      else if (id === "drawer") setDrawerOpen((d) => !d);
+    };
+    window.addEventListener(CMD_EVENT, onCmd);
+    return () => window.removeEventListener(CMD_EVENT, onCmd);
+  }, [save, status]);
+
+  // ---- editor shortcuts ---------------------------------------------------
+  // Ctrl+K Z is a chord: Ctrl+K arms, Z within two seconds fires. Cmd+K alone
+  // still opens the palette, so the chord only wins when a Z follows.
+  useEffect(() => {
+    let armed = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const onKey = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key.toLowerCase() === "k") {
+        armed = true;
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          armed = false;
+        }, 2000);
+        return;
+      }
+      if (armed && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        armed = false;
+        setZen((z) => !z);
+        return;
+      }
+      armed = false;
+      if (mod && e.shiftKey && e.key.toLowerCase() === "p") {
+        e.preventDefault();
+        save({
+          explicit: true,
+          nextStatus: status === "published" ? "draft" : "published",
+        });
+      } else if (mod && e.key === "\\") {
+        e.preventDefault();
+        openPreviewRef.current("split");
+      } else if (mod && e.key === ".") {
+        e.preventDefault();
+        setDrawerOpen((d) => !d);
+      } else if (e.key === "Escape" && zen) {
+        setZen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      if (timer) clearTimeout(timer);
+    };
+  }, [save, status, zen]);
+
   const words = countWords(content);
   const readMins = Math.max(1, Math.ceil(words / 200));
   const isPublished = status === "published";
@@ -285,30 +385,29 @@ export default function PostForm({
               : "Not saved yet";
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] overflow-hidden -mb-16 -mx-5 sm:-mx-8 lg:-mx-14 xl:-mx-20">
+    <div className="flex h-full overflow-hidden">
       {/* Editor pane */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <div className="shrink-0 bg-md-background border-b border-md-outline-variant px-5 sm:px-8 lg:px-14 xl:px-20 py-3 flex items-center gap-3">
+        {/* Top bar. 44px, and it no longer carries the title: the title is the
+            first line of the document, which is where a title is. Everything
+            left here is either state or a mode switch. The old bar gave the
+            title `flex-1` against five other controls, so on a real screen it
+            truncated mid-word. */}
+        <div className="editor-topbar h-11 shrink-0 bg-md-background border-b border-md-outline-variant px-3 flex items-center gap-2">
           <Link
             href="/admin/posts"
             title="Back to posts"
-            className="shrink-0 p-1.5 rounded-lg text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors"
+            className="shrink-0 p-1.5 rounded-lg text-md-on-surface-variant hover:bg-md-on-surface/8 hover:text-md-on-surface transition-colors duration-fast"
           >
-            <Icon name="arrow_back" size={18} />
+            <Icon name="arrow_back" size={17} />
           </Link>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="Post title…"
-            className="flex-1 bg-transparent text-[22px] leading-7 font-medium tracking-tight focus:outline-none placeholder:text-md-on-surface-variant/40"
-            required
-          />
+          <span className="min-w-0 truncate text-[13px] leading-5 text-md-on-surface-variant">
+            {title || "Untitled"}
+          </span>
 
           {/* Save state — quiet, always visible */}
           <span
-            className={`shrink-0 text-[12px] leading-4 tabular-nums ${
+            className={`ml-auto shrink-0 text-[11.5px] leading-4 font-mono tabular-nums ${
               saveState === "error"
                 ? "text-md-error"
                 : "text-md-on-surface-variant"
@@ -324,33 +423,27 @@ export default function PostForm({
                 key={mode}
                 type="button"
                 title={
-                  mode !== "edit" && !savedSlug
-                    ? "Save once to preview"
-                    : label
+                  mode !== "edit" && !savedSlug ? "Save once to preview" : label
                 }
                 onClick={() =>
                   mode === "edit" ? setView("edit") : openPreview(mode)
                 }
                 disabled={mode !== "edit" && !savedSlug}
-                className={`px-2.5 py-1.5 inline-flex items-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`px-2 py-1 inline-flex items-center transition-colors duration-fast disabled:opacity-40 disabled:cursor-not-allowed ${
                   view === mode
                     ? "bg-md-secondary-container text-md-on-secondary-container"
                     : "text-md-on-surface-variant hover:bg-md-on-surface/8"
                 }`}
               >
-                <Icon name={icon} size={17} />
+                <Icon name={icon} size={16} />
               </button>
             ))}
           </div>
 
-          <button
-            type="button"
-            onClick={() => save({ explicit: true })}
-            disabled={saveState === "saving"}
-            className="md-btn md-btn-text md-btn-sm shrink-0"
-          >
-            Save draft
-          </button>
+          {/* "Save draft" is gone: autosave already runs at 1.5s and ⌘S is in
+              the status bar and the palette. A button that repeats what the
+              system already does continuously is one more thing between the
+              writer and the words. */}
           <button
             type="button"
             onClick={() =>
@@ -360,6 +453,7 @@ export default function PostForm({
               })
             }
             disabled={saveState === "saving"}
+            title="⌘⇧P"
             className={`md-btn md-btn-sm shrink-0 ${
               isPublished ? "md-btn-tonal" : "md-btn-filled"
             }`}
@@ -368,13 +462,22 @@ export default function PostForm({
           </button>
           <button
             type="button"
+            onClick={() => setZen((z) => !z)}
+            title={zen ? "Leave zen mode (Esc)" : "Zen mode (⌘K Z)"}
+            className="p-1.5 rounded-lg text-md-on-surface-variant hover:text-md-on-surface transition-colors duration-fast shrink-0"
+          >
+            <Icon name={zen ? "fullscreen_exit" : "fullscreen"} size={17} />
+          </button>
+          <button
+            type="button"
             onClick={() => setDrawerOpen(!drawerOpen)}
-            title={drawerOpen ? "Hide sidebar" : "Show sidebar"}
-            className="p-1.5 rounded-lg text-md-on-surface-variant hover:text-md-on-surface transition-colors shrink-0"
+            title={drawerOpen ? "Hide metadata (⌘.)" : "Show metadata (⌘.)"}
+            className="p-1.5 rounded-lg text-md-on-surface-variant hover:text-md-on-surface transition-colors duration-fast shrink-0"
           >
             <Icon
               name={drawerOpen ? "right_panel_close" : "right_panel_open"}
-              size={18}
+              size={17}
+              filled={drawerOpen}
             />
           </button>
         </div>
@@ -383,12 +486,44 @@ export default function PostForm({
         <div className="flex-1 min-h-0 overflow-hidden flex">
           {view !== "preview" && (
             <div
-              className={`min-w-0 h-full overflow-hidden pt-6 pb-2 ${
+              className={`min-w-0 h-full overflow-y-auto pt-10 pb-32 ${
                 view === "split"
-                  ? "w-1/2 border-r border-md-outline-variant px-5 lg:px-8"
-                  : "w-full px-5 sm:px-8 lg:px-14 xl:px-20"
+                  ? "w-1/2 border-r border-md-outline-variant px-6"
+                  : "w-full px-6"
               }`}
             >
+              {/* The title as the document's first line, at the published h1
+                  size and inside the same centred measure as the body, so what
+                  you type looks like what publishes. */}
+              <div className="article-content prose-editor editor-title">
+                {/* A textarea, not an input: a real h1 wraps, and an input
+                    scrolls its overflow out of sight. The old top-bar title
+                    truncated mid-word on a 54-character title, which is most
+                    of them here. Rows are recomputed from scrollHeight so the
+                    box grows with the words. */}
+                <textarea
+                  ref={titleRef}
+                  value={title}
+                  onChange={(e) => handleTitleChange(e.target.value)}
+                  onKeyDown={(e) => {
+                    // Enter belongs to the body, not to the title.
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      document
+                        .querySelector<HTMLElement>(".prose-editor.ProseMirror")
+                        ?.focus();
+                    }
+                  }}
+                  rows={1}
+                  placeholder="Title"
+                  aria-label="Post title"
+                  className="block w-full resize-none overflow-hidden bg-transparent border-0 p-0 font-medium tracking-tight text-[2em] leading-[1.15] text-[color:var(--article-heading)] focus:outline-none placeholder:text-md-on-surface-variant/35"
+                  required
+                />
+                <p className="!mt-1.5 !mb-8 font-mono text-[12px] leading-5 text-md-on-surface-variant/80">
+                  /posts/{slug || "…"}
+                </p>
+              </div>
               <RichEditor content={content} onChange={setContent} />
             </div>
           )}
@@ -447,19 +582,46 @@ export default function PostForm({
           )}
         </div>
 
-        {/* Writing status bar */}
-        <div className="shrink-0 px-5 sm:px-8 lg:px-14 xl:px-20 py-2 flex items-center gap-4 text-[12px] leading-4 text-md-on-surface-variant border-t border-md-outline-variant">
+        {/* Status bar. 22px, VS Code's height, mono so the numbers stay put
+            as they change. It is the only always-on chrome in zen mode, and
+            it dims there until the pointer reaches it. */}
+        <div className="editor-statusbar h-[22px] shrink-0 px-3 flex items-center gap-4 font-mono text-[11px] leading-none text-md-on-surface-variant border-t border-md-outline-variant bg-md-surface-container-low">
           <span className="inline-flex items-center gap-1.5">
             <span
               className={`w-1.5 h-1.5 rounded-full ${
-                isPublished ? "bg-md-primary" : "bg-md-on-surface-variant"
+                isPublished ? "bg-md-primary" : "bg-md-on-surface-variant/60"
               }`}
             />
             {status}
           </span>
           <span className="tabular-nums">{words.toLocaleString()} words</span>
-          <span className="tabular-nums">{readMins} min read</span>
-          <span className="ml-auto opacity-70">⌘S / Ctrl+S to save</span>
+          <span className="tabular-nums">{readMins} min</span>
+          {zen && <span className="text-md-primary">zen</span>}
+          <button
+            type="button"
+            onClick={() => save({ explicit: true })}
+            disabled={saveState === "saving"}
+            title="Save now"
+            className="ml-auto hover:text-md-on-surface transition-colors duration-fast disabled:opacity-50"
+          >
+            ⌘S
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              window.dispatchEvent(
+                new KeyboardEvent("keydown", {
+                  key: "k",
+                  metaKey: true,
+                  bubbles: true,
+                }),
+              )
+            }
+            title="Command palette"
+            className="hover:text-md-on-surface transition-colors duration-fast"
+          >
+            ⌘K
+          </button>
         </div>
       </div>
 
@@ -473,8 +635,11 @@ export default function PostForm({
               </h3>
               <div className="space-y-3">
                 <div>
-                  <label className="md-field-label">Slug</label>
+                  <label className="md-field-label" htmlFor="post-slug">
+                    Slug
+                  </label>
                   <input
+                    id="post-slug"
                     type="text"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
@@ -488,8 +653,11 @@ export default function PostForm({
                   )}
                 </div>
                 <div>
-                  <label className="md-field-label">Meta description</label>
+                  <label className="md-field-label" htmlFor="post-meta">
+                    Meta description
+                  </label>
                   <textarea
+                    id="post-meta"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={6}
@@ -500,8 +668,11 @@ export default function PostForm({
                 </div>
                 {allProjects.length > 0 && (
                   <div>
-                    <label className="md-field-label">Collection</label>
+                    <label className="md-field-label" htmlFor="post-collection">
+                      Collection
+                    </label>
                     <select
+                      id="post-collection"
                       value={projectSlug}
                       onChange={(e) => setProjectSlug(e.target.value)}
                       className="md-field"
