@@ -44,11 +44,9 @@ export default async function AdminLayout({
   return (
     <>
       {/* Applies the stored theme before first paint. Without it, every admin
-          navigation flashes the light palette for one frame. */}
-      <script
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: fixed literal, no input
-        dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
-      />
+          navigation flashes the light palette for one frame. The injected
+          string is a fixed literal with no input in it. */}
+      <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       <ThemeProvider>
         <ToastProvider>
           <div className="flex h-screen overflow-hidden bg-md-background font-sans text-md-on-background">

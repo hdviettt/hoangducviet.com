@@ -6,6 +6,7 @@ import {
   CarouselEmbed,
   preprocessCarouselInMarkdown,
 } from "@/components/admin/extensions/CarouselExtension";
+import { FenceCell } from "@/components/admin/extensions/FenceCell";
 import {
   MathBlock,
   MathInline,
@@ -21,7 +22,8 @@ import {
   type OutlineItem,
   publishOutline,
 } from "@/lib/admin-events";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import Code from "@tiptap/extension-code";
+
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -492,8 +494,19 @@ export default function RichEditor({
     extensions: [
       StarterKit.configure({
         codeBlock: false, // replaced by CodeBlockLowlight
+        code: false, // replaced below, see the excludes note
       }),
-      CodeBlockLowlight.configure({ lowlight }),
+      // Tiptap's Code mark ships `excludes: "_"`, which excludes every other
+      // mark. That is right for bold and italic inside code and wrong for a
+      // link: parsing [`ms-marco-MiniLM-L6-v2`](https://huggingface.co/...)
+      // dropped the link and kept only the code text, so the URL was lost the
+      // moment that post was edited. Found by scripts/roundtrip-check.cjs,
+      // which caught 62 characters disappearing from one post.
+      //
+      // Naming the formatting marks instead of "_" keeps code exclusive of
+      // styling while letting a link carry it.
+      Code.extend({ excludes: "bold italic strike" }),
+      FenceCell.configure({ lowlight }),
       Image.extend({
         addStorage() {
           return {
@@ -661,6 +674,28 @@ export default function RichEditor({
     }
   }, [editor]);
 
+  // Round-trip test affordance.
+  //
+  // Stored markdown goes into the editor and comes back out on every keystroke
+  // through onUpdate, so a lossy pass does not corrupt one post: it rewrites
+  // every post the moment it is opened. That makes byte-identical round-tripping
+  // a correctness property of this component rather than a nice-to-have, and it
+  // needs to be checkable from outside. `scripts/roundtrip-check.cjs` drives
+  // this over every post in the database.
+  useEffect(() => {
+    if (!editor) return;
+    const w = window as unknown as { __cmsMarkdown?: () => string };
+    w.__cmsMarkdown = () =>
+      (
+        editor.storage as {
+          markdown?: { getMarkdown?: () => string };
+        }
+      ).markdown?.getMarkdown?.() ?? "";
+    return () => {
+      w.__cmsMarkdown = undefined;
+    };
+  }, [editor]);
+
   // Publish the heading list for the navigation panel and the palette.
   // Debounced at 400ms: it walks the whole document, and on a 90,000-character
   // post that is not something to do on every keystroke.
@@ -720,7 +755,7 @@ export default function RichEditor({
 
   // Close slash menu on click outside
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
+    const handler = () => {
       if (showSlash) setShowSlash(false);
     };
     document.addEventListener("click", handler);

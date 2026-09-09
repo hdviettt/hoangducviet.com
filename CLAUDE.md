@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Next.js 14 personal blog with a custom CMS admin panel. TypeScript, Drizzle ORM, PostgreSQL, Tailwind CSS, Tiptap editor for the admin. Material 3 visual system (SEONGON Prosperous Blue accent, Google Sans Flex, layered surfaces, rounded shapes) across both the public site and the admin. Light mode default, dark mode supported. Deployed on Railway via Nixpacks with Bun runtime.
+Next.js 14 personal blog with a custom CMS admin panel. TypeScript, Drizzle ORM, PostgreSQL, Tailwind CSS, Tiptap editor for the admin. Material 3 visual system (SEONGON Prosperous Blue accent, Google Sans Flex, layered surfaces, rounded shapes) across both the public site and the admin. **The public site is light only. The admin has a dark and a light theme and defaults to dark**; the `.dark` class goes on `<html>` and is removed when you leave `/admin`. Deployed on Railway via Nixpacks with Bun runtime.
 
 ## Development Commands
 
@@ -86,7 +86,7 @@ A "series" is a topical container with N posts attached via `series_posts`. A se
 layout/
   FileExplorer.tsx          — main shell: sticky nav, theme toggle, reading-progress bar
   ClientFileExplorer.tsx    — "use client" wrapper so server pages can compose it
-  ThemeProvider.tsx         — light/dark theme context
+  (no ThemeProvider here — theming is admin-only, see components/admin/)
 
 posts/
   PostDetail.tsx             — shared server component used by both
@@ -108,11 +108,30 @@ widgets/
 
 providers/
   PostHogProvider.tsx        — analytics
+  SiteAnalytics.tsx          — mounts GA + PostHog for the PUBLIC site only.
+                                Both used to sit in the root layout, which wraps
+                                /admin, so every editing session was counted as
+                                traffic and admin URLs went to Google.
 
 admin/
-  AdminSidebar, AdminHeader, PostForm, PageForm, ProjectForm, RichEditor (Tiptap), Toast
+  AdminNav                   — 48px activity rail + resizable contextual panel
+                                (posts, collections, and the open post's outline).
+                                Replaced AdminSidebar and AdminHeader.
+  AdminShellClient           — decides whether a route is an editor (full pane,
+                                no gutters) or a list page (gutters), so the
+                                editor no longer cancels the layout's padding
+                                with negative margins.
+  CommandPalette             — cmdk. Cmd+K. Prefixes: none = posts, > commands,
+                                # headings in the open post, @ media, : widgets.
+  ThemeProvider              — dark/light, admin only. THEME_INIT_SCRIPT is
+                                inlined by the admin layout so the stored theme
+                                lands before first paint.
+  PostTable                  — dense post list, / to search, J/K, Enter.
+  PostForm, ProjectForm, WorkForm, RichEditor (Tiptap), Toast
   StatusPill, EmptyState, etc.
-                             — CMS UI surfaces, scoped under `/admin/*`. Uses font-mono container scope.
+                             — CMS UI surfaces, scoped under `/admin/*`.
+                                Mono (`font-mono`) is used for numbers, labels
+                                and the status bar, not as a container scope.
 ```
 
 ## Auth
@@ -145,16 +164,17 @@ tokens live as HSL CSS variables in `src/app/globals.css` (`--md-sys-color-*`,
 Tailwind utilities in `tailwind.config.ts` (`bg-md-*`, `text-md-*`, `border-md-*`,
 `rounded-{sm,md,lg,xl,2xl}`, `shadow-md-{1..5}`, `ease-md-*`).
 
-- **Light mode default**, class-based dark mode (`html.dark`). Every `md-*` token has a dark value — use tokens, never hardcode hex / `bg-white` / `text-black`.
+- **Class-based dark mode** (`html.dark`), set by `components/admin/ThemeProvider`. The public site never gets the class. `globals.css` redefines the same `--md-sys-color-*` roles under `.dark`, so every existing `bg-md-*` / `text-md-*` utility themes itself: use tokens, never hardcode hex / `bg-white` / `text-black`.
+- Dark surfaces are a five-step neutral ramp at hue 218-220 with base `#181B21`, never `#000`. Body text lands at 11:1 against the surface rather than the 15-21:1 a white-on-black pair gives, because a large bright panel is the glare case. Two border roles: `outline` is operable and clears WCAG 1.4.11 at 3.24:1, `outline-variant` is a decorative seam at 1.34:1 and must never be the only thing separating two regions.
 - **Primary = SEONGON Prosperous Blue `#004AEF`** (`hsl(221 100% 47%)`). Change `--md-sys-color-primary` to rebrand; the rest derives from the M3 roles (secondary, tertiary, error, `surface-container-{low..highest}`, outline, outline-variant).
-- **Fonts:** `DM Sans` (closest open match to Google Sans) as the sans family — still exposed under the CSS-var name `--font-inter` for backward compat — weights 400/500/600/700; `JetBrains Mono` via `font-mono` for code and tabular numbers.
+- **Fonts:** `Google Sans Flex`, loaded by a `<link>` in `app/layout.tsx` and still exposed under the CSS-var name `--font-inter` for backward compat; `JetBrains Mono` via `font-mono` for code and tabular numbers. Google Sans Flex covers Vietnamese diacritics in full, verified with `CSS.getPlatformFontsForNode` against the stacked marks (ệ ộ ằ ữ ợ ẩ ẳ ẵ ặ ẫ ậ): every glyph is painted by it with no fallback.
 - **Type scale:** M3 utility classes `.md-display-*`, `.md-headline-*`, `.md-title-*`, `.md-body-*`, `.md-label-*` (defined in globals.css). Prefer these over raw `text-xl`/`text-sm`.
 - **Shape:** M3 corner scale (4/8/12/16/28px), not sharp corners. Panels/cards → `rounded-xl`; pills/toggles/status chips → `rounded-full`.
 - **Component utilities (globals.css):** `.md-btn` (+ `-filled`/`-tonal`/`-outlined`/`-text`, `-sm`/`-lg`/`-pill`); `.md-card` (+ `-elevated`/`-outlined`/`-filled`); `.md-field` / `.md-field-dense` / `.md-field-label` for inputs; `.md-elevation-*`.
 - **Admin** uses the same system: shared `AdminPageHeader` (`components/admin/PageHeader.tsx`), M3 sidebar + top bar, `md-btn`/`md-field` forms, tonal status chips.
-- `.article-content` — post typography (~17px body, Google body-gray, capped at 68ch reading width; figures, code blocks, and tables span the full column).
+- `.article-content` — post typography (17.5px / 1.45 body, Google body-gray). The reading column is **720px, centred**, set by the `mx-auto max-w-[720px]` wrapper in `PostDetail.tsx`, not by the per-element `68ch` rules: `ch` resolves against each element's own size, so an h2 at 32px caps at 1388px while a paragraph caps at 771px. Anything that renders article content outside that wrapper has to cap the container itself.
 - `.deck-label` / `.deck-display` — legacy utilities kept as **M3-tuned aliases** (no more extrabold / negative tracking); don't extend them.
-- `.prose-editor` — Tiptap editor content styling.
+- `.prose-editor` — Tiptap editor content styling. The editor surface carries **both** `article-content` and `prose-editor`, so anything set here overrides the published article and makes the draft lie about the page. It sets only the caret, the placeholder and the 720px centring; size, leading and the heading scale are inherited and must stay that way.
 
 ## Code Style
 
@@ -172,6 +192,21 @@ Helper Node CommonJS scripts for content management. Run via `railway run --serv
 - `push-series.cjs` — push edited markdown from `scripts/series/rewritten/*.md` back to DB (use `--commit` to write; default is dry-run)
 - `push-tldrs.cjs` — push hardcoded TL;DR text for posts and project summaries
 - `migrate-from-directus.ts` — one-shot import from a previous Directus instance
+- `roundtrip-check.cjs` — **the content safety gate.** Drives a real browser over
+  every post and byte-compares stored markdown against what the editor serialises
+  back. The editor re-emits markdown on every keystroke, so a lossy pass does not
+  damage one post, it rewrites whichever posts get opened. It must stay at 28/28
+  after any change to the editor's extensions. Run:
+  `railway run --service hoangducviet.com node scripts/roundtrip-check.cjs`
+- `fence-audit.cjs` — finds closing code fences with prose glued to them, which
+  markdown reads as a new opening fence with a very long info string. One post
+  had twelve, and its headings rendered as literal `### text` on the live site.
+- `normalise-markdown.cjs` — makes stored markdown identical to its own round
+  trip: trailing whitespace, `$$x$$` on one line (which parses as *inline* math,
+  not a display block), images glued to headings or to the paragraph above.
+  Writes with SQL, never through `PUT /api/posts/[slug]`, because that route
+  deletes and re-inserts categories and the series association from the request
+  body: a payload that omits them silently unfiles the post.
 
 `scripts/series/` is gitignored. The `.cjs` helpers are committed; the dumped/rewritten markdown is not.
 

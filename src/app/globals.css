@@ -1589,81 +1589,92 @@ select.md-field {
 }
 
 /* ------------------------------------------------------------------
-   Fence cells: `render` and `widget:<name>`.
+   Fence cells.
 
-   These two fences behave like notebook cells, and one of them is usually a
-   40-line wall of SVG path data sitting in the middle of a paragraph. This
-   post alone has nine, each 237px tall, which is most of a screen of
-   `<path d="M215.5,69.0 ...">` between two sentences.
-
-   Collapsed by default, expanded on focus, so clicking into one opens it and
-   moving away closes it again. Presentation only: this touches no node type
-   and no serialiser, so the fences still round-trip byte for byte. The full
-   Colab-style version, where the cell shows its rendered output and keeps the
-   source underneath, needs a custom node view and a markdown round-trip that
-   the current tiptap-markdown package cannot be assumed to survive.
+   The CSS-only collapse this replaces capped the block and faded it out. A
+   real node view can do the thing that was actually wanted: show the drawing
+   and keep the source a click away. Styling only, no schema, no serialiser.
    ------------------------------------------------------------------ */
-.prose-editor pre:has(> code[class*="language-render"]),
-.prose-editor pre:has(> code[class*="language-widget"]) {
-  position: relative;
-  max-height: 7.5em;
+.fence-cell {
+  margin: 1.25em auto;
+  border: 1px solid hsl(var(--md-sys-color-outline-variant));
+  border-radius: 10px;
   overflow: hidden;
-  transition: max-height 240ms var(--md-sys-motion-easing-standard);
+  background: var(--article-code-bg);
 }
 
-.prose-editor pre:has(> code[class*="language-render"])::after,
-.prose-editor pre:has(> code[class*="language-widget"])::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 3em;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--article-code-bg) 85%
-  );
-}
-
-.prose-editor pre:has(> code[class*="language-render"])::before,
-.prose-editor pre:has(> code[class*="language-widget"])::before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
-  padding: 2px 8px;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: hsl(var(--md-sys-color-primary));
+.fence-cell__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
   background: hsl(var(--md-sys-color-surface-container-high));
-  border-bottom-left-radius: 8px;
-  pointer-events: none;
+  border-bottom: 1px solid hsl(var(--md-sys-color-outline-variant));
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  user-select: none;
 }
-.prose-editor pre:has(> code[class*="language-render"])::before {
-  content: "render";
+.fence-cell__lang {
+  color: hsl(var(--md-sys-color-primary));
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
-.prose-editor pre:has(> code[class*="language-widget"])::before {
-  content: "widget";
+.fence-cell__meta {
+  color: hsl(var(--md-sys-color-on-surface-variant));
+}
+.fence-cell__toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  transition: color 110ms var(--md-sys-motion-easing-standard),
+    background 110ms var(--md-sys-motion-easing-standard);
+}
+.fence-cell__toggle:hover {
+  color: hsl(var(--md-sys-color-on-surface));
+  background: hsl(var(--md-sys-color-on-surface) / 0.08);
 }
 
-/* Click into it and it opens. Move away and it closes. No button, no state
-   to persist, and nothing to get out of step with the document. */
-.prose-editor pre:has(> code[class*="language-render"]):focus-within,
-.prose-editor pre:has(> code[class*="language-widget"]):focus-within {
-  max-height: none;
+.fence-cell__preview {
+  padding: 16px 12px;
+  background: hsl(var(--md-sys-color-surface-container-low));
 }
-.prose-editor pre:has(> code[class*="language-render"]):focus-within::after,
-.prose-editor pre:has(> code[class*="language-widget"]):focus-within::after {
+/* The drawing is authored against the article's own colours, so it inherits
+   them here exactly as it will on the page. */
+.fence-cell__out {
+  display: flex;
+  justify-content: center;
+}
+.fence-cell__out svg {
+  max-width: 100%;
+  height: auto;
+}
+.fence-cell__note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+}
+.fence-cell__note--bad {
+  color: hsl(var(--md-sys-color-error));
+}
+
+.fence-cell pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+/* Hidden, not removed: ProseMirror needs the contentDOM in the tree. */
+.fence-cell__source--hidden {
   display: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .prose-editor pre:has(> code[class*="language-render"]),
-  .prose-editor pre:has(> code[class*="language-widget"]) {
-    transition: none;
-  }
 }
 
 /* ------------------------------------------------------------------

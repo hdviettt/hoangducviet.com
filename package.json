@@ -13,6 +13,7 @@
     "@aws-sdk/client-s3": "^3.1009.0",
     "@next/third-parties": "^15.5.2",
     "@tiptap/extension-bubble-menu": "^3.20.1",
+    "@tiptap/extension-code": "^3.31.3",
     "@tiptap/extension-code-block-lowlight": "^3.20.1",
     "@tiptap/extension-image": "^3.20.1",
     "@tiptap/extension-link": "^3.20.1",
