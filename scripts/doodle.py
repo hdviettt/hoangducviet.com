@@ -33,6 +33,11 @@ AW, AH = W - 2 * M, H - 2 * M
 #
 #     DOODLE_INK="#111111" python scripts/make-work-field.py
 INK = os.environ.get("DOODLE_INK", "#004AEF")
+
+# Mau nen, va no khong phai "trang" ma la "mau cua trang". Ba cho dung no: nen
+# cua hinh Work, va hai net khoet (mot cham va mot the) duc nguoc lai nen de
+# tach khoi lop muc duoi. Ca ba phai doi cung luc, nen chung mot hang so.
+GROUND = os.environ.get("DOODLE_GROUND", "#FFFFFF")
 SW = 3.0
 SANS = "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
@@ -54,7 +59,7 @@ def defs(fid="rough"):
 
 def dot(x, y, r=5.0, op=1.0, hollow=False, sw=None):
     if hollow:
-        return (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="#FFFFFF" '
+        return (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{GROUND}" '
                 f'stroke="currentColor" stroke-opacity="{op:.2f}" '
                 f'stroke-width="{sw or SW * 0.85}"/>')
     return (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="currentColor" '
@@ -80,7 +85,7 @@ def white(x, y, w, h, r=0):
     """Nen trang dac: cach duy nhat trong ngon ngu nay de mot the noi len tren
     cai nam duoi no, vi o day khong co bong do."""
     return (f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
-            f'rx="{r}" fill="#FFFFFF"/>')
+            f'rx="{r}" fill="{GROUND}"/>')
 
 
 def arc(cx, cy, r, a0, a1, op=1.0, sw=None):
@@ -210,7 +215,7 @@ def work_svg(strokes, labels="", w=W, h=H):
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
         f'width="{w}" height="{h}" role="img" stroke-linejoin="round" '
         f'style="color:{INK}">'
-        f'{defs("rough")}<rect width="{w}" height="{h}" fill="#FFFFFF"/>'
+        f'{defs("rough")}<rect width="{w}" height="{h}" fill="{GROUND}"/>'
         f'<g filter="url(#rough)">{strokes}</g>{labels}</svg>'
     )
 
@@ -239,7 +244,7 @@ def figure_file_svg(strokes, labels="", w=640, h=320):
         '<?xml version="1.0" encoding="UTF-8"?>'
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
         f'width="{w}" height="{h}" role="img" stroke-linejoin="round">'
-        '<style>svg{color:#004AEF}</style>'
+        f'<style>svg{{color:{INK}}}</style>'
         f'{defs("rough")}<g filter="url(#rough)">{strokes}</g>{labels}</svg>'
     )
 

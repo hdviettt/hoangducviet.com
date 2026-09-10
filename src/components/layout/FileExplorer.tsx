@@ -1,4 +1,5 @@
 "use client";
+import { ThemeToggle } from "@/components/layout/theme";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useEffect, useRef, useState } from "react";
@@ -126,6 +127,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 </Link>
               );
             })}
+            <ThemeToggle />
           </nav>
         </div>
       </header>

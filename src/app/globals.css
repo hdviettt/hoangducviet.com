@@ -149,7 +149,84 @@
     --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
   }
 
-  /* ------------------------------------------------------------------
+    /* ------------------------------------------------------------------
+     DARK — the public site.
+
+     Default is light; this only applies when the reader asks for it. The
+     CMS keeps its own monochrome palette in the block below, which wins on
+     specificity wherever the admin nav is on the page. Two palettes because
+     they are two products: the editor took its colour out to get out of the
+     way of the writing, and the site keeps its blue because the blue is the
+     brand.
+
+     Every value here was measured against the #121212 ground rather than
+     picked, and the figures use the same ink as the links:
+
+       heading  #EDEDED  16.00:1      link       #8FB2FF   8.90:1
+       body     #C7C7C7  11.08:1      link hover #B9CEFF  11.90:1
+       muted    #9AA0A6   7.09:1      border     #6B6B6B   3.52:1  (1.4.11)
+       seam     #2A2A2A   1.31:1  decorative only, never the only separator
+
+     #121212 and not #000: a pure black panel behind light text is the
+     large-area glare case. It is also the exact ground baked into the dark
+     figures, so a drawing's card edge is invisible and the artwork floats on
+     the page the way it does in light mode.
+     ------------------------------------------------------------------ */
+  .dark {
+    --md-sys-color-primary: 220 100% 78%; /* #8FB2FF */
+    --md-sys-color-on-primary: 0 0% 7%;
+    --md-sys-color-primary-container: 221 45% 26%;
+    --md-sys-color-on-primary-container: 220 100% 88%;
+
+    --md-sys-color-secondary: 213 7% 63%;
+    --md-sys-color-on-secondary: 0 0% 7%;
+    --md-sys-color-secondary-container: 0 0% 18%;
+    --md-sys-color-on-secondary-container: 0 0% 88%;
+
+    --md-sys-color-tertiary: 0 0% 72%;
+    --md-sys-color-on-tertiary: 0 0% 7%;
+    --md-sys-color-tertiary-container: 0 0% 22%;
+    --md-sys-color-on-tertiary-container: 0 0% 88%;
+
+    --md-sys-color-warning: 43 96% 56%;
+    --md-sys-color-scrim: 0 0% 0%;
+    --md-sys-color-error: 0 84% 68%;
+    --md-sys-color-on-error: 0 0% 7%;
+
+    --md-sys-color-background: 0 0% 7%; /* #121212 */
+    --md-sys-color-on-background: 0 0% 78%;
+
+    --md-sys-color-surface: 0 0% 7%;
+    --md-sys-color-on-surface: 0 0% 78%; /* #C7C7C7, 11.08:1 */
+    --md-sys-color-surface-variant: 0 0% 10%;
+    --md-sys-color-on-surface-variant: 213 7% 63%; /* #9AA0A6, 7.09:1 */
+
+    --md-sys-color-surface-container-lowest: 0 0% 5%;
+    --md-sys-color-surface-container-low: 0 0% 6%;
+    --md-sys-color-surface-container: 0 0% 9%;
+    --md-sys-color-surface-container-high: 0 0% 11%;
+    --md-sys-color-surface-container-highest: 0 0% 13%;
+
+    --md-sys-color-outline: 0 0% 42%; /* #6B6B6B, 3.52:1 */
+    --md-sys-color-outline-variant: 0 0% 16%; /* #2A2A2A, decorative */
+
+    --md-sys-color-inverse-surface: 0 0% 90%;
+    --md-sys-color-inverse-on-surface: 0 0% 7%;
+    --md-sys-color-inverse-primary: 221 100% 47%;
+
+    --article-text: hsl(0 0% 78%);
+    --article-heading: hsl(0 0% 93%);
+    --article-link: hsl(220 100% 78%);
+    --article-link-hover: hsl(220 100% 86%);
+    --article-border: hsl(var(--md-sys-color-outline-variant));
+    --article-code-bg: hsl(0 0% 10%);
+    --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
+
+    --chart-1: #8fb2ff;
+    --chart-2: #fb923c;
+  }
+
+/* ------------------------------------------------------------------
      Dark theme, admin only.
 
      This redefines the same M3 role variables rather than introducing a
@@ -166,7 +243,7 @@
      light-on-dark reads slower regardless, so the reason to ship this is
      glare in a dim room and preference, not an ergonomics claim.
      ------------------------------------------------------------------ */
-  .dark {
+  .dark:has(.admin-nav) {
     /* Monochromatic. Every surface, border and text role is a neutral grey at
        saturation 0; the earlier ramp carried a 15-17% blue tint at hue 218-220
        and read as blue-grey rather than grey.
@@ -1155,12 +1232,20 @@ html {
   display: none;
 }
 
-/* Theme-aware figures — the diagram set is baked twice (light and a `-dark`
-   twin, via concepts/flow.py with FIG_THEME=dark). The img renderer and the
-   carousel each stack both variants; these rules swap them on the blog's
-   class-based dark mode so a light diagram never glares on a dark page. */
+/* Theme-aware figures. Each generated drawing ships two bakes, one per ground
+   — `DOODLE_INK`/`DOODLE_GROUND` in scripts/doodle.py — because no single ink
+   clears both: #004AEF measures 6.51:1 on white and 2.62:1 on #121212.
+   Both are in the DOM and the stylesheet shows the one that belongs, which is
+   the only way an <img> can follow a theme the page holds rather than the one
+   the reader's OS holds. */
 .fig-dark {
   display: none;
+}
+.dark .fig-light {
+  display: none;
+}
+.dark .fig-dark {
+  display: block;
 }
 
 /* Carousel slides pin their img to display:block at (0,3,1); out-specify it so

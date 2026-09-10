@@ -1,5 +1,6 @@
 "use client";
 
+import { darkTwin } from "@/lib/figure-theme";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface CarouselItem {
@@ -337,10 +338,15 @@ export default function MediaCarousel({
                 >
                   <source src={item.src} />
                 </video>
-              ) : item.srcDark ? (
+              ) : (item.srcDark ?? darkTwin(item.src)) ? (
                 // A light and a dark bake of the same diagram, stacked; CSS
                 // shows exactly one per theme. The dark twin is decorative
                 // (same information), so it carries no alt.
+                //
+                // The twin is derived here rather than asked of the caller, so
+                // a slide in a markdown fence and a slide on a project page get
+                // it on the same terms. An explicit `srcDark` still wins, for
+                // the pair that is not a generated set.
                 <>
                   <img
                     className="fig-light"
@@ -351,7 +357,7 @@ export default function MediaCarousel({
                   />
                   <img
                     className="fig-dark"
-                    src={item.srcDark}
+                    src={(item.srcDark ?? darkTwin(item.src)) as string}
                     alt=""
                     aria-hidden="true"
                     loading={i < 2 ? "eager" : "lazy"}

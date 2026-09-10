@@ -1,6 +1,7 @@
 import { Icon } from "@/components/ui/Icon";
 import FeaturedClip from "@/components/work/FeaturedClip";
 import { KitDots, flattenStack } from "@/components/work/StackChips";
+import { darkTwin } from "@/lib/figure-theme";
 import type { Project } from "@/lib/projects";
 import Link from "next/link";
 
@@ -148,8 +149,20 @@ export default function FeaturedWork({ project }: { project: Project }) {
               alt={project.title}
               loading="lazy"
               decoding="async"
-              className="w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]"
+              className={`w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]${
+                darkTwin(art) ? " fig-light" : ""
+              }`}
             />
+            {darkTwin(art) && (
+              <img
+                src={darkTwin(art) as string}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                className="fig-dark w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]"
+              />
+            )}
           </Link>
         ) : clip ? (
           // A clip from the CMS. Same box as a screenshot, and the same crop
@@ -172,8 +185,24 @@ export default function FeaturedWork({ project }: { project: Project }) {
               alt={shot.caption || project.title}
               loading="lazy"
               decoding="async"
-              className="aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
+              className={`aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]${
+                darkTwin(shot.src) ? " fig-light" : ""
+              }`}
             />
+            {/* The generated art arrives through this branch, not the one
+                above: `thumbnail` is null on every project and the drawing is
+                media[0]. An uploaded screenshot comes through here too and has
+                no twin, which is what `darkTwin` returning null is for. */}
+            {darkTwin(shot.src) && (
+              <img
+                src={darkTwin(shot.src) as string}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                className="fig-dark aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
+              />
+            )}
           </Link>
         ) : (
           // No fixed aspect ratio: a two-line metric label overflows a locked

@@ -1,3 +1,4 @@
+import { darkTwin } from "@/lib/figure-theme";
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
@@ -156,11 +157,10 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
           // image's intrinsic aspect ratio. Hardcoding 800×600 via Next/Image
           // warped vertical screenshots and panoramic captures.
           const s = src || "";
-          // Diagrams under /figures/ are single files that answer
-          // prefers-color-scheme themselves, so there is no light/dark twin to
-          // pick between. There used to be a `fig-*.webp` set that shipped two
-          // bakes; it was replaced by inline figures and deleted, and the
-          // twinning code that outlived it never reached the JSX anyway.
+          // Diagrams under /figures/ ship two bakes, one per ground, and the
+          // stylesheet shows the one that belongs. An uploaded screenshot has
+          // no twin and renders exactly as before.
+          const twin = darkTwin(s);
           const imgClass =
             "w-full h-auto rounded-[var(--md-sys-shape-corner-large-increased)]";
           return (
@@ -170,8 +170,18 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                 alt={alt || ""}
                 loading="lazy"
                 decoding="async"
-                className={imgClass}
+                className={`${imgClass}${twin ? " fig-light" : ""}`}
               />
+              {twin && (
+                <img
+                  src={twin}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  decoding="async"
+                  className={`${imgClass} fig-dark`}
+                />
+              )}
               {alt && (
                 <figcaption
                   className="text-center text-sm mt-3"

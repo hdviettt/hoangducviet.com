@@ -1,3 +1,4 @@
+import { SITE_THEME_INIT } from "@/components/layout/theme";
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -58,6 +59,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">
+        {/* Before first paint, so a reader who chose dark never sees a white
+            frame first. The literal is fixed and takes no input. */}
+        <script dangerouslySetInnerHTML={{ __html: SITE_THEME_INIT }} />
         <SiteAnalytics>
           <ClientFileExplorer>{children}</ClientFileExplorer>
         </SiteAnalytics>
