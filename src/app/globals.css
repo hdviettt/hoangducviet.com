@@ -167,59 +167,74 @@
      glare in a dim room and preference, not an ergonomics claim.
      ------------------------------------------------------------------ */
   .dark {
-    --md-sys-color-primary: 222 100% 68%; /* #5B8CFF, the brand blue lightened */
-    --md-sys-color-on-primary: 220 17% 7%;
-    --md-sys-color-primary-container: 222 60% 24%;
-    --md-sys-color-on-primary-container: 222 100% 88%;
+    /* Monochromatic. Every surface, border and text role is a neutral grey at
+       saturation 0; the earlier ramp carried a 15-17% blue tint at hue 218-220
+       and read as blue-grey rather than grey.
 
-    --md-sys-color-secondary: 217 12% 65%;
-    --md-sys-color-on-secondary: 220 17% 7%;
-    --md-sys-color-secondary-container: 219 16% 17%;
-    --md-sys-color-on-secondary-container: 217 17% 82%;
+       The accent is a light grey too, not a hue. That is the point of a
+       monochrome theme, and it costs one thing worth naming: a link in the
+       editor can no longer be told apart by colour. `.prose-editor a` already
+       underlines, so the affordance survives, but the underline is now doing
+       all the work and must not be removed.
 
-    --md-sys-color-tertiary: 280 60% 72%;
-    --md-sys-color-on-tertiary: 220 17% 7%;
-    --md-sys-color-tertiary-container: 280 30% 26%;
-    --md-sys-color-on-tertiary-container: 280 60% 88%;
+       Error and warning keep their hue. They encode state rather than
+       decorate, they appear rarely, and a grey warning is not a warning. */
+    --md-sys-color-primary: 0 0% 88%;
+    --md-sys-color-on-primary: 0 0% 11%;
+    --md-sys-color-primary-container: 0 0% 26%;
+    --md-sys-color-on-primary-container: 0 0% 92%;
+
+    --md-sys-color-secondary: 0 0% 65%;
+    --md-sys-color-on-secondary: 0 0% 11%;
+    --md-sys-color-secondary-container: 0 0% 20%;
+    --md-sys-color-on-secondary-container: 0 0% 88%;
+
+    --md-sys-color-tertiary: 0 0% 72%;
+    --md-sys-color-on-tertiary: 0 0% 11%;
+    --md-sys-color-tertiary-container: 0 0% 24%;
+    --md-sys-color-on-tertiary-container: 0 0% 88%;
 
     --md-sys-color-warning: 43 96% 56%;
     --md-sys-color-scrim: 0 0% 0%;
-    --md-sys-color-error: 0 91% 71%;
-    --md-sys-color-on-error: 220 17% 7%;
+    --md-sys-color-error: 0 84% 68%;
+    --md-sys-color-on-error: 0 0% 11%;
 
-    --md-sys-color-background: 220 16% 11%;
-    --md-sys-color-on-background: 217 17% 82%;
+    --md-sys-color-background: 0 0% 11%;
+    --md-sys-color-on-background: 0 0% 82%;
 
-    --md-sys-color-surface: 220 16% 11%;
-    --md-sys-color-on-surface: 217 17% 82%;
-    --md-sys-color-surface-variant: 220 17% 14%;
-    --md-sys-color-on-surface-variant: 217 12% 65%;
+    --md-sys-color-surface: 0 0% 11%;
+    --md-sys-color-on-surface: 0 0% 82%; /* 11.16:1, inside the 6.5-11 band */
+    --md-sys-color-surface-variant: 0 0% 14%;
+    --md-sys-color-on-surface-variant: 0 0% 65%; /* 7.00:1 */
 
-    --md-sys-color-surface-container-lowest: 220 17% 7%;
-    --md-sys-color-surface-container-low: 218 17% 9%;
-    --md-sys-color-surface-container: 220 16% 11%;
-    --md-sys-color-surface-container-high: 220 17% 14%;
-    --md-sys-color-surface-container-highest: 219 16% 17%;
+    /* Five tones, never #000: a pure black panel behind light text is the
+       large-area glare case. Base is #1C1C1C. */
+    --md-sys-color-surface-container-lowest: 0 0% 7%;
+    --md-sys-color-surface-container-low: 0 0% 9%;
+    --md-sys-color-surface-container: 0 0% 11%;
+    --md-sys-color-surface-container-high: 0 0% 14%;
+    --md-sys-color-surface-container-highest: 0 0% 17%;
 
-    /* Two border roles, not one. `outline` is operable (inputs, focus,
-       real edges) and clears WCAG 1.4.11's 3:1 at 3.24:1; `outline-variant`
-       is a decorative seam at 1.34:1 and must never be the only signal
-       separating two things. */
-    --md-sys-color-outline: 213 8% 43%;
-    --md-sys-color-outline-variant: 218 15% 20%;
+    /* Two border roles. `outline` is operable (inputs, focus, real edges) and
+       clears WCAG 1.4.11's 3:1 at 3.34:1; `outline-variant` is a decorative
+       seam at 1.35:1 and must never be the only thing separating two things. */
+    --md-sys-color-outline: 0 0% 43%;
+    --md-sys-color-outline-variant: 0 0% 20%;
 
-    --md-sys-color-inverse-surface: 217 17% 82%;
-    --md-sys-color-inverse-on-surface: 220 16% 11%;
-    --md-sys-color-inverse-primary: 221 100% 47%;
+    --md-sys-color-inverse-surface: 0 0% 82%;
+    --md-sys-color-inverse-on-surface: 0 0% 11%;
+    --md-sys-color-inverse-primary: 0 0% 25%;
 
-    --article-heading: hsl(217 17% 88%);
-    --article-link: hsl(var(--md-sys-color-primary));
-    --article-link-hover: hsl(222 100% 74%);
+    --article-heading: hsl(0 0% 92%);
+    --article-link: hsl(0 0% 88%);
+    --article-link-hover: hsl(0 0% 100%);
     --article-border: hsl(var(--md-sys-color-outline-variant));
-    --article-code-bg: hsl(218 17% 9%);
+    --article-code-bg: hsl(0 0% 9%);
     --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
 
-    --chart-1: #5b8cff;
+    /* The analytics charts keep two hues: series separation is the one job
+       colour is doing there, and greying them would remove the information. */
+    --chart-1: #b9b9b9;
     --chart-2: #fb923c;
   }
 }
@@ -1564,17 +1579,22 @@ select.md-field {
 
 /* The measure, matched to the published page rather than re-derived.
    `/posts/[slug]` wraps `.article-content` in `mx-auto max-w-[720px]`
-   (PostDetail.tsx), so 720px centred is the column a reader gets. The editor
-   uses the same number and the same centring.
+   (PostDetail.tsx), so 720px centred is the column a reader gets. The post
+   editor uses the same number and the same centring.
 
-   Capping the CONTAINER matters: the per-element `.article-content > * {
-   max-width: 68ch }` rules resolve `ch` against each element's own font size,
-   so an h2 at 32px caps at 1388px while a paragraph at 17.5px caps at 771px.
-   Measured in the editor before this rule, headings ran 300px past the body
-   column on both sides. On the published page the 720px wrapper hides that;
-   here the wrapper is what fixes it. */
-.prose-editor,
-.editor-title {
+   Scoped to `.post-editor`. Applying it to every `.prose-editor` centred the
+   content field inside the project and work forms too, so the editor's text
+   started 240px right of the label above it while every other field sat left.
+   A field belongs under its own label; only the standalone post editor is a
+   document.
+
+   Capping the CONTAINER matters: the per-element
+   `.article-content > * { max-width: 68ch }` rules resolve `ch` against each
+   element's own font size, so an h2 at 32px caps at 1388px while a paragraph
+   at 17.5px caps at 771px. Measured in the editor before this rule, headings
+   ran 300px past the body column on both sides. */
+.post-editor .prose-editor,
+.post-editor .editor-title {
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
@@ -1583,7 +1603,7 @@ select.md-field {
 /* The ProseMirror surface carries `px-4` for caret and drag-handle room, so
    the title block takes the same inset or the first line of the document sits
    16px wider than the second. */
-.editor-title {
+.post-editor .editor-title {
   padding-left: 1rem;
   padding-right: 1rem;
 }

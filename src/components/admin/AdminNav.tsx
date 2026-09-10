@@ -15,53 +15,88 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 
 /**
- * The admin's vertical navigation, in two parts.
+ * The admin's vertical navigation: a 48px activity rail and a panel beside it.
  *
- * A 48px activity rail (VS Code's own width) that never moves, and a panel
- * beside it whose contents depend on which activity is selected. Clicking the
- * already-active icon collapses the panel, which is the behaviour VS Code has
- * and the one people expect from a rail like this.
+ * The panel's contents are DERIVED FROM THE ROUTE rather than held in their own
+ * state. The first version kept a `view` that some items changed and others did
+ * not: clicking Media navigated without touching `view`, so Media lit up from
+ * the pathname while Posts stayed lit from `view`, two tabs active at once.
+ * Worse, clicking Posts then matched "you clicked the item that is already
+ * selected" and collapsed the panel instead of navigating, so the Posts page
+ * could not be reached at all. Deriving the panel from the pathname makes that
+ * disagreement impossible to express.
  *
- * The panel is a real drag-resizable dock, 180 to 460px, and both the width
- * and the collapsed state persist. Everything animates on the panel's width
- * only, at 240ms, and never on anything in the typing path.
- *
- * The Outline activity is the one that is not a copy of an existing app: it
- * lists the headings of the post currently open in the editor, published by
- * the editor through a window event, so a 2,500-word draft becomes navigable
- * without scrolling. It only appears while a post is open.
+ * Outline is the one exception, because it is a view of the document you are
+ * already inside rather than a place to go. It is a toggle, and it exists only
+ * while a post is open.
  */
 
-export interface NavPost {
+export interface NavItem {
   slug: string;
   title: string;
-  status: string;
-}
-export interface NavSeries {
-  slug: string;
-  title: string;
+  status?: string;
 }
 
-type ViewId = "posts" | "series" | "outline" | "media" | "links" | "settings";
+type PanelId = "posts" | "work" | "series" | "outline";
 
 interface Activity {
-  id: ViewId;
+  id: string;
   icon: string;
   label: string;
-  /** Activities that are a plain destination rather than a panel view. */
+  /** Where clicking goes. Absent only for Outline, which goes nowhere. */
   href?: string;
+  /** Match the whole path rather than a prefix. */
+  exact?: boolean;
+  /** Only rendered while a post is open in the editor. */
+  editorOnly?: boolean;
+  /** Draws a hairline above this item. */
+  groupStart?: boolean;
 }
 
 const ACTIVITIES: Activity[] = [
-  { id: "posts", icon: "description", label: "Posts" },
-  { id: "series", icon: "folder", label: "Collections" },
-  { id: "outline", icon: "format_list_bulleted", label: "Outline" },
-  { id: "media", icon: "image", label: "Media", href: "/admin/media" },
+  {
+    id: "dashboard",
+    icon: "dashboard",
+    label: "Dashboard",
+    href: "/admin",
+    exact: true,
+  },
+  {
+    id: "posts",
+    icon: "description",
+    label: "Posts",
+    href: "/admin/posts",
+  },
+  { id: "work", icon: "widgets", label: "Work", href: "/admin/work" },
+  {
+    id: "series",
+    icon: "folder",
+    label: "Collections",
+    href: "/admin/projects",
+  },
+  {
+    id: "outline",
+    icon: "format_list_bulleted",
+    label: "Outline",
+    editorOnly: true,
+  },
+  {
+    id: "media",
+    icon: "image",
+    label: "Media",
+    href: "/admin/media",
+    groupStart: true,
+  },
+  {
+    id: "categories",
+    icon: "label",
+    label: "Categories",
+    href: "/admin/categories",
+  },
   {
     id: "links",
     icon: "link",
@@ -78,59 +113,77 @@ const ACTIVITIES: Activity[] = [
 
 const W_KEY = "admin-nav-width";
 const C_KEY = "admin-nav-collapsed";
-const V_KEY = "admin-nav-view";
 const MIN_W = 180;
 const MAX_W = 460;
 const DEFAULT_W = 248;
 
+/** Which list the panel shows on a given route. */
+function routePanel(pathname: string): PanelId | null {
+  if (pathname.startsWith("/admin/posts")) return "posts";
+  if (pathname.startsWith("/admin/work")) return "work";
+  if (pathname.startsWith("/admin/projects")) return "series";
+  return null;
+}
+
+function isOnRoute(pathname: string, a: Activity) {
+  if (!a.href) return false;
+  return a.exact ? pathname === a.href : pathname.startsWith(a.href);
+}
+
 export default function AdminNav({
   posts,
+  work,
   series,
 }: {
-  posts: NavPost[];
-  series: NavSeries[];
+  posts: NavItem[];
+  work: NavItem[];
+  series: NavItem[];
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggle } = useTheme();
 
-  const editingSlug = useMemo(() => {
-    const m = /^\/admin\/posts\/([^/]+)\/edit$/.exec(pathname);
-    return m ? m[1] : null;
-  }, [pathname]);
+  const inPostEditor = /^\/admin\/posts\/(new|[^/]+\/edit)$/.test(pathname);
 
-  const [view, setView] = useState<ViewId>("posts");
+  const [showOutline, setShowOutline] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [width, setWidth] = useState(DEFAULT_W);
   const [filter, setFilter] = useState("");
   const [outline, setOutline] = useState<OutlineItem[]>([]);
   const [dragging, setDragging] = useState(false);
-  const filterRef = useRef<HTMLInputElement>(null);
 
-  // Read persisted layout before the browser paints, so the panel does not
-  // visibly jump from the default width to the stored one on every load.
+  const panel: PanelId | null =
+    showOutline && inPostEditor ? "outline" : routePanel(pathname);
+
+  // Read the persisted layout before paint so the panel does not jump width.
   useLayoutEffect(() => {
     try {
       const w = Number(localStorage.getItem(W_KEY));
       if (w >= MIN_W && w <= MAX_W) setWidth(w);
       setCollapsed(localStorage.getItem(C_KEY) === "true");
-      const v = localStorage.getItem(V_KEY) as ViewId | null;
-      if (v) setView(v);
     } catch {}
   }, []);
 
   useEffect(() => {
-    const onOutline = (e: Event) => {
+    const onOutline = (e: Event) =>
       setOutline((e as CustomEvent<OutlineItem[]>).detail ?? []);
-    };
     window.addEventListener(OUTLINE_EVENT, onOutline);
     return () => window.removeEventListener(OUTLINE_EVENT, onOutline);
   }, []);
 
-  // An outline belongs to one document; leaving the editor must clear it.
+  // Leaving the editor drops the outline and the toggle that shows it.
   useEffect(() => {
-    if (!editingSlug) setOutline([]);
-  }, [editingSlug]);
+    if (!inPostEditor) {
+      setOutline([]);
+      setShowOutline(false);
+    }
+  }, [inPostEditor]);
+
+  // A filter belongs to the list it was typed into.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: clears on panel change
+  useEffect(() => {
+    setFilter("");
+  }, [panel]);
 
   const persist = useCallback((k: string, v: string) => {
     try {
@@ -138,24 +191,31 @@ export default function AdminNav({
     } catch {}
   }, []);
 
-  const selectActivity = useCallback(
+  const select = useCallback(
     (a: Activity) => {
-      if (a.href) {
-        router.push(a.href);
+      if (a.id === "outline") {
+        setShowOutline((s) => !s);
+        setCollapsed(false);
+        persist(C_KEY, "false");
         return;
       }
-      // Clicking the active icon collapses, which is what VS Code does.
-      if (a.id === view && !collapsed) {
-        setCollapsed(true);
-        persist(C_KEY, "true");
+      // Clicking the place you are already in collapses the panel, which is
+      // what a rail like this does everywhere else. Clicking anywhere else
+      // navigates, always.
+      if (isOnRoute(pathname, a)) {
+        setShowOutline(false);
+        setCollapsed((c) => {
+          persist(C_KEY, String(!c));
+          return !c;
+        });
         return;
       }
-      setView(a.id);
+      setShowOutline(false);
       setCollapsed(false);
-      persist(V_KEY, a.id);
       persist(C_KEY, "false");
+      if (a.href) router.push(a.href);
     },
-    [view, collapsed, persist, router],
+    [pathname, persist, router],
   );
 
   const toggleCollapsed = useCallback(() => {
@@ -165,7 +225,6 @@ export default function AdminNav({
     });
   }, [persist]);
 
-  // Cmd/Ctrl+B collapses, matching every editor that has this rail.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b") {
@@ -177,21 +236,16 @@ export default function AdminNav({
     return () => window.removeEventListener("keydown", onKey);
   }, [toggleCollapsed]);
 
-  // Drag to resize. Pointer events on the window rather than the handle, so a
-  // fast drag that outruns the 4px grip does not drop the gesture.
   const startDrag = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
       setDragging(true);
       const startX = e.clientX;
       const startW = width;
-      const move = (ev: PointerEvent) => {
-        const next = Math.min(
-          MAX_W,
-          Math.max(MIN_W, startW + (ev.clientX - startX)),
+      const move = (ev: PointerEvent) =>
+        setWidth(
+          Math.min(MAX_W, Math.max(MIN_W, startW + (ev.clientX - startX))),
         );
-        setWidth(next);
-      };
       const up = () => {
         setDragging(false);
         window.removeEventListener("pointermove", move);
@@ -207,24 +261,18 @@ export default function AdminNav({
     [width, persist],
   );
 
-  const activities = ACTIVITIES.filter(
-    (a) => a.id !== "outline" || editingSlug,
-  );
+  const activities = ACTIVITIES.filter((a) => !a.editorOnly || inPostEditor);
 
-  const filtered = useMemo(() => {
+  const items = useMemo(() => {
+    const list = panel === "work" ? work : panel === "series" ? series : posts;
     const q = filter.trim().toLowerCase();
-    const list = view === "series" ? series : posts;
-    if (!q) return list;
-    return list.filter((i) => i.title.toLowerCase().includes(q));
-  }, [filter, posts, series, view]);
+    return q ? list.filter((i) => i.title.toLowerCase().includes(q)) : list;
+  }, [panel, posts, work, series, filter]);
 
-  const activeFor = (a: Activity) => {
-    if (a.href) return pathname.startsWith(a.href);
-    if (collapsed) return false;
-    return a.id === view;
-  };
+  const activeFor = (a: Activity) =>
+    a.id === "outline" ? panel === "outline" : isOnRoute(pathname, a);
 
-  const panelWidth = collapsed ? 0 : width;
+  const panelWidth = panel && !collapsed ? width : 0;
 
   return (
     <div className="admin-nav flex h-screen shrink-0">
@@ -238,28 +286,32 @@ export default function AdminNav({
           {IDENTITY.name.charAt(0)}
         </Link>
 
-        <div className="flex-1 w-full flex flex-col items-center gap-0.5 pt-1">
+        <div className="flex-1 w-full flex flex-col items-center pt-1">
           {activities.map((a) => {
             const on = activeFor(a);
             return (
-              <button
-                key={a.id}
-                type="button"
-                onClick={() => selectActivity(a)}
-                title={a.label}
-                aria-label={a.label}
-                aria-pressed={on}
-                className={`relative w-full h-11 grid place-items-center transition-colors duration-fast ${
-                  on
-                    ? "text-md-primary"
-                    : "text-md-on-surface-variant hover:text-md-on-surface"
-                }`}
-              >
-                {on && (
-                  <span className="absolute left-0 top-2 bottom-2 w-[2px] rounded-full bg-md-primary" />
+              <div key={a.id} className="w-full">
+                {a.groupStart && (
+                  <div className="my-1.5 mx-3 border-t border-md-outline-variant" />
                 )}
-                <Icon name={a.icon} size={20} filled={on} />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => select(a)}
+                  title={a.label}
+                  aria-label={a.label}
+                  aria-current={on ? "page" : undefined}
+                  className={`relative w-full h-10 grid place-items-center transition-colors duration-fast ${
+                    on
+                      ? "text-md-primary"
+                      : "text-md-on-surface-variant hover:text-md-on-surface"
+                  }`}
+                >
+                  {on && (
+                    <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-md-primary" />
+                  )}
+                  <Icon name={a.icon} size={19} filled={on} />
+                </button>
+              </div>
             );
           })}
         </div>
@@ -269,11 +321,11 @@ export default function AdminNav({
           onClick={toggle}
           title={theme === "dark" ? "Switch to light" : "Switch to dark"}
           aria-label="Toggle theme"
-          className="w-full h-11 grid place-items-center text-md-on-surface-variant hover:text-md-on-surface transition-colors duration-fast"
+          className="w-full h-10 grid place-items-center text-md-on-surface-variant hover:text-md-on-surface transition-colors duration-fast"
         >
           <Icon
             name={theme === "dark" ? "dark_mode" : "light_mode"}
-            size={19}
+            size={18}
           />
         </button>
         <button
@@ -284,35 +336,34 @@ export default function AdminNav({
           }}
           title="Log out"
           aria-label="Log out"
-          className="w-full h-11 mb-1 grid place-items-center text-md-on-surface-variant hover:text-md-error transition-colors duration-fast"
+          className="w-full h-10 mb-1 grid place-items-center text-md-on-surface-variant hover:text-md-error transition-colors duration-fast"
         >
-          <Icon name="logout" size={19} />
+          <Icon name="logout" size={18} />
         </button>
       </div>
 
       {/* ---------- contextual panel ---------- */}
       <div
         style={{ width: panelWidth }}
-        className={`relative h-full shrink-0 overflow-hidden border-r border-md-outline-variant bg-md-surface-container-low ${
-          dragging
-            ? ""
-            : "transition-[width] duration-moderate ease-md-standard"
-        }`}
+        className={`relative h-full shrink-0 overflow-hidden bg-md-surface-container-low ${
+          panelWidth ? "border-r border-md-outline-variant" : ""
+        } ${dragging ? "" : "transition-[width] duration-moderate ease-md-standard"}`}
       >
         <div style={{ width }} className="h-full flex flex-col">
-          <PanelBody
-            view={view}
-            editingSlug={editingSlug}
-            filter={filter}
-            setFilter={setFilter}
-            filterRef={filterRef}
-            items={filtered}
-            outline={outline}
-            pathname={pathname}
-          />
+          {panel === "outline" ? (
+            <OutlinePanel outline={outline} />
+          ) : (
+            <ListPanel
+              panel={panel}
+              items={items}
+              filter={filter}
+              setFilter={setFilter}
+              pathname={pathname}
+            />
+          )}
         </div>
 
-        {!collapsed && (
+        {panelWidth > 0 && (
           <button
             type="button"
             aria-label="Resize panel"
@@ -326,137 +377,6 @@ export default function AdminNav({
         )}
       </div>
     </div>
-  );
-}
-
-function PanelBody({
-  view,
-  editingSlug,
-  filter,
-  setFilter,
-  filterRef,
-  items,
-  outline,
-  pathname,
-}: {
-  view: ViewId;
-  editingSlug: string | null;
-  filter: string;
-  setFilter: (v: string) => void;
-  filterRef: React.RefObject<HTMLInputElement>;
-  items: Array<NavPost | NavSeries>;
-  outline: OutlineItem[];
-  pathname: string;
-}) {
-  if (view === "outline") {
-    return (
-      <>
-        <PanelHead title="Outline" count={outline.length} />
-        <div className="flex-1 overflow-y-auto pb-4">
-          {outline.length === 0 ? (
-            <p className="px-3 py-2 text-[12.5px] leading-5 text-md-on-surface-variant">
-              {editingSlug
-                ? "No headings yet."
-                : "Open a post to see its outline."}
-            </p>
-          ) : (
-            outline.map((h) => (
-              <button
-                key={h.id}
-                type="button"
-                onClick={() => gotoHeading(h.id)}
-                className="w-full text-left px-3 py-1 text-[12.5px] leading-5 text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-on-surface/8 truncate transition-colors duration-fast"
-                style={{ paddingLeft: 12 + (h.level - 1) * 12 }}
-                title={h.text}
-              >
-                {h.text}
-              </button>
-            ))
-          )}
-        </div>
-      </>
-    );
-  }
-
-  const isSeries = view === "series";
-  const base = isSeries ? "/admin/projects" : "/admin/posts";
-
-  return (
-    <>
-      <PanelHead
-        title={isSeries ? "Collections" : "Posts"}
-        count={items.length}
-        action={
-          <Link
-            href={isSeries ? "/admin/projects/new" : "/admin/posts/new"}
-            title={isSeries ? "New collection" : "New post"}
-            className="p-1 rounded text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-on-surface/8 transition-colors duration-fast"
-          >
-            <Icon name="add" size={16} />
-          </Link>
-        }
-      />
-
-      <div className="px-2 pb-2">
-        <div className="relative">
-          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-md-on-surface-variant pointer-events-none">
-            <Icon name="search" size={14} />
-          </span>
-          <input
-            ref={filterRef}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") setFilter("");
-            }}
-            placeholder="Filter"
-            aria-label="Filter list"
-            className="w-full h-7 pl-7 pr-2 rounded-md bg-md-surface-container-high border border-md-outline-variant text-[12.5px] text-md-on-surface placeholder:text-md-on-surface-variant/70 focus:outline-none focus:border-md-outline transition-colors duration-fast"
-          />
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto pb-4">
-        {items.length === 0 && (
-          <p className="px-3 py-2 text-[12.5px] leading-5 text-md-on-surface-variant">
-            Nothing matches.
-          </p>
-        )}
-        {items.map((item) => {
-          const href = `${base}/${item.slug}/edit`;
-          const on = pathname === href;
-          const status = (item as NavPost).status;
-          return (
-            <Link
-              key={item.slug}
-              href={href}
-              title={item.title}
-              className={`relative flex items-center gap-2 h-7 px-3 text-[12.5px] leading-5 transition-colors duration-fast ${
-                on
-                  ? "bg-md-primary/12 text-md-on-surface"
-                  : "text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-on-surface/8"
-              }`}
-            >
-              {on && (
-                <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-md-primary" />
-              )}
-              {status && (
-                <span
-                  aria-hidden
-                  title={status}
-                  className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                    status === "published"
-                      ? "bg-md-primary"
-                      : "bg-md-on-surface-variant/50"
-                  }`}
-                />
-              )}
-              <span className="truncate">{item.title}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </>
   );
 }
 
@@ -479,5 +399,150 @@ function PanelHead({
       </span>
       <span className="ml-auto flex items-center">{action}</span>
     </div>
+  );
+}
+
+function OutlinePanel({ outline }: { outline: OutlineItem[] }) {
+  return (
+    <>
+      <PanelHead title="Outline" count={outline.length} />
+      <div className="flex-1 overflow-y-auto pb-4">
+        {outline.length === 0 ? (
+          <p className="px-3 py-2 text-[12.5px] leading-5 text-md-on-surface-variant">
+            No headings yet.
+          </p>
+        ) : (
+          outline.map((h) => (
+            <button
+              key={h.id}
+              type="button"
+              onClick={() => gotoHeading(h.id)}
+              className="w-full text-left pr-3 py-1 text-[12.5px] leading-5 text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-on-surface/8 truncate transition-colors duration-fast"
+              style={{ paddingLeft: 12 + (h.level - 1) * 12 }}
+              title={h.text}
+            >
+              {h.text}
+            </button>
+          ))
+        )}
+      </div>
+    </>
+  );
+}
+
+const PANEL_META: Record<
+  "posts" | "work" | "series",
+  { title: string; base: string; add: string; newLabel: string }
+> = {
+  posts: {
+    title: "Posts",
+    base: "/admin/posts",
+    add: "/admin/posts/new",
+    newLabel: "New post",
+  },
+  work: {
+    title: "Work",
+    base: "/admin/work",
+    add: "/admin/work/new",
+    newLabel: "New work item",
+  },
+  series: {
+    title: "Collections",
+    base: "/admin/projects",
+    add: "/admin/projects/new",
+    newLabel: "New collection",
+  },
+};
+
+function ListPanel({
+  panel,
+  items,
+  filter,
+  setFilter,
+  pathname,
+}: {
+  panel: PanelId | null;
+  items: NavItem[];
+  filter: string;
+  setFilter: (v: string) => void;
+  pathname: string;
+}) {
+  if (!panel || panel === "outline") return null;
+  const meta = PANEL_META[panel];
+
+  return (
+    <>
+      <PanelHead
+        title={meta.title}
+        count={items.length}
+        action={
+          <Link
+            href={meta.add}
+            title={meta.newLabel}
+            className="p-1 rounded text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-on-surface/8 transition-colors duration-fast"
+          >
+            <Icon name="add" size={16} />
+          </Link>
+        }
+      />
+
+      <div className="px-2 pb-2">
+        <div className="relative">
+          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-md-on-surface-variant pointer-events-none">
+            <Icon name="search" size={14} />
+          </span>
+          <input
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setFilter("");
+            }}
+            placeholder="Filter"
+            aria-label={`Filter ${meta.title}`}
+            className="w-full h-7 pl-7 pr-2 rounded-md bg-md-surface-container-high border border-md-outline-variant text-[12.5px] text-md-on-surface placeholder:text-md-on-surface-variant/70 focus:outline-none focus:border-md-outline transition-colors duration-fast"
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pb-4">
+        {items.length === 0 && (
+          <p className="px-3 py-2 text-[12.5px] leading-5 text-md-on-surface-variant">
+            Nothing matches.
+          </p>
+        )}
+        {items.map((item) => {
+          const href = `${meta.base}/${item.slug}/edit`;
+          const on = pathname === href;
+          return (
+            <Link
+              key={item.slug}
+              href={href}
+              title={item.title}
+              className={`relative flex items-center gap-2 h-7 px-3 text-[12.5px] leading-5 transition-colors duration-fast ${
+                on
+                  ? "bg-md-primary/12 text-md-on-surface"
+                  : "text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-on-surface/8"
+              }`}
+            >
+              {on && (
+                <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-md-primary" />
+              )}
+              {item.status && (
+                <span
+                  aria-hidden
+                  title={item.status}
+                  className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                    item.status === "published"
+                      ? "bg-md-primary"
+                      : "bg-md-on-surface-variant/50"
+                  }`}
+                />
+              )}
+              <span className="truncate">{item.title}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </>
   );
 }

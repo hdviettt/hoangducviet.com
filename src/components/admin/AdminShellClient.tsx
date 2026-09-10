@@ -24,14 +24,15 @@ export default function AdminShellClient({
 }) {
   const pathname = usePathname();
 
-  const isEditor = useMemo(
-    () => /^\/admin\/(posts|projects|work)\/(new|[^/]+\/edit)$/.test(pathname),
-    [pathname],
-  );
+  // Only the POST editor takes the whole pane. It has its own top bar, status
+  // bar and scroll container. The project and work forms are ordinary forms:
+  // handing them a full-bleed pane stretched every field to the width of the
+  // window, because nothing in them caps a width.
   const inPostEditor = useMemo(
     () => /^\/admin\/posts\/(new|[^/]+\/edit)$/.test(pathname),
     [pathname],
   );
+  const isEditor = inPostEditor;
 
   return (
     <>
@@ -42,7 +43,7 @@ export default function AdminShellClient({
             : "flex-1 min-w-0 h-screen overflow-y-auto page-transition px-6 lg:px-10 pt-8 pb-16"
         }
       >
-        {isEditor ? children : <div className="max-w-[1100px]">{children}</div>}
+        {isEditor ? children : <div className="max-w-[960px]">{children}</div>}
       </main>
       <CommandPalette posts={posts} series={series} inEditor={inPostEditor} />
     </>

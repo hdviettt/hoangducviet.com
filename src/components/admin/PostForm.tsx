@@ -486,7 +486,7 @@ export default function PostForm({
         <div className="flex-1 min-h-0 overflow-hidden flex">
           {view !== "preview" && (
             <div
-              className={`min-w-0 h-full overflow-y-auto pt-10 pb-32 ${
+              className={`post-editor min-w-0 h-full overflow-y-auto pt-10 pb-32 ${
                 view === "split"
                   ? "w-1/2 border-r border-md-outline-variant px-6"
                   : "w-full px-6"
