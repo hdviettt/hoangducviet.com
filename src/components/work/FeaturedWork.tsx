@@ -63,11 +63,8 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // slot, so tagging is something Viet does when he wants to and not a thing
   // the page breaks without.
   const topics = project.categories.map((c) => c.title);
-  const eyebrow = topics.length
-    ? topics.join(" · ")
-    : kids > 0
-      ? `Platform · ${agentCount ?? kids} agents`
-      : "Project";
+  const fallback =
+    kids > 0 ? `Platform · ${agentCount ?? kids} agents` : "Project";
   const stack = flattenStack(project.stack, project.techTags);
   // Khong anh, khong clip, khong so lieu thi khong co cot phai. Thieu cai nay,
   // mot du an bi xoa het metrics trong CMS se render ra mot <dl> rong, tuc la
@@ -81,9 +78,31 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // means what it says.
     <article className="grid grid-cols-1 items-start gap-10 md:grid-cols-3 md:gap-12 lg:gap-16">
       <div className={visual ? "md:col-span-1" : "md:col-span-2"}>
-        <p className="text-[0.875rem] leading-6 text-md-on-surface-variant">
-          {eyebrow}
-        </p>
+        {/* Chips when the project is tagged, the derived line when it is not.
+            Not links: nothing on this site answers /topics/seo, and a chip that
+            looks clickable and lands on a 404 is worse than a chip that does
+            not. They become links the day an archive exists to point at.
+
+            `rounded-full` with a filled surface and no border, because the
+            outlined chip in this codebase already means something else — it is
+            the stack row further down the same block, where a border and a
+            logo carry a tool. Two chip shapes for two different jobs. */}
+        {topics.length > 0 ? (
+          <ul className="flex flex-wrap gap-2.5">
+            {topics.map((t) => (
+              <li
+                key={t}
+                className="inline-flex items-center rounded-full bg-md-surface-container-high px-4 py-2 text-[0.8125rem] leading-5 text-md-on-surface"
+              >
+                {t}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-[0.875rem] leading-6 text-md-on-surface-variant">
+            {fallback}
+          </p>
+        )}
 
         <h3 className="mt-3 max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
           <Link
