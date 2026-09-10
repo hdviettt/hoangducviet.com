@@ -11,8 +11,21 @@ import Link from "next/link";
  * writing feed underneath. A split block is roughly half the height and puts
  * the three side by side in the eye rather than end to end.
  *
- * The eyebrow is the child count, which is the one fact that separates these
- * three: the platform is a family, the other two stand alone.
+ * The eyebrow is the project's topics, set in the CMS from the same vocabulary
+ * the posts use. It was the child count, which meant two of the three said
+ * "Project" — a word that tells a reader nothing they cannot already see.
+ *
+ * The masthead used to be a 35px heading stacked over a summary sentence, in a
+ * column that left the right half of the row empty, and it cost about 150px
+ * before the first project. Two problems in one: the height, and that the
+ * Articles section directly below opens at 23px medium. Two sibling sections
+ * with headings that far apart read as two designs. They match now, and the
+ * sentence sits beside the heading instead of under it.
+ *
+ * The masthead breaks out with the blocks rather than staying on the column.
+ * It used to sit 72px to their right, so the section's own heading did not
+ * line up with the projects under it — a stagger that read as intent while the
+ * heading was 35px and as a mistake once it was not.
  */
 export default function SelectedWork({ projects }: { projects: Project[] }) {
   const topLevel = projects.filter((p) => !p.parentSlug);
@@ -23,17 +36,21 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
   // them that.
   return (
     <section id="work" className="scroll-mt-8 pb-6 md:pb-8">
-      <div className="max-w-[51.25rem]">
-        <h2 className="text-[1.5625rem] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[2rem] lg:text-[2.1875rem]">
+      {/* `items-baseline` rather than `items-center`: the heading and the
+          sentence are different sizes, and sitting them on a shared baseline is
+          what makes the row read as one line of the page instead of two things
+          that happen to be next to each other. */}
+      <div className="work-breakout grid grid-cols-1 gap-x-12 gap-y-3 md:grid-cols-[auto_1fr] md:items-baseline md:gap-y-0">
+        <h2 className="text-[1.4375rem] font-medium tracking-[-0.02em] text-md-on-surface">
           Selected work
         </h2>
-        <p className="mt-4 max-w-[38.75rem] text-[0.9375rem] leading-7 text-md-on-surface-variant">
+        <p className="max-w-[38.75rem] text-[0.9375rem] leading-7 text-md-on-surface-variant">
           A search engine built from scratch, and an AI platform of agents I
           built and led inside a company.
         </p>
       </div>
 
-      <div className="work-breakout mt-14 flex flex-col md:mt-20">
+      <div className="work-breakout mt-9 flex flex-col md:mt-12">
         {topLevel.map((p) => (
           <div
             key={p.slug}

@@ -23,9 +23,11 @@ interface WorkFormProps {
     models: ProjectLogo[];
     media: ProjectMedia[];
     postSlugs: string[];
+    categories: string[];
   };
   allPosts: Array<{ slug: string; title: string }>;
   allProjects: Array<{ slug: string; title: string }>;
+  allCategories: Array<{ slug: string; title: string }>;
   isEdit?: boolean;
 }
 
@@ -84,6 +86,7 @@ function LogoRow({
 export default function WorkForm({
   initialData,
   allPosts,
+  allCategories,
   allProjects,
   isEdit,
 }: WorkFormProps) {
@@ -114,6 +117,14 @@ export default function WorkForm({
   const [postSlugs, setPostSlugs] = useState<string[]>(
     initialData?.postSlugs ?? [],
   );
+  // Same vocabulary the posts use, so a topic means one thing across the site.
+  const [categories, setCategories] = useState<string[]>(
+    initialData?.categories ?? [],
+  );
+  const toggleCategory = (slug: string) =>
+    setCategories((prev) =>
+      prev.includes(slug) ? prev.filter((c) => c !== slug) : [...prev, slug],
+    );
 
   const onTitle = (value: string) => {
     setTitle(value);
@@ -153,6 +164,7 @@ export default function WorkForm({
           stack,
           media,
           postSlugs,
+          categories,
         }),
       });
       if (!res.ok) {
@@ -479,6 +491,34 @@ export default function WorkForm({
         onChange={setThumbnail}
         label="Thumbnail"
       />
+
+      {/* Topics. These are what the homepage prints above a featured project,
+          in place of the old derived "Project" line, so leaving a project
+          untagged is a visible choice rather than a silent one. */}
+      {allCategories.length > 0 && (
+        <div>
+          <label className="md-field-label">topics</label>
+          <div className="flex flex-wrap gap-2">
+            {allCategories.map((cat) => {
+              const selected = categories.includes(cat.slug);
+              return (
+                <button
+                  key={cat.slug}
+                  type="button"
+                  onClick={() => toggleCategory(cat.slug)}
+                  className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[13px] leading-[18px] transition-all duration-200 ease-md-standard ${
+                    selected
+                      ? "border-md-secondary-container bg-md-secondary-container text-md-on-secondary-container"
+                      : "border-md-outline bg-transparent text-md-on-surface-variant hover:bg-md-on-surface/8"
+                  }`}
+                >
+                  {cat.title}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Backing writing */}
       {allPosts.length > 0 && (

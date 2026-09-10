@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { projectPosts, projects } from "@/db/schema";
+import { projectPosts, projects, projectsCategories } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { asc, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -61,6 +61,15 @@ export async function POST(request: Request) {
       .returning();
 
     const created = result[0];
+
+    if (Array.isArray(body.categories) && body.categories.length) {
+      await db.insert(projectsCategories).values(
+        body.categories.map((categorySlug: string) => ({
+          projectSlug: created.slug,
+          categorySlug,
+        })),
+      );
+    }
 
     if (body.postSlugs?.length) {
       await db.insert(projectPosts).values(

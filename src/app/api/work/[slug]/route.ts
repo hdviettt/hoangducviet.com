@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { projectPosts, projects } from "@/db/schema";
+import { projectPosts, projects, projectsCategories } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -93,6 +93,24 @@ export async function PUT(request: Request, { params }: Params) {
     await db
       .delete(projectPosts)
       .where(eq(projectPosts.projectSlug, updated.slug));
+
+    // Tags are replaced only when the request actually carries them. An
+    // unconditional delete-then-insert means any caller that omits the field
+    // silently strips every tag off the project, which is a data loss that
+    // looks exactly like a successful save.
+    if (Array.isArray(body.categories)) {
+      await db
+        .delete(projectsCategories)
+        .where(eq(projectsCategories.projectSlug, updated.slug));
+      if (body.categories.length) {
+        await db.insert(projectsCategories).values(
+          body.categories.map((categorySlug: string) => ({
+            projectSlug: updated.slug,
+            categorySlug,
+          })),
+        );
+      }
+    }
 
     if (body.postSlugs?.length) {
       await db.insert(projectPosts).values(

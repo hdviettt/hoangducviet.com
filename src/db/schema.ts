@@ -94,6 +94,24 @@ export const postsCategories = pgTable(
   (table) => [primaryKey({ columns: [table.postId, table.categorySlug] })],
 );
 
+// Many-to-many: projects <-> the same categories the posts use.
+//
+// Deliberately `post_categories` and not a second vocabulary. One list of
+// topics for the site means "AI" is one thing whether it labels an essay or a
+// project; two lists is how a taxonomy quietly forks.
+export const projectsCategories = pgTable(
+  "projects_categories",
+  {
+    projectSlug: text("project_slug")
+      .notNull()
+      .references(() => projects.slug, { onDelete: "cascade" }),
+    categorySlug: text("category_slug")
+      .notNull()
+      .references(() => postCategories.slug, { onDelete: "cascade" }),
+  },
+  (table) => [primaryKey({ columns: [table.projectSlug, table.categorySlug] })],
+);
+
 // Series groups (e.g. "Personal", "AI", "Machine Learning")
 export const seriesGroups = pgTable("series_groups", {
   slug: text("slug").primaryKey(),

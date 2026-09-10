@@ -53,8 +53,21 @@ export default function FeaturedWork({ project }: { project: Project }) {
   const agentCount = project.metrics.find((m) =>
     /agents?/i.test(m.label),
   )?.value;
-  const eyebrow =
-    kids > 0 ? `Platform · ${agentCount ?? kids} agents` : "Project";
+  // Topics first, the derived line as a fallback. The old eyebrow said
+  // "Platform · 19 agents" or, for the other two, "Project" — a word that
+  // tells a reader nothing they cannot see. The agent count is not lost by
+  // this: it is one of the metrics in the panel to the right, where it was
+  // already being printed twice.
+  //
+  // A project with no topics still gets the old line rather than an empty
+  // slot, so tagging is something Viet does when he wants to and not a thing
+  // the page breaks without.
+  const topics = project.categories.map((c) => c.title);
+  const eyebrow = topics.length
+    ? topics.join(" · ")
+    : kids > 0
+      ? `Platform · ${agentCount ?? kids} agents`
+      : "Project";
   const stack = flattenStack(project.stack, project.techTags);
   // Khong anh, khong clip, khong so lieu thi khong co cot phai. Thieu cai nay,
   // mot du an bi xoa het metrics trong CMS se render ra mot <dl> rong, tuc la

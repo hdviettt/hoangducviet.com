@@ -5,9 +5,11 @@ import {
   type ProjectMedia,
   type ProjectMetric,
   type ProjectStackGroup,
+  postCategories,
   posts,
   projectPosts,
   projects,
+  projectsCategories,
 } from "@/db/schema";
 import { and, asc, desc, eq, inArray } from "drizzle-orm";
 
@@ -24,6 +26,11 @@ export interface ProjectPostRef {
   title: string;
   description: string | null;
   date_created: string | null;
+}
+
+export interface ProjectCategory {
+  slug: string;
+  title: string;
 }
 
 export interface ProjectChild {
@@ -56,6 +63,7 @@ export interface Project {
   buildStatus: string;
   featured: boolean;
   sortOrder: number;
+  categories: ProjectCategory[];
   date_created?: string;
   date_updated?: string;
   posts?: ProjectPostRef[];
@@ -87,6 +95,7 @@ function mapProject(row: ProjectRow, related?: ProjectPostRef[]): Project {
     buildStatus: row.buildStatus,
     featured: row.featured,
     sortOrder: row.sortOrder,
+    categories: [],
     date_created: row.dateCreated?.toISOString(),
     date_updated: row.dateUpdated?.toISOString() ?? undefined,
     ...(related ? { posts: related } : {}),
@@ -128,6 +137,37 @@ async function attachChildren(list: Project[]): Promise<Project[]> {
   return list;
 }
 
+// One query for the whole page rather than one per project. Three featured
+// projects is three round trips the naive way, and the homepage already pays
+// for a feed and a profile before it gets here.
+//
+// Ordered by title so a project's tags read the same on every surface: without
+// it Postgres is free to hand back "SEO · AI" on the homepage and "AI · SEO"
+// on /work, and a reader who notices reads it as two different labels.
+async function attachCategories(list: Project[]): Promise<Project[]> {
+  const slugs = list.map((p) => p.slug);
+  if (slugs.length === 0) return list;
+  const rows = await db
+    .select({
+      projectSlug: projectsCategories.projectSlug,
+      slug: postCategories.slug,
+      title: postCategories.title,
+    })
+    .from(projectsCategories)
+    .innerJoin(
+      postCategories,
+      eq(postCategories.slug, projectsCategories.categorySlug),
+    )
+    .where(inArray(projectsCategories.projectSlug, slugs))
+    .orderBy(asc(postCategories.title));
+  for (const p of list) {
+    p.categories = rows
+      .filter((r) => r.projectSlug === p.slug)
+      .map((r) => ({ slug: r.slug, title: r.title }));
+  }
+  return list;
+}
+
 export async function getProjects(): Promise<Project[]> {
   try {
     const rows = await db
@@ -135,7 +175,9 @@ export async function getProjects(): Promise<Project[]> {
       .from(projects)
       .where(eq(projects.status, "published"))
       .orderBy(asc(projects.sortOrder), desc(projects.dateCreated));
-    return await attachChildren(rows.map((r) => mapProject(r)));
+    return await attachCategories(
+      await attachChildren(rows.map((r) => mapProject(r))),
+    );
   } catch (error) {
     console.error("getProjects failed:", error);
     return [];
@@ -149,7 +191,9 @@ export async function getFeaturedProjects(): Promise<Project[]> {
       .from(projects)
       .where(and(eq(projects.status, "published"), eq(projects.featured, true)))
       .orderBy(asc(projects.sortOrder));
-    return await attachChildren(rows.map((r) => mapProject(r)));
+    return await attachCategories(
+      await attachChildren(rows.map((r) => mapProject(r))),
+    );
   } catch (error) {
     console.error("getFeaturedProjects failed:", error);
     return [];
@@ -218,6 +262,8 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         .limit(1);
       project.parent = pr[0] ?? null;
     }
+
+    await attachCategories([project]);
 
     return project;
   } catch (error) {
