@@ -11,7 +11,6 @@ import {
   type OutlineItem,
   gotoHeading,
 } from "@/lib/admin-events";
-import { IDENTITY } from "@/lib/identity";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -347,13 +346,17 @@ export default function AdminNav({
     <div className="admin-nav flex h-screen shrink-0">
       {/* ---------- activity rail ---------- */}
       <div className="w-12 shrink-0 h-full flex flex-col items-center border-r border-md-outline-variant bg-md-surface-container-lowest">
+        {/* A link back to the site, without the initial. A single letter at the
+            top of a rail is a logo slot, and this is one person's own CMS: it
+            was labelling the thing to its owner. */}
         <Link
           href="/"
           title="View site"
-          className="h-12 w-full grid place-items-center text-md-on-surface transition-colors duration-fast"
+          aria-label="View site"
+          className="h-11 w-full grid place-items-center text-md-on-surface-variant hover:text-md-on-surface transition-colors duration-fast"
         >
-          <span className="grid place-items-center w-8 h-8 rounded-[10px] text-[14px] font-medium ring-1 ring-md-outline-variant hover:ring-md-outline transition-colors duration-fast">
-            {IDENTITY.name.charAt(0)}
+          <span className="grid place-items-center w-8 h-8 rounded-[10px] hover:bg-md-on-surface/6 transition-colors duration-fast">
+            <Icon name="open_in_new" size={16} />
           </span>
         </Link>
 

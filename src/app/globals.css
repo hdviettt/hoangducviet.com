@@ -413,6 +413,44 @@ h6 {
 
 
 /* ================================
+   PAGE SHELL
+   ================================ */
+
+/* The column stopped growing at 1140px while the display type reached its
+   largest step at 1024px, so every window between the two ran the wide
+   layout's type against gutters that had not arrived yet — at 1280 the column
+   took 82% of the screen and the headings were the size they are at 1920.
+   Column and display sizes now both scale across that range and land on their
+   existing values at 1600, so a wide screen renders exactly as it did and the
+   mid widths get the proportions the design was drawn at. */
+:root {
+  --shell-max: clamp(980px, 50vw + 340px, 1140px);
+}
+
+.site-shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .site-shell {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-shell {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+/* ================================
    ARTICLE CONTENT
    ================================ */
 
@@ -749,7 +787,7 @@ h6 {
 
 @media (min-width: 900px) {
   .article-content figure {
-    width: min(1080px, calc(100vw - 5rem));
+    width: min(1080px, calc(100vw - 5rem), calc(var(--shell-max) - 3rem));
     margin-left: 50%;
     transform: translateX(-50%);
   }
@@ -833,7 +871,7 @@ h6 {
    1360px, where the cap and the column are closest. */
 @media (min-width: 1024px) {
   .work-breakout {
-    width: min(1320px, calc(100vw - 4rem));
+    width: min(calc(var(--shell-max) + 180px), calc(100vw - 4rem));
     margin-left: 50%;
     transform: translateX(-50%);
   }

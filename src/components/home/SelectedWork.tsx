@@ -24,7 +24,7 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
   return (
     <section id="work" className="scroll-mt-8 pb-6 md:pb-8">
       <div className="max-w-[820px]">
-        <h2 className="text-[28px] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[36px] lg:text-[40px]">
+        <h2 className="text-[28px] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[36px] lg:text-[clamp(32px,2.5vw,40px)]">
           Selected work
         </h2>
         <p className="mt-4 max-w-[620px] text-[16px] leading-7 text-md-on-surface-variant">

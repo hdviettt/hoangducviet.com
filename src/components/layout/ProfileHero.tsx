@@ -46,7 +46,7 @@ export default function ProfileHero({
             )}
             <div className="min-w-0">
               {name && (
-                <h1 className="text-[26px] leading-8 sm:text-[32px] sm:leading-9 md:text-[36px] md:leading-[42px] font-normal tracking-tight text-md-on-surface">
+                <h1 className="text-[26px] leading-8 sm:text-[32px] sm:leading-9 md:text-[clamp(29px,2.25vw,36px)] md:leading-[1.17] font-normal tracking-tight text-md-on-surface">
                   {name}
                 </h1>
               )}
