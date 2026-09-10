@@ -1,3 +1,5 @@
+import type { ProjectStackGroup } from "@/db/schema";
+
 // Canonical identity facts for Hoang Duc Viet — the single source of truth for
 // both the visible hero (page.tsx) and the JSON-LD entity graph (jsonld.ts) so
 // the two can never drift. Consistency across every surface is what lets Google
@@ -62,4 +64,79 @@ export const SAME_AS: string[] = [
   ...SOCIAL_PROFILES.map((p) => p.href),
   SEONGON_EXPERT_URL,
   WIKIDATA_URL,
+];
+
+// What Viet actually builds with, grouped the way he would say it out loud.
+//
+// Every entry is either named on a project's own "Built with" panel under /work
+// or is a default he reaches for across enough of them to count. Nothing
+// aspirational goes in here: the project pages are the receipts, and a stack
+// that lists something no project uses is the one claim on this site a reader
+// can disprove in two clicks.
+//
+// The shape is ProjectStackGroup, so the About page renders through the same
+// Chips component the project pages use and a tool looks identical wherever you
+// meet it. `import type` keeps the schema module out of the emitted bundle.
+export const TECH_STACK: ProjectStackGroup[] = [
+  {
+    group: "Languages",
+    items: [{ name: "Python" }, { name: "TypeScript" }, { name: "SQL" }],
+  },
+  {
+    group: "Models",
+    items: [
+      { name: "Claude" },
+      { name: "GPT" },
+      { name: "Gemini" },
+      { name: "Grok" },
+      { name: "Qwen" },
+      { name: "Voyage" },
+    ],
+  },
+  {
+    group: "Agents",
+    items: [
+      { name: "Claude Agent SDK" },
+      { name: "Vercel AI SDK" },
+      { name: "MCP" },
+      { name: "Agno" },
+      { name: "n8n" },
+    ],
+  },
+  {
+    group: "Machine learning",
+    items: [
+      { name: "underthesea" },
+      { name: "UMAP" },
+      { name: "HDBSCAN" },
+      { name: "ONNX Runtime" },
+      { name: "Unsloth" },
+    ],
+  },
+  {
+    group: "Application",
+    items: [
+      { name: "Next.js" },
+      { name: "React" },
+      { name: "Tailwind" },
+      { name: "FastAPI" },
+      { name: "Drizzle" },
+      { name: "Bun" },
+    ],
+  },
+  {
+    group: "Data",
+    // One chip, not two. `pgvector` resolves to the same elephant as
+    // `PostgreSQL`, and two identical logos side by side read as a rendering
+    // bug; the project pages already write it as one item for that reason.
+    items: [
+      { name: "PostgreSQL + pgvector" },
+      { name: "Supabase" },
+      { name: "Redis" },
+    ],
+  },
+  {
+    group: "Infrastructure",
+    items: [{ name: "Railway" }, { name: "Docker" }, { name: "Cloudflare R2" }],
+  },
 ];

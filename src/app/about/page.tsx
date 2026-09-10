@@ -1,3 +1,4 @@
+import TechStack from "@/components/about/TechStack";
 import MarkdownContent from "@/components/content/MarkdownContent";
 import ProfileHero from "@/components/layout/ProfileHero";
 import { IDENTITY } from "@/lib/identity";
@@ -87,6 +88,12 @@ export default async function AboutPage() {
         description={profile?.description}
         imageUrl={profile?.image ?? null}
       />
+
+      {/* Cai stack, dat ngay duoi phan gioi thieu dung chung voi trang chu.
+          No la du lieu chu khong phai van xuoi, nen no di truoc than bai: ai
+          den day de biet Viet lam bang gi thi doc xong trong mot cai liec, con
+          ai den de doc thi cuon qua. */}
+      <TechStack />
 
       {/* Than bai, dung ong render cua bai viet. */}
       {hasBody && (

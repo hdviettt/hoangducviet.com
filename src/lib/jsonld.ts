@@ -5,6 +5,7 @@ import {
   PROFILEPAGE_ID,
   SAME_AS,
   SITE_ORIGIN,
+  TECH_STACK,
   WEBSITE_ID,
 } from "./identity";
 import { CERTIFICATIONS, EDUCATION } from "./resume";
@@ -111,7 +112,15 @@ export function createAboutPageSchema(params?: { description?: string }) {
           })),
         ],
         homeLocation: { "@type": "Place", name: "Hanoi, Vietnam" },
-        knowsAbout: [...IDENTITY.knowsAbout],
+        // The tools go in the About page's node and not the homepage's,
+        // because this is the page that shows them. Structured data is only
+        // worth anything while it says what the page says; a homepage that
+        // claims forty tools it never prints is the kind of mismatch that gets
+        // a rich result dropped rather than rewarded.
+        knowsAbout: [
+          ...IDENTITY.knowsAbout,
+          ...TECH_STACK.flatMap((g) => g.items.map((i) => i.name)),
+        ],
         hasCredential: CERTIFICATIONS.map((c) => ({
           "@type": "EducationalOccupationalCredential",
           name: c.name,

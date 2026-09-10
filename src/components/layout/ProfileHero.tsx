@@ -61,7 +61,7 @@ export default function ProfileHero({
               />
             )}
 
-          <div className="mt-6 flex flex-wrap justify-center items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-250 fill-mode-backwards">
+          <div className="mt-6 flex flex-wrap justify-center items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200 fill-mode-backwards">
             {SOCIAL_PROFILES.map(({ href, label }) => {
               // href/label come from identity.ts so the visible links and the
               // JSON-LD sameAs stay in lockstep; only the icon lives in the UI.
