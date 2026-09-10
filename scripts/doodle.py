@@ -17,6 +17,7 @@ Hai luat khong duoc pha:
      cai dau, va mot ngay nao do doi mot hinh se lam hong mot hinh khac.
 """
 
+import os
 import math
 from pathlib import Path
 
@@ -25,7 +26,13 @@ W, H = 960, 640
 M = 72
 AW, AH = W - 2 * M, H - 2 * M
 
-INK = "#004AEF"          # mau in cung, dung cho <img> doc lap
+# Mau in cung, dung cho <img> doc lap. Ca bo hinh chi co MOT muc: moi mang to
+# la do mo cua chinh no, con lai la trang. Doi mot dong nay la doi ca ngon ngu
+# hinh, nen no doc duoc tu bien moi truong — de thu mot bang mau khac ma khong
+# phai sua file, va de ban thu nghiem khong lan vao mac dinh dang chay.
+#
+#     DOODLE_INK="#111111" python scripts/make-work-field.py
+INK = os.environ.get("DOODLE_INK", "#004AEF")
 SW = 3.0
 SANS = "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif"
 MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
