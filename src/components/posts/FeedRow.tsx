@@ -24,9 +24,9 @@ function stripPartPrefix(title: string): string {
 }
 
 const TITLE_CLS =
-  "text-[19px] leading-[1.25] tracking-[-0.013em] font-medium text-md-on-surface [text-wrap:balance] transition-colors duration-200 ease-md-standard";
+  "text-[1.1875rem] leading-[1.25] tracking-[-0.013em] font-medium text-md-on-surface [text-wrap:balance] transition-colors duration-200 ease-md-standard";
 const DATE_CLS =
-  "text-[13px] font-medium tabular-nums text-md-on-surface-variant";
+  "text-[0.8125rem] font-medium tabular-nums text-md-on-surface-variant";
 const ROW_CLS =
   "grid grid-cols-1 gap-y-1.5 border-b border-md-outline-variant sm:gap-x-6";
 
@@ -34,9 +34,9 @@ function PostRow({ item }: { item: Extract<FeedItem, { kind: "post" }> }) {
   return (
     <Link
       href={`/posts/${item.post.slug}`}
-      className={`group items-baseline py-[21px] sm:grid-cols-[92px_1fr] ${ROW_CLS}`}
+      className={`group items-baseline py-[1.3125rem] sm:grid-cols-[92px_1fr] ${ROW_CLS}`}
     >
-      <span className={`${DATE_CLS} sm:pt-[3px]`}>
+      <span className={`${DATE_CLS} sm:pt-[0.1875rem]`}>
         {feedRowDate(item.post.date_created)}
       </span>
       <h3 className={`${TITLE_CLS} group-hover:text-primary`}>
@@ -55,8 +55,8 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
   ];
 
   return (
-    <div className={`py-[26px] sm:grid-cols-[92px_1fr] ${ROW_CLS}`}>
-      <span className={`${DATE_CLS} sm:pt-[3px]`}>
+    <div className={`py-[1.625rem] sm:grid-cols-[92px_1fr] ${ROW_CLS}`}>
+      <span className={`${DATE_CLS} sm:pt-[0.1875rem]`}>
         {feedRowDate(item.lastDate)}
       </span>
       <div>
@@ -73,12 +73,12 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
                 <Link
                   key={part.slug}
                   href={`/posts/${part.slug}`}
-                  className="group/part flex items-baseline gap-3 py-[7px]"
+                  className="group/part flex items-baseline gap-3 py-[0.4375rem]"
                 >
-                  <span className="w-5 shrink-0 text-[12.5px] font-medium tabular-nums text-[hsl(var(--md-sys-color-primary)/0.75)]">
+                  <span className="w-5 shrink-0 text-[0.78125rem] font-medium tabular-nums text-[hsl(var(--md-sys-color-primary)/0.75)]">
                     {String(col.offset + i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-[14px] leading-[1.35] text-md-on-surface-variant transition-colors duration-200 ease-md-standard group-hover/part:text-primary">
+                  <span className="text-[0.875rem] leading-[1.35] text-md-on-surface-variant transition-colors duration-200 ease-md-standard group-hover/part:text-primary">
                     {stripPartPrefix(part.title)}
                   </span>
                 </Link>

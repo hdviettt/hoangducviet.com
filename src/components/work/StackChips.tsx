@@ -4,7 +4,7 @@ import { Fragment } from "react";
 
 export function LetterMark({ text }: { text: string }) {
   return (
-    <span className="inline-flex h-[17px] min-w-[17px] shrink-0 items-center justify-center rounded-[5px] bg-md-on-surface/[0.07] px-[3px] font-mono text-[8.5px] font-semibold leading-none text-md-on-surface-variant">
+    <span className="inline-flex h-[1.0625rem] min-w-[1.0625rem] shrink-0 items-center justify-center rounded-[0.3125rem] bg-md-on-surface/[0.07] px-[0.1875rem] font-mono text-[0.53125rem] font-semibold leading-none text-md-on-surface-variant">
       {text}
     </span>
   );
@@ -95,7 +95,7 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
         return (
           <li
             key={it.name}
-            className="inline-flex items-center gap-2 rounded-[11px] border border-md-outline-variant bg-md-surface-container-high px-3 py-[7px] text-[12.5px] font-medium leading-none text-md-on-surface shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
+            className="inline-flex items-center gap-2 rounded-[0.6875rem] border border-md-outline-variant bg-md-surface-container-high px-3 py-[0.4375rem] text-[0.78125rem] font-medium leading-none text-md-on-surface shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
           >
             {mark ? (
               // `mono` giong het hang dia o trang chu. Truoc day chip o trang
@@ -105,7 +105,7 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
               <Mark
                 id={mark}
                 mono
-                className="h-[16px] w-[16px] text-md-on-surface"
+                className="h-[1rem] w-[1rem] text-md-on-surface"
               />
             ) : (
               <LetterMark text={letter as string} />
@@ -159,7 +159,7 @@ function Dot({ item }: { item: ProjectLogo }) {
           it has the rest of the row and the artwork column to spill into.
           `stack-tip` is what reveals it, and it lives in globals.css because it
           has to sit inside `@media (hover: hover)` — see the rule there. */}
-      <span className="stack-tip pointer-events-none absolute bottom-[calc(100%+8px)] left-0 z-10 whitespace-nowrap rounded-md bg-md-inverse-surface px-2.5 py-1.5 text-[12px] font-medium leading-none text-md-inverse-on-surface opacity-0 shadow-md-2 transition-opacity duration-150 ease-md-standard">
+      <span className="stack-tip pointer-events-none absolute bottom-[calc(100%+8px)] left-0 z-10 whitespace-nowrap rounded-md bg-md-inverse-surface px-2.5 py-1.5 text-[0.75rem] font-medium leading-none text-md-inverse-on-surface opacity-0 shadow-md-2 transition-opacity duration-150 ease-md-standard">
         {item.name}
       </span>
     </li>

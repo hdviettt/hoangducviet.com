@@ -23,11 +23,11 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
   // them that.
   return (
     <section id="work" className="scroll-mt-8 pb-6 md:pb-8">
-      <div className="max-w-[820px]">
-        <h2 className="text-[25px] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[32px] lg:text-[clamp(28px,2.2vw,35px)]">
+      <div className="max-w-[51.25rem]">
+        <h2 className="text-[1.5625rem] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[2rem] lg:text-[2.1875rem]">
           Selected work
         </h2>
-        <p className="mt-4 max-w-[620px] text-[length:var(--fluid-body)] leading-[1.75] text-md-on-surface-variant">
+        <p className="mt-4 max-w-[38.75rem] text-[0.9375rem] leading-7 text-md-on-surface-variant">
           A search engine built from scratch, and an AI platform of agents I
           built and led inside a company.
         </p>

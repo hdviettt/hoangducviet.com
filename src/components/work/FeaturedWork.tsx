@@ -66,13 +66,13 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // gutters, so 880px of a 1320px row is gutter and the art column collapses
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
-    <article className="grid grid-cols-1 items-start gap-10 md:grid-cols-3 md:gap-12 lg:gap-[var(--fluid-gutter)]">
+    <article className="grid grid-cols-1 items-start gap-10 md:grid-cols-3 md:gap-12 lg:gap-16">
       <div className={visual ? "md:col-span-1" : "md:col-span-2"}>
-        <p className="text-[length:var(--fluid-label)] leading-[1.7] text-md-on-surface-variant">
+        <p className="text-[0.875rem] leading-6 text-md-on-surface-variant">
           {eyebrow}
         </p>
 
-        <h3 className="mt-3 max-w-[17ch] text-balance text-[23px] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[28px] lg:text-[clamp(26px,2vw,32px)]">
+        <h3 className="mt-3 max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
           <Link
             href={href}
             className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
@@ -82,7 +82,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
         </h3>
 
         {project.description && (
-          <p className="mt-5 text-[length:var(--fluid-body)] leading-[1.75] text-md-on-surface-variant">
+          <p className="mt-5 text-[0.9375rem] leading-7 text-md-on-surface-variant">
             {project.description}
           </p>
         )}
@@ -152,12 +152,12 @@ export default function FeaturedWork({ project }: { project: Project }) {
             {metrics.map((m) => (
               <div
                 key={m.label}
-                className="flex min-h-[150px] flex-col justify-center bg-md-surface-container-low px-7 py-8 sm:min-h-[190px] sm:px-9"
+                className="flex min-h-[9.375rem] flex-col justify-center bg-md-surface-container-low px-7 py-8 sm:min-h-[11.875rem] sm:px-9"
               >
-                <dd className="text-[28px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[clamp(28px,2.2vw,35px)]">
+                <dd className="text-[1.75rem] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[2.1875rem]">
                   {m.value}
                 </dd>
-                <dt className="mt-3 text-[length:var(--fluid-label)] leading-[1.4] text-md-on-surface-variant">
+                <dt className="mt-3 text-[0.875rem] leading-[1.4] text-md-on-surface-variant">
                   {m.label}
                 </dt>
               </div>

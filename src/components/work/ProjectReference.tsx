@@ -12,7 +12,7 @@ import type { ReactNode } from "react";
 
 function SubHead({ children }: { children: ReactNode }) {
   return (
-    <h3 className="mb-5 text-[12.5px] font-medium uppercase tracking-[0.08em] text-md-on-surface-variant">
+    <h3 className="mb-5 text-[0.78125rem] font-medium uppercase tracking-[0.08em] text-md-on-surface-variant">
       {children}
     </h3>
   );
@@ -24,14 +24,14 @@ function Features({ features }: { features: ProjectFeature[] }) {
       {features.map((f) => (
         <div key={f.name} className="flex gap-3">
           <span
-            className="mt-[8px] h-[7px] w-[7px] shrink-0 rounded-[2px] bg-primary"
+            className="mt-[0.5rem] h-[0.4375rem] w-[0.4375rem] shrink-0 rounded-[2px] bg-primary"
             aria-hidden="true"
           />
           <div>
-            <dt className="text-[14.5px] font-medium leading-snug text-md-on-surface">
+            <dt className="text-[0.90625rem] font-medium leading-snug text-md-on-surface">
               {f.name}
             </dt>
-            <dd className="mt-1 text-[13.5px] leading-[1.5] text-md-on-surface-variant">
+            <dd className="mt-1 text-[0.84375rem] leading-[1.5] text-md-on-surface-variant">
               {f.desc}
             </dd>
           </div>
@@ -50,7 +50,7 @@ function StackGroupBlock({
 }) {
   return (
     <div>
-      <div className="mb-2 text-[11.5px] text-md-on-surface-variant opacity-80">
+      <div className="mb-2 text-[0.71875rem] text-md-on-surface-variant opacity-80">
         {label}
       </div>
       <Chips items={items} />

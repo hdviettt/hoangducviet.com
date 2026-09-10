@@ -58,7 +58,7 @@ export default function Credentials() {
                 )}
               </span>
               {c.credentialId && (
-                <p className="mt-0.5 font-mono text-[12px] leading-4 text-md-on-surface-variant">
+                <p className="mt-0.5 font-mono text-[0.75rem] leading-4 text-md-on-surface-variant">
                   {c.credentialId}
                 </p>
               )}

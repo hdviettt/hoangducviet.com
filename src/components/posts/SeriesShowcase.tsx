@@ -44,7 +44,7 @@ export default function SeriesShowcase({
             moves above the text (order-first) so it reads image→text like
             every other card, instead of stacking against part 1's cover. */}
         <div className="mb-10 lg:mb-0 lg:sticky lg:top-10 lg:self-start flex flex-col">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
             <span className="font-medium text-primary">Collection</span>
             <span>{parts.length} parts</span>
             <span className="tabular-nums">{feedRowDate(item.lastDate)}</span>
@@ -54,12 +54,12 @@ export default function SeriesShowcase({
             href={`/collection/${series.slug}`}
             className="group block mt-3"
           >
-            <h3 className="text-[25px] leading-9 md:text-[37px] md:leading-[48px] font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+            <h3 className="text-[1.5625rem] leading-9 md:text-[2.3125rem] md:leading-[3rem] font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
               {series.title}
             </h3>
           </Link>
           {series.summary && (
-            <p className="mt-4 text-[15px] leading-[26px] text-md-on-surface-variant max-w-[560px]">
+            <p className="mt-4 text-[0.9375rem] leading-[1.625rem] text-md-on-surface-variant max-w-[35rem]">
               {series.summary}
             </p>
           )}
@@ -76,15 +76,15 @@ export default function SeriesShowcase({
               className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
             >
               <div className="min-w-0 flex-1">
-                <h4 className="text-[20px] leading-7 md:text-[25px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                <h4 className="text-[1.25rem] leading-7 md:text-[1.5625rem] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                   {partLabel(part.title, series.title)}
                 </h4>
                 {part.description && (
-                  <p className="mt-3 text-[15px] leading-[26px] text-md-on-surface-variant">
+                  <p className="mt-3 text-[0.9375rem] leading-[1.625rem] text-md-on-surface-variant">
                     {part.description}
                   </p>
                 )}
-                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
                   <span className="tabular-nums">Part {i + 1}</span>
                   <span className="tabular-nums">
                     {feedRowDate(part.date_created)}

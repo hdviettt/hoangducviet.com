@@ -51,7 +51,7 @@ export async function generateMetadata({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-5 text-[14px] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
+    <h2 className="mb-5 text-[0.875rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
       {children}
     </h2>
   );
@@ -87,14 +87,14 @@ export default async function ProjectDeepDivePage({
     // Can giua trong khung 1044px cua vo trang, giong trang bai viet. Thieu
     // mx-auto thi khoi 880px dinh sat mep trai va bo trong 164px ben phai —
     // do 1440px thi le trai 198, le phai 473.
-    <div className="mx-auto max-w-[880px] pb-20 md:pb-28">
+    <div className="mx-auto max-w-[55rem] pb-20 md:pb-28">
       {/* Breadcrumb. A trail, not a back arrow: "← Work" only says where the
           previous tab was, while the trail says where this page sits. The last
           crumb is the section rather than the title, since the title is the h1
           directly underneath. */}
       <nav
         aria-label="Breadcrumb"
-        className="flex items-center gap-1.5 pt-10 text-[13px] sm:pt-12 md:pt-14"
+        className="flex items-center gap-1.5 pt-10 text-[0.8125rem] sm:pt-12 md:pt-14"
       >
         <Link
           href="/"
@@ -138,11 +138,11 @@ export default async function ProjectDeepDivePage({
 
       {/* ===== Hero ===== */}
       <header className="mt-8">
-        <h1 className="max-w-[20ch] text-balance text-[30px] font-medium leading-[1.05] tracking-[-0.03em] text-md-on-surface sm:text-[39px]">
+        <h1 className="max-w-[20ch] text-balance text-[1.875rem] font-medium leading-[1.05] tracking-[-0.03em] text-md-on-surface sm:text-[2.4375rem]">
           {project.title}
         </h1>
         {project.description && (
-          <p className="mt-5 max-w-[66ch] text-[16.5px] leading-[1.55] text-md-on-surface-variant">
+          <p className="mt-5 max-w-[66ch] text-[1.03125rem] leading-[1.55] text-md-on-surface-variant">
             {project.description}
           </p>
         )}
@@ -178,7 +178,7 @@ export default async function ProjectDeepDivePage({
             )}
           </div>
           {hero.caption && (
-            <figcaption className="mt-3 text-[14px] leading-6 text-md-on-surface-variant">
+            <figcaption className="mt-3 text-[0.875rem] leading-6 text-md-on-surface-variant">
               {hero.caption}
             </figcaption>
           )}
@@ -196,10 +196,10 @@ export default async function ProjectDeepDivePage({
           <dl className="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-4">
             {metrics.map((m) => (
               <div key={m.label}>
-                <dd className="text-[27px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[32px]">
+                <dd className="text-[1.6875rem] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[2rem]">
                   {m.value}
                 </dd>
-                <dt className="mt-3 text-[13.5px] leading-[1.45] text-md-on-surface-variant">
+                <dt className="mt-3 text-[0.84375rem] leading-[1.45] text-md-on-surface-variant">
                   {m.label}
                 </dt>
               </div>
@@ -215,7 +215,7 @@ export default async function ProjectDeepDivePage({
           <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-[max-content_1fr] sm:gap-y-4">
             {stackGroups.map((g) => (
               <Fragment key={g.group}>
-                <div className="text-[13.5px] font-medium text-md-on-surface-variant sm:pt-[8px]">
+                <div className="text-[0.84375rem] font-medium text-md-on-surface-variant sm:pt-[0.5rem]">
                   {g.group}
                 </div>
                 <Chips items={g.items} />
@@ -270,7 +270,7 @@ export default async function ProjectDeepDivePage({
       {/* ===== Writing ===== */}
       {hasPosts && (
         <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
-          <h2 className="mb-4 text-[20px] font-medium tracking-[-0.02em] text-md-on-surface">
+          <h2 className="mb-4 text-[1.25rem] font-medium tracking-[-0.02em] text-md-on-surface">
             Related Articles
           </h2>
           <div>
@@ -278,12 +278,12 @@ export default async function ProjectDeepDivePage({
               <Link
                 key={p.slug}
                 href={`/posts/${p.slug}`}
-                className="group grid grid-cols-1 items-baseline gap-y-1.5 border-b border-md-outline-variant py-[21px] sm:grid-cols-[92px_1fr] sm:gap-x-6"
+                className="group grid grid-cols-1 items-baseline gap-y-1.5 border-b border-md-outline-variant py-[1.3125rem] sm:grid-cols-[92px_1fr] sm:gap-x-6"
               >
-                <span className="text-[13px] font-medium tabular-nums text-md-on-surface-variant sm:pt-[4px]">
+                <span className="text-[0.8125rem] font-medium tabular-nums text-md-on-surface-variant sm:pt-[0.25rem]">
                   {feedRowDate(p.date_created)}
                 </span>
-                <h3 className="text-[19px] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface [text-wrap:balance] transition-colors group-hover:text-primary">
+                <h3 className="text-[1.1875rem] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface [text-wrap:balance] transition-colors group-hover:text-primary">
                   {p.title}
                 </h3>
               </Link>

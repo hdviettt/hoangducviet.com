@@ -126,7 +126,7 @@ export default async function PostDetail({
   return (
     <>
       {preview && data.status !== "published" && (
-        <div className="bg-md-tertiary-container text-md-on-tertiary-container text-center text-[13px] leading-5 py-1.5 px-4">
+        <div className="bg-md-tertiary-container text-md-on-tertiary-container text-center text-[0.8125rem] leading-5 py-1.5 px-4">
           Preview · this {data.status} is not published yet
         </div>
       )}
@@ -137,8 +137,8 @@ export default async function PostDetail({
       <article className="pt-12 sm:pt-16 md:pt-20 pb-24">
         {/* deepmind.google article anatomy: centered meta → display title →
             byline → full-width rounded hero → centered standfirst → prose. */}
-        <header className="mx-auto max-w-[880px] text-center mb-10 md:mb-14">
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[14px] leading-5 text-md-on-surface-variant mb-5 md:mb-7">
+        <header className="mx-auto max-w-[55rem] text-center mb-10 md:mb-14">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[0.875rem] leading-5 text-md-on-surface-variant mb-5 md:mb-7">
             <time className="tabular-nums" dateTime={data.date_created ?? ""}>
               {feedRowDate(data.date_created)}
             </time>
@@ -167,23 +167,23 @@ export default async function PostDetail({
             {viewCount > 0 && <ViewCount count={viewCount} />}
           </div>
           <h1
-            className="text-[30px] leading-[1.12] sm:text-[36px] md:text-[clamp(38px,3vw,48px)] md:leading-[1.08] font-medium tracking-tight"
+            className="text-[1.875rem] leading-[1.12] sm:text-[2.25rem] md:text-[3rem] md:leading-[1.08] font-medium tracking-tight"
             style={{ color: "var(--article-heading)" }}
           >
             {data.title}
           </h1>
-          <p className="mt-5 md:mt-7 text-[15px] leading-6 text-md-on-surface-variant">
+          <p className="mt-5 md:mt-7 text-[0.9375rem] leading-6 text-md-on-surface-variant">
             Hoang Duc Viet
           </p>
         </header>
 
         {standfirst && (
-          <div className="standfirst mx-auto max-w-[620px] text-center mb-12 md:mb-16">
+          <div className="standfirst mx-auto max-w-[38.75rem] text-center mb-12 md:mb-16">
             <MarkdownContent content={standfirst} />
           </div>
         )}
 
-        <div className="mx-auto max-w-[620px] min-w-0">
+        <div className="mx-auto max-w-[38.75rem] min-w-0">
           {body ? (
             <div className="article-content">
               <MarkdownContent content={body} />
@@ -211,7 +211,7 @@ export default async function PostDetail({
           )}
         </div>
 
-        <div className="mx-auto max-w-[880px]">
+        <div className="mx-auto max-w-[55rem]">
           <PostNavigation
             previous={navPrev ? { ...navPrev, href: prevHref } : null}
             next={navNext ? { ...navNext, href: nextHref } : null}

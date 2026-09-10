@@ -97,7 +97,7 @@ export default async function AboutPage() {
 
       {/* Than bai, dung ong render cua bai viet. */}
       {hasBody && (
-        <section className="mx-auto mt-14 max-w-[620px] px-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
+        <section className="mx-auto mt-14 max-w-[38.75rem] px-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
           <div className="article-content">
             <MarkdownContent content={body} />
           </div>

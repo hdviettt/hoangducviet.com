@@ -80,7 +80,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
       {isPostPage && (
         <div
           aria-hidden="true"
-          className="fixed top-0 left-0 right-0 h-[3px] z-50 pointer-events-none"
+          className="fixed top-0 left-0 right-0 h-[0.1875rem] z-50 pointer-events-none"
         >
           <div
             className="h-full bg-primary transition-[width] duration-150 ease-out"
@@ -102,7 +102,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         <div className="site-shell h-16 flex items-center gap-4 sm:gap-8">
           <Link
             href="/"
-            className="text-[14px] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[15.5px]"
+            className="text-[0.875rem] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[0.96875rem]"
           >
             Hoang Duc Viet
           </Link>
@@ -116,7 +116,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-[13px] leading-5 sm:text-[14px] transition-colors duration-200 ease-md-standard ${
+                  className={`text-[0.8125rem] leading-5 sm:text-[0.875rem] transition-colors duration-200 ease-md-standard ${
                     active
                       ? "text-md-on-surface font-medium"
                       : "text-md-on-surface-variant hover:text-md-on-surface"

@@ -154,7 +154,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
       {/* Same anatomy as the feed's series block: meta line, display title,
           summary, then the cover. */}
       <header className="mb-10 md:mb-14">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
           <span className="font-medium text-primary">Collection</span>
           {isSeries && <span>{posts.length} parts</span>}
           {seriesDate && (
@@ -168,17 +168,17 @@ export default async function SeriesPage({ params }: SeriesParams) {
           {totalViews > 0 && <ViewCount count={totalViews} />}
         </div>
 
-        <h1 className="mt-3 text-[32px] leading-[44px] md:text-[50px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
+        <h1 className="mt-3 text-[2rem] leading-[2.75rem] md:text-[3.125rem] md:leading-[3.875rem] font-medium tracking-tight text-md-on-surface">
           {seriesItem.title}
         </h1>
 
         {seriesItem.summary && (
-          <p className="mt-4 text-[16.5px] leading-[30px] text-md-on-surface-variant max-w-[760px]">
+          <p className="mt-4 text-[1.03125rem] leading-[1.875rem] text-md-on-surface-variant max-w-[47.5rem]">
             {seriesItem.summary}
           </p>
         )}
 
-        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[14px] leading-5 font-medium">
+        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[0.875rem] leading-5 font-medium">
           {firstPost && (
             <Link
               href={`/posts/${firstPost.slug}`}
@@ -214,7 +214,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
 
       {seriesItem.description && (
         <div
-          className="article-content mx-auto max-w-[620px] mb-16 md:mb-20"
+          className="article-content mx-auto max-w-[38.75rem] mb-16 md:mb-20"
           dangerouslySetInnerHTML={{ __html: seriesItem.description }}
         />
       )}
@@ -223,7 +223,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
           hairline per card, cover on the right, image on top below sm. */}
       {posts.length > 0 && (
         <section>
-          <h2 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-md-on-surface-variant pb-4 border-b border-md-outline-variant">
+          <h2 className="text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-md-on-surface-variant pb-4 border-b border-md-outline-variant">
             {isSeries ? "The series" : "Posts in this series"}
           </h2>
           <div className="[&>a]:border-b [&>a]:border-md-outline-variant">
@@ -239,15 +239,15 @@ export default async function SeriesPage({ params }: SeriesParams) {
                   className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
                 >
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[20px] leading-7 md:text-[25px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                    <h3 className="text-[1.25rem] leading-7 md:text-[1.5625rem] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                       {cleanTitle}
                     </h3>
                     {post.description && (
-                      <p className="mt-3 text-[15px] leading-[26px] text-md-on-surface-variant">
+                      <p className="mt-3 text-[0.9375rem] leading-[1.625rem] text-md-on-surface-variant">
                         {post.description}
                       </p>
                     )}
-                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] leading-5 text-md-on-surface-variant">
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
                       {isSeries && (
                         <span className="tabular-nums">Part {i + 1}</span>
                       )}

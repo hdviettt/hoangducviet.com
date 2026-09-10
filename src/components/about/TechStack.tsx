@@ -21,8 +21,8 @@ import { Fragment } from "react";
 // that broke.
 export default function TechStack() {
   return (
-    <section className="mx-auto max-w-[880px] border-t border-md-outline-variant pt-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards">
-      <h2 className="mb-5 text-[14px] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
+    <section className="mx-auto max-w-[55rem] border-t border-md-outline-variant pt-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards">
+      <h2 className="mb-5 text-[0.875rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
         What I build with
       </h2>
       {/* `max-content` on the label column rather than a fixed width: the
@@ -42,7 +42,7 @@ export default function TechStack() {
                 group and the next, so at seven groups every gap is 20px and
                 nothing says which label owns which row. Pulling the label 8px
                 closer to its chips is what makes the pairs read. */}
-            <div className="-mb-2 text-[13.5px] font-medium text-md-on-surface-variant sm:mb-0 sm:pt-[8px]">
+            <div className="-mb-2 text-[0.84375rem] font-medium text-md-on-surface-variant sm:mb-0 sm:pt-[0.5rem]">
               {g.group}
             </div>
             <LogoRow items={g.items} fixed />

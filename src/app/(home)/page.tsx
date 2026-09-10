@@ -154,14 +154,14 @@ export default async function Home() {
 
       {/* Asymmetric two-zone writing index: a sticky rail (heading, standfirst,
           year index) beside the list — fills a wide viewport with structure. */}
-      <section className="mt-16 max-w-[1120px] md:mt-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[64px]">
+      <section className="mt-16 max-w-[70rem] md:mt-24">
+        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[4rem]">
           <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
-            <h2 className="text-[23px] font-medium tracking-[-0.02em] text-md-on-surface">
+            <h2 className="text-[1.4375rem] font-medium tracking-[-0.02em] text-md-on-surface">
               Articles
             </h2>
             {years.length > 1 && (
-              <div className="mt-7 hidden flex-col gap-2 text-[13px] tabular-nums text-md-on-surface-variant lg:flex">
+              <div className="mt-7 hidden flex-col gap-2 text-[0.8125rem] tabular-nums text-md-on-surface-variant lg:flex">
                 {years.map((y, i) => (
                   <span
                     key={y}

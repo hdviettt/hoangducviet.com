@@ -32,7 +32,7 @@ export default function ProfileHero({
         {/* Identity — centred column: photo, then name, then bio, then the
             contact row. The measure stays tight so a centred bio still breaks
             into even lines instead of one long ribbon. */}
-        <div className="max-w-[640px] mx-auto text-center">
+        <div className="max-w-[40rem] mx-auto text-center">
           <div className="flex flex-col items-center gap-4 sm:gap-5 mb-5 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
             {imageUrl && (
               <Image
@@ -46,7 +46,7 @@ export default function ProfileHero({
             )}
             <div className="min-w-0">
               {name && (
-                <h1 className="text-[23px] leading-8 sm:text-[28px] sm:leading-9 md:text-[clamp(26px,2vw,32px)] md:leading-[1.17] font-normal tracking-tight text-md-on-surface">
+                <h1 className="text-[1.4375rem] leading-8 sm:text-[1.75rem] sm:leading-9 md:text-[2rem] md:leading-[1.17] font-normal tracking-tight text-md-on-surface">
                   {name}
                 </h1>
               )}

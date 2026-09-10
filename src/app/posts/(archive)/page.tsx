@@ -88,14 +88,14 @@ export default async function PostsPage() {
     .sort((a, b) => b.localeCompare(a));
 
   return (
-    <section className="max-w-[1120px] pb-16 pt-12 sm:pt-16 md:pb-20 md:pt-20">
-      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[64px]">
+    <section className="max-w-[70rem] pb-16 pt-12 sm:pt-16 md:pb-20 md:pt-20">
+      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[4rem]">
         <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
-          <h1 className="text-[23px] font-medium tracking-[-0.02em] text-md-on-surface">
+          <h1 className="text-[1.4375rem] font-medium tracking-[-0.02em] text-md-on-surface">
             Articles
           </h1>
           {years.length > 1 && (
-            <div className="mt-7 hidden flex-col gap-2 text-[13px] tabular-nums text-md-on-surface-variant lg:flex">
+            <div className="mt-7 hidden flex-col gap-2 text-[0.8125rem] tabular-nums text-md-on-surface-variant lg:flex">
               {years.map((y, i) => (
                 <span
                   key={y}

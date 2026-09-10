@@ -13,6 +13,7 @@ import {
   series,
 } from "@/db/schema";
 import { desc } from "drizzle-orm";
+import { ScaleLock } from "./scale-lock";
 
 export const metadata = {
   title: "Admin",
@@ -79,6 +80,7 @@ export default async function AdminLayout({
           navigation flashes the light palette for one frame. The injected
           string is a fixed literal with no input in it. */}
       <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      <ScaleLock />
       <ThemeProvider>
         <ToastProvider>
           <div className="flex h-screen overflow-hidden bg-md-background font-sans text-md-on-background">

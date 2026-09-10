@@ -17,11 +17,11 @@ export function ChildRow({ child }: { child: ChildRowData }) {
       href={`/work/${child.slug}`}
       className="group block border-t border-md-outline-variant py-4 first:border-t-0 first:pt-0"
     >
-      <h4 className="text-[15.5px] font-medium leading-[1.2] tracking-[-0.01em] text-md-on-surface transition-colors group-hover:text-primary md:text-[16.5px]">
+      <h4 className="text-[0.96875rem] font-medium leading-[1.2] tracking-[-0.01em] text-md-on-surface transition-colors group-hover:text-primary md:text-[1.03125rem]">
         {child.title}
       </h4>
       {child.description && (
-        <p className="mt-1 max-w-[62ch] text-[13.5px] leading-[1.5] text-md-on-surface-variant">
+        <p className="mt-1 max-w-[62ch] text-[0.84375rem] leading-[1.5] text-md-on-surface-variant">
           {child.description}
         </p>
       )}

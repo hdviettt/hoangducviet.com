@@ -62,25 +62,25 @@
 
     /* ----- M3 shape (corner radius) ----- */
     --md-sys-shape-corner-none: 0;
-    --md-sys-shape-corner-extra-small: 4px;
-    --md-sys-shape-corner-small: 8px;
-    --md-sys-shape-corner-medium: 12px;
-    --md-sys-shape-corner-large: 16px;
+    --md-sys-shape-corner-extra-small: 0.25rem;
+    --md-sys-shape-corner-small: 0.5rem;
+    --md-sys-shape-corner-medium: 0.75rem;
+    --md-sys-shape-corner-large: 1rem;
     /* deepmind.google's image radius — sits in M3 Expressive's expanded scale */
-    --md-sys-shape-corner-large-increased: 24px;
-    --md-sys-shape-corner-extra-large: 28px;
-    --md-sys-shape-corner-full: 9999px;
+    --md-sys-shape-corner-large-increased: 1.5rem;
+    --md-sys-shape-corner-extra-large: 1.75rem;
+    --md-sys-shape-corner-full: 624.9375rem;
 
     /* ----- M3 elevation (light) ----- */
     --md-sys-elevation-level0: none;
     --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --md-sys-elevation-level2: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0
+    --md-sys-elevation-level2: 0 1px 0.1875rem 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0
       rgba(0, 0, 0, 0.06);
-    --md-sys-elevation-level3: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px
+    --md-sys-elevation-level3: 0 0.25rem 0.375rem -1px rgba(0, 0, 0, 0.07), 0 2px 0.25rem
       -2px rgba(0, 0, 0, 0.06);
-    --md-sys-elevation-level4: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px
+    --md-sys-elevation-level4: 0 0.625rem 0.9375rem -3px rgba(0, 0, 0, 0.08), 0 0.25rem 0.375rem
       -4px rgba(0, 0, 0, 0.06);
-    --md-sys-elevation-level5: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px
+    --md-sys-elevation-level5: 0 1.25rem 1.5625rem -5px rgba(0, 0, 0, 0.1), 0 0.5rem 0.625rem
       -6px rgba(0, 0, 0, 0.08);
 
     /* ----- M3 motion (easing + duration) ----- */
@@ -265,100 +265,100 @@
    ================================ */
 
 body {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
   letter-spacing: 0.5px;
   font-weight: 400;
 }
 
 /* M3 utility classes — explicit type roles */
 .md-display-large {
-  font-size: 57px;
-  line-height: 64px;
+  font-size: 3.5625rem;
+  line-height: 4rem;
   letter-spacing: -0.25px;
   font-weight: 400;
 }
 .md-display-medium {
-  font-size: 45px;
-  line-height: 52px;
+  font-size: 2.8125rem;
+  line-height: 3.25rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-display-small {
-  font-size: 36px;
-  line-height: 44px;
+  font-size: 2.25rem;
+  line-height: 2.75rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-headline-large {
-  font-size: 32px;
-  line-height: 40px;
+  font-size: 2rem;
+  line-height: 2.5rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-headline-medium {
-  font-size: 28px;
-  line-height: 36px;
+  font-size: 1.75rem;
+  line-height: 2.25rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-headline-small {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 1.5rem;
+  line-height: 2rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-title-large {
-  font-size: 22px;
-  line-height: 28px;
+  font-size: 1.375rem;
+  line-height: 1.75rem;
   letter-spacing: 0;
   font-weight: 500;
 }
 .md-title-medium {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
   letter-spacing: 0.15px;
   font-weight: 500;
 }
 .md-title-small {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   letter-spacing: 0.1px;
   font-weight: 500;
 }
 .md-body-large {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
   letter-spacing: 0.5px;
   font-weight: 400;
 }
 .md-body-medium {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   letter-spacing: 0.25px;
   font-weight: 400;
 }
 .md-body-small {
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   letter-spacing: 0.4px;
   font-weight: 400;
 }
 .md-label-large {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   letter-spacing: 0.1px;
   font-weight: 500;
 }
 .md-label-medium {
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   letter-spacing: 0.5px;
   font-weight: 500;
 }
 .md-label-small {
-  font-size: 11px;
-  line-height: 16px;
+  font-size: 0.6875rem;
+  line-height: 1rem;
   letter-spacing: 0.5px;
   font-weight: 500;
 }
@@ -375,38 +375,38 @@ h6 {
   font-weight: 400;
 }
 h1 {
-  font-size: 32px;
-  line-height: 40px;
+  font-size: 2rem;
+  line-height: 2.5rem;
   letter-spacing: 0;
   font-weight: 500;
 }
 h2 {
-  font-size: 28px;
-  line-height: 36px;
+  font-size: 1.75rem;
+  line-height: 2.25rem;
   letter-spacing: 0;
   font-weight: 500;
 }
 h3 {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 1.5rem;
+  line-height: 2rem;
   letter-spacing: 0;
   font-weight: 500;
 }
 h4 {
-  font-size: 22px;
-  line-height: 28px;
+  font-size: 1.375rem;
+  line-height: 1.75rem;
   letter-spacing: 0;
   font-weight: 500;
 }
 h5 {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
   letter-spacing: 0.15px;
   font-weight: 500;
 }
 h6 {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   letter-spacing: 0.1px;
   font-weight: 500;
 }
@@ -423,34 +423,47 @@ h6 {
 
    71.25vw is 1140/1600, so a window at or above 1600 gets exactly the layout
    it got before and everything narrower gets that same layout scaled rather
-   than that same layout crammed. The inner `min(100vw - 3rem, 820px)` is the
-   floor: under about 1150px the proportional width starts wasting a small
-   screen, so the shell goes back to filling it. 820 rather than 900 because
-   at 900 the floor held all the way to 1265px and the breakout derived from
-   it sat at 91% of a 1150px window instead of the 82.5% everything else
-   lands on. */
+   than that same layout crammed.
+
+   912px is the floor, and it is arithmetic rather than taste: 80% of 1140,
+   the same 80% the root font size stops at. The two have to agree. While the
+   column floored at 820 (72%) and the type floored at 12.8px (80%), the type
+   was 8% larger than the column holding it, and a row of logos that fitted at
+   every other width came apart at 1024 and 1150, measured 27px short. One
+   scale means one floor. */
 :root {
-  --shell-max: min(1140px, max(71.25vw, min(100vw - 3rem, 820px)));
+  --shell-max: min(1140px, max(71.25vw, min(100vw - 48px, 912px)));
+}
 
-  /* Everything inside the wide blocks is a fraction of the column, not of the
-     window. That distinction is the whole trick: `--shell-max` has a floor and
-     a cap, so below 1150px and above 1600px it stops tracking the viewport,
-     and type sized in `vw` drifts out of step with the column exactly there.
-     Sized off the column itself, a row that fits at one width fits at all of
-     them. Each ratio is the original px over 1140, the column at 1600px, so a
-     window at or above 1600 renders precisely what it rendered before.
+/* One knob for the whole public site.
 
-     The floors are where proportion stops and legibility starts. Scaled
-     honestly, body copy would be 10.8px on a 1024px screen; the block would
-     be correct and unreadable, and that is not a trade this page makes. */
-  --fluid-body: clamp(12px, calc(var(--shell-max) * 0.01316), 15px);
-  --fluid-label: clamp(11px, calc(var(--shell-max) * 0.01228), 14px);
-  /* Separate from --fluid-label because it started at 13px, not 14, and
-     rounding it up cost the kit row the 8px it needed to stay on one line at
-     1600px, the width this whole scale is anchored to. */
-  --fluid-kit-label: clamp(10px, calc(var(--shell-max) * 0.0114), 13px);
-  --fluid-dot: clamp(22px, calc(var(--shell-max) * 0.0281), 32px);
-  --fluid-gutter: clamp(36px, calc(var(--shell-max) * 0.0561), 64px);
+   Everything reader-facing is sized in rem, so the root font size is the scale
+   of the page: type, leading, padding, gaps and column widths all ride it and
+   cannot drift apart. That is the point. The previous attempt gave two blocks
+   their own clamps against the viewport and left the rest of the site at fixed
+   px, which made the homepage scale and the feed under it not.
+
+   0.0140351 is 16/1140: the root is 16px exactly when the column is at its
+   full 1140px, so a window at or above 1600px renders what it always did. The
+   12.8px floor is 80% and it is reached around 1280px, which is where the
+   design stops shrinking and stays put.
+
+   `--shell-max` is deliberately free of rem. The root size is derived from it,
+   and a rem inside it would make that derivation circular.
+
+   Below 1024px the root goes back to 16px. A phone is not this layout shrunk,
+   it is a different one, and scaling it to 30% because the arithmetic says so
+   would be following the rule off a cliff. The boundary sits at 1024 because
+   the layout already changes there, so the one discontinuity in the scale
+   coincides with a reflow that happens anyway. */
+html {
+  font-size: 1rem;
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: clamp(12.8px, calc(var(--shell-max) * 0.0140351), 16px);
+  }
 }
 
 .site-shell {
@@ -481,9 +494,9 @@ h6 {
    ================================ */
 
 .article-content {
-  /* 16px / 1.6. Was deepmind.google's 17.5/1.45; the line box is the same
-     25.6px either way, so paragraphs keep their rhythm and only the type
-     shrinks into the extra leading. */
+  /* 16px / 1.6. Was deepmind.google's 17.5px / 1.45; at the reference width
+     the line box is 25.6px either way, so a paragraph keeps its rhythm and
+     only the type shrinks into the extra leading. */
   font-size: 1rem;
   line-height: 1.6;
   color: var(--article-text);
@@ -497,7 +510,7 @@ h6 {
 
 /* deepmind.google standfirst — the bold centered dek between hero and prose */
 .standfirst p {
-  font-size: 17px;
+  font-size: 1.0625rem;
   line-height: 1.5;
   font-weight: 500;
   color: hsl(var(--md-sys-color-on-surface));
@@ -514,7 +527,7 @@ h6 {
 }
 @media (min-width: 768px) {
   .standfirst p {
-    font-size: 20px;
+    font-size: 1.25rem;
     line-height: 1.45;
   }
 }
@@ -539,7 +552,7 @@ h6 {
 .article-content h4,
 .article-content h5,
 .article-content h6 {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 5rem;
   font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   color: var(--article-heading);
   font-weight: 400;
@@ -547,42 +560,42 @@ h6 {
 }
 
 .article-content h1 {
-  font-size: 32px;
-  line-height: 40px;
+  font-size: 2rem;
+  line-height: 2.5rem;
   margin-top: 3.5rem;
   margin-bottom: 1.25rem;
 }
 /* H2 = M3 headline-large (32/40) with deepmind's generous air above */
 .article-content h2 {
-  font-size: 28px;
-  line-height: 36px;
+  font-size: 1.75rem;
+  line-height: 2.25rem;
   margin-top: 4.5rem;
   margin-bottom: 1.25rem;
 }
 .article-content h3 {
-  font-size: 20px;
-  line-height: 27px;
+  font-size: 1.25rem;
+  line-height: 1.6875rem;
   margin-top: 2.5rem;
   margin-bottom: 0.75rem;
   font-weight: 500;
 }
 .article-content h4 {
-  font-size: 16.5px;
-  line-height: 23px;
+  font-size: 1.03125rem;
+  line-height: 1.4375rem;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 .article-content h5 {
-  font-size: 15px;
-  line-height: 23px;
+  font-size: 0.9375rem;
+  line-height: 1.4375rem;
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 .article-content h6 {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
@@ -674,14 +687,14 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px 9px;
+  padding: 0.625rem 1rem 0.5625rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.015);
 }
 .article-content .code-block-lang {
   font-family: var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas,
     monospace;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: #e6edf3;
@@ -695,8 +708,8 @@ h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  height: 1.875rem;
   padding: 0;
   color: #8b949e;
   background: transparent;
@@ -711,7 +724,7 @@ h6 {
 }
 .article-content .code-block-pre {
   margin: 0;
-  padding: 15px 18px 17px;
+  padding: 0.9375rem 1.125rem 1.0625rem;
   overflow-x: auto;
   background: transparent;
   border: none;
@@ -726,7 +739,7 @@ h6 {
   color: #c9d1d9;
   font-family: var(--font-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas,
     monospace;
-  font-size: 13.75px;
+  font-size: 0.859375rem;
   line-height: 1.65;
   white-space: pre;
 }
@@ -835,7 +848,7 @@ h6 {
   .article-content
     figure:not(.media-carousel__slide):has(img[src^="/figures/"])
     img {
-    min-width: 680px;
+    min-width: 42.5rem;
     max-width: none;
   }
   .article-content
@@ -859,8 +872,8 @@ h6 {
    fallback. --mc-pad centres the first and last slide against scroll-snap. */
 .media-carousel {
   --mc-gap: 1.5rem;
-  --mc-max: 1080px;
-  --mc-peek: 176px;
+  --mc-max: 67.5rem;
+  --mc-peek: 11rem;
   --mc-slide: min(var(--mc-max), calc(var(--mc-vw, 100vw) - var(--mc-peek) * 2));
   --mc-pad: max(1.25rem, calc((var(--mc-vw, 100vw) - var(--mc-slide)) / 2));
   width: var(--mc-vw, 100vw);
@@ -879,8 +892,8 @@ h6 {
   width: 100%;
   margin: 0;
   transform: none;
-  --mc-max: 880px;
-  --mc-peek: 72px;
+  --mc-max: 55rem;
+  --mc-peek: 4.5rem;
   --mc-pad: 0;
   --mc-slide: min(var(--mc-max), calc(100% - var(--mc-peek)));
 }
@@ -929,22 +942,22 @@ h6 {
 /* Colour is the only thing that moves without a pointer that can hover. The
    hop lives in the block below so a touch screen, where :hover latches on tap,
    never leaves a disc stuck 4px above its own row. */
-/* Size comes from a variable rather than three Tailwind utilities so the disc,
-   the logo inside it and the `+N` pill beside it can never fall out of step.
-   `--dot-size` is set per row: the project cards scale with the window, the
-   About page's stack does not, because it sits in a column of its own. */
+/* One variable so the disc, the logo inside it and the `+N` pill beside it can
+   never fall out of step. Plain lengths: these were bespoke clamps against the
+   viewport for a while, which is exactly how two blocks ended up scaling with
+   the window while the rest of the site stood still. The scale lives in one
+   place now and everything rides it. */
 .stack-row {
-  --dot-size: var(--fluid-dot);
-  /* 0.22 rather than 0.25. Measured, the kit row cleared 1600px by 4px and
-     came up 1px short at 1265px and 5px at 1024px, because the `+N` pill and
-     the label carry a little that does not scale. Taking a shade off the gap
-     and the pill's padding buys the row 9px at 1600 and 7px at 1265, which is
-     the difference between one line and two at every width. */
-  --dot-gap: calc(var(--dot-size) * 0.22);
-  gap: var(--dot-gap);
+  --dot-size: 2rem;
+  /* 7px, not 8. The reference row cleared its column by 4px of 319, so a 1%
+     difference anywhere flipped it onto a second line — and there is a 1%
+     difference by construction, because the root size stops at its 12.8px
+     floor a shade before the column stops shrinking. A row that depends on
+     four pixels is not a row that fits, it is one that has not failed yet. */
+  gap: 0.4375rem;
 }
 .stack-row--fixed {
-  --dot-size: 40px;
+  --dot-size: 2.5rem;
 }
 .stack-dot {
   width: var(--dot-size);
@@ -962,19 +975,15 @@ h6 {
 .stack-more {
   height: var(--dot-size);
   font-size: calc(var(--dot-size) * 0.34);
-  padding-inline: calc(var(--dot-size) * 0.26);
+  padding-inline: calc(var(--dot-size) * 0.24);
 }
 
-/* The row of discs was proportional and still wrapped, because the label beside
-   it and the gap between them were not: at 1265px they ate 78px of a 317px
-   column, the same 78px they eat out of 397px at 1600px. Everything in the
-   block scales or nothing does. */
 .kit-dots {
-  column-gap: calc(var(--fluid-dot) * 0.5);
-  row-gap: calc(var(--fluid-dot) * 0.375);
+  column-gap: 1rem;
+  row-gap: 0.75rem;
 }
 .kit-dots > dt {
-  font-size: var(--fluid-kit-label);
+  font-size: 0.8125rem;
   line-height: 1.6;
 }
 
@@ -1217,7 +1226,7 @@ h6 {
    in — a fill thicker than its own track reads as a bug. */
 .media-carousel__rail {
   position: relative;
-  flex: 0 1 220px;
+  flex: 0 1 13.75rem;
   height: 2px;
   margin-left: 0.75rem;
   border-radius: 9999px;
@@ -1322,12 +1331,12 @@ h6 {
 
 .deck-label {
   display: block;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 500;
   letter-spacing: 0.1px;
   color: hsl(var(--md-sys-color-on-surface-variant));
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 
 /* deck-display is now an alias for headline-large weight 500 */
@@ -1384,13 +1393,13 @@ mark,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 16px;
+  gap: 0.5rem;
+  height: 2.25rem;
+  padding: 0 1rem;
   border-radius: var(--md-sys-shape-corner-small);
   font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   letter-spacing: -0.01em;
   font-weight: 500;
   border: none;
@@ -1434,8 +1443,8 @@ mark,
 /* Icons in a button run a step smaller than the label, the way the icon font
    was set to 18px inside .md-btn before the icons became inline SVG. */
 .md-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .md-btn-filled {
@@ -1454,7 +1463,7 @@ mark,
   background: transparent;
   color: hsl(var(--md-sys-color-on-surface));
   border: 1px solid hsl(var(--md-sys-color-outline-variant));
-  padding: 0 15px;
+  padding: 0 0.9375rem;
 }
 .md-btn-outlined:hover {
   border-color: hsl(var(--md-sys-color-outline));
@@ -1465,25 +1474,25 @@ mark,
 .md-btn-text {
   background: transparent;
   color: hsl(var(--md-sys-color-on-surface-variant));
-  padding: 0 10px;
+  padding: 0 0.625rem;
 }
 .md-btn-text:hover {
   color: hsl(var(--md-sys-color-on-surface));
 }
 
 .md-btn-sm {
-  height: 30px;
-  padding: 0 12px;
-  font-size: 13px;
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  font-size: 0.8125rem;
 }
 .md-btn-lg {
-  height: 44px;
-  padding: 0 24px;
+  height: 2.75rem;
+  padding: 0 1.5rem;
   /* 16px with a hair of positive tracking. Label type on a control wants to be
      looser than running text, not tighter: it is read as a word, not scanned as
      a line, and the negative tracking inherited from .md-btn closes the letters
      up at exactly the size where they need to stay open. */
-  font-size: 16px;
+  font-size: 1rem;
   letter-spacing: 0.1px;
 }
 .md-btn-pill {
@@ -1501,7 +1510,7 @@ mark,
   color: hsl(var(--md-sys-color-on-surface));
   border: 1px solid hsl(var(--md-sys-color-outline-variant));
   border-radius: var(--md-sys-shape-corner-large);
-  padding: 20px;
+  padding: 1.25rem;
   transition: border-color var(--md-sys-motion-duration-short4)
     var(--md-sys-motion-easing-standard);
 }
@@ -1527,11 +1536,11 @@ mark,
   color: hsl(var(--md-sys-color-on-surface));
   border: 1px solid hsl(var(--md-sys-color-outline-variant));
   border-radius: var(--md-sys-shape-corner-small);
-  padding: 0 12px;
-  height: 40px;
+  padding: 0 0.75rem;
+  height: 2.5rem;
   font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 0.9375rem;
+  line-height: 1.375rem;
   letter-spacing: -0.005em;
   transition: border-color var(--md-sys-motion-duration-short4)
     var(--md-sys-motion-easing-standard), box-shadow
@@ -1552,9 +1561,9 @@ mark,
 }
 textarea.md-field {
   height: auto;
-  padding: 10px 12px;
+  padding: 0.625rem 0.75rem;
   resize: vertical;
-  min-height: 96px;
+  min-height: 6rem;
 }
 select.md-field {
   -webkit-appearance: none;
@@ -1569,20 +1578,20 @@ select.md-field {
       hsl(var(--md-sys-color-on-surface-variant)) 50%,
       transparent 50%
     );
-  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
-  background-size: 5px 5px, 5px 5px;
+  background-position: calc(100% - 1.125rem) 50%, calc(100% - 0.8125rem) 50%;
+  background-size: 0.3125rem 0.3125rem, 0.3125rem 0.3125rem;
   background-repeat: no-repeat;
-  padding-right: 40px;
+  padding-right: 2.5rem;
 }
 
 .md-field-label {
   display: block;
-  font-size: 13px;
-  line-height: 18px;
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
   letter-spacing: -0.005em;
   font-weight: 400;
   color: hsl(var(--md-sys-color-on-surface-variant));
-  margin-bottom: 6px;
+  margin-bottom: 0.375rem;
 }
 
 /* Dense variant for inline filters and chip-adjacent inputs */
@@ -1592,10 +1601,10 @@ select.md-field {
   color: hsl(var(--md-sys-color-on-surface));
   border: 1px solid hsl(var(--md-sys-color-outline-variant));
   border-radius: var(--md-sys-shape-corner-small);
-  padding: 0 10px;
-  height: 32px;
-  font-size: 14px;
-  line-height: 20px;
+  padding: 0 0.625rem;
+  height: 2rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   letter-spacing: -0.005em;
   outline: none;
   transition: border-color var(--md-sys-motion-duration-short4)
@@ -1613,7 +1622,7 @@ select.md-field {
 .md-input-outlined {
   position: relative;
   display: block;
-  height: 56px;
+  height: 3.5rem;
   border: 1px solid hsl(var(--md-sys-color-outline));
   border-radius: var(--md-sys-shape-corner-extra-small);
   background: transparent;
@@ -1628,7 +1637,7 @@ select.md-field {
 .md-input-outlined textarea {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 1rem;
   background: transparent;
   border: none;
   outline: none;
@@ -1656,7 +1665,7 @@ select.md-field {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(0.5rem);
   }
   to {
     opacity: 1;
@@ -1666,8 +1675,8 @@ select.md-field {
 
 /* Scrollbar — restrained M3-style */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -1689,7 +1698,7 @@ select.md-field {
   scrollbar-color: hsl(var(--md-sys-color-outline) / 0.4) transparent;
 }
 .toc-scroll::-webkit-scrollbar {
-  width: 6px;
+  width: 0.375rem;
 }
 .toc-scroll::-webkit-scrollbar-track {
   background: transparent;
@@ -1742,7 +1751,7 @@ select.md-field {
    headings ran 300px past the body column on both sides. */
 .post-editor .prose-editor,
 .post-editor .editor-title {
-  max-width: 620px;
+  max-width: 38.75rem;
   margin-left: auto;
   margin-right: auto;
 }
@@ -1773,12 +1782,12 @@ select.md-field {
 .fence-cell__bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 5px 10px;
+  gap: 0.625rem;
+  padding: 0.3125rem 0.625rem;
   background: hsl(var(--md-sys-color-surface-container-high));
   border-bottom: 1px solid hsl(var(--md-sys-color-outline-variant));
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
   line-height: 1.4;
   user-select: none;
 }
@@ -1794,8 +1803,8 @@ select.md-field {
   margin-left: auto;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 2px 8px;
+  gap: 0.3125rem;
+  padding: 2px 0.5rem;
   border-radius: 6px;
   color: hsl(var(--md-sys-color-on-surface-variant));
   transition: color 110ms var(--md-sys-motion-easing-standard), background 110ms
@@ -1807,7 +1816,7 @@ select.md-field {
 }
 
 .fence-cell__preview {
-  padding: 16px 12px;
+  padding: 1rem 0.75rem;
   background: hsl(var(--md-sys-color-surface-container-low));
 }
 /* The drawing is authored against the article's own colours, so it inherits
@@ -1823,10 +1832,10 @@ select.md-field {
 .fence-cell__note {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
   justify-content: center;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: hsl(var(--md-sys-color-on-surface-variant));
 }
 .fence-cell__note--bad {
@@ -1874,8 +1883,8 @@ select.md-field {
 }
 
 .rail-marker__pill {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 10px;
   background: hsl(var(--md-sys-color-on-surface) / 0.14);
   box-shadow: inset 0 0 0 1px hsl(var(--md-sys-color-outline) / 0.55);
@@ -1886,8 +1895,8 @@ select.md-field {
 .rail-marker__bar {
   position: absolute;
   left: 0;
-  top: 8px;
-  bottom: 8px;
+  top: 0.5rem;
+  bottom: 0.5rem;
   width: 2px;
   border-radius: 0 3px 3px 0;
   background: hsl(var(--md-sys-color-primary));
@@ -1911,7 +1920,7 @@ select.md-field {
   display: grid;
   place-items: center;
   width: 100%;
-  height: 40px;
+  height: 2.5rem;
   color: hsl(var(--md-sys-color-on-surface-variant));
   transition: color 140ms var(--md-sys-motion-easing-standard);
 }
@@ -1925,8 +1934,8 @@ select.md-field {
 .rail-item__icon {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 10px;
   transition: background 140ms var(--md-sys-motion-easing-standard), transform
     220ms cubic-bezier(0.22, 0.9, 0.24, 1.12);
@@ -1964,10 +1973,10 @@ select.md-field {
   position: absolute;
   left: calc(100% + 2px);
   z-index: 60;
-  padding: 4px 9px;
+  padding: 0.25rem 0.5625rem;
   border-radius: 8px;
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.3;
   color: hsl(var(--md-sys-color-on-surface));
   background: hsl(var(--md-sys-color-surface-container-highest));
@@ -2017,20 +2026,20 @@ select.md-field {
    adding weight to every row.
    ------------------------------------------------------------------ */
 .tree-root {
-  padding: 0 6px 10px;
-  font-size: 12.5px;
+  padding: 0 0.375rem 0.625rem;
+  font-size: 0.78125rem;
   line-height: 1.45;
 }
 
 .tree-toolbar {
-  padding: 0 2px 6px;
+  padding: 0 2px 0.375rem;
 }
 .tree-newfolder {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
   width: 100%;
-  padding: 5px 8px;
+  padding: 0.3125rem 0.5rem;
   border-radius: 8px;
   border: 1px dashed hsl(var(--md-sys-color-outline-variant));
   color: hsl(var(--md-sys-color-on-surface-variant));
@@ -2048,9 +2057,9 @@ select.md-field {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 5px;
-  height: 28px;
-  padding-right: 6px;
+  gap: 0.3125rem;
+  height: 1.75rem;
+  padding-right: 0.375rem;
   border-radius: 7px;
   color: hsl(var(--md-sys-color-on-surface-variant));
   cursor: default;
@@ -2080,8 +2089,8 @@ select.md-field {
 .tree-row.is-after::after {
   content: "";
   position: absolute;
-  left: 4px;
-  right: 4px;
+  left: 0.25rem;
+  right: 0.25rem;
   height: 2px;
   border-radius: 2px;
   background: hsl(var(--md-sys-color-primary));
@@ -2096,8 +2105,8 @@ select.md-field {
 .tree-twisty {
   display: grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   flex-shrink: 0;
   border-radius: 4px;
   color: hsl(var(--md-sys-color-on-surface-variant));
@@ -2118,10 +2127,10 @@ select.md-field {
 }
 
 .tree-dot {
-  width: 5px;
-  height: 5px;
+  width: 0.3125rem;
+  height: 0.3125rem;
   flex-shrink: 0;
-  margin: 0 4px 0 5px;
+  margin: 0 0.25rem 0 0.3125rem;
   border-radius: 50%;
   background: hsl(var(--md-sys-color-on-surface-variant) / 0.45);
 }
@@ -2142,8 +2151,8 @@ select.md-field {
 .tree-rename {
   flex: 1 1 auto;
   min-width: 0;
-  height: 20px;
-  padding: 0 5px;
+  height: 1.25rem;
+  padding: 0 0.3125rem;
   border-radius: 5px;
   background: hsl(var(--md-sys-color-surface-container-highest));
   border: 1px solid hsl(var(--md-sys-color-outline));
@@ -2157,7 +2166,7 @@ select.md-field {
 .tree-count {
   flex-shrink: 0;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   color: hsl(var(--md-sys-color-on-surface-variant) / 0.7);
 }
 
@@ -2167,8 +2176,8 @@ select.md-field {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
+  width: 1.125rem;
+  height: 1.125rem;
   border-radius: 5px;
   opacity: 0;
   color: hsl(var(--md-sys-color-on-surface-variant));
@@ -2185,26 +2194,26 @@ select.md-field {
 }
 
 .tree-children {
-  margin-left: 13px;
+  margin-left: 0.8125rem;
   border-left: 1px solid hsl(var(--md-sys-color-outline-variant));
   padding-left: 1px;
 }
 
 .tree-empty,
 .tree-none {
-  padding: 5px 0 5px 6px;
-  font-size: 11.5px;
+  padding: 0.3125rem 0 0.3125rem 0.375rem;
+  font-size: 0.71875rem;
   color: hsl(var(--md-sys-color-on-surface-variant) / 0.6);
   font-style: italic;
 }
 
 .tree-outzone {
   height: 0;
-  margin-top: 6px;
+  margin-top: 0.375rem;
   border-radius: 8px;
   border: 1px dashed transparent;
   color: hsl(var(--md-sys-color-on-surface-variant));
-  font-size: 11px;
+  font-size: 0.6875rem;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -2213,7 +2222,7 @@ select.md-field {
     var(--md-sys-motion-easing-standard);
 }
 .tree-outzone.is-hot {
-  height: 34px;
+  height: 2.125rem;
   border-color: hsl(var(--md-sys-color-primary) / 0.7);
   background: hsl(var(--md-sys-color-primary) / 0.1);
 }
@@ -2357,7 +2366,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 .prose-editor td {
   border: 1px solid hsl(var(--md-sys-color-outline-variant));
   padding: 0.5em 0.75em;
-  min-width: 80px;
+  min-width: 5rem;
   vertical-align: top;
   position: relative;
   text-align: left;
@@ -2379,7 +2388,7 @@ html[data-zen="1"] .editor-statusbar:hover {
   right: -2px;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 0.25rem;
   background: hsl(var(--md-sys-color-primary));
   cursor: col-resize;
   z-index: 10;
@@ -2549,16 +2558,16 @@ html[data-zen="1"] .editor-statusbar:hover {
   --l5: #a8c8f8;
   --sans: var(--font-inter);
   --mono: var(--font-mono);
-  --fs-r1: 16px;
-  --fs-rf: 999px;
-  --fs-shadow: 0 2px 4px rgba(16, 18, 30, 0.04), 0 6px 20px -12px
+  --fs-r1: 1rem;
+  --fs-rf: 62.4375rem;
+  --fs-shadow: 0 2px 0.25rem rgba(16, 18, 30, 0.04), 0 0.375rem 1.25rem -12px
     rgba(16, 18, 30, 0.1);
-  max-width: 1040px;
+  max-width: 65rem;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 1.5rem;
   font-family: var(--sans);
   color: var(--ink);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -2649,12 +2658,12 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-zone-t {
   fill: var(--wd-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 .work-diagram .wd-note {
   fill: var(--wd-faint);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: var(--font-mono), monospace;
 }
 .work-diagram .wd-card {
@@ -2668,7 +2677,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-title {
   fill: var(--wd-blue-ink);
-  font-size: 13.5px;
+  font-size: 0.84375rem;
   font-weight: 600;
 }
 .work-diagram .neutral .wd-title {
@@ -2680,7 +2689,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 .work-diagram .wd-sub {
   fill: var(--wd-blue-ink);
   opacity: 0.72;
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .work-diagram .neutral .wd-sub {
   fill: var(--wd-neutral-ink);
@@ -2708,7 +2717,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-lab {
   fill: var(--wd-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 /* Model family: light-blue fill + a solid accent ring (learned-model nodes) */
 .work-diagram .wd-card.accent {
@@ -2752,7 +2761,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 .work-diagram .wd-tools {
   fill: var(--wd-blue-ink);
   opacity: 0.66;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-family: var(--font-mono), monospace;
 }
 .work-diagram .neutral .wd-tools {
@@ -2771,7 +2780,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-panel-t {
   fill: var(--wd-ink);
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -2783,17 +2792,17 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-subzone-t {
   fill: var(--wd-faint);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 .work-diagram .wd-mono {
   fill: var(--wd-muted);
-  font-size: 11.5px;
+  font-size: 0.71875rem;
   font-family: var(--font-mono), monospace;
 }
 .work-diagram .wd-mono-k {
   fill: var(--wd-faint);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: var(--font-mono), monospace;
 }
 .work-diagram .wd-input {
@@ -2803,7 +2812,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-inputtext {
   fill: var(--wd-ink);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 500;
 }
 .work-diagram .wd-pill {
@@ -2811,7 +2820,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-pill-t {
   fill: hsl(var(--md-sys-color-primary));
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-weight: 600;
 }
 .work-diagram .wd-bar {
@@ -2833,7 +2842,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-ret-t {
   fill: hsl(var(--md-sys-color-primary));
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: var(--font-mono), monospace;
 }
 /* Model / service tag chips inside nodes */
@@ -2842,7 +2851,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-tag-t {
   fill: var(--wd-tagink);
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-family: var(--font-mono), monospace;
 }
 .work-diagram .wd-tag-dot {
@@ -2870,7 +2879,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 /* Section band labels (sentence case, no tracking) */
 .work-diagram .wd-band-t {
   fill: var(--wd-muted);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   font-weight: 600;
   letter-spacing: 0;
 }
@@ -2883,18 +2892,18 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-offline-t {
   fill: var(--wd-faint);
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-family: var(--font-mono), monospace;
 }
 /* Real example text inside the result card */
 .work-diagram .wd-real {
   fill: var(--wd-blue-ink);
   opacity: 0.82;
-  font-size: 11.5px;
+  font-size: 0.71875rem;
 }
 .work-diagram .wd-cite {
   fill: hsl(var(--md-sys-color-primary));
-  font-size: 10px;
+  font-size: 0.625rem;
   font-family: var(--font-mono), monospace;
 }
 /* Follow-up (AI Mode) chat bubbles in the You panel */
@@ -2903,7 +2912,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-qbub-t {
   fill: hsl(var(--md-sys-color-primary));
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   font-weight: 500;
 }
 .work-diagram .wd-abub {
@@ -2911,12 +2920,12 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-abub-t {
   fill: var(--wd-neutral-ink);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   font-weight: 500;
 }
 .work-diagram .wd-band-n {
   fill: var(--wd-faint);
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-family: var(--font-mono), monospace;
   opacity: 0.85;
 }
@@ -2926,7 +2935,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-tab-t {
   fill: hsl(var(--md-sys-color-primary));
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 .work-diagram .wd-tab-out {
@@ -2936,7 +2945,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .work-diagram .wd-tab-out-t {
   fill: var(--wd-muted);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 .work-illus {
@@ -3017,7 +3026,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 .work-illus .wi-label {
   fill: hsl(var(--md-sys-color-on-surface-variant));
   font-family: var(--font-inter), system-ui, sans-serif;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 .work-illus .wi-label-a {
@@ -3026,7 +3035,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 .work-illus .wi-mono {
   fill: hsl(var(--md-sys-color-on-surface-variant));
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
+  font-size: 0.65625rem;
 }
 .work-illus .wi-dot {
   fill: hsl(var(--md-sys-color-outline));
@@ -3051,19 +3060,19 @@ html[data-zen="1"] .editor-statusbar:hover {
   position: relative;
 }
 .feature-showcase .eyebrow {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--faint);
   font-weight: 500;
 }
 .feature-showcase .eyebrow .mono {
   font-family: var(--mono);
-  margin-left: 9px;
-  padding-left: 9px;
+  margin-left: 0.5625rem;
+  padding-left: 0.5625rem;
   border-left: 1px solid var(--hair-2);
 }
 .feature-showcase .fs-title {
-  margin: 13px 0 0;
-  font-size: 25px;
+  margin: 0.8125rem 0 0;
+  font-size: 1.5625rem;
   line-height: 1.16;
   font-weight: 600;
   letter-spacing: -0.018em;
@@ -3071,8 +3080,8 @@ html[data-zen="1"] .editor-statusbar:hover {
   color: var(--ink);
 }
 .feature-showcase .thesis {
-  margin: 13px 0 0;
-  font-size: 16px;
+  margin: 0.8125rem 0 0;
+  font-size: 1rem;
   line-height: 1.55;
   color: var(--muted);
   max-width: 64ch;
@@ -3083,14 +3092,14 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .sh {
   margin: 0;
-  font-size: 19px;
+  font-size: 1.1875rem;
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.2;
   color: var(--ink);
 }
 .feature-showcase .showcase {
-  margin-top: 24px;
+  margin-top: 1.5rem;
 }
 .feature-showcase .pills {
   position: relative;
@@ -3098,13 +3107,13 @@ html[data-zen="1"] .editor-statusbar:hover {
   background: var(--surface-2);
   border: 1px solid var(--hair);
   border-radius: 999px;
-  padding: 4px;
+  padding: 0.25rem;
 }
 .feature-showcase .pillbg {
   position: absolute;
-  top: 4px;
+  top: 0.25rem;
   left: 0;
-  height: calc(100% - 8px);
+  height: calc(100% - 0.5rem);
   border-radius: 999px;
   background: var(--surface);
   box-shadow: 0 1px 3px rgba(16, 18, 30, 0.12);
@@ -3120,10 +3129,10 @@ html[data-zen="1"] .editor-statusbar:hover {
   background: transparent;
   cursor: pointer;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
   color: var(--muted);
-  padding: 7px 15px;
+  padding: 0.4375rem 0.9375rem;
   border-radius: 999px;
   transition: color 0.2s;
 }
@@ -3136,7 +3145,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .frame {
   position: relative;
-  margin-top: 14px;
+  margin-top: 0.875rem;
   aspect-ratio: 16 / 9;
   border: 1px solid var(--hair);
   border-radius: var(--fs-r1);
@@ -3173,15 +3182,15 @@ html[data-zen="1"] .editor-statusbar:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 0.4375rem;
 }
 .feature-showcase .slide .ph .n {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 .feature-showcase .slide .ph .f {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--faint);
 }
 .feature-showcase .smedia {
@@ -3195,15 +3204,15 @@ html[data-zen="1"] .editor-statusbar:hover {
 .feature-showcase .mslide {
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 22px 34px;
+  gap: 1.75rem;
+  padding: 1.375rem 2.125rem;
 }
 .feature-showcase .m-art {
   flex: 0 0 44%;
   background: var(--surface);
   border: 1px solid var(--hair);
   border-radius: 12px;
-  padding: 14px;
+  padding: 0.875rem;
 }
 .feature-showcase .m-art .il {
   display: block;
@@ -3214,14 +3223,14 @@ html[data-zen="1"] .editor-statusbar:hover {
   flex: 1;
 }
 .feature-showcase .m-h {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--ink);
   letter-spacing: -0.01em;
 }
 .feature-showcase .m-b {
-  margin-top: 9px;
-  font-size: 14px;
+  margin-top: 0.5625rem;
+  font-size: 0.875rem;
   color: var(--muted);
   line-height: 1.6;
 }
@@ -3229,7 +3238,7 @@ html[data-zen="1"] .editor-statusbar:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
 }
 .feature-showcase .gstage .diag {
   width: 100%;
@@ -3240,18 +3249,18 @@ html[data-zen="1"] .editor-statusbar:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  margin-top: 13px;
-  min-height: 30px;
+  gap: 0.875rem;
+  margin-top: 0.8125rem;
+  min-height: 1.875rem;
 }
 .feature-showcase .ncap {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
 }
 .feature-showcase .nright {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
 }
 .feature-showcase .nright.hide {
   visibility: hidden;
@@ -3259,12 +3268,12 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ndots {
   display: flex;
-  gap: 7px;
+  gap: 0.4375rem;
   align-items: center;
 }
 .feature-showcase .ndot {
-  width: 7px;
-  height: 7px;
+  width: 0.4375rem;
+  height: 0.4375rem;
   border-radius: 999px;
   background: var(--hair-2);
   border: 0;
@@ -3274,15 +3283,15 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ndot.on {
   background: var(--primary);
-  width: 19px;
+  width: 1.1875rem;
 }
 .feature-showcase .nbtns {
   display: flex;
-  gap: 7px;
+  gap: 0.4375rem;
 }
 .feature-showcase .nbtn {
-  width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  height: 1.875rem;
   border-radius: 999px;
   border: 1px solid var(--hair);
   background: var(--surface);
@@ -3298,33 +3307,33 @@ html[data-zen="1"] .editor-statusbar:hover {
   border-color: var(--hair-2);
 }
 .feature-showcase .nbtn svg {
-  width: 13px;
-  height: 13px;
+  width: 0.8125rem;
+  height: 0.8125rem;
 }
 .feature-showcase .meta {
   display: grid;
-  grid-template-columns: 206px 1fr;
-  gap: 40px;
-  margin-top: 34px;
+  grid-template-columns: 12.875rem 1fr;
+  gap: 2.5rem;
+  margin-top: 2.125rem;
   align-items: start;
 }
 .feature-showcase .meta .band {
   margin-top: 0;
 }
 .feature-showcase .meta .models {
-  margin-top: 11px;
-  gap: 10px;
+  margin-top: 0.6875rem;
+  gap: 0.625rem;
 }
 .feature-showcase .meta .mc {
-  width: 38px;
-  height: 38px;
+  width: 2.375rem;
+  height: 2.375rem;
 }
 .feature-showcase .meta .mc .lg {
-  width: 17px;
-  height: 17px;
+  width: 1.0625rem;
+  height: 1.0625rem;
 }
 .feature-showcase .meta .sg .gl {
-  flex: 0 0 96px;
+  flex: 0 0 6rem;
 }
 .feature-showcase .diag {
   display: block;
@@ -3355,7 +3364,7 @@ html[data-zen="1"] .editor-statusbar:hover {
   stroke: none;
 }
 .feature-showcase .diag .nlabel {
-  font-size: 14.5px;
+  font-size: 0.90625rem;
   font-weight: 600;
   fill: var(--ink);
 }
@@ -3363,7 +3372,7 @@ html[data-zen="1"] .editor-statusbar:hover {
   fill: #fff;
 }
 .feature-showcase .diag .nsub {
-  font-size: 12px;
+  font-size: 0.75rem;
   fill: var(--faint);
 }
 .feature-showcase .diag .hub .nsub {
@@ -3405,12 +3414,12 @@ html[data-zen="1"] .editor-statusbar:hover {
   stroke-width: 1;
 }
 .feature-showcase .diag .cont-t {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   fill: var(--ink);
 }
 .feature-showcase .diag .cap {
-  font-size: 11px;
+  font-size: 0.6875rem;
   fill: var(--faint);
 }
 .feature-showcase .diag .mini {
@@ -3422,12 +3431,12 @@ html[data-zen="1"] .editor-statusbar:hover {
   stroke-dasharray: 4 3;
 }
 .feature-showcase .diag .mini-t {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   fill: var(--ink);
 }
 .feature-showcase .diag .mini-t.pt {
-  font-size: 10px;
+  font-size: 0.625rem;
 }
 .feature-showcase .diag .chip {
   fill: var(--surface);
@@ -3445,7 +3454,7 @@ html[data-zen="1"] .editor-statusbar:hover {
   fill: var(--primary);
 }
 .feature-showcase .diag .lbl {
-  font-size: 12px;
+  font-size: 0.75rem;
   fill: var(--faint);
 }
 .feature-showcase .diag .flabel rect {
@@ -3502,12 +3511,12 @@ html[data-zen="1"] .editor-statusbar:hover {
   fill: var(--muted);
 }
 .feature-showcase .band {
-  margin-top: 50px;
+  margin-top: 3.125rem;
 }
 .feature-showcase .models {
-  margin-top: 18px;
+  margin-top: 1.125rem;
   display: flex;
-  gap: 13px;
+  gap: 0.8125rem;
   flex-wrap: wrap;
 }
 .feature-showcase .model {
@@ -3515,8 +3524,8 @@ html[data-zen="1"] .editor-statusbar:hover {
   outline: none;
 }
 .feature-showcase .mc {
-  width: 42px;
-  height: 42px;
+  width: 2.625rem;
+  height: 2.625rem;
   border-radius: var(--fs-rf);
   background: var(--surface);
   border: 1px solid var(--hair);
@@ -3527,8 +3536,8 @@ html[data-zen="1"] .editor-statusbar:hover {
   transition: transform 0.16s ease, box-shadow 0.16s ease;
 }
 .feature-showcase .mc .lg {
-  width: 19px;
-  height: 19px;
+  width: 1.1875rem;
+  height: 1.1875rem;
 }
 .feature-showcase .model:hover .mc,
 .feature-showcase .model:focus-visible .mc {
@@ -3544,7 +3553,7 @@ html[data-zen="1"] .editor-statusbar:hover {
   background: var(--surface);
   border: 1px solid var(--hair);
   border-radius: 9px;
-  padding: 6px 10px;
+  padding: 0.375rem 0.625rem;
   box-shadow: var(--fs-shadow);
   opacity: 0;
   pointer-events: none;
@@ -3557,7 +3566,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .tip .nm {
   display: block;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ink);
   line-height: 1.3;
@@ -3565,7 +3574,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 .feature-showcase .tip .id {
   display: block;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--faint);
   line-height: 1.35;
 }
@@ -3579,64 +3588,64 @@ html[data-zen="1"] .editor-statusbar:hover {
   border-top-color: var(--hair);
 }
 .feature-showcase .stack {
-  margin-top: 18px;
+  margin-top: 1.125rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 .feature-showcase .sg {
   display: flex;
-  gap: 18px;
+  gap: 1.125rem;
   align-items: baseline;
 }
 .feature-showcase .sg .gl {
-  flex: 0 0 108px;
-  font-size: 12px;
+  flex: 0 0 6.75rem;
+  font-size: 0.75rem;
   color: var(--faint);
 }
 .feature-showcase .sg .gi {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 18px;
+  gap: 0.625rem 1.125rem;
 }
 .feature-showcase .si {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  font-size: 14px;
+  gap: 0.4375rem;
+  font-size: 0.875rem;
   color: var(--ink);
 }
 .feature-showcase .si .lg {
-  width: 15px;
-  height: 15px;
+  width: 0.9375rem;
+  height: 0.9375rem;
   color: var(--muted);
 }
 .feature-showcase .si .mk {
   flex: 0 0 auto;
-  width: 15px;
-  height: 15px;
+  width: 0.9375rem;
+  height: 0.9375rem;
   border-radius: 4px;
   border: 1px solid var(--hair-2);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
-  font-size: 8px;
+  font-size: 0.5rem;
   font-weight: 600;
   color: var(--muted);
 }
 @media (max-width: 640px) {
   .feature-showcase .meta {
     grid-template-columns: 1fr;
-    gap: 22px;
+    gap: 1.375rem;
   }
 }
 @media (max-width: 600px) {
   .feature-showcase .mslide {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
-    padding: 18px;
+    gap: 0.875rem;
+    padding: 1.125rem;
   }
 }
 
@@ -3661,7 +3670,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-ptitle {
   fill: var(--muted);
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: -.01em;
 }
@@ -3673,7 +3682,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-zone-t {
   fill: var(--faint);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: .03em;
 }
@@ -3721,7 +3730,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-bt2 {
   fill: var(--ci-blue-ink);
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: 600;
 }
 .feature-showcase .ci-node.plain .ci-bt2 {
@@ -3729,13 +3738,13 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-node.hub .ci-bt2 {
   fill: #fff;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
 }
 .feature-showcase .ci-bs2 {
   fill: var(--ci-blue-ink);
   opacity: 0.74;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .feature-showcase .ci-node.plain .ci-bs2 {
   fill: var(--muted);
@@ -3748,7 +3757,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 .feature-showcase .ci-tool2 {
   fill: var(--ci-blue-ink);
   opacity: 0.8;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: var(--mono);
 }
 .feature-showcase .ci-node.hub .ci-tool2 {
@@ -3784,12 +3793,12 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-lead {
   fill: var(--ink);
-  font-size: 14.5px;
+  font-size: 0.90625rem;
   font-weight: 600;
 }
 .feature-showcase .ci-brief {
   fill: var(--muted);
-  font-size: 13.5px;
+  font-size: 0.84375rem;
 }
 .feature-showcase .ci-file {
   fill: var(--surface);
@@ -3805,7 +3814,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-fname {
   fill: var(--muted);
-  font-size: 11.5px;
+  font-size: 0.71875rem;
   font-family: var(--mono);
 }
 .feature-showcase .ci-hr {
@@ -3814,16 +3823,16 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-json {
   fill: var(--muted);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   font-family: var(--mono);
 }
 .feature-showcase .ci-json.k {
   fill: var(--faint);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .feature-showcase .ci-tagm {
   fill: var(--faint);
-  font-size: 11.5px;
+  font-size: 0.71875rem;
   font-family: var(--mono);
 }
 .feature-showcase .ci-gate {
@@ -3833,13 +3842,13 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-gate-t {
   fill: var(--primary);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   font-weight: 600;
   font-family: var(--mono);
 }
 .feature-showcase .ci-note {
   fill: var(--faint);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: var(--mono);
 }
 .feature-showcase .ci-edge {
@@ -3854,11 +3863,11 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-lab {
   fill: var(--muted);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .feature-showcase .ci-lab.sm {
   fill: var(--faint);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-family: var(--mono);
 }
 .feature-showcase .ci-flab rect {
@@ -3897,7 +3906,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-lane-t {
   fill: var(--ci-blue-ink);
-  font-size: 12.5px;
+  font-size: 0.78125rem;
   font-weight: 600;
 }
 .feature-showcase .ci-frame {
@@ -3910,7 +3919,7 @@ html[data-zen="1"] .editor-statusbar:hover {
 }
 .feature-showcase .ci-ftab-t {
   fill: var(--ci-blue-ink);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
@@ -3932,7 +3941,7 @@ html[data-zen="1"] .editor-statusbar:hover {
   margin-bottom: 0;
 }
 .article-content .about-credentials h3 {
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.4;
   margin-top: 0;
   margin-bottom: 0;

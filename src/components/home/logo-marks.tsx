@@ -188,7 +188,7 @@ const MARK_COLORS: Record<string, string> = {
 
 export function Mark({
   id,
-  className = "h-[14px] w-[14px]",
+  className = "h-[0.875rem] w-[0.875rem]",
   mono = false,
 }: { id: string; className?: string; mono?: boolean }) {
   const m = MARKS[id];
