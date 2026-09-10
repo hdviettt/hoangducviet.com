@@ -130,29 +130,19 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
 //
 // CSS-only, deliberately. This renders inside a server component, and a
 // tooltip that needs a client bundle to say "PostgreSQL" is a bad trade.
-function Dot({ item, big = false }: { item: ProjectLogo; big?: boolean }) {
+function Dot({ item }: { item: ProjectLogo }) {
   const mark = resolveMark(item);
   const letter = mark ? null : item.letter || monogram(item.name);
   return (
     <li className="group relative">
       <span
         aria-hidden="true"
-        className={`stack-dot flex items-center justify-center rounded-full border border-md-outline-variant bg-md-surface-container-high text-md-on-surface group-hover:border-md-outline ${
-          big ? "h-10 w-10" : "h-8 w-8"
-        }`}
+        className="stack-dot flex items-center justify-center rounded-full border border-md-outline-variant bg-md-surface-container-high text-md-on-surface group-hover:border-md-outline"
       >
         {mark ? (
-          <Mark
-            id={mark}
-            mono
-            className={big ? "h-[19px] w-[19px]" : "h-[15px] w-[15px]"}
-          />
+          <Mark id={mark} mono />
         ) : (
-          <span
-            className={`font-mono font-semibold leading-none text-md-on-surface-variant ${
-              big ? "text-[11px]" : "text-[9.5px]"
-            }`}
-          >
+          <span className="stack-mono font-mono font-semibold leading-none text-md-on-surface-variant">
             {letter}
           </span>
         )}
@@ -205,12 +195,12 @@ function pick(items: ProjectLogo[], max: number, taken: Set<string>) {
 
 function Row({ shown, rest }: { shown: ProjectLogo[]; rest: number }) {
   return (
-    <ul className="flex flex-wrap items-center gap-2">
+    <ul className="stack-row flex flex-wrap items-center">
       {shown.map((it) => (
         <Dot key={it.name} item={it} />
       ))}
       {rest > 0 && (
-        <li className="flex h-8 items-center rounded-full border border-md-outline-variant bg-md-surface-container-high px-2.5 font-mono text-[11px] font-medium leading-none text-md-on-surface-variant">
+        <li className="stack-more flex items-center rounded-full border border-md-outline-variant bg-md-surface-container-high px-2.5 font-mono font-medium leading-none text-md-on-surface-variant">
           +{rest}
         </li>
       )}
@@ -244,12 +234,10 @@ export function KitDots({
   if (rows.length === 0) return null;
 
   return (
-    <dl className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3">
+    <dl className="kit-dots grid grid-cols-[auto_1fr] items-center">
       {rows.map((r) => (
         <Fragment key={r.label}>
-          <dt className="text-[13px] leading-6 text-md-on-surface-variant">
-            {r.label}
-          </dt>
+          <dt className="text-md-on-surface-variant">{r.label}</dt>
           <dd>
             <Row shown={r.shown} rest={r.rest} />
           </dd>
@@ -270,15 +258,19 @@ export function KitDots({
 // reveal, which is gated on a pointer that can actually hover.
 export function LogoRow({
   items,
-  big = false,
+  fixed = false,
 }: {
   items: ProjectLogo[];
-  big?: boolean;
+  fixed?: boolean;
 }) {
   return (
-    <ul className="flex flex-wrap items-center gap-2.5">
+    <ul
+      className={`stack-row flex flex-wrap items-center ${
+        fixed ? "stack-row--fixed" : ""
+      }`}
+    >
       {items.map((it) => (
-        <Dot key={it.name} item={it} big={big} />
+        <Dot key={it.name} item={it} />
       ))}
     </ul>
   );

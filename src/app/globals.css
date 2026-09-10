@@ -415,15 +415,42 @@ h6 {
    PAGE SHELL
    ================================ */
 
-/* The column stopped growing at 1140px while the display type reached its
-   largest step at 1024px, so every window between the two ran the wide
-   layout's type against gutters that had not arrived yet — at 1280 the column
-   took 82% of the screen and the headings were the size they are at 1920.
-   Column and display sizes now both scale across that range and land on their
-   existing values at 1600, so a wide screen renders exactly as it did and the
-   mid widths get the proportions the design was drawn at. */
+/* The column is a fraction of the window, not a fixed width that gutters
+   absorb. Identifying the two screenshots by where their paragraphs wrapped
+   put a number on why the old rule was not enough: at 1265px the shell was
+   980px, 77% of the window, while the same page at 1600px was 1140px, 71%,
+   and 1140 of 1920 is 59%. One design rendered at three different densities.
+
+   71.25vw is 1140/1600, so a window at or above 1600 gets exactly the layout
+   it got before and everything narrower gets that same layout scaled rather
+   than that same layout crammed. The inner `min(100vw - 3rem, 820px)` is the
+   floor: under about 1150px the proportional width starts wasting a small
+   screen, so the shell goes back to filling it. 820 rather than 900 because
+   at 900 the floor held all the way to 1265px and the breakout derived from
+   it sat at 91% of a 1150px window instead of the 82.5% everything else
+   lands on. */
 :root {
-  --shell-max: clamp(980px, 50vw + 340px, 1140px);
+  --shell-max: min(1140px, max(71.25vw, min(100vw - 3rem, 820px)));
+
+  /* Everything inside the wide blocks is a fraction of the column, not of the
+     window. That distinction is the whole trick: `--shell-max` has a floor and
+     a cap, so below 1150px and above 1600px it stops tracking the viewport,
+     and type sized in `vw` drifts out of step with the column exactly there.
+     Sized off the column itself, a row that fits at one width fits at all of
+     them. Each ratio is the original px over 1140, the column at 1600px, so a
+     window at or above 1600 renders precisely what it rendered before.
+
+     The floors are where proportion stops and legibility starts. Scaled
+     honestly, body copy would be 10.8px on a 1024px screen; the block would
+     be correct and unreadable, and that is not a trade this page makes. */
+  --fluid-body: clamp(12px, calc(var(--shell-max) * 0.01316), 15px);
+  --fluid-label: clamp(11px, calc(var(--shell-max) * 0.01228), 14px);
+  /* Separate from --fluid-label because it started at 13px, not 14, and
+     rounding it up cost the kit row the 8px it needed to stay on one line at
+     1600px, the width this whole scale is anchored to. */
+  --fluid-kit-label: clamp(10px, calc(var(--shell-max) * 0.0114), 13px);
+  --fluid-dot: clamp(22px, calc(var(--shell-max) * 0.0281), 32px);
+  --fluid-gutter: clamp(36px, calc(var(--shell-max) * 0.0561), 64px);
 }
 
 .site-shell {
@@ -872,7 +899,11 @@ h6 {
    1360px, where the cap and the column are closest. */
 @media (min-width: 1024px) {
   .work-breakout {
-    width: min(calc(var(--shell-max) + 180px), calc(100vw - 4rem));
+    /* 1.158 is 1320/1140, so the break past the column is the same fraction
+       of it at every width. A fixed +180px was 16% of the column at 1600px and
+       20% at 1265px, which is how a block meant to read as emphasis ended up
+       reading as a page that had outgrown its window. */
+    width: min(calc(var(--shell-max) * 1.158), calc(100vw - 4rem));
     margin-left: 50%;
     transform: translateX(-50%);
   }
@@ -898,9 +929,53 @@ h6 {
 /* Colour is the only thing that moves without a pointer that can hover. The
    hop lives in the block below so a touch screen, where :hover latches on tap,
    never leaves a disc stuck 4px above its own row. */
+/* Size comes from a variable rather than three Tailwind utilities so the disc,
+   the logo inside it and the `+N` pill beside it can never fall out of step.
+   `--dot-size` is set per row: the project cards scale with the window, the
+   About page's stack does not, because it sits in a column of its own. */
+.stack-row {
+  --dot-size: var(--fluid-dot);
+  /* 0.22 rather than 0.25. Measured, the kit row cleared 1600px by 4px and
+     came up 1px short at 1265px and 5px at 1024px, because the `+N` pill and
+     the label carry a little that does not scale. Taking a shade off the gap
+     and the pill's padding buys the row 9px at 1600 and 7px at 1265, which is
+     the difference between one line and two at every width. */
+  --dot-gap: calc(var(--dot-size) * 0.22);
+  gap: var(--dot-gap);
+}
+.stack-row--fixed {
+  --dot-size: 40px;
+}
 .stack-dot {
+  width: var(--dot-size);
+  height: var(--dot-size);
   transition: border-color 150ms var(--md-sys-motion-easing-standard, ease),
     box-shadow 200ms var(--md-sys-motion-easing-standard, ease);
+}
+.stack-dot > svg {
+  width: calc(var(--dot-size) * 0.47);
+  height: calc(var(--dot-size) * 0.47);
+}
+.stack-dot > .stack-mono {
+  font-size: calc(var(--dot-size) * 0.29);
+}
+.stack-more {
+  height: var(--dot-size);
+  font-size: calc(var(--dot-size) * 0.34);
+  padding-inline: calc(var(--dot-size) * 0.26);
+}
+
+/* The row of discs was proportional and still wrapped, because the label beside
+   it and the gap between them were not: at 1265px they ate 78px of a 317px
+   column, the same 78px they eat out of 397px at 1600px. Everything in the
+   block scales or nothing does. */
+.kit-dots {
+  column-gap: calc(var(--fluid-dot) * 0.5);
+  row-gap: calc(var(--fluid-dot) * 0.375);
+}
+.kit-dots > dt {
+  font-size: var(--fluid-kit-label);
+  line-height: 1.6;
 }
 
 @media (min-width: 640px) and (hover: hover) {

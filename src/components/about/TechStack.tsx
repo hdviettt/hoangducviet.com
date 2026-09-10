@@ -45,7 +45,7 @@ export default function TechStack() {
             <div className="-mb-2 text-[13.5px] font-medium text-md-on-surface-variant sm:mb-0 sm:pt-[8px]">
               {g.group}
             </div>
-            <LogoRow items={g.items} big />
+            <LogoRow items={g.items} fixed />
           </Fragment>
         ))}
       </div>

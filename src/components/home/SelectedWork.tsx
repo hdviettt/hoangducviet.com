@@ -27,7 +27,7 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
         <h2 className="text-[25px] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[32px] lg:text-[clamp(28px,2.2vw,35px)]">
           Selected work
         </h2>
-        <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-md-on-surface-variant">
+        <p className="mt-4 max-w-[620px] text-[length:var(--fluid-body)] leading-[1.75] text-md-on-surface-variant">
           A search engine built from scratch, and an AI platform of agents I
           built and led inside a company.
         </p>

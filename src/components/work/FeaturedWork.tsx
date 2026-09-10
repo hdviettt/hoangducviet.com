@@ -66,9 +66,9 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // gutters, so 880px of a 1320px row is gutter and the art column collapses
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
-    <article className="grid grid-cols-1 items-start gap-10 md:grid-cols-3 md:gap-12 lg:gap-16">
+    <article className="grid grid-cols-1 items-start gap-10 md:grid-cols-3 md:gap-12 lg:gap-[var(--fluid-gutter)]">
       <div className={visual ? "md:col-span-1" : "md:col-span-2"}>
-        <p className="text-[14px] leading-6 text-md-on-surface-variant">
+        <p className="text-[length:var(--fluid-label)] leading-[1.7] text-md-on-surface-variant">
           {eyebrow}
         </p>
 
@@ -82,7 +82,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
         </h3>
 
         {project.description && (
-          <p className="mt-5 text-[15px] leading-7 text-md-on-surface-variant">
+          <p className="mt-5 text-[length:var(--fluid-body)] leading-[1.75] text-md-on-surface-variant">
             {project.description}
           </p>
         )}
@@ -157,7 +157,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
                 <dd className="text-[28px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[clamp(28px,2.2vw,35px)]">
                   {m.value}
                 </dd>
-                <dt className="mt-3 text-[14px] leading-[1.4] text-md-on-surface-variant">
+                <dt className="mt-3 text-[length:var(--fluid-label)] leading-[1.4] text-md-on-surface-variant">
                   {m.label}
                 </dt>
               </div>
