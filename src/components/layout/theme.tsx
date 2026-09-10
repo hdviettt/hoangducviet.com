@@ -52,7 +52,7 @@ export function ThemeToggle() {
       aria-pressed={dark}
       aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
       title={dark ? "Light" : "Dark"}
-      className="-mr-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-md-on-surface-variant transition-colors duration-200 ease-md-standard hover:bg-md-on-surface/[0.06] hover:text-md-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="-mr-1 inline-flex h-7 w-7 shrink-0 sm:h-8 sm:w-8 items-center justify-center rounded-full text-md-on-surface-variant transition-colors duration-200 ease-md-standard hover:bg-md-on-surface/[0.06] hover:text-md-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       {/* One glyph, not two stacked and swapped: the icon shows what a click
           gives you, so it is a moon while the page is light. */}

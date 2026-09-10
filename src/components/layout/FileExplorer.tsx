@@ -100,7 +100,12 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           scrolled ? "bg-md-background/80 backdrop-blur-lg" : "bg-md-background"
         }`}
       >
-        <div className="site-shell h-16 flex items-center gap-4 sm:gap-8">
+        {/* Measured at 360px: the row wants 403px, of which the theme toggle and
+            its gap are 48. Tightening the gaps on a phone buys most of that
+            back, and `flex-wrap` covers the rest — a nav that runs out of room
+            drops to a second line instead of pushing the page sideways, which
+            is what it was doing at 320px even before the toggle existed. */}
+        <div className="site-shell flex min-h-16 flex-wrap items-center gap-x-3 gap-y-1 py-2 sm:flex-nowrap sm:gap-x-8 sm:py-0">
           <Link
             href="/"
             className="text-[0.875rem] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[0.96875rem]"
@@ -110,7 +115,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
 
           {/* Nav nam canh wordmark. `ml-auto` la thu toi them vao khi go nut doi
               theme, va no day ca cum sang phai — mot hoi quy toi tu tao ra. */}
-          <nav className="flex items-center gap-4 sm:gap-6">
+          <nav className="ml-auto flex items-center gap-2.5 sm:gap-6">
             {navItems.map((item) => {
               const active = item.match(pathname);
               return (
