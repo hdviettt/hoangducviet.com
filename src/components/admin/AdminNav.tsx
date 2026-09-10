@@ -1,5 +1,9 @@
 "use client";
 
+import NavTree, {
+  type TreeFolder,
+  type TreePlacement,
+} from "@/components/admin/NavTree";
 import { useTheme } from "@/components/admin/ThemeProvider";
 import { Icon } from "@/components/ui/Icon";
 import {
@@ -60,14 +64,14 @@ interface Activity {
 const ACTIVITIES: Activity[] = [
   {
     id: "dashboard",
-    icon: "dashboard",
+    icon: "home",
     label: "Dashboard",
     href: "/admin",
     exact: true,
   },
   {
     id: "posts",
-    icon: "description",
+    icon: "article",
     label: "Posts",
     href: "/admin/posts",
   },
@@ -134,10 +138,14 @@ export default function AdminNav({
   posts,
   work,
   series,
+  folders,
+  placement,
 }: {
   posts: NavItem[];
   work: NavItem[];
   series: NavItem[];
+  folders: TreeFolder[];
+  placement: TreePlacement[];
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -277,20 +285,22 @@ export default function AdminNav({
   return (
     <div className="admin-nav flex h-screen shrink-0">
       {/* ---------- activity rail ---------- */}
-      <div className="w-12 shrink-0 h-full flex flex-col items-center border-r border-md-outline-variant bg-md-surface-container-low">
+      <div className="w-12 shrink-0 h-full flex flex-col items-center border-r border-md-outline-variant bg-md-surface-container-lowest">
         <Link
           href="/"
           title="View site"
-          className="h-12 w-full grid place-items-center text-[15px] font-medium text-md-on-surface hover:text-md-primary transition-colors duration-fast"
+          className="h-12 w-full grid place-items-center text-md-on-surface transition-colors duration-fast"
         >
-          {IDENTITY.name.charAt(0)}
+          <span className="grid place-items-center w-8 h-8 rounded-[10px] text-[14px] font-medium ring-1 ring-md-outline-variant hover:ring-md-outline transition-colors duration-fast">
+            {IDENTITY.name.charAt(0)}
+          </span>
         </Link>
 
         <div className="flex-1 w-full flex flex-col items-center pt-1">
           {activities.map((a) => {
             const on = activeFor(a);
             return (
-              <div key={a.id} className="w-full">
+              <div key={a.id} className="w-full group/rail">
                 {a.groupStart && (
                   <div className="my-1.5 mx-3 border-t border-md-outline-variant" />
                 )}
@@ -302,14 +312,22 @@ export default function AdminNav({
                   aria-current={on ? "page" : undefined}
                   className={`relative w-full h-10 grid place-items-center transition-colors duration-fast ${
                     on
-                      ? "text-md-primary"
+                      ? "text-md-on-surface"
                       : "text-md-on-surface-variant hover:text-md-on-surface"
                   }`}
                 >
                   {on && (
-                    <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-md-primary" />
+                    <span className="absolute left-0 top-2 bottom-2 w-[2px] rounded-r-full bg-md-primary" />
                   )}
-                  <Icon name={a.icon} size={19} filled={on} />
+                  <span
+                    className={`grid place-items-center w-8 h-8 rounded-[10px] transition-colors duration-fast ${
+                      on
+                        ? "bg-md-on-surface/14 ring-1 ring-md-outline/55"
+                        : "group-hover/rail:bg-md-on-surface/6"
+                    }`}
+                  >
+                    <Icon name={a.icon} size={18} filled={on} />
+                  </span>
                 </button>
               </div>
             );
@@ -338,7 +356,9 @@ export default function AdminNav({
           aria-label="Log out"
           className="w-full h-10 mb-1 grid place-items-center text-md-on-surface-variant hover:text-md-error transition-colors duration-fast"
         >
-          <Icon name="logout" size={18} />
+          <span className="grid place-items-center w-8 h-8 rounded-[10px] hover:bg-md-error/12 transition-colors duration-fast">
+            <Icon name="logout" size={18} />
+          </span>
         </button>
       </div>
 
@@ -356,6 +376,15 @@ export default function AdminNav({
             <ListPanel
               panel={panel}
               items={items}
+              allCount={
+                panel === "work"
+                  ? work.length
+                  : panel === "series"
+                    ? series.length
+                    : posts.length
+              }
+              folders={folders}
+              placement={placement}
               filter={filter}
               setFilter={setFilter}
               pathname={pathname}
@@ -390,7 +419,7 @@ function PanelHead({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="h-12 shrink-0 flex items-center gap-2 px-3">
+    <div className="h-12 shrink-0 flex items-center gap-2 px-3 border-b border-md-outline-variant/60">
       <span className="text-[11px] font-mono uppercase tracking-[0.08em] text-md-on-surface-variant">
         {title}
       </span>
@@ -457,24 +486,32 @@ const PANEL_META: Record<
 function ListPanel({
   panel,
   items,
+  allCount,
+  folders,
+  placement,
   filter,
   setFilter,
   pathname,
 }: {
   panel: PanelId | null;
   items: NavItem[];
+  allCount: number;
+  folders: TreeFolder[];
+  placement: TreePlacement[];
   filter: string;
   setFilter: (v: string) => void;
   pathname: string;
 }) {
   if (!panel || panel === "outline") return null;
   const meta = PANEL_META[panel];
+  const scopeFolders = folders.filter((f) => f.scope === panel);
+  const scopePlacement = placement.filter((p) => p.scope === panel);
 
   return (
     <>
       <PanelHead
         title={meta.title}
-        count={items.length}
+        count={allCount}
         action={
           <Link
             href={meta.add}
@@ -486,7 +523,7 @@ function ListPanel({
         }
       />
 
-      <div className="px-2 pb-2">
+      <div className="px-2 pt-2 pb-1.5">
         <div className="relative">
           <span className="absolute left-2 top-1/2 -translate-y-1/2 text-md-on-surface-variant pointer-events-none">
             <Icon name="search" size={14} />
@@ -499,49 +536,21 @@ function ListPanel({
             }}
             placeholder="Filter"
             aria-label={`Filter ${meta.title}`}
-            className="w-full h-7 pl-7 pr-2 rounded-md bg-md-surface-container-high border border-md-outline-variant text-[12.5px] text-md-on-surface placeholder:text-md-on-surface-variant/70 focus:outline-none focus:border-md-outline transition-colors duration-fast"
+            className="w-full h-8 pl-7 pr-2 rounded-lg bg-md-surface-container-high border border-md-outline-variant text-[12.5px] text-md-on-surface placeholder:text-md-on-surface-variant/70 focus:outline-none focus:border-md-outline transition-colors duration-fast"
           />
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-4">
-        {items.length === 0 && (
-          <p className="px-3 py-2 text-[12.5px] leading-5 text-md-on-surface-variant">
-            Nothing matches.
-          </p>
-        )}
-        {items.map((item) => {
-          const href = `${meta.base}/${item.slug}/edit`;
-          const on = pathname === href;
-          return (
-            <Link
-              key={item.slug}
-              href={href}
-              title={item.title}
-              className={`relative flex items-center gap-2 h-7 px-3 text-[12.5px] leading-5 transition-colors duration-fast ${
-                on
-                  ? "bg-md-primary/12 text-md-on-surface"
-                  : "text-md-on-surface-variant hover:text-md-on-surface hover:bg-md-on-surface/8"
-              }`}
-            >
-              {on && (
-                <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-md-primary" />
-              )}
-              {item.status && (
-                <span
-                  aria-hidden
-                  title={item.status}
-                  className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                    item.status === "published"
-                      ? "bg-md-primary"
-                      : "bg-md-on-surface-variant/50"
-                  }`}
-                />
-              )}
-              <span className="truncate">{item.title}</span>
-            </Link>
-          );
-        })}
+      <div className="flex-1 overflow-y-auto">
+        <NavTree
+          scope={panel}
+          base={meta.base}
+          items={items}
+          folders={scopeFolders}
+          placement={scopePlacement}
+          pathname={pathname}
+          filter={filter}
+        />
       </div>
     </>
   );

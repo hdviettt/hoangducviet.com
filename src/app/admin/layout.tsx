@@ -5,7 +5,13 @@ import ThemeProvider, {
 } from "@/components/admin/ThemeProvider";
 import { ToastProvider } from "@/components/admin/Toast";
 import { db } from "@/db";
-import { posts, projects, series } from "@/db/schema";
+import {
+  cmsFolders,
+  cmsItemPlacement,
+  posts,
+  projects,
+  series,
+} from "@/db/schema";
 import { desc } from "drizzle-orm";
 
 export const metadata = {
@@ -20,7 +26,7 @@ export const metadata = {
 // `series`; the URLs kept their old names for backward compatibility.
 async function getNavData() {
   try {
-    const [p, w, s] = await Promise.all([
+    const [p, w, s, folders, placement] = await Promise.all([
       db
         .select({ slug: posts.slug, title: posts.title, status: posts.status })
         .from(posts)
@@ -37,11 +43,25 @@ async function getNavData() {
         .select({ slug: series.slug, title: series.title })
         .from(series)
         .orderBy(desc(series.dateCreated)),
+      db.select().from(cmsFolders).orderBy(cmsFolders.sortOrder),
+      db.select().from(cmsItemPlacement),
     ]);
-    return { navPosts: p, navWork: w, navSeries: s };
+    return {
+      navPosts: p,
+      navWork: w,
+      navSeries: s,
+      navFolders: folders,
+      navPlacement: placement,
+    };
   } catch {
     // Build-time prerender can run without a reachable database.
-    return { navPosts: [], navWork: [], navSeries: [] };
+    return {
+      navPosts: [],
+      navWork: [],
+      navSeries: [],
+      navFolders: [],
+      navPlacement: [],
+    };
   }
 }
 
@@ -50,7 +70,8 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { navPosts, navWork, navSeries } = await getNavData();
+  const { navPosts, navWork, navSeries, navFolders, navPlacement } =
+    await getNavData();
 
   return (
     <>
@@ -61,7 +82,13 @@ export default async function AdminLayout({
       <ThemeProvider>
         <ToastProvider>
           <div className="flex h-screen overflow-hidden bg-md-background font-sans text-md-on-background">
-            <AdminNav posts={navPosts} work={navWork} series={navSeries} />
+            <AdminNav
+              posts={navPosts}
+              work={navWork}
+              series={navSeries}
+              folders={navFolders}
+              placement={navPlacement}
+            />
             <AdminShellClient posts={navPosts} series={navSeries}>
               {children}
             </AdminShellClient>

@@ -199,3 +199,38 @@ export const media = pgTable("media", {
     .notNull()
     .defaultNow(),
 });
+
+// ---------------------------------------------------------------------------
+// CMS-only organisation.
+//
+// Folders and item placement exist to organise the admin navigation panel and
+// are never read by the public site. Nothing in `src/app/(public routes)`,
+// the feed, the sitemap or the JSON-LD builders touches these two tables.
+// ---------------------------------------------------------------------------
+
+export const cmsFolders = pgTable("cms_folders", {
+  id: serial("id").primaryKey(),
+  /** Which panel the folder belongs to: "posts" | "work" | "series". */
+  scope: text("scope").notNull(),
+  name: text("name").notNull(),
+  parentId: integer("parent_id"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  dateCreated: timestamp("date_created", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+/**
+ * Where one item sits. An item with no row is unfiled and shows at the root,
+ * so a newly created post needs nothing done to it to appear.
+ */
+export const cmsItemPlacement = pgTable(
+  "cms_item_placement",
+  {
+    scope: text("scope").notNull(),
+    itemSlug: text("item_slug").notNull(),
+    folderId: integer("folder_id"),
+    sortOrder: integer("sort_order").notNull().default(0),
+  },
+  (table) => [primaryKey({ columns: [table.scope, table.itemSlug] })],
+);

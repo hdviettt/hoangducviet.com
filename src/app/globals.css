@@ -1698,6 +1698,234 @@ select.md-field {
 }
 
 /* ------------------------------------------------------------------
+   The navigation tree.
+
+   Rows are rounded and inset rather than full-bleed stripes, which is what
+   makes a file tree read as a list of objects instead of a table. The active
+   row is a filled pill, not a hairline at the far edge: at a glance you should
+   see WHICH row, not that some row somewhere is selected.
+
+   Indent guides are a single left border on the children wrapper. VS Code
+   draws one per level and it is the cheapest way to make depth legible without
+   adding weight to every row.
+   ------------------------------------------------------------------ */
+.tree-root {
+  padding: 0 6px 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.tree-toolbar {
+  padding: 0 2px 6px;
+}
+.tree-newfolder {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px dashed hsl(var(--md-sys-color-outline-variant));
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  transition:
+    color 110ms var(--md-sys-motion-easing-standard),
+    border-color 110ms var(--md-sys-motion-easing-standard),
+    background 110ms var(--md-sys-motion-easing-standard);
+}
+.tree-newfolder:hover {
+  color: hsl(var(--md-sys-color-on-surface));
+  border-color: hsl(var(--md-sys-color-outline));
+  background: hsl(var(--md-sys-color-on-surface) / 0.06);
+}
+
+.tree-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding-right: 6px;
+  border-radius: 7px;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  cursor: default;
+  transition:
+    background 110ms var(--md-sys-motion-easing-standard),
+    color 110ms var(--md-sys-motion-easing-standard);
+}
+.tree-row:hover {
+  background: hsl(var(--md-sys-color-on-surface) / 0.06);
+  color: hsl(var(--md-sys-color-on-surface));
+}
+.tree-row.is-active {
+  background: hsl(var(--md-sys-color-on-surface) / 0.14);
+  color: hsl(var(--md-sys-color-on-surface));
+  box-shadow: inset 0 0 0 1px hsl(var(--md-sys-color-outline) / 0.55);
+}
+.tree-row.is-dragging {
+  opacity: 0.4;
+}
+
+/* Drop feedback. "inside" outlines the folder; the edges draw the line the
+   row would be inserted at, which is the only way to show order. */
+.tree-row.is-inside {
+  background: hsl(var(--md-sys-color-primary) / 0.16);
+  box-shadow: inset 0 0 0 1px hsl(var(--md-sys-color-primary) / 0.7);
+}
+.tree-row.is-before::after,
+.tree-row.is-after::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: hsl(var(--md-sys-color-primary));
+}
+.tree-row.is-before::after {
+  top: -1px;
+}
+.tree-row.is-after::after {
+  bottom: -1px;
+}
+
+.tree-twisty {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  transition: color 110ms var(--md-sys-motion-easing-standard);
+}
+.tree-twisty:hover {
+  color: hsl(var(--md-sys-color-on-surface));
+}
+.tree-twisty--empty {
+  pointer-events: none;
+}
+
+.tree-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+}
+
+.tree-dot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  margin: 0 4px 0 5px;
+  border-radius: 50%;
+  background: hsl(var(--md-sys-color-on-surface-variant) / 0.45);
+}
+.tree-dot.is-live {
+  background: hsl(var(--md-sys-color-on-surface) / 0.75);
+}
+
+.tree-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: inherit;
+}
+
+.tree-rename {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+  background: hsl(var(--md-sys-color-surface-container-highest));
+  border: 1px solid hsl(var(--md-sys-color-outline));
+  color: hsl(var(--md-sys-color-on-surface));
+  font: inherit;
+}
+.tree-rename:focus {
+  outline: none;
+}
+
+.tree-count {
+  flex-shrink: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  color: hsl(var(--md-sys-color-on-surface-variant) / 0.7);
+}
+
+/* Row actions stay out of the way until the row is under the pointer, so a
+   list of thirty folders does not carry thirty buttons. */
+.tree-action {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  opacity: 0;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  transition:
+    opacity 110ms var(--md-sys-motion-easing-standard),
+    color 110ms var(--md-sys-motion-easing-standard),
+    background 110ms var(--md-sys-motion-easing-standard);
+}
+.tree-row:hover .tree-action {
+  opacity: 1;
+}
+.tree-action:hover {
+  color: hsl(var(--md-sys-color-error));
+  background: hsl(var(--md-sys-color-error) / 0.14);
+}
+
+.tree-children {
+  margin-left: 13px;
+  border-left: 1px solid hsl(var(--md-sys-color-outline-variant));
+  padding-left: 1px;
+}
+
+.tree-empty,
+.tree-none {
+  padding: 5px 0 5px 6px;
+  font-size: 11.5px;
+  color: hsl(var(--md-sys-color-on-surface-variant) / 0.6);
+  font-style: italic;
+}
+
+.tree-outzone {
+  height: 0;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px dashed transparent;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  font-size: 11px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  transition:
+    height 150ms var(--md-sys-motion-easing-standard),
+    border-color 110ms var(--md-sys-motion-easing-standard),
+    background 110ms var(--md-sys-motion-easing-standard);
+}
+.tree-outzone.is-hot {
+  height: 34px;
+  border-color: hsl(var(--md-sys-color-primary) / 0.7);
+  background: hsl(var(--md-sys-color-primary) / 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tree-row,
+  .tree-twisty,
+  .tree-action,
+  .tree-outzone,
+  .tree-newfolder {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------
    Zen mode.
 
    Driven by a data attribute on <html> rather than by React state, so the
