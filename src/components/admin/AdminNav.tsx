@@ -19,6 +19,7 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -280,6 +281,66 @@ export default function AdminNav({
   const activeFor = (a: Activity) =>
     a.id === "outline" ? panel === "outline" : isOnRoute(pathname, a);
 
+  // ---- the travelling indicator -------------------------------------------
+  //
+  // One element that moves, rather than one per item appearing and vanishing.
+  // A marker that fades out here and in over there tells you the selection
+  // changed; a marker that travels tells you WHERE it went, and the eye
+  // follows it instead of re-scanning the column.
+  //
+  // Position is measured from the real buttons rather than computed from a row
+  // height, because the group separators make the rows unevenly spaced.
+  const listRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const [marker, setMarker] = useState<{ top: number; height: number } | null>(
+    null,
+  );
+  const [travelling, setTravelling] = useState(false);
+  const lastTop = useRef<number | null>(null);
+
+  const activeId = activities.find((a) => activeFor(a))?.id ?? null;
+
+  // Measure after layout, and only write state when a number actually changed.
+  // Writing a fresh object every pass is a render loop: the effect has no
+  // dependency list on purpose, so an unconditional setState re-runs it for
+  // ever, React hits its update ceiling and the marker never paints at all.
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = activeId ? itemRefs.current.get(activeId) : null;
+      const list = listRef.current;
+      if (!el || !list) {
+        setMarker((m) => (m === null ? m : null));
+        lastTop.current = null;
+        return;
+      }
+      const a = el.getBoundingClientRect();
+      const b = list.getBoundingClientRect();
+      const top = Math.round(a.top - b.top);
+      const height = Math.round(a.height);
+
+      const moved =
+        lastTop.current !== null && Math.abs(top - lastTop.current) > 2;
+      lastTop.current = top;
+      setMarker((m) =>
+        m && m.top === top && m.height === height ? m : { top, height },
+      );
+      if (moved) setTravelling(true);
+    };
+
+    measure();
+    // The rail's rows shift when the Outline item appears or disappears, and
+    // when the window changes height.
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [activeId, activities.length]);
+
+  // The stretch lasts exactly as long as the travel.
+  useEffect(() => {
+    if (!travelling) return;
+    const t = setTimeout(() => setTravelling(false), 260);
+    return () => clearTimeout(t);
+  }, [travelling]);
+
   const panelWidth = panel && !collapsed ? width : 0;
 
   return (
@@ -296,38 +357,47 @@ export default function AdminNav({
           </span>
         </Link>
 
-        <div className="flex-1 w-full flex flex-col items-center pt-1">
+        <div ref={listRef} className="relative flex-1 w-full pt-1">
+          {/* The marker sits behind the buttons and slides between them. */}
+          {marker && (
+            <span
+              aria-hidden
+              className={`rail-marker ${travelling ? "is-travelling" : ""}`}
+              style={{
+                transform: `translateY(${marker.top}px)`,
+                height: marker.height,
+              }}
+            >
+              <span className="rail-marker__bar" />
+              <span className="rail-marker__pill" />
+            </span>
+          )}
+
           {activities.map((a) => {
             const on = activeFor(a);
             return (
-              <div key={a.id} className="w-full group/rail">
+              <div key={a.id} className="w-full">
                 {a.groupStart && (
                   <div className="my-1.5 mx-3 border-t border-md-outline-variant" />
                 )}
                 <button
                   type="button"
+                  ref={(el) => {
+                    if (el) itemRefs.current.set(a.id, el);
+                    else itemRefs.current.delete(a.id);
+                  }}
                   onClick={() => select(a)}
-                  title={a.label}
                   aria-label={a.label}
                   aria-current={on ? "page" : undefined}
-                  className={`relative w-full h-10 grid place-items-center transition-colors duration-fast ${
-                    on
-                      ? "text-md-on-surface"
-                      : "text-md-on-surface-variant hover:text-md-on-surface"
-                  }`}
+                  className={`rail-item ${on ? "is-on" : ""}`}
                 >
-                  {on && (
-                    <span className="absolute left-0 top-2 bottom-2 w-[2px] rounded-r-full bg-md-primary" />
-                  )}
-                  <span
-                    className={`grid place-items-center w-8 h-8 rounded-[10px] transition-colors duration-fast ${
-                      on
-                        ? "bg-md-on-surface/14 ring-1 ring-md-outline/55"
-                        : "group-hover/rail:bg-md-on-surface/6"
-                    }`}
-                  >
+                  <span className="rail-item__icon">
                     <Icon name={a.icon} size={18} filled={on} />
                   </span>
+                  {/* A real label instead of the browser's tooltip: it arrives
+                      fast enough to be useful and slow enough that sweeping
+                      the pointer down the rail does not fire all of them. */}
+                  <span className="rail-tip">{a.label}</span>
                 </button>
               </div>
             );
