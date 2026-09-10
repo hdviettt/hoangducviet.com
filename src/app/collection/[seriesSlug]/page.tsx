@@ -168,17 +168,17 @@ export default async function SeriesPage({ params }: SeriesParams) {
           {totalViews > 0 && <ViewCount count={totalViews} />}
         </div>
 
-        <h1 className="mt-3 text-[36px] leading-[44px] md:text-[57px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
+        <h1 className="mt-3 text-[32px] leading-[44px] md:text-[50px] md:leading-[62px] font-medium tracking-tight text-md-on-surface">
           {seriesItem.title}
         </h1>
 
         {seriesItem.summary && (
-          <p className="mt-4 text-[18px] leading-[30px] text-md-on-surface-variant max-w-[760px]">
+          <p className="mt-4 text-[16.5px] leading-[30px] text-md-on-surface-variant max-w-[760px]">
             {seriesItem.summary}
           </p>
         )}
 
-        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[15px] leading-5 font-medium">
+        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[14px] leading-5 font-medium">
           {firstPost && (
             <Link
               href={`/posts/${firstPost.slug}`}
@@ -214,7 +214,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
 
       {seriesItem.description && (
         <div
-          className="article-content mx-auto max-w-[720px] mb-16 md:mb-20"
+          className="article-content mx-auto max-w-[620px] mb-16 md:mb-20"
           dangerouslySetInnerHTML={{ __html: seriesItem.description }}
         />
       )}
@@ -239,11 +239,11 @@ export default async function SeriesPage({ params }: SeriesParams) {
                   className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
                 >
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                    <h3 className="text-[20px] leading-7 md:text-[25px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                       {cleanTitle}
                     </h3>
                     {post.description && (
-                      <p className="mt-3 text-[16px] leading-[26px] text-md-on-surface-variant">
+                      <p className="mt-3 text-[15px] leading-[26px] text-md-on-surface-variant">
                         {post.description}
                       </p>
                     )}

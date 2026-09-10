@@ -24,20 +24,20 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
   return (
     <section id="work" className="scroll-mt-8 pb-6 md:pb-8">
       <div className="max-w-[820px]">
-        <h2 className="text-[28px] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[36px] lg:text-[clamp(32px,2.5vw,40px)]">
+        <h2 className="text-[25px] font-normal leading-[1.18] tracking-[-0.25px] text-md-on-surface sm:text-[32px] lg:text-[clamp(28px,2.2vw,35px)]">
           Selected work
         </h2>
-        <p className="mt-4 max-w-[620px] text-[16px] leading-7 text-md-on-surface-variant">
+        <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-md-on-surface-variant">
           A search engine built from scratch, and an AI platform of agents I
           built and led inside a company.
         </p>
       </div>
 
-      <div className="work-breakout mt-12 flex flex-col md:mt-16">
+      <div className="work-breakout mt-14 flex flex-col md:mt-20">
         {topLevel.map((p) => (
           <div
             key={p.slug}
-            className="border-t border-md-outline-variant py-14 first:border-t-0 first:pt-2 md:py-20"
+            className="border-t border-md-outline-variant py-16 first:border-t-0 first:pt-2 md:py-24"
           >
             <FeaturedWork project={p} />
           </div>
@@ -50,14 +50,20 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
             bi doc nham thanh dau muc ben duoi, va khong can mui ten: no dang
             dung tren mot duong ngang chu khong phai trong mot hang chu. */}
         <div className="flex items-center gap-5 md:gap-8">
-          <span aria-hidden="true" className="h-px flex-1 bg-md-outline-variant" />
+          <span
+            aria-hidden="true"
+            className="h-px flex-1 bg-md-outline-variant"
+          />
           <Link
             href="/work"
             className="md-btn md-btn-outlined md-btn-pill md-btn-lg shrink-0 no-underline"
           >
             All work
           </Link>
-          <span aria-hidden="true" className="h-px flex-1 bg-md-outline-variant" />
+          <span
+            aria-hidden="true"
+            className="h-px flex-1 bg-md-outline-variant"
+          />
         </div>
       </div>
     </section>

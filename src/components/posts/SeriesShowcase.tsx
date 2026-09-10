@@ -50,13 +50,16 @@ export default function SeriesShowcase({
             <span className="tabular-nums">{feedRowDate(item.lastDate)}</span>
             {views > 0 && <ViewCount count={views} />}
           </div>
-          <Link href={`/collection/${series.slug}`} className="group block mt-3">
-            <h3 className="text-[28px] leading-9 md:text-[42px] md:leading-[48px] font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+          <Link
+            href={`/collection/${series.slug}`}
+            className="group block mt-3"
+          >
+            <h3 className="text-[25px] leading-9 md:text-[37px] md:leading-[48px] font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
               {series.title}
             </h3>
           </Link>
           {series.summary && (
-            <p className="mt-4 text-[16px] leading-[26px] text-md-on-surface-variant max-w-[560px]">
+            <p className="mt-4 text-[15px] leading-[26px] text-md-on-surface-variant max-w-[560px]">
               {series.summary}
             </p>
           )}
@@ -73,11 +76,11 @@ export default function SeriesShowcase({
               className="group flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-8 py-8 md:py-10"
             >
               <div className="min-w-0 flex-1">
-                <h4 className="text-[22px] leading-7 md:text-[28px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
+                <h4 className="text-[20px] leading-7 md:text-[25px] md:leading-9 font-medium tracking-tight text-md-on-surface group-hover:text-primary transition-colors duration-200 ease-md-standard">
                   {partLabel(part.title, series.title)}
                 </h4>
                 {part.description && (
-                  <p className="mt-3 text-[16px] leading-[26px] text-md-on-surface-variant">
+                  <p className="mt-3 text-[15px] leading-[26px] text-md-on-surface-variant">
                     {part.description}
                   </p>
                 )}

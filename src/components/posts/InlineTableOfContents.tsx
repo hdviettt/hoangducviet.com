@@ -92,7 +92,7 @@ export default function InlineTableOfContents({
 
   return (
     <nav aria-label="On this page">
-      <div className="text-[15px] font-medium text-md-on-surface mb-5">
+      <div className="text-[14px] font-medium text-md-on-surface mb-5">
         In this story
       </div>
       <ul className="relative border-l border-md-outline-variant">

@@ -46,6 +46,15 @@ const NAME_TO_MARK: Array<[RegExp, string]> = [
   [/(^|\W)mcp($|\W)|model context protocol/, "mcp"],
   [/google doc/, "googledocs"],
   [/typescript/, "typescript"],
+  [/tailwind/, "tailwindcss"],
+  [/drizzle/, "drizzle"],
+  [/railway/, "railway"],
+  [/docker/, "docker"],
+  // Word-bounded: "bun" is three letters that turn up inside other words, and a
+  // loose match would put Bun's logo on anything containing them.
+  [/(^|\W)bun($|\W)/, "bun"],
+  // Vercel's gateway, so it wears Vercel's mark rather than a monogram.
+  [/ai gateway/, "vercel"],
 ];
 
 function resolveMark(it: ProjectLogo): string | undefined {
@@ -121,19 +130,29 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
 //
 // CSS-only, deliberately. This renders inside a server component, and a
 // tooltip that needs a client bundle to say "PostgreSQL" is a bad trade.
-function Dot({ item }: { item: ProjectLogo }) {
+function Dot({ item, big = false }: { item: ProjectLogo; big?: boolean }) {
   const mark = resolveMark(item);
   const letter = mark ? null : item.letter || monogram(item.name);
   return (
     <li className="group relative">
       <span
         aria-hidden="true"
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-md-outline-variant bg-md-surface-container-high text-md-on-surface transition-colors duration-200 ease-md-standard group-hover:border-md-outline"
+        className={`stack-dot flex items-center justify-center rounded-full border border-md-outline-variant bg-md-surface-container-high text-md-on-surface group-hover:border-md-outline ${
+          big ? "h-10 w-10" : "h-8 w-8"
+        }`}
       >
         {mark ? (
-          <Mark id={mark} mono className="h-[15px] w-[15px]" />
+          <Mark
+            id={mark}
+            mono
+            className={big ? "h-[19px] w-[19px]" : "h-[15px] w-[15px]"}
+          />
         ) : (
-          <span className="font-mono text-[9.5px] font-semibold leading-none text-md-on-surface-variant">
+          <span
+            className={`font-mono font-semibold leading-none text-md-on-surface-variant ${
+              big ? "text-[11px]" : "text-[9.5px]"
+            }`}
+          >
             {letter}
           </span>
         )}
@@ -237,6 +256,31 @@ export function KitDots({
         </Fragment>
       ))}
     </dl>
+  );
+}
+
+// Every item as a logo, nothing elided. `KitDots` caps a row with `+N` because
+// a project card has one line to spend and the tools past it are the ones a
+// reader loses least by not seeing. A page section has no such budget: if a
+// group holds six tools, the point of the section is that it holds six tools.
+//
+// The name is real text at zero opacity rather than a `title` or an aria-label,
+// so a screen reader reads the row as the list of names it is, and the pointer
+// gets the same string. See `.stack-dot` and `.stack-tip` in globals.css for the
+// reveal, which is gated on a pointer that can actually hover.
+export function LogoRow({
+  items,
+  big = false,
+}: {
+  items: ProjectLogo[];
+  big?: boolean;
+}) {
+  return (
+    <ul className="flex flex-wrap items-center gap-2.5">
+      {items.map((it) => (
+        <Dot key={it.name} item={it} big={big} />
+      ))}
+    </ul>
   );
 }
 

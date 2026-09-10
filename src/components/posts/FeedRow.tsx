@@ -24,7 +24,7 @@ function stripPartPrefix(title: string): string {
 }
 
 const TITLE_CLS =
-  "text-[21px] leading-[1.25] tracking-[-0.013em] font-medium text-md-on-surface [text-wrap:balance] transition-colors duration-200 ease-md-standard";
+  "text-[19px] leading-[1.25] tracking-[-0.013em] font-medium text-md-on-surface [text-wrap:balance] transition-colors duration-200 ease-md-standard";
 const DATE_CLS =
   "text-[13px] font-medium tabular-nums text-md-on-surface-variant";
 const ROW_CLS =
@@ -78,7 +78,7 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
                   <span className="w-5 shrink-0 text-[12.5px] font-medium tabular-nums text-[hsl(var(--md-sys-color-primary)/0.75)]">
                     {String(col.offset + i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-[15px] leading-[1.35] text-md-on-surface-variant transition-colors duration-200 ease-md-standard group-hover/part:text-primary">
+                  <span className="text-[14px] leading-[1.35] text-md-on-surface-variant transition-colors duration-200 ease-md-standard group-hover/part:text-primary">
                     {stripPartPrefix(part.title)}
                   </span>
                 </Link>

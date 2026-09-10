@@ -72,7 +72,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
           {eyebrow}
         </p>
 
-        <h3 className="mt-3 max-w-[17ch] text-balance text-[26px] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[32px] lg:text-[clamp(29px,2.25vw,36px)]">
+        <h3 className="mt-3 max-w-[17ch] text-balance text-[23px] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[28px] lg:text-[clamp(26px,2vw,32px)]">
           <Link
             href={href}
             className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
@@ -82,7 +82,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
         </h3>
 
         {project.description && (
-          <p className="mt-5 text-[16px] leading-7 text-md-on-surface-variant">
+          <p className="mt-5 text-[15px] leading-7 text-md-on-surface-variant">
             {project.description}
           </p>
         )}
@@ -154,7 +154,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
                 key={m.label}
                 className="flex min-h-[150px] flex-col justify-center bg-md-surface-container-low px-7 py-8 sm:min-h-[190px] sm:px-9"
               >
-                <dd className="text-[32px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[clamp(32px,2.5vw,40px)]">
+                <dd className="text-[28px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[clamp(28px,2.2vw,35px)]">
                   {m.value}
                 </dd>
                 <dt className="mt-3 text-[14px] leading-[1.4] text-md-on-surface-variant">

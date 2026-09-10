@@ -27,7 +27,7 @@ export default function ProfileHero({
   imageUrl,
 }: ProfileHeroProps) {
   return (
-    <section className="pt-10 sm:pt-12 md:pt-16 pb-10 md:pb-14">
+    <section className="pt-14 sm:pt-16 md:pt-20 pb-12 md:pb-16">
       <div>
         {/* Identity — centred column: photo, then name, then bio, then the
             contact row. The measure stays tight so a centred bio still breaks
@@ -46,7 +46,7 @@ export default function ProfileHero({
             )}
             <div className="min-w-0">
               {name && (
-                <h1 className="text-[26px] leading-8 sm:text-[32px] sm:leading-9 md:text-[clamp(29px,2.25vw,36px)] md:leading-[1.17] font-normal tracking-tight text-md-on-surface">
+                <h1 className="text-[23px] leading-8 sm:text-[28px] sm:leading-9 md:text-[clamp(26px,2vw,32px)] md:leading-[1.17] font-normal tracking-tight text-md-on-surface">
                   {name}
                 </h1>
               )}

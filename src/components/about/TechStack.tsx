@@ -1,12 +1,13 @@
-import { Chips } from "@/components/work/StackChips";
+import { LogoRow } from "@/components/work/StackChips";
 import { TECH_STACK } from "@/lib/identity";
 import { Fragment } from "react";
 
-// The same label-then-chips grid a project's "Built with" panel uses, so a tool
-// reads identically whether you meet it on a project page or here. That is the
-// whole point of reusing it: this block is the union of those panels, and if it
-// had its own visual language it would look like a separate claim rather than
-// the sum of the ones already on the site.
+// Logos only, with the name behind a hover. A chip that carries both a mark and
+// a word is a list you read; thirty-one of them is a wall of text pretending to
+// be a graphic. The discs read as a texture at a glance, which is what a stack
+// actually is, and the name is one hover away for the tool you did not
+// recognise. It is the same `Dot` the homepage project cards use, so a tool
+// looks the same wherever you meet it on this site.
 //
 // It sits directly under the intro the About page shares with the homepage.
 // Someone arriving from a post knows one project's stack; the first thing the
@@ -28,7 +29,12 @@ export default function TechStack() {
           longest group name sets it, so the chips start at one edge without a
           magic number that breaks the day a group is renamed. Below sm the
           grid collapses to one column and each label sits above its own row. */}
-      <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-[max-content_1fr] sm:gap-y-4">
+      {/* `gap-y-9` is measured, not chosen. The name pill sits 8px above its disc
+          and stands about 24px tall, so it reaches 32px into the row above; at
+          the old 16px gap it landed on the previous row's logos. 36px clears it
+          with 4px to spare. Below sm the pill is `display: none` and the gap
+          goes back to being about spacing. */}
+      <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-[max-content_1fr] sm:gap-y-9">
         {TECH_STACK.map((g) => (
           <Fragment key={g.group}>
             {/* `-mb-2` only below sm. Stacked in one column the grid's row gap
@@ -39,7 +45,7 @@ export default function TechStack() {
             <div className="-mb-2 text-[13.5px] font-medium text-md-on-surface-variant sm:mb-0 sm:pt-[8px]">
               {g.group}
             </div>
-            <Chips items={g.items} />
+            <LogoRow items={g.items} big />
           </Fragment>
         ))}
       </div>

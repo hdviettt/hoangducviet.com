@@ -167,23 +167,23 @@ export default async function PostDetail({
             {viewCount > 0 && <ViewCount count={viewCount} />}
           </div>
           <h1
-            className="text-[34px] leading-[1.12] sm:text-[44px] md:text-[54px] md:leading-[1.08] font-medium tracking-tight"
+            className="text-[30px] leading-[1.12] sm:text-[36px] md:text-[clamp(38px,3vw,48px)] md:leading-[1.08] font-medium tracking-tight"
             style={{ color: "var(--article-heading)" }}
           >
             {data.title}
           </h1>
-          <p className="mt-5 md:mt-7 text-[16px] leading-6 text-md-on-surface-variant">
+          <p className="mt-5 md:mt-7 text-[15px] leading-6 text-md-on-surface-variant">
             Hoang Duc Viet
           </p>
         </header>
 
         {standfirst && (
-          <div className="standfirst mx-auto max-w-[720px] text-center mb-12 md:mb-16">
+          <div className="standfirst mx-auto max-w-[620px] text-center mb-12 md:mb-16">
             <MarkdownContent content={standfirst} />
           </div>
         )}
 
-        <div className="mx-auto max-w-[720px] min-w-0">
+        <div className="mx-auto max-w-[620px] min-w-0">
           {body ? (
             <div className="article-content">
               <MarkdownContent content={body} />

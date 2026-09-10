@@ -102,7 +102,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         <div className="site-shell h-16 flex items-center gap-4 sm:gap-8">
           <Link
             href="/"
-            className="text-[15px] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[17px]"
+            className="text-[14px] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[15.5px]"
           >
             Hoang Duc Viet
           </Link>
@@ -130,9 +130,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         </div>
       </header>
 
-      <main className="site-shell pb-16">
-        {children}
-      </main>
+      <main className="site-shell pb-16">{children}</main>
     </div>
   );
 }

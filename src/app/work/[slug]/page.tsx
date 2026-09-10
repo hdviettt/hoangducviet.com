@@ -138,11 +138,11 @@ export default async function ProjectDeepDivePage({
 
       {/* ===== Hero ===== */}
       <header className="mt-8">
-        <h1 className="max-w-[20ch] text-balance text-[34px] font-medium leading-[1.05] tracking-[-0.03em] text-md-on-surface sm:text-[44px]">
+        <h1 className="max-w-[20ch] text-balance text-[30px] font-medium leading-[1.05] tracking-[-0.03em] text-md-on-surface sm:text-[39px]">
           {project.title}
         </h1>
         {project.description && (
-          <p className="mt-5 max-w-[66ch] text-[18px] leading-[1.55] text-md-on-surface-variant">
+          <p className="mt-5 max-w-[66ch] text-[16.5px] leading-[1.55] text-md-on-surface-variant">
             {project.description}
           </p>
         )}
@@ -196,7 +196,7 @@ export default async function ProjectDeepDivePage({
           <dl className="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-4">
             {metrics.map((m) => (
               <div key={m.label}>
-                <dd className="text-[30px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[36px]">
+                <dd className="text-[27px] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[32px]">
                   {m.value}
                 </dd>
                 <dt className="mt-3 text-[13.5px] leading-[1.45] text-md-on-surface-variant">
@@ -270,7 +270,7 @@ export default async function ProjectDeepDivePage({
       {/* ===== Writing ===== */}
       {hasPosts && (
         <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
-          <h2 className="mb-4 text-[22px] font-medium tracking-[-0.02em] text-md-on-surface">
+          <h2 className="mb-4 text-[20px] font-medium tracking-[-0.02em] text-md-on-surface">
             Related Articles
           </h2>
           <div>
@@ -283,7 +283,7 @@ export default async function ProjectDeepDivePage({
                 <span className="text-[13px] font-medium tabular-nums text-md-on-surface-variant sm:pt-[4px]">
                   {feedRowDate(p.date_created)}
                 </span>
-                <h3 className="text-[21px] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface [text-wrap:balance] transition-colors group-hover:text-primary">
+                <h3 className="text-[19px] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface [text-wrap:balance] transition-colors group-hover:text-primary">
                   {p.title}
                 </h3>
               </Link>

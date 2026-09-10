@@ -17,7 +17,7 @@ export function ChildRow({ child }: { child: ChildRowData }) {
       href={`/work/${child.slug}`}
       className="group block border-t border-md-outline-variant py-4 first:border-t-0 first:pt-0"
     >
-      <h4 className="text-[17px] font-medium leading-[1.2] tracking-[-0.01em] text-md-on-surface transition-colors group-hover:text-primary md:text-[18px]">
+      <h4 className="text-[15.5px] font-medium leading-[1.2] tracking-[-0.01em] text-md-on-surface transition-colors group-hover:text-primary md:text-[16.5px]">
         {child.title}
       </h4>
       {child.description && (

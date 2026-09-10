@@ -411,7 +411,6 @@ h6 {
   font-weight: 500;
 }
 
-
 /* ================================
    PAGE SHELL
    ================================ */
@@ -445,8 +444,8 @@ h6 {
 
 @media (min-width: 1024px) {
   .site-shell {
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
   }
 }
 
@@ -455,9 +454,11 @@ h6 {
    ================================ */
 
 .article-content {
-  /* deepmind.google prose: 17.5px / 1.45 */
-  font-size: 1.09375rem;
-  line-height: 1.45;
+  /* 16px / 1.6. Was deepmind.google's 17.5/1.45; the line box is the same
+     25.6px either way, so paragraphs keep their rhythm and only the type
+     shrinks into the extra leading. */
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--article-text);
   font-family: var(--font-inter), "Google Sans", system-ui, -apple-system,
     sans-serif;
@@ -469,8 +470,8 @@ h6 {
 
 /* deepmind.google standfirst — the bold centered dek between hero and prose */
 .standfirst p {
-  font-size: 19px;
-  line-height: 1.42;
+  font-size: 17px;
+  line-height: 1.5;
   font-weight: 500;
   color: hsl(var(--md-sys-color-on-surface));
 }
@@ -486,8 +487,8 @@ h6 {
 }
 @media (min-width: 768px) {
   .standfirst p {
-    font-size: 22px;
-    line-height: 1.4;
+    font-size: 20px;
+    line-height: 1.45;
   }
 }
 
@@ -519,36 +520,36 @@ h6 {
 }
 
 .article-content h1 {
-  font-size: 36px;
-  line-height: 44px;
-  margin-top: 3rem;
+  font-size: 32px;
+  line-height: 40px;
+  margin-top: 3.5rem;
   margin-bottom: 1.25rem;
 }
 /* H2 = M3 headline-large (32/40) with deepmind's generous air above */
 .article-content h2 {
-  font-size: 32px;
-  line-height: 40px;
-  margin-top: 4rem;
+  font-size: 28px;
+  line-height: 36px;
+  margin-top: 4.5rem;
   margin-bottom: 1.25rem;
 }
 .article-content h3 {
-  font-size: 22px;
-  line-height: 28px;
-  margin-top: 2.25rem;
+  font-size: 20px;
+  line-height: 27px;
+  margin-top: 2.5rem;
   margin-bottom: 0.75rem;
   font-weight: 500;
 }
 .article-content h4 {
-  font-size: 18px;
-  line-height: 24px;
-  margin-top: 1.75rem;
+  font-size: 16.5px;
+  line-height: 23px;
+  margin-top: 2rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 .article-content h5 {
-  font-size: 16px;
-  line-height: 24px;
-  margin-top: 1.5rem;
+  font-size: 15px;
+  line-height: 23px;
+  margin-top: 1.75rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
@@ -771,7 +772,7 @@ h6 {
   border-radius: var(--md-sys-shape-corner-medium);
 }
 
-/* Every figure breaks out past the 720px prose measure on wide screens, so
+/* Every figure breaks out past the 620px prose measure on wide screens, so
    diagrams and screenshots get room to breathe. The image keeps max-width:100%
    with auto width and centers itself, so a large upload downscales crisply
    while a small one is never stretched past its natural resolution. */
@@ -894,12 +895,45 @@ h6 {
 /* Dieu kien co CA be rong, khong chi hover. Hai ly do: mot cua so desktop hep
    cung tran y het mot cai dien thoai, va `hover` la thu khong kiem chung duoc
    bang cong cu o day — con be rong thi do duoc. */
+/* Colour is the only thing that moves without a pointer that can hover. The
+   hop lives in the block below so a touch screen, where :hover latches on tap,
+   never leaves a disc stuck 4px above its own row. */
+.stack-dot {
+  transition: border-color 150ms var(--md-sys-motion-easing-standard, ease),
+    box-shadow 200ms var(--md-sys-motion-easing-standard, ease);
+}
+
 @media (min-width: 640px) and (hover: hover) {
   .stack-tip {
     display: block;
   }
   .group:hover > .stack-tip {
     opacity: 1;
+  }
+
+  /* The hop. It overshoots by a hair and settles rather than easing flat,
+     which is the whole difference between a disc that moves and a disc that
+     looks like it was nudged. 4px is enough to read against a 2.5px gap and
+     small enough that a row of thirty does not ripple when the pointer
+     crosses it. The name does not travel with it: the pill is anchored to the
+     row, so the disc rises toward its own label. */
+  .stack-dot {
+    transition: transform 200ms cubic-bezier(0.22, 0.9, 0.24, 1.06),
+      border-color 150ms var(--md-sys-motion-easing-standard, ease), box-shadow
+      200ms var(--md-sys-motion-easing-standard, ease);
+  }
+  .group:hover > .stack-dot {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 10px -2px rgb(0 0 0 / 0.12);
+  }
+}
+
+/* Nothing here is load-bearing, so it all collapses rather than degrading. */
+@media (prefers-reduced-motion: reduce) {
+  .stack-dot,
+  .group:hover > .stack-dot {
+    transform: none;
+    transition: none;
   }
 }
 
@@ -1616,8 +1650,8 @@ select.md-field {
 }
 
 /* The measure, matched to the published page rather than re-derived.
-   `/posts/[slug]` wraps `.article-content` in `mx-auto max-w-[720px]`
-   (PostDetail.tsx), so 720px centred is the column a reader gets. The post
+   `/posts/[slug]` wraps `.article-content` in `mx-auto max-w-[620px]`
+   (PostDetail.tsx), so 620px centred is the column a reader gets. The post
    editor uses the same number and the same centring.
 
    Scoped to `.post-editor`. Applying it to every `.prose-editor` centred the
@@ -1628,12 +1662,12 @@ select.md-field {
 
    Capping the CONTAINER matters: the per-element
    `.article-content > * { max-width: 68ch }` rules resolve `ch` against each
-   element's own font size, so an h2 at 32px caps at 1388px while a paragraph
-   at 17.5px caps at 771px. Measured in the editor before this rule, headings
-   ran 300px past the body column on both sides. */
+   element's own font size, so an h2 at 28px caps at about 1190px while a
+   paragraph at 16px caps at 680px. Measured in the editor before this rule,
+   headings ran 300px past the body column on both sides. */
 .post-editor .prose-editor,
 .post-editor .editor-title {
-  max-width: 720px;
+  max-width: 620px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -1689,8 +1723,8 @@ select.md-field {
   padding: 2px 8px;
   border-radius: 6px;
   color: hsl(var(--md-sys-color-on-surface-variant));
-  transition: color 110ms var(--md-sys-motion-easing-standard),
-    background 110ms var(--md-sys-motion-easing-standard);
+  transition: color 110ms var(--md-sys-motion-easing-standard), background 110ms
+    var(--md-sys-motion-easing-standard);
 }
 .fence-cell__toggle:hover {
   color: hsl(var(--md-sys-color-on-surface));
@@ -1770,9 +1804,8 @@ select.md-field {
   border-radius: 10px;
   background: hsl(var(--md-sys-color-on-surface) / 0.14);
   box-shadow: inset 0 0 0 1px hsl(var(--md-sys-color-outline) / 0.55);
-  transition:
-    transform 260ms cubic-bezier(0.22, 0.9, 0.24, 1.06),
-    border-radius 260ms cubic-bezier(0.22, 0.9, 0.24, 1.06);
+  transition: transform 260ms cubic-bezier(0.22, 0.9, 0.24, 1.06), border-radius
+    260ms cubic-bezier(0.22, 0.9, 0.24, 1.06);
 }
 
 .rail-marker__bar {
@@ -1783,9 +1816,8 @@ select.md-field {
   width: 2px;
   border-radius: 0 3px 3px 0;
   background: hsl(var(--md-sys-color-primary));
-  transition:
-    transform 260ms cubic-bezier(0.22, 0.9, 0.24, 1.06),
-    opacity 160ms var(--md-sys-motion-easing-standard);
+  transition: transform 260ms cubic-bezier(0.22, 0.9, 0.24, 1.06), opacity 160ms
+    var(--md-sys-motion-easing-standard);
 }
 
 /* In flight: the pill stretches along the direction of travel and rounds off,
@@ -1821,9 +1853,8 @@ select.md-field {
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  transition:
-    background 140ms var(--md-sys-motion-easing-standard),
-    transform 220ms cubic-bezier(0.22, 0.9, 0.24, 1.12);
+  transition: background 140ms var(--md-sys-motion-easing-standard), transform
+    220ms cubic-bezier(0.22, 0.9, 0.24, 1.12);
 }
 .rail-item:hover .rail-item__icon {
   background: hsl(var(--md-sys-color-on-surface) / 0.06);
@@ -1865,16 +1896,14 @@ select.md-field {
   line-height: 1.3;
   color: hsl(var(--md-sys-color-on-surface));
   background: hsl(var(--md-sys-color-surface-container-highest));
-  box-shadow:
-    inset 0 0 0 1px hsl(var(--md-sys-color-outline) / 0.6),
-    0 8px 22px hsl(0 0% 0% / 0.45);
+  box-shadow: inset 0 0 0 1px hsl(var(--md-sys-color-outline) / 0.6), 0 8px 22px
+    hsl(0 0% 0% / 0.45);
   opacity: 0;
   transform: translateX(-8px) scale(0.96);
   transform-origin: left center;
   pointer-events: none;
-  transition:
-    opacity 130ms var(--md-sys-motion-easing-standard),
-    transform 190ms cubic-bezier(0.22, 0.9, 0.24, 1.1);
+  transition: opacity 130ms var(--md-sys-motion-easing-standard), transform
+    190ms cubic-bezier(0.22, 0.9, 0.24, 1.1);
   transition-delay: 0ms;
 }
 .rail-item:hover .rail-tip,
@@ -1930,10 +1959,9 @@ select.md-field {
   border-radius: 8px;
   border: 1px dashed hsl(var(--md-sys-color-outline-variant));
   color: hsl(var(--md-sys-color-on-surface-variant));
-  transition:
-    color 110ms var(--md-sys-motion-easing-standard),
-    border-color 110ms var(--md-sys-motion-easing-standard),
-    background 110ms var(--md-sys-motion-easing-standard);
+  transition: color 110ms var(--md-sys-motion-easing-standard), border-color
+    110ms var(--md-sys-motion-easing-standard), background 110ms
+    var(--md-sys-motion-easing-standard);
 }
 .tree-newfolder:hover {
   color: hsl(var(--md-sys-color-on-surface));
@@ -1951,9 +1979,8 @@ select.md-field {
   border-radius: 7px;
   color: hsl(var(--md-sys-color-on-surface-variant));
   cursor: default;
-  transition:
-    background 110ms var(--md-sys-motion-easing-standard),
-    color 110ms var(--md-sys-motion-easing-standard);
+  transition: background 110ms var(--md-sys-motion-easing-standard), color 110ms
+    var(--md-sys-motion-easing-standard);
 }
 .tree-row:hover {
   background: hsl(var(--md-sys-color-on-surface) / 0.06);
@@ -2070,10 +2097,9 @@ select.md-field {
   border-radius: 5px;
   opacity: 0;
   color: hsl(var(--md-sys-color-on-surface-variant));
-  transition:
-    opacity 110ms var(--md-sys-motion-easing-standard),
-    color 110ms var(--md-sys-motion-easing-standard),
-    background 110ms var(--md-sys-motion-easing-standard);
+  transition: opacity 110ms var(--md-sys-motion-easing-standard), color 110ms
+    var(--md-sys-motion-easing-standard), background 110ms
+    var(--md-sys-motion-easing-standard);
 }
 .tree-row:hover .tree-action {
   opacity: 1;
@@ -2107,10 +2133,9 @@ select.md-field {
   display: grid;
   place-items: center;
   overflow: hidden;
-  transition:
-    height 150ms var(--md-sys-motion-easing-standard),
-    border-color 110ms var(--md-sys-motion-easing-standard),
-    background 110ms var(--md-sys-motion-easing-standard);
+  transition: height 150ms var(--md-sys-motion-easing-standard), border-color
+    110ms var(--md-sys-motion-easing-standard), background 110ms
+    var(--md-sys-motion-easing-standard);
 }
 .tree-outzone.is-hot {
   height: 34px;
