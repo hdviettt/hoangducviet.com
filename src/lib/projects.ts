@@ -33,13 +33,6 @@ export interface ProjectCategory {
   title: string;
 }
 
-export interface ProjectChild {
-  slug: string;
-  title: string;
-  description: string | null;
-  buildStatus: string;
-}
-
 export interface Project {
   slug: string;
   title: string;
@@ -53,6 +46,11 @@ export interface Project {
   repoUrl: string | null;
   liveUrl: string | null;
   techTags: string[] | null; // legacy; stack is the source
+  // Still on the row, and deliberately not read anywhere. Work is flat: which
+  // project contains which is something the description says in prose, not
+  // something the layout derives. The column keeps what it already holds
+  // because nothing writes it either — see the work API, which stopped
+  // setting it so a save cannot quietly clear history.
   parentSlug: string | null;
   features: ProjectFeature[];
   stack: ProjectStackGroup[];
@@ -67,7 +65,6 @@ export interface Project {
   date_created?: string;
   date_updated?: string;
   posts?: ProjectPostRef[];
-  children?: ProjectChild[];
 }
 
 type ProjectRow = typeof projects.$inferSelect;
@@ -99,41 +96,6 @@ function mapProject(row: ProjectRow, related?: ProjectPostRef[]): Project {
     date_updated: row.dateUpdated?.toISOString() ?? undefined,
     ...(related ? { posts: related } : {}),
   };
-}
-
-// Gan danh sach con vao tung du an cha. Dung chung cho ca /work lan trang chu:
-// khoi featured lay so con lam eyebrow ("Platform . 4 agents inside"), nen chi
-// mot trong hai ben nap children thi cung mot du an hien hai kieu o hai trang.
-async function attachChildren(list: Project[]): Promise<Project[]> {
-  const parentSlugs = list.map((p) => p.slug);
-  if (parentSlugs.length === 0) return list;
-  const childRows = await db
-    .select({
-      slug: projects.slug,
-      title: projects.title,
-      description: projects.description,
-      buildStatus: projects.buildStatus,
-      parentSlug: projects.parentSlug,
-    })
-    .from(projects)
-    .where(
-      and(
-        eq(projects.status, "published"),
-        inArray(projects.parentSlug, parentSlugs),
-      ),
-    )
-    .orderBy(asc(projects.sortOrder));
-  for (const p of list) {
-    p.children = childRows
-      .filter((c) => c.parentSlug === p.slug)
-      .map((c) => ({
-        slug: c.slug,
-        title: c.title,
-        description: c.description ?? null,
-        buildStatus: c.buildStatus,
-      }));
-  }
-  return list;
 }
 
 // One query for the whole page rather than one per project. Three featured
@@ -174,9 +136,7 @@ export async function getProjects(): Promise<Project[]> {
       .from(projects)
       .where(eq(projects.status, "published"))
       .orderBy(asc(projects.sortOrder), desc(projects.dateCreated));
-    return await attachCategories(
-      await attachChildren(rows.map((r) => mapProject(r))),
-    );
+    return await attachCategories(rows.map((r) => mapProject(r)));
   } catch (error) {
     console.error("getProjects failed:", error);
     return [];
@@ -190,9 +150,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
       .from(projects)
       .where(and(eq(projects.status, "published"), eq(projects.featured, true)))
       .orderBy(asc(projects.sortOrder));
-    return await attachCategories(
-      await attachChildren(rows.map((r) => mapProject(r))),
-    );
+    return await attachCategories(rows.map((r) => mapProject(r)));
   } catch (error) {
     console.error("getFeaturedProjects failed:", error);
     return [];
@@ -233,24 +191,6 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         date_created: p.dateCreated?.toISOString() ?? null,
       })),
     );
-
-    // Child pieces (for a parent like the platform).
-    const childRows = await db
-      .select({
-        slug: projects.slug,
-        title: projects.title,
-        description: projects.description,
-        buildStatus: projects.buildStatus,
-      })
-      .from(projects)
-      .where(
-        and(eq(projects.parentSlug, slug), eq(projects.status, "published")),
-      )
-      .orderBy(asc(projects.sortOrder));
-    project.children = childRows.map((c) => ({
-      ...c,
-      description: c.description ?? null,
-    }));
 
     await attachCategories([project]);
 

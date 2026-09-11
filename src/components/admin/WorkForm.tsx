@@ -15,7 +15,6 @@ interface WorkFormProps {
     description: string;
     content: string;
     thumbnail: string;
-    parentSlug: string;
     status: string;
     buildStatus: string;
     featured: boolean;
@@ -101,7 +100,6 @@ export default function WorkForm({
   );
   const [content, setContent] = useState(initialData?.content ?? "");
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
-  const [parentSlug, setParentSlug] = useState(initialData?.parentSlug ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
   const [buildStatus, setBuildStatus] = useState(
     initialData?.buildStatus ?? "live",
@@ -156,7 +154,6 @@ export default function WorkForm({
           description: description || null,
           content: content || null,
           thumbnail: thumbnail || null,
-          parentSlug: parentSlug || null,
           status,
           buildStatus,
           featured,
@@ -255,26 +252,6 @@ export default function WorkForm({
             featured
           </label>
         </div>
-      </div>
-
-      <div>
-        <label className="md-field-label">
-          parent project <span>(nest this under another project)</span>
-        </label>
-        <select
-          value={parentSlug}
-          onChange={(e) => setParentSlug(e.target.value)}
-          className="md-field"
-        >
-          <option value="">No parent (top level)</option>
-          {allProjects
-            .filter((p) => p.slug !== slug)
-            .map((p) => (
-              <option key={p.slug} value={p.slug}>
-                {p.title}
-              </option>
-            ))}
-        </select>
       </div>
 
       {/* Models repeater */}

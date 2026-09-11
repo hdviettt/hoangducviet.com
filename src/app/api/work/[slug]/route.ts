@@ -69,7 +69,6 @@ export async function PUT(request: Request, { params }: Params) {
         description: body.description ?? null,
         content: body.content ?? null,
         thumbnail: body.thumbnail ?? null,
-        parentSlug: body.parentSlug ?? null,
         stack: body.stack ?? [],
         models: body.models ?? [],
         media: body.media ?? [],

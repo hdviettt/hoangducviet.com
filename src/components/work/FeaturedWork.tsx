@@ -46,26 +46,13 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // Four is what every project carries and what the 2x2 grid is built for; the
   // slice stops a fifth from silently breaking the panel.
   const metrics = project.metrics.slice(0, 4);
-  const kids = project.children?.length ?? 0;
-  // So agent that su, khong phai so trang con. Truoc day eyebrow dem
-  // `children.length` va in ra "Platform · 4 agents inside", trong khi nen
-  // tang do chay 19 agent — bon cai kia chi la bon agent duoc viet rieng mot
-  // trang. Tu ban CV doc sang thi con so 4 lam nho di dung 5 lan.
-  const agentCount = project.metrics.find((m) =>
-    /agents?/i.test(m.label),
-  )?.value;
-  // Topics first, the derived line as a fallback. The old eyebrow said
-  // "Platform · 19 agents" or, for the other two, "Project" — a word that
-  // tells a reader nothing they cannot see. The agent count is not lost by
-  // this: it is one of the metrics in the panel to the right, where it was
-  // already being printed twice.
-  //
-  // A project with no topics still gets the old line rather than an empty
-  // slot, so tagging is something Viet does when he wants to and not a thing
-  // the page breaks without.
+  // Topics, or nothing. The eyebrow used to derive "Platform · 19 agents" from
+  // a project's children and print "Project" for everyone else — one claim
+  // about containment that the prose now makes, and one word that told a
+  // reader nothing they could not see. An untagged project simply opens with
+  // its title.
   const topics = project.categories.map((c) => c.title);
-  const fallback =
-    kids > 0 ? `Platform · ${agentCount ?? kids} agents` : "Project";
+
   const stack = flattenStack(project.stack, project.techTags);
   // Khong anh, khong clip, khong so lieu thi khong co cot phai. Thieu cai nay,
   // mot du an bi xoa het metrics trong CMS se render ra mot <dl> rong, tuc la
@@ -88,8 +75,8 @@ export default function FeaturedWork({ project }: { project: Project }) {
             outlined chip in this codebase already means something else — it is
             the stack row further down the same block, where a border and a
             logo carry a tool. Two chip shapes for two different jobs. */}
-        {topics.length > 0 ? (
-          <ul className="flex flex-wrap gap-2.5">
+        {topics.length > 0 && (
+          <ul className="mb-3 flex flex-wrap gap-2.5">
             {topics.map((t) => (
               <li
                 key={t}
@@ -99,13 +86,9 @@ export default function FeaturedWork({ project }: { project: Project }) {
               </li>
             ))}
           </ul>
-        ) : (
-          <p className="text-[0.875rem] leading-6 text-md-on-surface-variant">
-            {fallback}
-          </p>
         )}
 
-        <h3 className="mt-3 max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
+        <h3 className="max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem] max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
           <Link
             href={href}
             className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"

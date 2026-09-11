@@ -47,7 +47,6 @@ export async function POST(request: Request) {
         thumbnail: body.thumbnail || null,
         repoUrl: body.repoUrl || null,
         liveUrl: body.liveUrl || null,
-        parentSlug: body.parentSlug || null,
         features: body.features ?? [],
         stack: body.stack ?? [],
         models: body.models ?? [],

@@ -28,8 +28,10 @@ import Link from "next/link";
  * heading was 35px and as a mistake once it was not.
  */
 export default function SelectedWork({ projects }: { projects: Project[] }) {
-  const topLevel = projects.filter((p) => !p.parentSlug);
-  if (topLevel.length === 0) return null;
+  // No parentage filter. `featured` is what puts a project here, and measured
+  // against the data it always was: not one featured project is a child, so
+  // the filter was answering a question nothing asked.
+  if (projects.length === 0) return null;
 
   // `pb`, khong phai `mb`: le duoi cua muc nay va le tren cua muc Articles la
   // hai le ke nhau nen chung triet tieu, chi con cai lon hon. Padding thi cong
@@ -51,7 +53,7 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
       </div>
 
       <div className="work-breakout mt-9 flex flex-col md:mt-12">
-        {topLevel.map((p) => (
+        {projects.map((p) => (
           <div
             key={p.slug}
             className="border-t border-md-outline-variant py-16 first:border-t-0 first:pt-2 md:py-24"
