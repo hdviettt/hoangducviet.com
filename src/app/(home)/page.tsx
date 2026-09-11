@@ -1,4 +1,3 @@
-import CollectionLead from "@/components/home/CollectionLead";
 import WorkLead from "@/components/home/WorkLead";
 import ProfileHero from "@/components/layout/ProfileHero";
 import FeedBlocks from "@/components/posts/FeedBlocks";
@@ -120,6 +119,14 @@ export default async function Home() {
       : `${baseUrl}${imageUrl}`
     : undefined;
 
+  // The feed the front page shows: the six newest items, plus the series if a
+  // straight slice would have cut it. Nine of eighteen posts live in that one
+  // object, and it carries the date of its last part rather than of its
+  // newest-feeling idea, so it loses a recency race it should not be in.
+  const head = allItems.slice(0, 6);
+  const series = allItems.find((i) => i.kind === "series");
+  const homeFeed = series && !head.includes(series) ? [...head, series] : head;
+
   const jsonLd = createEntityGraph({ image: profileImageUrl });
 
   // Distinct years present in the feed, newest first — a small index in the rail.
@@ -154,12 +161,6 @@ export default async function Home() {
         <WorkLead projects={featuredProjects} />
       </div>
 
-      <div className="mt-16 md:mt-24">
-        <CollectionLead
-          item={allItems.find((i) => i.kind === "series") ?? null}
-        />
-      </div>
-
       {/* Asymmetric two-zone writing index: a sticky rail (heading, standfirst,
           year index) beside the list — fills a wide viewport with structure. */}
       <section className="work-breakout mt-16 md:mt-24">
@@ -187,10 +188,7 @@ export default async function Home() {
           </aside>
 
           <div className="col-2">
-            <FeedBlocks
-              items={allItems.filter((i) => i.kind !== "series").slice(0, 6)}
-              viewCounts={viewCounts}
-            />
+            <FeedBlocks items={homeFeed} viewCounts={viewCounts} />
             <Link
               href="/posts"
               className="group mt-8 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-md-on-surface transition-colors hover:text-primary"

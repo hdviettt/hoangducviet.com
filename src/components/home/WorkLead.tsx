@@ -1,4 +1,5 @@
 import FeaturedWork from "@/components/work/FeaturedWork";
+import { darkTwin } from "@/lib/figure-theme";
 import type { Project } from "@/lib/projects";
 import Link from "next/link";
 
@@ -34,25 +35,62 @@ export default function WorkLead({ projects }: { projects: Project[] }) {
       <div className="work-breakout mt-9 md:mt-12">
         <FeaturedWork project={lead} />
 
+        {/* The other two keep their artwork. Dropping it to save height was the
+            wrong trade: the drawing is the most distinctive thing this site
+            has, and a project without one reads as a placeholder next to a
+            project with one. They stay rows rather than full blocks, so the
+            lead still leads. */}
         {rest.length > 0 && (
           <ul className="mt-14 border-t border-md-outline-variant md:mt-16">
-            {rest.map((p) => (
-              <li key={p.slug}>
-                <Link
-                  href={`/work/${p.slug}`}
-                  className="group site-grid items-baseline border-b border-md-outline-variant py-6"
-                >
-                  <h3 className="col-1 text-[1.1875rem] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface transition-colors group-hover:text-primary">
-                    {p.title}
-                  </h3>
-                  {p.description && (
-                    <p className="col-2 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-                      {p.description}
-                    </p>
-                  )}
-                </Link>
-              </li>
-            ))}
+            {rest.map((p) => {
+              const art = p.media.find(
+                (m) => m.src?.trim() && m.type === "image",
+              );
+              const twin = art ? darkTwin(art.src) : null;
+              return (
+                <li key={p.slug}>
+                  <Link
+                    href={`/work/${p.slug}`}
+                    className="group site-grid items-start border-b border-md-outline-variant py-8"
+                  >
+                    <div className="col-1">
+                      <h3 className="text-[1.1875rem] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface transition-colors group-hover:text-primary">
+                        {p.title}
+                      </h3>
+                      {p.description && (
+                        <p className="mt-3 text-[0.9375rem] leading-7 text-md-on-surface-variant">
+                          {p.description}
+                        </p>
+                      )}
+                    </div>
+                    {art && (
+                      <div className="col-2 overflow-hidden rounded-xl">
+                        <img
+                          src={art.src}
+                          alt=""
+                          aria-hidden="true"
+                          loading="lazy"
+                          decoding="async"
+                          className={`w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]${
+                            twin ? " fig-light" : ""
+                          }`}
+                        />
+                        {twin && (
+                          <img
+                            src={twin}
+                            alt=""
+                            aria-hidden="true"
+                            loading="lazy"
+                            decoding="async"
+                            className="fig-dark w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         )}
 
