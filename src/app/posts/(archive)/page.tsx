@@ -88,9 +88,9 @@ export default async function PostsPage() {
     .sort((a, b) => b.localeCompare(a));
 
   return (
-    <section className="max-w-[70rem] pb-16 pt-12 sm:pt-16 md:pb-20 md:pt-20">
-      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[4rem]">
-        <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
+    <section className="work-breakout pb-16 pt-12 sm:pt-16 md:pb-20 md:pt-20">
+      <div className="site-grid">
+        <aside className="col-1 mb-9 md:mb-0 md:sticky md:top-8 md:self-start">
           <h1 className="text-[1.4375rem] font-medium tracking-[-0.02em] text-md-on-surface">
             Articles
           </h1>
@@ -112,7 +112,9 @@ export default async function PostsPage() {
           )}
         </aside>
 
-        <FeedBlocks items={items} viewCounts={viewCounts} />
+        <div className="col-2">
+          <FeedBlocks items={items} viewCounts={viewCounts} />
+        </div>
       </div>
     </section>
   );

@@ -22,10 +22,10 @@ export default function PostNavigation({
 
   const prevLabel =
     context?.kind === "series" ? "Previous in series" : "Previous";
-  const nextLabel =
-    context?.kind === "series" ? "Next in series" : "Next";
+  const nextLabel = context?.kind === "series" ? "Next in series" : "Next";
 
-  const prevHref = previous?.href || (previous?.slug ? `/posts/${previous.slug}` : null);
+  const prevHref =
+    previous?.href || (previous?.slug ? `/posts/${previous.slug}` : null);
   const nextHref = next?.href || (next?.slug ? `/posts/${next.slug}` : null);
 
   return (
@@ -36,11 +36,11 @@ export default function PostNavigation({
             href={prevHref}
             className="group p-5 rounded-xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container transition-colors duration-200 ease-md-standard"
           >
-            <span className="md-label-medium text-md-on-surface-variant flex items-center gap-1 mb-1.5">
+            <span className="text-[0.8125rem] leading-5 text-md-on-surface-variant flex items-center gap-1 mb-1.5">
               <Icon name="arrow_back" size={16} />
               {prevLabel}
             </span>
-            <span className="md-title-medium text-md-on-surface line-clamp-2">
+            <span className="text-[0.9375rem] leading-6 text-md-on-surface line-clamp-2">
               {previous.title}
             </span>
           </Link>
@@ -52,11 +52,11 @@ export default function PostNavigation({
             href={nextHref}
             className="group p-5 rounded-xl border border-md-outline-variant bg-md-surface-container-low hover:bg-md-surface-container transition-colors duration-200 ease-md-standard sm:text-right"
           >
-            <span className="md-label-medium text-md-on-surface-variant flex items-center justify-end gap-1 mb-1.5">
+            <span className="text-[0.8125rem] leading-5 text-md-on-surface-variant flex items-center justify-end gap-1 mb-1.5">
               {nextLabel}
               <Icon name="arrow_forward" size={16} />
             </span>
-            <span className="md-title-medium text-md-on-surface line-clamp-2">
+            <span className="text-[0.9375rem] leading-6 text-md-on-surface line-clamp-2">
               {next.title}
             </span>
           </Link>

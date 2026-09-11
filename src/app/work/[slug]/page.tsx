@@ -50,7 +50,7 @@ export async function generateMetadata({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-5 text-[0.875rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
+    <h2 className="mb-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
       {children}
     </h2>
   );
@@ -121,7 +121,7 @@ export default async function ProjectDeepDivePage({
           {project.title}
         </h1>
         {project.description && (
-          <p className="mt-5 max-w-[66ch] text-[1.03125rem] leading-[1.55] text-md-on-surface-variant">
+          <p className="mt-5 max-w-[66ch] text-[0.9375rem] leading-[1.55] text-md-on-surface-variant">
             {project.description}
           </p>
         )}
@@ -157,7 +157,7 @@ export default async function ProjectDeepDivePage({
             )}
           </div>
           {hero.caption && (
-            <figcaption className="mt-3 text-[0.875rem] leading-6 text-md-on-surface-variant">
+            <figcaption className="mt-3 text-[0.9375rem] leading-6 text-md-on-surface-variant">
               {hero.caption}
             </figcaption>
           )}
@@ -178,7 +178,7 @@ export default async function ProjectDeepDivePage({
                 <dd className="text-[1.6875rem] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[2rem]">
                   {m.value}
                 </dd>
-                <dt className="mt-3 text-[0.84375rem] leading-[1.45] text-md-on-surface-variant">
+                <dt className="mt-3 text-[0.8125rem] leading-[1.45] text-md-on-surface-variant">
                   {m.label}
                 </dt>
               </div>
@@ -194,7 +194,7 @@ export default async function ProjectDeepDivePage({
           <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-[max-content_1fr] sm:gap-y-4">
             {stackGroups.map((g) => (
               <Fragment key={g.group}>
-                <div className="text-[0.84375rem] font-medium text-md-on-surface-variant sm:pt-[0.5rem]">
+                <div className="text-[0.8125rem] font-medium text-md-on-surface-variant sm:pt-[0.5rem]">
                   {g.group}
                 </div>
                 <Chips items={g.items} />

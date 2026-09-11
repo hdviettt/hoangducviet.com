@@ -138,7 +138,7 @@ export default async function PostDetail({
         {/* deepmind.google article anatomy: centered meta → display title →
             byline → full-width rounded hero → centered standfirst → prose. */}
         <header className="mx-auto max-w-[55rem] text-center mb-10 md:mb-14">
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[0.875rem] leading-5 text-md-on-surface-variant mb-5 md:mb-7">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[0.9375rem] leading-5 text-md-on-surface-variant mb-5 md:mb-7">
             <time className="tabular-nums" dateTime={data.date_created ?? ""}>
               {feedRowDate(data.date_created)}
             </time>

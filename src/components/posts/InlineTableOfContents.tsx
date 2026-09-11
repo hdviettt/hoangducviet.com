@@ -92,7 +92,7 @@ export default function InlineTableOfContents({
 
   return (
     <nav aria-label="On this page">
-      <div className="text-[0.875rem] font-medium text-md-on-surface mb-5">
+      <div className="text-[0.9375rem] font-medium text-md-on-surface mb-5">
         In this story
       </div>
       <ul className="relative border-l border-md-outline-variant">
@@ -103,7 +103,7 @@ export default function InlineTableOfContents({
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
-                className={`block py-2 pl-4 pr-3 -ml-px border-l-[3px] text-[0.875rem] leading-[1.25rem] transition-colors duration-200 ease-md-standard ${
+                className={`block py-2 pl-4 pr-3 -ml-px border-l-[3px] text-[0.9375rem] leading-[1.25rem] transition-colors duration-200 ease-md-standard ${
                   isActive
                     ? "border-primary text-primary font-medium"
                     : "border-transparent text-md-on-surface/70 hover:text-md-on-surface"

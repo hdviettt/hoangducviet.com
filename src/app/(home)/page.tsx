@@ -1,4 +1,5 @@
-import SelectedWork from "@/components/home/SelectedWork";
+import CollectionLead from "@/components/home/CollectionLead";
+import WorkLead from "@/components/home/WorkLead";
 import ProfileHero from "@/components/layout/ProfileHero";
 import FeedBlocks from "@/components/posts/FeedBlocks";
 import { getGlobalMetadata } from "@/lib/global";
@@ -9,6 +10,7 @@ import { type FeedItem, getFeedItems } from "@/lib/posts";
 import { getProfile } from "@/lib/profile";
 import { type Project, getFeaturedProjects } from "@/lib/projects";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -149,14 +151,20 @@ export default async function Home() {
 
       {/* Selected work: featured projects, rendered from the projects table. */}
       <div className="mt-16 md:mt-24">
-        <SelectedWork projects={featuredProjects} />
+        <WorkLead projects={featuredProjects} />
+      </div>
+
+      <div className="mt-16 md:mt-24">
+        <CollectionLead
+          item={allItems.find((i) => i.kind === "series") ?? null}
+        />
       </div>
 
       {/* Asymmetric two-zone writing index: a sticky rail (heading, standfirst,
           year index) beside the list — fills a wide viewport with structure. */}
-      <section className="mt-16 max-w-[70rem] md:mt-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] lg:gap-x-[4rem]">
-          <aside className="mb-9 lg:mb-0 lg:sticky lg:top-8 lg:self-start">
+      <section className="work-breakout mt-16 md:mt-24">
+        <div className="site-grid">
+          <aside className="col-1 mb-9 md:mb-0 md:sticky md:top-8 md:self-start">
             <h2 className="text-[1.4375rem] font-medium tracking-[-0.02em] text-md-on-surface">
               Articles
             </h2>
@@ -178,7 +186,24 @@ export default async function Home() {
             )}
           </aside>
 
-          <FeedBlocks items={allItems} viewCounts={viewCounts} />
+          <div className="col-2">
+            <FeedBlocks
+              items={allItems.filter((i) => i.kind !== "series").slice(0, 6)}
+              viewCounts={viewCounts}
+            />
+            <Link
+              href="/posts"
+              className="group mt-8 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-md-on-surface transition-colors hover:text-primary"
+            >
+              All writing
+              <span
+                aria-hidden="true"
+                className="transition-transform duration-200 group-hover:translate-x-0.5"
+              >
+                &#8594;
+              </span>
+            </Link>
+          </div>
         </div>
       </section>
     </div>

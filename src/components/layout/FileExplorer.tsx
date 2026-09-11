@@ -108,7 +108,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
         <div className="site-shell flex min-h-16 flex-wrap items-center gap-x-3 gap-y-1 py-2 sm:flex-nowrap sm:gap-x-8 sm:py-0">
           <Link
             href="/"
-            className="text-[0.875rem] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[0.96875rem]"
+            className="text-[0.9375rem] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[0.9375rem]"
           >
             Hoang Duc Viet
           </Link>
@@ -122,7 +122,7 @@ export default function FileExplorer({ children }: FileExplorerProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-[0.8125rem] leading-5 sm:text-[0.875rem] transition-colors duration-200 ease-md-standard ${
+                  className={`text-[0.8125rem] leading-5 sm:text-[0.9375rem] transition-colors duration-200 ease-md-standard ${
                     active
                       ? "text-md-on-surface font-medium"
                       : "text-md-on-surface-variant hover:text-md-on-surface"

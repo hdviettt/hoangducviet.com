@@ -58,7 +58,7 @@ export function IssuerLogo({
   // Fallback: issuer initial in a neutral tone.
   return (
     <span
-      className={`inline-flex items-center justify-center md-label-small text-md-on-surface-variant ${className ?? ""}`}
+      className={`inline-flex items-center justify-center text-[0.8125rem] leading-5 text-md-on-surface-variant ${className ?? ""}`}
     >
       {issuer.charAt(0).toUpperCase()}
     </span>

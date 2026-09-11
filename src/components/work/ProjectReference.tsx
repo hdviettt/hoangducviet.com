@@ -12,7 +12,7 @@ import type { ReactNode } from "react";
 
 function SubHead({ children }: { children: ReactNode }) {
   return (
-    <h3 className="mb-5 text-[0.78125rem] font-medium uppercase tracking-[0.08em] text-md-on-surface-variant">
+    <h3 className="mb-5 text-[0.8125rem] font-medium uppercase tracking-[0.08em] text-md-on-surface-variant">
       {children}
     </h3>
   );
@@ -28,10 +28,10 @@ function Features({ features }: { features: ProjectFeature[] }) {
             aria-hidden="true"
           />
           <div>
-            <dt className="text-[0.90625rem] font-medium leading-snug text-md-on-surface">
+            <dt className="text-[0.9375rem] font-medium leading-snug text-md-on-surface">
               {f.name}
             </dt>
-            <dd className="mt-1 text-[0.84375rem] leading-[1.5] text-md-on-surface-variant">
+            <dd className="mt-1 text-[0.8125rem] leading-[1.5] text-md-on-surface-variant">
               {f.desc}
             </dd>
           </div>
@@ -50,7 +50,7 @@ function StackGroupBlock({
 }) {
   return (
     <div>
-      <div className="mb-2 text-[0.71875rem] text-md-on-surface-variant opacity-80">
+      <div className="mb-2 text-[0.8125rem] text-md-on-surface-variant opacity-80">
         {label}
       </div>
       <Chips items={items} />

@@ -56,7 +56,7 @@ export default function ProfileHero({
           {description &&
             description.replace(/<[^>]*>/g, "").trim().length > 0 && (
               <div
-                className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:text-base [&_p]:leading-7 [&_p]:mb-3 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-150 fill-mode-backwards"
+                className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:text-[0.9375rem] [&_p]:leading-7 [&_p]:mb-3 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-150 fill-mode-backwards"
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             )}
@@ -85,7 +85,7 @@ export default function ProfileHero({
             <span className="hidden h-4 w-px bg-md-outline-variant sm:block" />
             <a
               href={`mailto:${IDENTITY.email}`}
-              className="inline-flex items-center gap-1.5 md-body-medium text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
+              className="inline-flex items-center gap-1.5 text-[0.8125rem] leading-5 text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard"
             >
               <Icon name="mail" size={18} />
               <span>{IDENTITY.email}</span>

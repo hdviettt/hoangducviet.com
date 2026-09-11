@@ -51,7 +51,6 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // about containment that the prose now makes, and one word that told a
   // reader nothing they could not see. An untagged project simply opens with
   // its title.
-  const topics = project.categories.map((c) => c.title);
 
   const stack = flattenStack(project.stack, project.techTags);
   // Khong anh, khong clip, khong so lieu thi khong co cot phai. Thieu cai nay,
@@ -64,8 +63,8 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // gutters, so 880px of a 1320px row is gutter and the art column collapses
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
-    <article className="grid grid-cols-1 items-start gap-10 md:grid-cols-3 md:gap-12 lg:gap-16">
-      <div className={visual ? "md:col-span-1" : "md:col-span-2"}>
+    <article className="site-grid items-start">
+      <div className={visual ? "col-1" : "col-2"}>
         {/* Chips when the project is tagged, the derived line when it is not.
             Not links: nothing on this site answers /topics/seo, and a chip that
             looks clickable and lands on a 404 is worse than a chip that does
@@ -75,14 +74,18 @@ export default function FeaturedWork({ project }: { project: Project }) {
             outlined chip in this codebase already means something else — it is
             the stack row further down the same block, where a border and a
             logo carry a tool. Two chip shapes for two different jobs. */}
-        {topics.length > 0 && (
+        {project.categories.length > 0 && (
           <ul className="mb-3 flex flex-wrap gap-2.5">
-            {topics.map((t) => (
-              <li
-                key={t}
-                className="inline-flex items-center rounded-full bg-md-surface-container-high px-4 py-2 text-[0.8125rem] leading-5 text-md-on-surface"
-              >
-                {t}
+            {project.categories.map((c) => (
+              <li key={c.slug}>
+                {/* Links now. They were labels shaped like buttons for as long
+                    as nothing answered /topics/<slug>; something does. */}
+                <Link
+                  href={`/topics/${c.slug}`}
+                  className="inline-flex items-center rounded-full bg-md-surface-container-high px-4 py-2 text-[0.8125rem] leading-5 text-md-on-surface transition-colors hover:text-primary"
+                >
+                  {c.title}
+                </Link>
               </li>
             ))}
           </ul>
@@ -118,7 +121,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
         </Link>
       </div>
 
-      <div className="md:col-span-2">
+      <div className="col-2">
         {!visual ? null : art ? (
           // Purpose-drawn hero art, and the whole point of it is that it has no
           // frame: it sits on the page's own ground the way blog.google's
@@ -201,7 +204,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
                 <dd className="text-[1.75rem] font-normal leading-none tracking-[-0.02em] text-md-on-surface sm:text-[2.1875rem]">
                   {m.value}
                 </dd>
-                <dt className="mt-3 text-[0.875rem] leading-[1.4] text-md-on-surface-variant">
+                <dt className="mt-3 text-[0.9375rem] leading-[1.4] text-md-on-surface-variant">
                   {m.label}
                 </dt>
               </div>

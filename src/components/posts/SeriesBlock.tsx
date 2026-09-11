@@ -79,7 +79,7 @@ export default function SeriesBlock({
       <div className="grid gap-6 md:gap-10 md:grid-cols-[minmax(0,300px)_1fr] md:items-start">
         {/* Left — collection meta */}
         <div className="flex flex-col">
-          <span className="inline-flex w-fit items-center gap-1.5 px-2.5 py-0.5 rounded-full md-label-small bg-md-primary text-md-on-primary mb-4">
+          <span className="inline-flex w-fit items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.8125rem] leading-5 bg-md-primary text-md-on-primary mb-4">
             <Icon name="auto_stories" size={14} />
             Collection · {parts.length} parts
           </span>
@@ -94,12 +94,12 @@ export default function SeriesBlock({
           </Link>
 
           {series.summary && (
-            <p className="mb-5 md-body-medium text-md-on-surface-variant">
+            <p className="mb-5 text-[0.8125rem] leading-5 text-md-on-surface-variant">
               {series.summary}
             </p>
           )}
 
-          <div className="flex items-center gap-3 flex-wrap mb-6 md-label-small tabular-nums text-md-on-surface-variant">
+          <div className="flex items-center gap-3 flex-wrap mb-6 text-[0.8125rem] leading-5 tabular-nums text-md-on-surface-variant">
             <span>{formatDateRange(firstDate, lastDate)}</span>
             {viewCount !== undefined && viewCount > 0 && (
               <ViewCount count={viewCount} />
@@ -108,7 +108,7 @@ export default function SeriesBlock({
 
           <Link
             href={`/collection/${series.slug}`}
-            className="mt-auto self-start inline-flex items-center gap-1 md-label-medium text-primary hover:underline transition-colors duration-200"
+            className="mt-auto self-start inline-flex items-center gap-1 text-[0.8125rem] leading-5 text-primary hover:underline transition-colors duration-200"
           >
             View collection
             <Icon name="arrow_forward" size={16} />
@@ -124,11 +124,11 @@ export default function SeriesBlock({
               className="group/card flex items-center gap-3 rounded-xl border border-md-outline-variant bg-md-surface p-2.5 hover:bg-md-surface-container-low hover:shadow-md-1 transition-all duration-200 ease-md-standard"
             >
               <div className="w-11 h-11 rounded-lg bg-md-primary-container/40 flex items-center justify-center shrink-0">
-                <span className="md-label-large tabular-nums text-md-on-primary-container/70">
+                <span className="text-[0.8125rem] leading-5 tabular-nums text-md-on-primary-container/70">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
-              <h4 className="min-w-0 flex-1 md-body-medium font-medium text-md-on-surface line-clamp-2 group-hover/card:text-primary transition-colors duration-200">
+              <h4 className="min-w-0 flex-1 text-[0.8125rem] leading-5 font-medium text-md-on-surface line-clamp-2 group-hover/card:text-primary transition-colors duration-200">
                 {stripPartPrefix(part.title)}
               </h4>
               <Icon
@@ -142,7 +142,7 @@ export default function SeriesBlock({
           {remaining > 0 && (
             <Link
               href={`/collection/${series.slug}`}
-              className="self-start mt-1 md-label-small text-primary hover:underline"
+              className="self-start mt-1 text-[0.8125rem] leading-5 text-primary hover:underline"
             >
               +{remaining} more part{remaining > 1 ? "s" : ""}
             </Link>

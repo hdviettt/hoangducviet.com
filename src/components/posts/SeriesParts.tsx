@@ -15,7 +15,7 @@ export default function SeriesParts({
     <nav aria-label="All parts in this series" className="mt-10">
       <Link
         href={`/collection/${series.slug}`}
-        className="block md-label-large uppercase tracking-widest text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard mb-4"
+        className="block text-[0.8125rem] leading-5 uppercase tracking-widest text-md-on-surface-variant hover:text-primary transition-colors duration-200 ease-md-standard mb-4"
       >
         All parts
       </Link>
@@ -29,10 +29,10 @@ export default function SeriesParts({
                 key={part.slug}
                 className="flex items-baseline gap-3 px-3 py-2 rounded-full bg-md-secondary-container text-md-on-secondary-container"
               >
-                <span className="md-label-medium tabular-nums shrink-0">
+                <span className="text-[0.8125rem] leading-5 tabular-nums shrink-0">
                   {num}
                 </span>
-                <span className="md-body-medium font-medium">
+                <span className="text-[0.8125rem] leading-5 font-medium">
                   {stripPartPrefix(part.title)}
                 </span>
               </li>
@@ -44,10 +44,10 @@ export default function SeriesParts({
                 href={`/posts/${part.slug}`}
                 className="flex items-baseline gap-3 px-3 py-2 rounded-full text-md-on-surface-variant hover:bg-md-on-surface/8 transition-colors duration-200 ease-md-standard"
               >
-                <span className="md-label-medium tabular-nums shrink-0">
+                <span className="text-[0.8125rem] leading-5 tabular-nums shrink-0">
                   {num}
                 </span>
-                <span className="md-body-medium">
+                <span className="text-[0.8125rem] leading-5">
                   {stripPartPrefix(part.title)}
                 </span>
               </Link>

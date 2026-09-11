@@ -95,7 +95,7 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
         return (
           <li
             key={it.name}
-            className="inline-flex items-center gap-2 rounded-[0.6875rem] border border-md-outline-variant bg-md-surface-container-high px-3 py-[0.4375rem] text-[0.78125rem] font-medium leading-none text-md-on-surface shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
+            className="inline-flex items-center gap-2 rounded-[0.6875rem] border border-md-outline-variant bg-md-surface-container-high px-3 py-[0.4375rem] text-[0.8125rem] font-medium leading-none text-md-on-surface shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
           >
             {mark ? (
               // `mono` giong het hang dia o trang chu. Truoc day chip o trang
@@ -159,7 +159,7 @@ function Dot({ item }: { item: ProjectLogo }) {
           it has the rest of the row and the artwork column to spill into.
           `stack-tip` is what reveals it, and it lives in globals.css because it
           has to sit inside `@media (hover: hover)` — see the rule there. */}
-      <span className="stack-tip pointer-events-none absolute bottom-[calc(100%+8px)] left-0 z-10 whitespace-nowrap rounded-md bg-md-inverse-surface px-2.5 py-1.5 text-[0.75rem] font-medium leading-none text-md-inverse-on-surface opacity-0 shadow-md-2 transition-opacity duration-150 ease-md-standard">
+      <span className="stack-tip pointer-events-none absolute bottom-[calc(100%+8px)] left-0 z-10 whitespace-nowrap rounded-md bg-md-inverse-surface px-2.5 py-1.5 text-[0.8125rem] font-medium leading-none text-md-inverse-on-surface opacity-0 shadow-md-2 transition-opacity duration-150 ease-md-standard">
         {item.name}
       </span>
     </li>

@@ -87,3 +87,4 @@ scripts/seo-history-inline/
 !/scripts/make-covers-doodle.py
 /scripts/verify-figs.cjs
 scripts/_*.json
+layout-ideas.html

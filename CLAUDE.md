@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Next.js 14 personal blog with a custom CMS admin panel. TypeScript, Drizzle ORM, PostgreSQL, Tailwind CSS, Tiptap editor for the admin. Material 3 visual system (SEONGON Prosperous Blue accent, Google Sans Flex, layered surfaces, rounded shapes) across both the public site and the admin. **The public site is light only. The admin has a dark and a light theme and defaults to dark**; the `.dark` class goes on `<html>` and is removed when you leave `/admin`. Deployed on Railway via Nixpacks with Bun runtime.
+Next.js 14 personal blog with a custom CMS admin panel. TypeScript, Drizzle ORM, PostgreSQL, Tailwind CSS, Tiptap editor for the admin. Material 3 visual system (SEONGON Prosperous Blue accent, Google Sans Flex, layered surfaces, rounded shapes) across both the public site and the admin. **Both the public site and the admin have a dark theme. The site defaults to light and the CMS defaults to dark**; the `.dark` class goes on `<html>` and each keeps its own stored choice (`site-theme` / `admin-theme`). The two palettes differ on purpose: the CMS's is monochrome, the site's keeps the blue, scoped by `.dark:has(.admin-nav)`. Deployed on Railway via Nixpacks with Bun runtime.
 
 ## Development Commands
 
@@ -164,7 +164,7 @@ tokens live as HSL CSS variables in `src/app/globals.css` (`--md-sys-color-*`,
 Tailwind utilities in `tailwind.config.ts` (`bg-md-*`, `text-md-*`, `border-md-*`,
 `rounded-{sm,md,lg,xl,2xl}`, `shadow-md-{1..5}`, `ease-md-*`).
 
-- **Class-based dark mode** (`html.dark`), set by `components/admin/ThemeProvider`. The public site never gets the class. `globals.css` redefines the same `--md-sys-color-*` roles under `.dark`, so every existing `bg-md-*` / `text-md-*` utility themes itself: use tokens, never hardcode hex / `bg-white` / `text-black`.
+- **Class-based dark mode** (`html.dark`). The CMS sets it from `components/admin/ThemeProvider`; the public site sets it from `components/layout/theme.tsx`, whose blocking script runs before first paint so a stored choice never flashes. `globals.css` redefines the same `--md-sys-color-*` roles under `.dark`, so every existing `bg-md-*` / `text-md-*` utility themes itself: use tokens, never hardcode hex / `bg-white` / `text-black`.
 - Dark surfaces are a five-step neutral ramp at hue 218-220 with base `#181B21`, never `#000`. Body text lands at 11:1 against the surface rather than the 15-21:1 a white-on-black pair gives, because a large bright panel is the glare case. Two border roles: `outline` is operable and clears WCAG 1.4.11 at 3.24:1, `outline-variant` is a decorative seam at 1.34:1 and must never be the only thing separating two regions.
 - **Primary = SEONGON Prosperous Blue `#004AEF`** (`hsl(221 100% 47%)`). Change `--md-sys-color-primary` to rebrand; the rest derives from the M3 roles (secondary, tertiary, error, `surface-container-{low..highest}`, outline, outline-variant).
 - **Fonts:** `Google Sans Flex`, loaded by a `<link>` in `app/layout.tsx` and still exposed under the CSS-var name `--font-inter` for backward compat; `JetBrains Mono` via `font-mono` for code and tabular numbers. Google Sans Flex covers Vietnamese diacritics in full, verified with `CSS.getPlatformFontsForNode` against the stacked marks (ệ ộ ằ ữ ợ ẩ ẳ ẵ ặ ẫ ậ): every glyph is painted by it with no fallback.
@@ -172,9 +172,27 @@ Tailwind utilities in `tailwind.config.ts` (`bg-md-*`, `text-md-*`, `border-md-*
 - **Shape:** M3 corner scale (4/8/12/16/28px), not sharp corners. Panels/cards → `rounded-xl`; pills/toggles/status chips → `rounded-full`.
 - **Component utilities (globals.css):** `.md-btn` (+ `-filled`/`-tonal`/`-outlined`/`-text`, `-sm`/`-lg`/`-pill`); `.md-card` (+ `-elevated`/`-outlined`/`-filled`); `.md-field` / `.md-field-dense` / `.md-field-label` for inputs; `.md-elevation-*`.
 - **Admin** uses the same system: shared `AdminPageHeader` (`components/admin/PageHeader.tsx`), M3 sidebar + top bar, `md-btn`/`md-field` forms, tonal status chips.
-- `.article-content` — post typography (17.5px / 1.45 body, Google body-gray). The reading column is **720px, centred**, set by the `mx-auto max-w-[720px]` wrapper in `PostDetail.tsx`, not by the per-element `68ch` rules: `ch` resolves against each element's own size, so an h2 at 32px caps at 1388px while a paragraph caps at 771px. Anything that renders article content outside that wrapper has to cap the container itself.
+- `.article-content` — post typography (16px / 1.6 body, Google body-gray). The reading column is **620px, centred**, set by the `mx-auto max-w-[620px]` wrapper in `PostDetail.tsx`, not by the per-element `68ch` rules: `ch` resolves against each element's own size, so an h2 at 32px caps at 1388px while a paragraph caps at 771px. Anything that renders article content outside that wrapper has to cap the container itself.
 - `.deck-label` / `.deck-display` — legacy utilities kept as **M3-tuned aliases** (no more extrabold / negative tracking); don't extend them.
-- `.prose-editor` — Tiptap editor content styling. The editor surface carries **both** `article-content` and `prose-editor`, so anything set here overrides the published article and makes the draft lie about the page. It sets only the caret, the placeholder and the 720px centring; size, leading and the heading scale are inherited and must stay that way.
+- `.prose-editor` — Tiptap editor content styling. The editor surface carries **both** `article-content` and `prose-editor`, so anything set here overrides the published article and makes the draft lie about the page. It sets only the caret, the placeholder and the 620px centring; size, leading and the heading scale are inherited and must stay that way.
+
+## Scale and grid
+
+Everything reader-facing is sized in `rem` and the root font size is the page's
+scale, derived from the reading column (`html { font-size }` in globals, floored
+at 80%). The CMS opts out with `src/app/admin/scale-lock.tsx`, because its chrome
+is measured in device pixels. Change the scale in one place or not at all.
+
+`.site-grid` is the one grid: three equal columns with a 4rem gutter, blocks
+spanning `.col-1` or `.col-2`. It replaced five different grid definitions that
+between them gave the homepage seven left edges, two of them 2px apart.
+
+Figures are baked twice, light and dark — `DOODLE_INK` / `DOODLE_GROUND` in
+`scripts/doodle.py` — because no single ink clears both grounds: `#004AEF` is
+6.51:1 on white and 2.62:1 on `#121212`. `src/lib/figure-theme.ts` derives the
+twin's path; the stylesheet shows the one that belongs. An `<img>` answers the
+reader's OS and the page answers the reader's toggle, so a `prefers-color-scheme`
+branch inside the SVG is the one thing that cannot work here.
 
 ## Code Style
 

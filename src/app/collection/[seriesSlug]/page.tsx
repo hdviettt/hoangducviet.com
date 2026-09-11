@@ -154,7 +154,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
       {/* Same anatomy as the feed's series block: meta line, display title,
           summary, then the cover. */}
       <header className="mb-10 md:mb-14">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.9375rem] leading-5 text-md-on-surface-variant">
           <span className="font-medium text-primary">Collection</span>
           {isSeries && <span>{posts.length} parts</span>}
           {seriesDate && (
@@ -173,12 +173,12 @@ export default async function SeriesPage({ params }: SeriesParams) {
         </h1>
 
         {seriesItem.summary && (
-          <p className="mt-4 text-[1.03125rem] leading-[1.875rem] text-md-on-surface-variant max-w-[47.5rem]">
+          <p className="mt-4 text-[0.9375rem] leading-[1.875rem] text-md-on-surface-variant max-w-[47.5rem]">
             {seriesItem.summary}
           </p>
         )}
 
-        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[0.875rem] leading-5 font-medium">
+        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[0.9375rem] leading-5 font-medium">
           {firstPost && (
             <Link
               href={`/posts/${firstPost.slug}`}
@@ -223,7 +223,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
           hairline per card, cover on the right, image on top below sm. */}
       {posts.length > 0 && (
         <section>
-          <h2 className="text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-md-on-surface-variant pb-4 border-b border-md-outline-variant">
+          <h2 className="text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-md-on-surface-variant pb-4 border-b border-md-outline-variant">
             {isSeries ? "The series" : "Posts in this series"}
           </h2>
           <div className="[&>a]:border-b [&>a]:border-md-outline-variant">
@@ -247,7 +247,7 @@ export default async function SeriesPage({ params }: SeriesParams) {
                         {post.description}
                       </p>
                     )}
-                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.9375rem] leading-5 text-md-on-surface-variant">
                       {isSeries && (
                         <span className="tabular-nums">Part {i + 1}</span>
                       )}

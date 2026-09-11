@@ -44,7 +44,7 @@ export default function SeriesShowcase({
             moves above the text (order-first) so it reads image→text like
             every other card, instead of stacking against part 1's cover. */}
         <div className="mb-10 lg:mb-0 lg:sticky lg:top-10 lg:self-start flex flex-col">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.9375rem] leading-5 text-md-on-surface-variant">
             <span className="font-medium text-primary">Collection</span>
             <span>{parts.length} parts</span>
             <span className="tabular-nums">{feedRowDate(item.lastDate)}</span>
@@ -84,7 +84,7 @@ export default function SeriesShowcase({
                     {part.description}
                   </p>
                 )}
-                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.875rem] leading-5 text-md-on-surface-variant">
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.9375rem] leading-5 text-md-on-surface-variant">
                   <span className="tabular-nums">Part {i + 1}</span>
                   <span className="tabular-nums">
                     {feedRowDate(part.date_created)}

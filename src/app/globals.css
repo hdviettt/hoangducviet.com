@@ -74,14 +74,14 @@
     /* ----- M3 elevation (light) ----- */
     --md-sys-elevation-level0: none;
     --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --md-sys-elevation-level2: 0 1px 0.1875rem 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0
-      rgba(0, 0, 0, 0.06);
-    --md-sys-elevation-level3: 0 0.25rem 0.375rem -1px rgba(0, 0, 0, 0.07), 0 2px 0.25rem
-      -2px rgba(0, 0, 0, 0.06);
-    --md-sys-elevation-level4: 0 0.625rem 0.9375rem -3px rgba(0, 0, 0, 0.08), 0 0.25rem 0.375rem
-      -4px rgba(0, 0, 0, 0.06);
-    --md-sys-elevation-level5: 0 1.25rem 1.5625rem -5px rgba(0, 0, 0, 0.1), 0 0.5rem 0.625rem
-      -6px rgba(0, 0, 0, 0.08);
+    --md-sys-elevation-level2: 0 1px 0.1875rem 0 rgba(0, 0, 0, 0.08), 0 1px 2px
+      0 rgba(0, 0, 0, 0.06);
+    --md-sys-elevation-level3: 0 0.25rem 0.375rem -1px rgba(0, 0, 0, 0.07), 0
+      2px 0.25rem -2px rgba(0, 0, 0, 0.06);
+    --md-sys-elevation-level4: 0 0.625rem 0.9375rem -3px rgba(0, 0, 0, 0.08), 0
+      0.25rem 0.375rem -4px rgba(0, 0, 0, 0.06);
+    --md-sys-elevation-level5: 0 1.25rem 1.5625rem -5px rgba(0, 0, 0, 0.1), 0
+      0.5rem 0.625rem -6px rgba(0, 0, 0, 0.08);
 
     /* ----- M3 motion (easing + duration) ----- */
     --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
@@ -149,7 +149,7 @@
     --article-blockquote: hsl(var(--md-sys-color-on-surface-variant));
   }
 
-    /* ------------------------------------------------------------------
+  /* ------------------------------------------------------------------
      DARK — the public site.
 
      Default is light; this only applies when the reader asks for it. The
@@ -226,7 +226,7 @@
     --chart-2: #fb923c;
   }
 
-/* ------------------------------------------------------------------
+  /* ------------------------------------------------------------------
      Dark theme, admin only.
 
      This redefines the same M3 role variables rather than introducing a
@@ -540,6 +540,34 @@ html {
 @media (min-width: 1024px) {
   html {
     font-size: clamp(12.8px, calc(var(--shell-max) * 0.0140351), 16px);
+  }
+}
+
+/* One grid for the whole page.
+   Measured before this existed: the homepage had seven distinct left edges,
+   two of them 2px apart — the article feed at 472 and a project's artwork
+   column at 474 — because five different grid definitions each invented their
+   own. A near-miss reads worse than a difference: the eye keeps trying to
+   align them and cannot.
+   Three equal columns and one gutter. Everything spans 1 or 2 of them, so a
+   block can start in only two places. */
+.site-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 4rem;
+  row-gap: 2.25rem;
+}
+
+@media (min-width: 768px) {
+  .site-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 0;
+  }
+  .site-grid > .col-1 {
+    grid-column: span 1;
+  }
+  .site-grid > .col-2 {
+    grid-column: span 2;
   }
 }
 
@@ -1592,11 +1620,13 @@ mark,
 .md-btn-lg {
   height: 2.75rem;
   padding: 0 1.5rem;
-  /* 16px with a hair of positive tracking. Label type on a control wants to be
-     looser than running text, not tighter: it is read as a word, not scanned as
-     a line, and the negative tracking inherited from .md-btn closes the letters
-     up at exactly the size where they need to stay open. */
-  font-size: 1rem;
+  /* The body size with a hair of positive tracking. Label type on a control
+     wants to be looser than running text, not tighter: it is read as a word,
+     not scanned as a line, and the negative tracking inherited from .md-btn
+     closes the letters up at exactly the size where they need to stay open.
+     It was 16px, which made a button the only thing on a page carrying a size
+     nothing else used. */
+  font-size: 0.9375rem;
   letter-spacing: 0.1px;
 }
 .md-btn-pill {

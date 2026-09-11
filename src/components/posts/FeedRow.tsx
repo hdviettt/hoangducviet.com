@@ -75,10 +75,10 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
                   href={`/posts/${part.slug}`}
                   className="group/part flex items-baseline gap-3 py-[0.4375rem]"
                 >
-                  <span className="w-5 shrink-0 text-[0.78125rem] font-medium tabular-nums text-[hsl(var(--md-sys-color-primary)/0.75)]">
+                  <span className="w-5 shrink-0 text-[0.8125rem] font-medium tabular-nums text-[hsl(var(--md-sys-color-primary)/0.75)]">
                     {String(col.offset + i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-[0.875rem] leading-[1.35] text-md-on-surface-variant transition-colors duration-200 ease-md-standard group-hover/part:text-primary">
+                  <span className="text-[0.9375rem] leading-[1.35] text-md-on-surface-variant transition-colors duration-200 ease-md-standard group-hover/part:text-primary">
                     {stripPartPrefix(part.title)}
                   </span>
                 </Link>
