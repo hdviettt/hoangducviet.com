@@ -2,7 +2,6 @@ import { feedRowDate } from "@/components/posts/FeedRow";
 import { Icon } from "@/components/ui/Icon";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import FeaturedClip from "@/components/work/FeaturedClip";
-import { ChildRow } from "@/components/work/ProjectRow";
 import { Chips } from "@/components/work/StackChips";
 import { IDENTITY } from "@/lib/identity";
 import { socialImages } from "@/lib/og";
@@ -72,7 +71,6 @@ export default async function ProjectDeepDivePage({
   const shown = project.media.filter((m) => m.src?.trim());
   const hero = shown[0];
   const rest = shown.slice(1);
-  const hasChildren = !!project.children && project.children.length > 0;
   const hasPosts = !!project.posts && project.posts.length > 0;
   const hasStack = project.models.length > 0 || project.stack.length > 0;
 
@@ -110,30 +108,11 @@ export default async function ProjectDeepDivePage({
         />
         <Link
           href="/work"
-          className={`rounded-sm underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-            project.parent ? "text-md-on-surface-variant" : "text-md-on-surface"
-          }`}
-          aria-current={project.parent ? undefined : "page"}
+          aria-current="page"
+          className="rounded-sm text-md-on-surface underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Work
         </Link>
-        {project.parent && (
-          <>
-            <Icon
-              name="chevron_right"
-              size={16}
-              className="text-md-outline"
-              aria-hidden="true"
-            />
-            <Link
-              href={`/work/${project.parent.slug}`}
-              aria-current="page"
-              className="rounded-sm text-md-on-surface underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              {project.parent.title}
-            </Link>
-          </>
-        )}
       </nav>
 
       {/* ===== Hero ===== */}
@@ -253,18 +232,6 @@ export default async function ProjectDeepDivePage({
           // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted admin content
           dangerouslySetInnerHTML={{ __html: project.content }}
         />
-      )}
-
-      {/* ===== Pieces on the platform ===== */}
-      {hasChildren && (
-        <section className="mt-14 border-t border-md-outline-variant pt-10 md:mt-16">
-          <SectionLabel>Pieces on the platform</SectionLabel>
-          <div>
-            {project.children?.map((c) => (
-              <ChildRow key={c.slug} child={c} />
-            ))}
-          </div>
-        </section>
       )}
 
       {/* ===== Writing ===== */}

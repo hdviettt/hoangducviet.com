@@ -68,7 +68,6 @@ export interface Project {
   date_updated?: string;
   posts?: ProjectPostRef[];
   children?: ProjectChild[];
-  parent?: { slug: string; title: string } | null;
 }
 
 type ProjectRow = typeof projects.$inferSelect;
@@ -252,16 +251,6 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       ...c,
       description: c.description ?? null,
     }));
-
-    // Parent (for a child), so the deep-dive can link up.
-    if (project.parentSlug) {
-      const pr = await db
-        .select({ slug: projects.slug, title: projects.title })
-        .from(projects)
-        .where(eq(projects.slug, project.parentSlug))
-        .limit(1);
-      project.parent = pr[0] ?? null;
-    }
 
     await attachCategories([project]);
 
