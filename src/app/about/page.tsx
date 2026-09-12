@@ -95,9 +95,11 @@ export default async function AboutPage() {
           ai den de doc thi cuon qua. */}
       <TechStack />
 
-      {/* Than bai, dung ong render cua bai viet. */}
+      {/* Than bai, dung ong render cua bai viet. Khong con `mx-auto`: cot doc
+          van rong 620px, nhung no bat dau o mep trai cua trang chu khong phai
+          can giua, de ba khoi cua trang About cung mot mep. */}
       {hasBody && (
-        <section className="mx-auto mt-14 max-w-[38.75rem] px-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
+        <section className="work-breakout mt-14 max-w-[38.75rem] px-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
           <div className="article-content">
             <MarkdownContent content={body} />
           </div>

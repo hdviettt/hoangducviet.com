@@ -21,7 +21,7 @@ import { Fragment } from "react";
 // that broke.
 export default function TechStack() {
   return (
-    <section className="mx-auto max-w-[55rem] border-t border-md-outline-variant pt-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards">
+    <section className="work-breakout border-t border-md-outline-variant pt-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards">
       <h2 className="mb-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
         What I build with
       </h2>

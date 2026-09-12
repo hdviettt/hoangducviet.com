@@ -28,14 +28,17 @@ export default function ProfileHero({
 }: ProfileHeroProps) {
   return (
     <section className="work-breakout pt-12 pb-8 sm:pt-14 md:pb-10 md:pt-16">
-      <div className="site-grid items-start">
-        {/* Identity, on the page's own grid rather than centred in the middle
-            of it. Centred, this block invented two left edges nothing else
-            used — the section wrapper and the text inside it — and it was the
-            only thing on the homepage that did not line up with anything.
-            Photo and name take the first column, the bio and contacts the
-            other two, which is the same shape every band below it uses. */}
-        <div className="col-1">
+      <div className="max-w-[36rem]">
+        {/* One left-aligned stack, not two columns.
+            Split across the grid, the photo pushed the name 132px below the
+            first line of the bio — so the most important words in the block
+            sat under the least important, and the eye had nowhere to enter.
+            The bio also ran 859px, which is 110 characters a line, on a site
+            whose article measure was just brought down to 75.
+            It is also one two-column relationship fewer at the top of a page
+            that already has two more underneath, each splitting on different
+            things. */}
+        <div>
           <div className="flex flex-col items-start gap-4 sm:gap-5 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
             {imageUrl && (
               <Image
@@ -55,13 +58,10 @@ export default function ProfileHero({
               )}
             </div>
           </div>
-        </div>
-
-        <div className="col-2">
           {description &&
             description.replace(/<[^>]*>/g, "").trim().length > 0 && (
               <div
-                className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline [&_p]:text-[0.9375rem] [&_p]:leading-7 [&_p]:mb-3 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-150 fill-mode-backwards"
+                className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline mt-5 [&_p]:text-[0.9375rem] [&_p]:leading-7 [&_p]:mb-3 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-150 fill-mode-backwards"
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             )}
