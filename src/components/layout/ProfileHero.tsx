@@ -27,13 +27,16 @@ export default function ProfileHero({
   imageUrl,
 }: ProfileHeroProps) {
   return (
-    <section className="pt-14 sm:pt-16 md:pt-20 pb-12 md:pb-16">
-      <div>
-        {/* Identity — centred column: photo, then name, then bio, then the
-            contact row. The measure stays tight so a centred bio still breaks
-            into even lines instead of one long ribbon. */}
-        <div className="max-w-[40rem] mx-auto text-center">
-          <div className="flex flex-col items-center gap-4 sm:gap-5 mb-5 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
+    <section className="work-breakout pt-12 pb-8 sm:pt-14 md:pb-10 md:pt-16">
+      <div className="site-grid items-start">
+        {/* Identity, on the page's own grid rather than centred in the middle
+            of it. Centred, this block invented two left edges nothing else
+            used — the section wrapper and the text inside it — and it was the
+            only thing on the homepage that did not line up with anything.
+            Photo and name take the first column, the bio and contacts the
+            other two, which is the same shape every band below it uses. */}
+        <div className="col-1">
+          <div className="flex flex-col items-start gap-4 sm:gap-5 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
             {imageUrl && (
               <Image
                 src={imageUrl}
@@ -52,7 +55,9 @@ export default function ProfileHero({
               )}
             </div>
           </div>
+        </div>
 
+        <div className="col-2">
           {description &&
             description.replace(/<[^>]*>/g, "").trim().length > 0 && (
               <div
@@ -61,7 +66,7 @@ export default function ProfileHero({
               />
             )}
 
-          <div className="mt-6 flex flex-wrap justify-center items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200 fill-mode-backwards">
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200 fill-mode-backwards">
             {SOCIAL_PROFILES.map(({ href, label }) => {
               // href/label come from identity.ts so the visible links and the
               // JSON-LD sameAs stay in lockstep; only the icon lives in the UI.
