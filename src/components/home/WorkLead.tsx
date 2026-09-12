@@ -1,5 +1,4 @@
 import FeaturedWork from "@/components/work/FeaturedWork";
-import { darkTwin } from "@/lib/figure-theme";
 import type { Project } from "@/lib/projects";
 import Link from "next/link";
 
@@ -11,14 +10,21 @@ import Link from "next/link";
  * writing — eighteen items, and the thing this site is for — gets 779px at the
  * bottom.
  *
- * So: one project leads at full size, because the split block with its artwork
- * is the best thing this site draws. The other two become rows. A reader who
- * wants the full versions is one click away, and that click now buys them
- * something.
+ * The three featured projects, each in the same block /work uses.
+ *
+ * There was a version of this where one project led at full size and the other
+ * two were rows. Measured, those rows typeset their titles at 15.2px/500 —
+ * which is the size and weight of an article row — so the same project read as
+ * a project on /work and as a piece of writing here. A hierarchy that turns
+ * two of three things into a different kind of thing is not a hierarchy, it is
+ * an inconsistency. They are all the same block now.
+ *
+ * What the page still does not do is repeat the whole archive underneath: the
+ * feed below shows six items rather than eighteen, which is where /posts got
+ * its job back.
  */
 export default function WorkLead({ projects }: { projects: Project[] }) {
   if (projects.length === 0) return null;
-  const [lead, ...rest] = projects;
 
   return (
     <section id="work" className="scroll-mt-8">
@@ -32,69 +38,19 @@ export default function WorkLead({ projects }: { projects: Project[] }) {
         </p>
       </div>
 
-      <div className="work-breakout mt-9 md:mt-12">
-        <FeaturedWork project={lead} />
+      {/* The same separators /work uses, so a project sits in the same frame on
+          both pages rather than in a homepage-shaped one. */}
+      <div className="work-breakout mt-9 flex flex-col md:mt-12">
+        {projects.map((p) => (
+          <div
+            key={p.slug}
+            className="border-t border-md-outline-variant py-14 first:border-t-0 first:pt-0 md:py-20"
+          >
+            <FeaturedWork project={p} />
+          </div>
+        ))}
 
-        {/* The other two keep their artwork. Dropping it to save height was the
-            wrong trade: the drawing is the most distinctive thing this site
-            has, and a project without one reads as a placeholder next to a
-            project with one. They stay rows rather than full blocks, so the
-            lead still leads. */}
-        {rest.length > 0 && (
-          <ul className="mt-14 border-t border-md-outline-variant md:mt-16">
-            {rest.map((p) => {
-              const art = p.media.find(
-                (m) => m.src?.trim() && m.type === "image",
-              );
-              const twin = art ? darkTwin(art.src) : null;
-              return (
-                <li key={p.slug}>
-                  <Link
-                    href={`/work/${p.slug}`}
-                    className="group site-grid items-start border-b border-md-outline-variant py-8"
-                  >
-                    <div className="col-1">
-                      <h3 className="text-[1.1875rem] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface transition-colors group-hover:text-primary">
-                        {p.title}
-                      </h3>
-                      {p.description && (
-                        <p className="mt-3 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-                          {p.description}
-                        </p>
-                      )}
-                    </div>
-                    {art && (
-                      <div className="col-2 overflow-hidden rounded-xl">
-                        <img
-                          src={art.src}
-                          alt=""
-                          aria-hidden="true"
-                          loading="lazy"
-                          decoding="async"
-                          className={`w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]${
-                            twin ? " fig-light" : ""
-                          }`}
-                        />
-                        {twin && (
-                          <img
-                            src={twin}
-                            alt=""
-                            aria-hidden="true"
-                            loading="lazy"
-                            decoding="async"
-                            className="fig-dark w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]"
-                          />
-                        )}
-                      </div>
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-
-        <div className="mt-10 flex items-center gap-5 md:gap-8">
+        <div className="flex items-center gap-5 md:gap-8">
           <span
             aria-hidden="true"
             className="h-px flex-1 bg-md-outline-variant"
