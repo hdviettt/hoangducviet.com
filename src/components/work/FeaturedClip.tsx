@@ -31,10 +31,12 @@ export default function FeaturedClip({
   src,
   label,
   className,
+  poster,
 }: {
   src: string;
   label: string;
   className?: string;
+  poster?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -66,6 +68,7 @@ export default function FeaturedClip({
     <video
       ref={ref}
       src={src}
+      poster={poster}
       aria-label={label}
       muted
       loop

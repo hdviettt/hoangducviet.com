@@ -162,6 +162,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
           <Link href={href} className="group block overflow-hidden rounded-xl">
             <FeaturedClip
               src={clip.src}
+              poster={clip.poster}
               label={clip.caption || project.title}
               className="w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
             />

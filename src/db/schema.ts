@@ -18,6 +18,15 @@ export type ProjectMedia = {
   type: "image" | "video";
   src: string;
   caption?: string;
+  /**
+   * First-frame still for a video, shown before playback starts.
+   *
+   * Without it the largest element on the page is the video itself, and LCP
+   * cannot finish until enough of the file has arrived to paint a frame:
+   * measured 3.8s on desktop and 7.5s on a slow connection. A ~70 KB still
+   * paints immediately and the clip fades in behind it.
+   */
+  poster?: string;
 };
 // A single "by the numbers" stat: a hard figure and what it measures.
 export type ProjectMetric = { value: string; label: string };

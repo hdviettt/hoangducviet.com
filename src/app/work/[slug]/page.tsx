@@ -143,6 +143,7 @@ export default async function ProjectDeepDivePage({
             {hero.type === "video" ? (
               <FeaturedClip
                 src={hero.src}
+                poster={hero.poster}
                 label={hero.caption || project.title}
                 className="w-full"
               />
