@@ -72,6 +72,10 @@ export async function PUT(request: Request, { params }: Params) {
         stack: body.stack ?? [],
         models: body.models ?? [],
         media: body.media ?? [],
+        // Only replaced when the request actually carries them, the same rule
+        // the tags below follow. PUT never wrote metrics at all before, which
+        // is why they could be seeded and then never changed.
+        ...(Array.isArray(body.metrics) ? { metrics: body.metrics } : {}),
         status: body.status,
         buildStatus: body.buildStatus,
         featured: !!body.featured,

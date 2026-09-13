@@ -63,6 +63,7 @@ export default async function EditWorkPage({ params }: Params) {
           stack: p.stack ?? [],
           models: p.models ?? [],
           media: p.media ?? [],
+          metrics: p.metrics ?? [],
           postSlugs: linked.map((l) => l.postSlug),
           categories: tagged.map((t) => t.categorySlug),
         }}

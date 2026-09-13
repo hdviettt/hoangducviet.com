@@ -4,7 +4,12 @@ import MediaPicker from "@/components/admin/MediaPicker";
 import RichEditor from "@/components/admin/RichEditor";
 import { useToast } from "@/components/admin/Toast";
 import { MARK_IDS } from "@/components/home/logo-marks";
-import type { ProjectLogo, ProjectMedia, ProjectStackGroup } from "@/db/schema";
+import type {
+  ProjectLogo,
+  ProjectMedia,
+  ProjectMetric,
+  ProjectStackGroup,
+} from "@/db/schema";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -21,6 +26,7 @@ interface WorkFormProps {
     stack: ProjectStackGroup[];
     models: ProjectLogo[];
     media: ProjectMedia[];
+    metrics: ProjectMetric[];
     postSlugs: string[];
     categories: string[];
   };
@@ -99,7 +105,9 @@ export default function WorkForm({
     initialData?.description ?? "",
   );
   const [content, setContent] = useState(initialData?.content ?? "");
-  const [thumbnail, setThumbnail] = useState(initialData?.thumbnail ?? "");
+  // Read-only now: there is no control for it, but the value still has to
+  // survive a save rather than be nulled by the form that stopped showing it.
+  const [thumbnail] = useState(initialData?.thumbnail ?? "");
   const [status, setStatus] = useState(initialData?.status ?? "draft");
   const [buildStatus, setBuildStatus] = useState(
     initialData?.buildStatus ?? "live",
@@ -112,6 +120,12 @@ export default function WorkForm({
     initialData?.stack ?? [],
   );
   const [media, setMedia] = useState<ProjectMedia[]>(initialData?.media ?? []);
+  // These render as the "by the numbers" panel on the project page. They have
+  // always been real database rows; there was simply no way to edit them here,
+  // which made them look hard-coded from the CMS.
+  const [metrics, setMetrics] = useState<ProjectMetric[]>(
+    initialData?.metrics ?? [],
+  );
   const [postSlugs, setPostSlugs] = useState<string[]>(
     initialData?.postSlugs ?? [],
   );
@@ -160,6 +174,7 @@ export default function WorkForm({
           models,
           stack,
           media,
+          metrics,
           postSlugs,
           categories,
         }),
@@ -451,6 +466,64 @@ export default function WorkForm({
         </button>
       </div>
 
+      {/* Metrics repeater. Four is what the 2x2 panel is built for; the page
+          slices to four anyway, so the button stops there rather than letting
+          a fifth be typed and silently dropped. */}
+      <div>
+        <label className="md-field-label">
+          by the numbers <span>(up to 4; shown on the project page)</span>
+        </label>
+        <div className="space-y-2">
+          {metrics.map((m, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <input
+                value={m.value}
+                onChange={(e) =>
+                  setMetrics((p) =>
+                    p.map((x, idx) =>
+                      idx === i ? { ...x, value: e.target.value } : x,
+                    ),
+                  )
+                }
+                placeholder="~1.5 hrs"
+                className="md-field-dense w-40 shrink-0"
+              />
+              <input
+                value={m.label}
+                onChange={(e) =>
+                  setMetrics((p) =>
+                    p.map((x, idx) =>
+                      idx === i ? { ...x, label: e.target.value } : x,
+                    ),
+                  )
+                }
+                placeholder="per SEO proposal, from about a day"
+                className="md-field-dense flex-1"
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  setMetrics((p) => p.filter((_, idx) => idx !== i))
+                }
+                className="md-btn md-btn-text md-btn-sm shrink-0"
+                aria-label="Remove metric"
+              >
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>
+        {metrics.length < 4 && (
+          <button
+            type="button"
+            onClick={() => setMetrics((p) => [...p, { value: "", label: "" }])}
+            className="md-btn md-btn-tonal md-btn-sm mt-2"
+          >
+            + metric
+          </button>
+        )}
+      </div>
+
       {/* Long-form writeup (optional) */}
       <div>
         <label className="md-field-label">
@@ -463,12 +536,14 @@ export default function WorkForm({
         />
       </div>
 
-      {/* Thumbnail */}
-      <MediaPicker
-        value={thumbnail}
-        onChange={setThumbnail}
-        label="Thumbnail"
-      />
+      {/* No thumbnail control.
+          A work item's cover comes from its first media row, which is the field
+          that actually feeds the featured block and the project page. The
+          separate thumbnail was null on every project and the only thing that
+          ever read it was one dead fallback, so the control did nothing except
+          pose as a second, competing place to set the cover. The value is still
+          carried through the form untouched, so nothing is lost for any item
+          that does happen to have one. */}
 
       {/* Topics. These are what the homepage prints above a featured project,
           in place of the old derived "Project" line, so leaving a project
