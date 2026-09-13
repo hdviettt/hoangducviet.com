@@ -88,3 +88,4 @@ scripts/seo-history-inline/
 /scripts/verify-figs.cjs
 scripts/_*.json
 layout-ideas.html
+scripts/_backup-*.md
