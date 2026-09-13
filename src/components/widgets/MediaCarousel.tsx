@@ -384,54 +384,62 @@ export default function MediaCarousel({
 
       {count > 1 && (
         <div className="media-carousel__controls">
-          <button
-            type="button"
-            className="media-carousel__btn"
-            onClick={() => go(-1)}
-            disabled={nav.atStart}
-            aria-label="Previous slide"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M15 5 8 12l7 7" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="media-carousel__btn"
-            onClick={() => go(1)}
-            disabled={nav.atEnd}
-            aria-label="Next slide"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="m9 5 7 7-7 7" />
-            </svg>
-          </button>
-          <div className="media-carousel__rail" aria-hidden="true">
-            <span
-              className="media-carousel__progress"
-              style={{ width: `${nav.progress * 100}%` }}
-            />
+          {/* Position first, controls second: the reader is told where they are
+              before they are offered a way to move. */}
+          <div className="media-carousel__dots" aria-hidden="true">
+            {items.map((it, i) => (
+              <span
+                key={it.src || `slide-${i}`}
+                className={`media-carousel__dot${i === nav.index ? " is-active" : ""}`}
+              />
+            ))}
           </div>
+
+          <div className="media-carousel__nav">
+            <button
+              type="button"
+              className="media-carousel__btn"
+              onClick={() => go(-1)}
+              disabled={nav.atStart}
+              aria-label="Previous slide"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M15 5 8 12l7 7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="media-carousel__btn"
+              onClick={() => go(1)}
+              disabled={nav.atEnd}
+              aria-label="Next slide"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m9 5 7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
           <p className="sr-only" aria-live="polite">
             Slide {nav.index + 1} of {count}
           </p>

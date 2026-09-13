@@ -1325,27 +1325,71 @@ html {
 .media-carousel__controls {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.75rem;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
   padding-inline: var(--mc-pad);
+}
+
+/* Position on the left, controls on the right, both quiet.
+   Outlined 44px circles sitting next to a progress bar read as the loudest
+   thing under a picture, which is backwards: the chrome should be findable
+   and never compete with the slide. Dots in a soft pill, with the current one
+   stretched into a bar, say where you are without drawing a line across the
+   page. */
+.media-carousel__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.6875rem;
+  border-radius: 9999px;
+  background: hsl(var(--md-sys-color-surface-container));
+}
+
+.media-carousel__dot {
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 9999px;
+  background: hsl(var(--md-sys-color-on-surface) / 0.26);
+  transition:
+    width 200ms var(--md-sys-motion-easing-standard, ease),
+    background-color 200ms var(--md-sys-motion-easing-standard, ease);
+}
+
+.media-carousel__dot.is-active {
+  width: 1.375rem;
+  background: hsl(var(--md-sys-color-on-surface) / 0.82);
+}
+
+.media-carousel__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-carousel__dot {
+    transition: none;
+  }
 }
 
 .media-carousel__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 9999px;
-  border: 1px solid hsl(var(--md-sys-color-outline-variant));
-  color: hsl(var(--md-sys-color-on-surface));
-  background: transparent;
+  border: 0;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+  background: hsl(var(--md-sys-color-surface-container));
   transition: background-color 150ms var(--md-sys-motion-easing-standard, ease),
     opacity 150ms var(--md-sys-motion-easing-standard, ease);
 }
 
 .media-carousel__btn:hover:not(:disabled) {
-  background: hsl(var(--md-sys-color-surface-container));
+  background: hsl(var(--md-sys-color-surface-container-high));
+  color: hsl(var(--md-sys-color-on-surface));
 }
 
 .media-carousel__btn:disabled {
@@ -1353,38 +1397,10 @@ html {
   cursor: default;
 }
 
-/* A progress bar rather than dots or a floating thumb: the fill is anchored
-   left and grows as you scroll, and it is exactly as thin as the rail it sits
-   in — a fill thicker than its own track reads as a bug. */
-.media-carousel__rail {
-  position: relative;
-  flex: 0 1 13.75rem;
-  height: 2px;
-  margin-left: 0.75rem;
-  border-radius: 9999px;
-  overflow: hidden;
-  background: hsl(var(--md-sys-color-outline-variant));
-}
 
-.media-carousel__progress {
-  position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: 9999px;
-  background: hsl(var(--md-sys-color-on-surface));
-  transition: width 120ms linear;
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .media-carousel__progress {
-    transition: none;
-  }
-}
 
 @media (max-width: 899px) {
-  /* The rail is the only progress cue on a phone, so let it use the width. */
-  .media-carousel__rail {
-    flex: 1 1 auto;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
