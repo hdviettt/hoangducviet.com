@@ -1,4 +1,5 @@
 import { Icon } from "@/components/ui/Icon";
+import MediaCarousel from "@/components/widgets/MediaCarousel";
 import FeaturedClip from "@/components/work/FeaturedClip";
 import { KitDots, flattenStack } from "@/components/work/StackChips";
 import { darkTwin } from "@/lib/figure-theme";
@@ -40,7 +41,11 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // trong mang, nen `media[0]` nhan no, roi khoi featured render mot the video
   // khong co nguon va cot phai trong tron. Do dung la thu da xay ra voi
   // agentic-ai-platform tren prod.
-  const hero = project.media.find((m) => m.src?.trim());
+  // Every media row that actually has a file. A project with more than one
+  // becomes a carousel here rather than showing its first item and hiding the
+  // rest on its own page, which is what it used to do.
+  const shown = project.media.filter((m) => m.src?.trim());
+  const hero = shown[0];
   const clip = hero?.type === "video" ? hero : null;
   const shot = hero?.type === "image" ? hero : null;
   // Four is what every project carries and what the 2x2 grid is built for; the
@@ -57,6 +62,10 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // mot du an bi xoa het metrics trong CMS se render ra mot <dl> rong, tuc la
   // mot vach mau mong nam giua trang.
   const visual = Boolean(art || hero || metrics.length > 0);
+  // Two or more files is a set, and a set is a carousel. One file is one file:
+  // reserving peek space for a neighbour that does not exist shrinks the only
+  // thing there is to look at.
+  const isSet = shown.length > 1;
 
   return (
     // Three columns, not twelve. A 12-column grid with an 80px gap has eleven
@@ -122,7 +131,22 @@ export default function FeaturedWork({ project }: { project: Project }) {
       </div>
 
       <div className="col-2">
-        {!visual ? null : art ? (
+        {isSet ? (
+          // Not wrapped in a Link: the slides scroll and the controls are
+          // buttons, so a link around them would swallow both. The title and
+          // the View project button already go to the project.
+          <div className="work-carousel">
+            <MediaCarousel
+              items={shown.map((m) => ({
+                src: m.src,
+                type: m.type,
+                poster: m.poster,
+                caption: m.caption,
+              }))}
+              label={`${project.title}: media`}
+            />
+          </div>
+        ) : !visual ? null : art ? (
           // Purpose-drawn hero art, and the whole point of it is that it has no
           // frame: it sits on the page's own ground the way blog.google's
           // artwork does. A rounded box around the same pixels reads smaller,

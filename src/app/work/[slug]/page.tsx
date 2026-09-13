@@ -70,7 +70,6 @@ export default async function ProjectDeepDivePage({
   const metrics = project.metrics.slice(0, 4);
   const shown = project.media.filter((m) => m.src?.trim());
   const hero = shown[0];
-  const rest = shown.slice(1);
   const hasPosts = !!project.posts && project.posts.length > 0;
   const hasStack = project.models.length > 0 || project.stack.length > 0;
 
@@ -133,7 +132,23 @@ export default async function ProjectDeepDivePage({
           be rong. Trang bai cua Google dat anh ngay duoi tieu de va cho no
           chiem tron cot — do la thu bao cho nguoi doc biet du an nay trong ra
           sao truoc khi ho phai doc bat cu dong nao. */}
-      {hero && (
+      {shown.length > 1 ? (
+        // A set of files belongs together, at the top, in one carousel. It used
+        // to show the first file here and push the rest into a second carousel
+        // far below the stack table, so a reader met half the project twice.
+        <div className="work-carousel work-breakout mt-10 md:mt-12">
+          <MediaCarousel
+            items={shown.map((m) => ({
+              src: m.src,
+              poster: m.poster,
+              caption: m.caption,
+              type: m.type,
+            }))}
+            mat="ambient"
+            label={`${project.title}: media`}
+          />
+        </div>
+      ) : hero ? (
         // `work-breakout` keo hinh rong ra 1320px, vuot ca cot chu 880 lan
         // khung 1044 cua vo trang. Do tren bai cua Google: cot chu ~808px, anh
         // ~1305px — anh rong gap 1.6 lan cot chu. Bang dung cot chu thi no
@@ -163,7 +178,7 @@ export default async function ProjectDeepDivePage({
             </figcaption>
           )}
         </figure>
-      )}
+      ) : null}
 
       {/* ===== Bang so =====
 
@@ -203,27 +218,6 @@ export default async function ProjectDeepDivePage({
             ))}
           </div>
         </section>
-      )}
-
-      {/* ===== Media: carousel of real screenshots and clips ===== */}
-      {rest.length > 0 && (
-        <div
-          className={`work-carousel mt-12 md:mt-14 ${
-            rest.length > 1 ? "" : "work-carousel--one"
-          }`}
-        >
-          <MediaCarousel
-            items={rest.map((m) => ({
-              src: m.src,
-              caption: m.caption,
-              type: m.type,
-              fit: "cover",
-            }))}
-            ratio="16 / 9"
-            mat="ambient"
-            label={`${project.title} media`}
-          />
-        </div>
       )}
 
       {/* ===== The story ===== */}
