@@ -1,27 +1,48 @@
+// Archive skeleton.
+//
+// The page is a sticky aside in col-1 and the feed in col-2, inside
+// work-breakout, and every row is the same 92px date column plus title that
+// FeedRow renders. The previous version drew a full-width stack of year groups
+// with no aside at all, so the real page arrived as a two-column layout on top
+// of a one-column placeholder.
+const ROWS = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"];
+
+const Bar = ({ className }: { className: string }) => (
+  <div className={`animate-pulse rounded bg-muted ${className}`} />
+);
+
 export default function PostsLoading() {
   return (
-    <div className="py-8 sm:py-12 md:py-16">
-      <div className="h-8 w-24 bg-muted animate-pulse mb-8 sm:mb-10 md:mb-12" />
-
-      {[1, 2].map((group) => (
-        <div key={group} className="mb-10 sm:mb-12 md:mb-16">
-          <div className="h-4 w-16 bg-muted animate-pulse mb-6 md:mb-8 pb-2 border-b border-border" />
-          <div className="space-y-1 md:space-y-1.5">
-            {Array.from({ length: group === 1 ? 4 : 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex items-baseline gap-4 py-1.5 md:py-2"
-              >
-                <div className="h-3 w-14 bg-muted animate-pulse shrink-0" />
-                <div
-                  className="h-4 bg-muted animate-pulse"
-                  style={{ width: `${50 + ((i * 17) % 30)}%` }}
-                />
-              </div>
-            ))}
+    <section
+      className="work-breakout pb-16 pt-12 sm:pt-16 md:pb-20 md:pt-20"
+      aria-hidden
+    >
+      <div className="site-grid">
+        <aside className="col-1 mb-9 md:mb-0">
+          <Bar className="h-7 w-28" />
+          <div className="mt-7 hidden flex-col gap-2 lg:flex">
+            <Bar className="h-4 w-10" />
+            <Bar className="h-4 w-10" />
           </div>
+        </aside>
+
+        <div className="col-2">
+          {ROWS.map((id, i) => (
+            <div
+              key={id}
+              className="grid grid-cols-1 gap-y-1.5 border-b border-md-outline-variant py-[1.3125rem] sm:grid-cols-[92px_1fr] sm:gap-x-6"
+            >
+              <Bar className="h-4 w-20 sm:mt-[0.1875rem]" />
+              {/* Deterministic widths so the placeholder does not shimmer into
+                  a different shape on every render. */}
+              <div
+                className="h-5 animate-pulse rounded bg-muted"
+                style={{ width: `${68 + ((i * 13) % 26)}%` }}
+              />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
 }
