@@ -931,6 +931,29 @@ html {
   margin-right: auto;
 }
 
+/* Inline doodles get the same room as uploaded media.
+   A render fence lands in `.visual-embed`, which never had the figure
+   breakout, and each drawing also carries an inline `max-width:620px` from the
+   generator. Measured on a post at 1440: uploaded images ran 972px while the
+   doodles beside them sat at 558px, a little over half. Same drawings, half
+   the presence, for no reason a reader could see.
+
+   The `!important` is not decoration: the cap is an inline style on the svg
+   itself, and nothing but `!important` outranks that. */
+.article-content .visual-embed:has(svg) svg {
+  max-width: 100% !important;
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 900px) {
+  .article-content .visual-embed:has(svg) {
+    width: min(1080px, calc(100vw - 5rem), calc(var(--shell-max) - 3rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 @media (min-width: 900px) {
   .article-content figure {
     width: min(1080px, calc(100vw - 5rem), calc(var(--shell-max) - 3rem));
