@@ -5,8 +5,17 @@ import { useEffect, useRef } from "react";
 /**
  * A looping clip in the featured-work slot.
  *
- * `autoplay` on a <video> is not something CSS can take back, so the two rules
- * that make an autoplaying loop acceptable have to live in JS:
+ * Playback is driven entirely from JS, and the element deliberately has no
+ * `autoplay` attribute.
+ *
+ * It used to have one. `autoplay` overrides `preload="metadata"`: the browser
+ * starts fetching the whole file the moment the element mounts, and the
+ * observer below only pauses it afterwards, once the bytes are already in
+ * flight. Measured on /work, a clip that was paused and off screen had still
+ * pulled 15.31 MB. Letting the observer call `play()` instead means an
+ * off-screen clip costs its metadata and nothing more.
+ *
+ * The two rules that make a looping clip acceptable still live here:
  *
  *  - `prefers-reduced-motion` means it never starts. The element stays on its
  *    first frame, which is why `preload` is metadata rather than none.
@@ -58,7 +67,6 @@ export default function FeaturedClip({
       ref={ref}
       src={src}
       aria-label={label}
-      autoPlay
       muted
       loop
       playsInline
