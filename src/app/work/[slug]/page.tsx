@@ -144,7 +144,7 @@ export default async function ProjectDeepDivePage({
               <FeaturedClip
                 src={hero.src}
                 label={hero.caption || project.title}
-                className="aspect-[3/2] w-full object-cover"
+                className="w-full"
               />
             ) : (
               <img
@@ -152,7 +152,7 @@ export default async function ProjectDeepDivePage({
                 alt={hero.caption || project.title}
                 loading="eager"
                 decoding="async"
-                className="aspect-[3/2] w-full object-cover"
+                className="w-full"
               />
             )}
           </div>

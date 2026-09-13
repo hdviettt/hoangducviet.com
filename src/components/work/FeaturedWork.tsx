@@ -151,27 +151,32 @@ export default function FeaturedWork({ project }: { project: Project }) {
             )}
           </Link>
         ) : clip ? (
-          // A clip from the CMS. Same box as a screenshot, and the same crop
-          // rule: 16:9, cover, anchored top-left, because a UI recording has
-          // its content in the top-left and letterboxing it would shrink the
-          // only part worth seeing.
+          // A clip from the CMS, at its own aspect ratio.
+          //
+          // This used to lock a 3:2 box and `object-cover` from the top-left.
+          // Every uploaded file is 16:9-ish (measured 1.61 to 1.80), so that
+          // threw away 7 to 17 percent of each one off the right and bottom
+          // edges — the side of a UI recording where the panel being
+          // demonstrated usually is. Showing the whole frame costs a little
+          // vertical rhythm and is worth it.
           <Link href={href} className="group block overflow-hidden rounded-xl">
             <FeaturedClip
               src={clip.src}
               label={clip.caption || project.title}
-              className="aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
+              className="w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
             />
           </Link>
         ) : shot ? (
           // A screenshot is not art: it has hard edges and a white ground, so
-          // it still needs the box that the art does not.
+          // it still needs the rounded box that the art does not. What it does
+          // not need is a crop — see the clip branch above.
           <Link href={href} className="group block overflow-hidden rounded-xl">
             <img
               src={shot.src}
               alt={shot.caption || project.title}
               loading="lazy"
               decoding="async"
-              className={`aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]${
+              className={`w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]${
                 darkTwin(shot.src) ? " fig-light" : ""
               }`}
             />
@@ -186,7 +191,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
                 aria-hidden="true"
                 loading="lazy"
                 decoding="async"
-                className="fig-dark aspect-[3/2] w-full object-cover object-left-top transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
+                className="fig-dark w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.02]"
               />
             )}
           </Link>
