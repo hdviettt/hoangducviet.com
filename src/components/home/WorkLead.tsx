@@ -28,14 +28,13 @@ export default function WorkLead({ projects }: { projects: Project[] }) {
 
   return (
     <section id="work" className="scroll-mt-8">
-      <div className="work-breakout site-grid items-baseline">
-        <h2 className="col-1 text-[1.4375rem] font-medium tracking-[-0.02em] text-md-on-surface">
+      {/* The masthead is the heading alone. It used to carry a sentence in the
+          second column summarising the three projects underneath, which the
+          three projects then said better in their own words. */}
+      <div className="work-breakout">
+        <h2 className="text-[1.4375rem] font-medium tracking-[-0.02em] text-md-on-surface">
           Selected work
         </h2>
-        <p className="col-2 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-          A search engine built from scratch, and an AI platform of agents I
-          built and led inside a company.
-        </p>
       </div>
 
       {/* The same separators /work uses, so a project sits in the same frame on
