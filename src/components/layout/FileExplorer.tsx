@@ -100,40 +100,47 @@ export default function FileExplorer({ children }: FileExplorerProps) {
           scrolled ? "bg-md-background/80 backdrop-blur-lg" : "bg-md-background"
         }`}
       >
-        {/* Measured at 360px: the row wants 403px, of which the theme toggle and
-            its gap are 48. Tightening the gaps on a phone buys most of that
-            back, and `flex-wrap` covers the rest — a nav that runs out of room
-            drops to a second line instead of pushing the page sideways, which
-            is what it was doing at 320px even before the toggle existed. */}
-        <div className="site-shell flex min-h-16 flex-wrap items-center gap-x-3 gap-y-1 py-2 sm:flex-nowrap sm:gap-x-8 sm:py-0">
-          <Link
-            href="/"
-            className="text-[0.9375rem] font-medium tracking-tight text-md-on-surface whitespace-nowrap sm:text-[0.9375rem]"
-          >
-            Hoang Duc Viet
-          </Link>
+        {/* The bar is nested `work-breakout` inside `site-shell`, the way every
+            band on every page already is, so the first nav link starts on the
+            same vertical line as the content underneath it. Nested rather than
+            swapped: `work-breakout` carries no width rule below 1024, so on its
+            own it runs the bar edge to edge and drops the first link to x=0 on
+            a phone.
 
-          {/* Nav nam canh wordmark. `ml-auto` la thu toi them vao khi go nut doi
-              theme, va no day ca cum sang phai — mot hoi quy toi tu tao ra. */}
-          <nav className="ml-auto flex items-center gap-2.5 sm:gap-6">
-            {navItems.map((item) => {
-              const active = item.match(pathname);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`text-[0.8125rem] leading-5 sm:text-[0.9375rem] transition-colors duration-200 ease-md-standard ${
-                    active
-                      ? "text-md-on-surface font-medium"
-                      : "text-md-on-surface-variant hover:text-md-on-surface"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-            <ThemeToggle />
-          </nav>
+            Measured at 360px: the row wants 403px, of which the theme toggle
+            and its gap are 48. Tightening the gaps on a phone buys most of that
+            back, and `flex-wrap` covers the rest — a nav that runs out of room
+            drops to a second line instead of pushing the page sideways. */}
+        <div className="site-shell">
+          <div className="work-breakout flex min-h-16 flex-wrap items-center gap-x-3 gap-y-1 py-2 sm:flex-nowrap sm:gap-x-8 sm:py-0">
+            {/* No wordmark. Home is the first nav item, so the site is still one
+                click from anywhere, and the nav now starts at the content edge
+                instead of being pushed right by a name. */}
+            <nav className="flex items-center gap-2.5 sm:gap-6">
+              {navItems.map((item) => {
+                const active = item.match(pathname);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`text-[0.8125rem] leading-5 sm:text-[0.9375rem] transition-colors duration-200 ease-md-standard ${
+                      active
+                        ? "text-md-on-surface font-medium"
+                        : "text-md-on-surface-variant hover:text-md-on-surface"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Out of <nav>, because a theme switch is not navigation, and
+                held at the far edge so the bar is not one huddle on the left. */}
+            <span className="ml-auto flex items-center">
+              <ThemeToggle />
+            </span>
+          </div>
         </div>
       </header>
 
