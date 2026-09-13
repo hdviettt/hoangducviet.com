@@ -436,6 +436,7 @@ export default function WorkForm({
                     )
                   }
                   label="File"
+                  allowVideo
                 />
               </div>
             </div>

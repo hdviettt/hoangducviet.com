@@ -15,12 +15,24 @@ interface MediaPickerProps {
   value: string;
   onChange: (url: string) => void;
   label?: string;
+  /**
+   * Let this picker upload and choose video as well as images.
+   *
+   * Off by default on purpose: most call sites are thumbnails and og images,
+   * and a thumbnail that is an mp4 is a broken card. Only the media rows on a
+   * work item — the ones with an image/video type select next to them — set it.
+   */
+  allowVideo?: boolean;
 }
+
+const VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i;
+const isVideoUrl = (u: string) => VIDEO_EXT.test(u);
 
 export default function MediaPicker({
   value,
   onChange,
   label,
+  allowVideo = false,
 }: MediaPickerProps) {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -63,7 +75,11 @@ export default function MediaPicker({
   };
 
   const images = items.filter((i) => {
-    if (!i.mimeType?.startsWith("image/")) return false;
+    const mime = i.mimeType || "";
+    const ok =
+      mime.startsWith("image/") ||
+      (allowVideo && (mime.startsWith("video/") || isVideoUrl(i.filename)));
+    if (!ok) return false;
     if (search) {
       const q = search.toLowerCase();
       return (
@@ -89,7 +105,21 @@ export default function MediaPicker({
             title="View full size"
             className="relative w-28 h-20 border border-md-outline-variant bg-md-surface-container rounded-lg overflow-hidden shrink-0 hover:border-md-primary transition-colors"
           >
-            <img src={value} alt="" className="w-full h-full object-contain" />
+            {isVideoUrl(value) ? (
+              <video
+                src={value}
+                muted
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              <img
+                src={value}
+                alt=""
+                className="w-full h-full object-contain"
+              />
+            )}
           </button>
         ) : (
           <div className="w-20 h-14 border border-dashed border-md-outline-variant rounded-lg flex items-center justify-center shrink-0">
@@ -170,7 +200,7 @@ export default function MediaPicker({
                 {uploading ? "Uploading…" : "Upload new"}
                 <input
                   type="file"
-                  accept="image/*"
+                  accept={allowVideo ? "image/*,video/*" : "image/*"}
                   onChange={handleUpload}
                   className="hidden"
                   disabled={uploading}
@@ -214,11 +244,22 @@ export default function MediaPicker({
                             : "border-md-outline-variant hover:border-md-primary"
                         }`}
                       >
-                        <img
-                          src={item.url}
-                          alt={item.originalName}
-                          className="w-full h-full object-cover"
-                        />
+                        {isVideoUrl(item.filename) ||
+                        item.mimeType?.startsWith("video/") ? (
+                          <video
+                            src={item.url}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <img
+                            src={item.url}
+                            alt={item.originalName}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
                       </button>
                     );
                   })}
