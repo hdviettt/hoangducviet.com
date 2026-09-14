@@ -27,7 +27,8 @@ export default function ProfileHero({
   imageUrl,
 }: ProfileHeroProps) {
   // "Agentic AI Leader / Engineer" -> the two halves either side of the slash,
-  // so the separator can be styled without the string being written twice.
+  // so the separator can be set quieter than the words it separates without
+  // the string being written twice.
   const jobTitleParts = IDENTITY.jobTitle.split(" / ");
 
   return (
@@ -60,25 +61,20 @@ export default function ProfileHero({
                   {name}
                 </h1>
               )}
-              {/* The role, in the site's mono voice.
-                  Small tracked capitals under a large name read as a
-                  credential rather than as a second sentence, and the mono
-                  face is the one this site already uses for anything that is
-                  a fact about a thing rather than prose about it. The slash
-                  carries the accent because it is the load-bearing character:
-                  one role with two halves, not two jobs. */}
-              <p className="mt-2 flex items-center gap-2 font-mono text-[0.6875rem] uppercase leading-4 tracking-[0.16em] text-md-on-surface-variant sm:mt-2.5 sm:text-[0.75rem]">
-                <span
-                  aria-hidden="true"
-                  className="h-px w-5 shrink-0 bg-md-outline-variant sm:w-7"
-                />
-                <span>
-                  {jobTitleParts[0]}
-                  <span className="mx-[0.35em] font-medium text-primary">
-                    /
-                  </span>
-                  {jobTitleParts[1]}
+              {/* The role, set as a subtitle in the same face as the name.
+                  It was a tracked mono eyebrow, which under a 32px name came
+                  out at 12px of dispersed capitals and read as a file label
+                  rather than as a job. At the size the hierarchy actually
+                  wants, the words carry themselves: one step down from the
+                  name in size, one step up from the bio in weight. The slash
+                  goes to the outline colour, because a separator should be
+                  quieter than the two things it separates. */}
+              <p className="mt-1.5 text-[0.9375rem] font-medium leading-6 tracking-[-0.01em] text-md-on-surface-variant sm:mt-2 sm:text-[1.0625rem] sm:leading-7">
+                {jobTitleParts[0]}
+                <span className="mx-[0.3em] font-normal text-md-outline">
+                  /
                 </span>
+                {jobTitleParts[1]}
               </p>
             </div>
           </div>
