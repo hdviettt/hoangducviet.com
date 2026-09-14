@@ -1130,6 +1130,18 @@ html {
 .stack-row--fixed {
   --dot-size: 2.5rem;
 }
+/* The root size is fluid and bottoms out at 12.8px on a wide screen while a
+   phone sits at the full 16px, so one rem value drew a 40px disc on the phone
+   and a 36px disc on the desktop — the small screen carrying the larger mark.
+   That cost height where height is scarcest, and it left the widest row (six
+   discs) clearing a 320px column by five pixels, which is not a row that fits
+   but one that has not failed yet. Matching the desktop size gives the same
+   disc on both and takes the clearance to thirty-odd pixels. */
+@media (max-width: 639px) {
+  .stack-row--fixed {
+    --dot-size: 2.25rem;
+  }
+}
 .stack-dot {
   width: var(--dot-size);
   height: var(--dot-size);
@@ -1417,8 +1429,7 @@ html {
   height: 0.3125rem;
   border-radius: 9999px;
   background: hsl(var(--md-sys-color-on-surface) / 0.26);
-  transition:
-    width 200ms var(--md-sys-motion-easing-standard, ease),
+  transition: width 200ms var(--md-sys-motion-easing-standard, ease),
     background-color 200ms var(--md-sys-motion-easing-standard, ease);
 }
 
@@ -1462,9 +1473,6 @@ html {
   opacity: 0.35;
   cursor: default;
 }
-
-
-
 
 @media (max-width: 899px) {
 }

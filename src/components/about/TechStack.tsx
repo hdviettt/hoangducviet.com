@@ -25,23 +25,41 @@ export default function TechStack() {
       <h2 className="mb-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
         What I build with
       </h2>
-      {/* `max-content` on the label column rather than a fixed width: the
-          longest group name sets it, so the chips start at one edge without a
-          magic number that breaks the day a group is renamed. Below sm the
-          grid collapses to one column and each label sits above its own row. */}
-      {/* `gap-y-9` is measured, not chosen. The name pill sits 8px above its disc
-          and stands about 24px tall, so it reaches 32px into the row above; at
-          the old 16px gap it landed on the previous row's logos. 36px clears it
-          with 4px to spare. Below sm the pill is `display: none` and the gap
-          goes back to being about spacing. */}
-      <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-[max-content_1fr] sm:gap-y-9">
+      {/* Two group-columns from lg up, one below it.
+
+          Seven label-and-row pairs stacked in a single column spent 527px of
+          height at 1440 and stopped painting at x=513 inside a 1188px panel:
+          801px, two thirds of the width, held nothing. Height was the only
+          axis the panel was using, and it is the expensive one, because it is
+          the axis the reader has to scroll.
+
+          `max-content 1fr` repeated puts the second pair's label on the
+          midpoint, so auto-placement fills two groups per row and the seven
+          become four rows. The `1fr` matters: with `auto` the columns would
+          shrink to their contents and the two pairs would huddle at the left,
+          which is the same waste in a smaller package.
+
+          `max-content` on each label column rather than a fixed width: the
+          longest group name in that column sets it, so the dots start at one
+          edge without a magic number that breaks the day a group is renamed.
+          Below sm the grid collapses to one column and each label sits above
+          its own row. */}
+      {/* The row gap is measured against the hover pill, not chosen. The pill
+          sits 8px above its disc and stands about 24px tall, so it reaches
+          32px into the row above. `gap-y-9` cleared that outright, which is
+          what cost the height. It now clears by less and the pill is allowed
+          to overlap: it is opaque, it is on z-10, and it is only there while a
+          pointer is on the disc, which is what every tooltip does. Below sm
+          the pill is `display: none` and the gap is only spacing. */}
+      <div className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-[max-content_1fr] sm:gap-y-5 lg:grid-cols-[max-content_1fr_max-content_1fr] lg:gap-x-10 lg:gap-y-6">
         {TECH_STACK.map((g) => (
           <Fragment key={g.group}>
             {/* `-mb-2` only below sm. Stacked in one column the grid's row gap
                 falls both between a label and its own chips and between one
-                group and the next, so at seven groups every gap is 20px and
-                nothing says which label owns which row. Pulling the label 8px
-                closer to its chips is what makes the pairs read. */}
+                group and the next, so at seven groups every gap is the same
+                and nothing says which label owns which row. Pulling the label
+                8px closer leaves 4px under a label and 12px between groups,
+                and that three-to-one is what makes the pairs read. */}
             <div className="-mb-2 text-[0.8125rem] font-medium text-md-on-surface-variant sm:mb-0 sm:pt-[0.5rem]">
               {g.group}
             </div>
