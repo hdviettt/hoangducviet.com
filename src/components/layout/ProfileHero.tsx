@@ -61,17 +61,24 @@ export default function ProfileHero({
                   {name}
                 </h1>
               )}
-              {/* The role, set as a subtitle in the same face as the name.
-                  It was a tracked mono eyebrow, which under a 32px name came
-                  out at 12px of dispersed capitals and read as a file label
-                  rather than as a job. At the size the hierarchy actually
-                  wants, the words carry themselves: one step down from the
-                  name in size, one step up from the bio in weight. The slash
-                  goes to the outline colour, because a separator should be
-                  quieter than the two things it separates. */}
-              <p className="mt-1.5 text-[0.9375rem] font-medium leading-6 tracking-[-0.01em] text-md-on-surface-variant sm:mt-2 sm:text-[1.0625rem] sm:leading-7">
+              {/* The role, in the name's ink and the name's weight, one size
+                  step below it.
+
+                  What was here separated the role from the bio with weight
+                  alone: 500 against 400, at 15.3px against 13.5px, in the same
+                  grey. Two tiers 1.8px and zero contrast apart do not read as
+                  two tiers, so the role came out looking like a bolded first
+                  line of the bio. Worse, 500 against the name's 400 put the
+                  heavier stroke on the less important line.
+
+                  Colour separates the role from the bio now, and size
+                  separates it from the name, so weight is free to stay at 400
+                  everywhere and nothing is inverted. The slash drops to the
+                  bio's grey: quieter than the two halves it joins, without
+                  disappearing the way the outline colour did. */}
+              <p className="mt-1.5 text-[1.0625rem] leading-6 tracking-[-0.02em] text-md-on-surface sm:mt-2 md:text-[1.2rem] md:leading-7">
                 {jobTitleParts[0]}
-                <span className="mx-[0.3em] font-normal text-md-outline">
+                <span className="mx-[0.28em] text-md-on-surface-variant">
                   /
                 </span>
                 {jobTitleParts[1]}
