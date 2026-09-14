@@ -24,7 +24,11 @@ export const IDENTITY = {
   givenName: "Duc Viet",
   familyName: "Hoang",
   username: "hdviet",
-  jobTitle: "AI Leader",
+  // Shown under the name in ProfileHero and emitted as the Person node's
+  // jobTitle, so the page and the entity graph cannot disagree about what he
+  // does. The slash is meaningful: it is one role with two halves, not two
+  // jobs, and the UI colours it to say so.
+  jobTitle: "Agentic AI Leader / Engineer",
   email: "viethd2704@gmail.com",
   employer: { name: "SEONGON", url: "https://seongon.com" },
   description:
