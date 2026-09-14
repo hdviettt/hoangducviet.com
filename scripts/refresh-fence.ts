@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 const SLUG = process.argv[2], KEY = process.argv[3], UID = process.argv[4];
-const figs = JSON.parse(readFileSync(join(import.meta.dir ?? __dirname, "_teamfail.json"), "utf8"));
+const figs = JSON.parse(readFileSync(join((import.meta as any).dir ?? __dirname, "_teamfail.json"), "utf8"));
 const row = (await db.select().from(posts).where(eq(posts.slug, SLUG)))[0];
 let c = row.content as string;
 const marker = `rough-${SLUG}-${UID}`;

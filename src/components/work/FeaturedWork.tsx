@@ -73,7 +73,13 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
     <article className="site-grid items-start">
-      <div className={visual ? "col-1" : "col-2"}>
+      {/* Three parts, not two: the heading, the media, then the rest of the
+          prose. On a phone the grid is one column and DOM order wins, so the
+          media lands directly under the title instead of after the whole
+          pitch — it used to sit 611px below it at 390px wide. On desktop the
+          rows put head and body back in the left column with the media
+          spanning both, which is the layout it always had. */}
+      <div className={`${visual ? "col-1" : "col-2"} fw-head`}>
         {/* Chips when the project is tagged, the derived line when it is not.
             Not links: nothing on this site answers /topics/seo, and a chip that
             looks clickable and lands on a 404 is worse than a chip that does
@@ -108,29 +114,9 @@ export default function FeaturedWork({ project }: { project: Project }) {
             {project.title}
           </Link>
         </h3>
-
-        {project.description && (
-          <p className="mt-5 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-            {project.description}
-          </p>
-        )}
-
-        {(project.models.length > 0 || stack.length > 0) && (
-          <div className="mt-7">
-            <KitDots models={project.models} stack={stack} />
-          </div>
-        )}
-
-        <Link
-          href={href}
-          className="md-btn md-btn-outlined md-btn-pill md-btn-lg mt-8 no-underline"
-        >
-          View project
-          <Icon name="arrow_forward" size={20} aria-hidden="true" />
-        </Link>
       </div>
 
-      <div className="col-2">
+      <div className="col-2 fw-media">
         {isSet ? (
           // Not wrapped in a Link: the slides scroll and the controls are
           // buttons, so a link around them would swallow both. The title and
@@ -241,6 +227,28 @@ export default function FeaturedWork({ project }: { project: Project }) {
             ))}
           </dl>
         )}
+      </div>
+
+      <div className={`${visual ? "col-1" : "col-2"} fw-body`}>
+        {project.description && (
+          <p className="mt-5 text-[0.9375rem] leading-7 text-md-on-surface-variant">
+            {project.description}
+          </p>
+        )}
+
+        {(project.models.length > 0 || stack.length > 0) && (
+          <div className="mt-7">
+            <KitDots models={project.models} stack={stack} />
+          </div>
+        )}
+
+        <Link
+          href={href}
+          className="md-btn md-btn-outlined md-btn-pill md-btn-lg mt-8 no-underline"
+        >
+          View project
+          <Icon name="arrow_forward" size={20} aria-hidden="true" />
+        </Link>
       </div>
     </article>
   );

@@ -53,7 +53,8 @@ if (bad) { console.log("\n" + bad + " problem(s); nothing written."); process.ex
 if (!APPLY) { console.log("\npreflight clean. set APPLY=1 to write."); process.exit(0); }
 
 for (const [asset, key] of MAP) {
-  const [line] = lineFor(asset);
+  const line = lineFor(asset)[0];
+  if (!line) continue;
   content = content.replace(line, "```render\n" + figs[key] + "\n```");
 }
 

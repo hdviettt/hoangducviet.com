@@ -13,7 +13,7 @@ import { join } from "node:path";
 const SLUG = "why-our-ai-team-failed";
 const APPLY = process.env.APPLY === "1";
 const figs = JSON.parse(
-  readFileSync(join(import.meta.dir ?? __dirname, "_teamfail.json"), "utf8"),
+  readFileSync(join((import.meta as any).dir ?? __dirname, "_teamfail.json"), "utf8"),
 ) as Record<string, string>;
 
 // original asset -> generated figure
@@ -57,13 +57,14 @@ if (bad) { console.log("\n" + bad + " problem(s); nothing written."); process.ex
 if (!APPLY) { console.log("\npreflight clean. set APPLY=1 to write."); process.exit(0); }
 
 for (const [asset, key] of MAP) {
-  const [line] = lineFor(asset);
+  const line = lineFor(asset)[0];
+  if (!line) continue;
   content = content.replace(line, "```render\n" + figs[key] + "\n```");
 }
 
 const before = (row.content as string).length;
 writeFileSync(
-  join(import.meta.dir ?? __dirname, `_backup-${SLUG}.md`),
+  join((import.meta as any).dir ?? __dirname, `_backup-${SLUG}.md`),
   row.content as string,
   "utf8",
 );

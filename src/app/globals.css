@@ -510,6 +510,9 @@ h6 {
    scale means one floor. */
 :root {
   --shell-max: min(1140px, max(71.25vw, min(100vw - 48px, 912px)));
+  /* The 48px subtraction is a desktop measure. On a phone it is 24px a side
+     on top of the shell's own 20px padding, so 44px of a 390px screen was
+     gutter before anything was drawn. */
 }
 
 /* One knob for the whole public site.
@@ -568,6 +571,46 @@ html {
   }
   .site-grid > .col-2 {
     grid-column: span 2;
+  }
+}
+
+/* Featured work is three parts, and the grid decides where they go.
+
+   On a phone the grid is one column, so DOM order rules and the media lands
+   directly under the title. It used to sit 611px below it at 390px wide,
+   after the whole pitch and the button, which is the wrong end of the block
+   to meet a picture. On desktop the rows put the heading and the body back in
+   the left column with the media spanning both, which is the layout it had. */
+@media (min-width: 768px) {
+  .site-grid:has(> .fw-media) > .fw-head {
+    grid-row: 1;
+  }
+  .site-grid:has(> .fw-media) > .fw-body {
+    grid-row: 2;
+  }
+  .site-grid:has(> .fw-media) > .fw-media {
+    grid-row: 1 / span 2;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --shell-max: 100vw;
+  }
+  /* Three stacked parts want a tighter rhythm than two did. */
+  .site-grid:has(> .fw-media) {
+    row-gap: 1.5rem;
+  }
+  /* And the media runs past the prose gutter. A screenshot is the one thing
+     on the block that is hurt most by being small, and it is the one thing
+     that loses nothing by touching the edges. */
+  .fw-media {
+    margin-inline: -0.75rem;
+  }
+  /* Less peek, so the slide you are looking at gets the width instead of its
+     neighbour. */
+  .work-carousel .media-carousel {
+    --mc-peek: 2rem;
   }
 }
 
