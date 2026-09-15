@@ -46,10 +46,6 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // rest on its own page, which is what it used to do.
   const shown = project.media.filter((m) => m.src?.trim());
   const hero = shown[0];
-  const svgHero =
-    hero?.type === "image" && /\.svg(?:[?#]|$)/i.test(hero.src ?? "")
-      ? hero
-      : null;
   const clip = hero?.type === "video" ? hero : null;
   const shot = hero?.type === "image" ? hero : null;
   // Four is what every project carries and what the 2x2 grid is built for; the
@@ -110,7 +106,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
           </ul>
         )}
 
-        <h3 className="max-w-[17ch] text-balance text-[1.1875rem] font-medium leading-[1.25] tracking-[-0.013em] text-md-on-surface">
+        <h3 className="max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem] max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
           <Link
             href={href}
             className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
@@ -121,7 +117,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
       </div>
 
       <div className="col-2 fw-media">
-        {isSet && !svgHero ? (
+        {isSet ? (
           // Not wrapped in a Link: the slides scroll and the controls are
           // buttons, so a link around them would swallow both. The title and
           // the View project button already go to the project.
@@ -136,7 +132,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
               label={`${project.title}: media`}
             />
           </div>
-        ) : !visual ? null : art || svgHero ? (
+        ) : !visual ? null : art ? (
           // Purpose-drawn hero art, and the whole point of it is that it has no
           // frame: it sits on the page's own ground the way blog.google's
           // artwork does. A rounded box around the same pixels reads smaller,
@@ -145,17 +141,17 @@ export default function FeaturedWork({ project }: { project: Project }) {
           // read the page theme.
           <Link href={href} className="group block overflow-hidden rounded-2xl">
             <img
-              src={art ?? svgHero?.src}
-              alt={svgHero?.caption || project.title}
+              src={art}
+              alt={project.title}
               loading="lazy"
               decoding="async"
               className={`w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]${
-                darkTwin(art ?? svgHero?.src) ? " fig-light" : ""
+                darkTwin(art) ? " fig-light" : ""
               }`}
             />
-            {darkTwin(art ?? svgHero?.src) && (
+            {darkTwin(art) && (
               <img
-                src={darkTwin(art ?? svgHero?.src) as string}
+                src={darkTwin(art) as string}
                 alt=""
                 aria-hidden="true"
                 loading="lazy"

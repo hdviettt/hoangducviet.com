@@ -2,6 +2,7 @@ import { feedRowDate } from "@/components/posts/FeedRow";
 import { Icon } from "@/components/ui/Icon";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import FeaturedClip from "@/components/work/FeaturedClip";
+import ProjectContent from "@/components/work/ProjectContent";
 import { Chips } from "@/components/work/StackChips";
 import { IDENTITY } from "@/lib/identity";
 import { socialImages } from "@/lib/og";
@@ -222,11 +223,7 @@ export default async function ProjectDeepDivePage({
 
       {/* ===== The story ===== */}
       {project.content && (
-        <div
-          className="article-content mx-auto mt-14 max-w-[38.75rem] md:mt-16"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted admin content
-          dangerouslySetInnerHTML={{ __html: project.content }}
-        />
+        <ProjectContent content={project.content} />
       )}
 
       {/* ===== Writing ===== */}
