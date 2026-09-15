@@ -1010,6 +1010,19 @@ html {
     margin-left: 50%;
     transform: translateX(-50%);
   }
+
+  .project-content > p:has(> img),
+  .project-content > img {
+    width: min(1080px, calc(100vw - 5rem), calc(var(--shell-max) - 3rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .project-content > p:has(> img) img,
+  .project-content > img {
+    width: 100%;
+    max-width: none;
+  }
 }
 
 /* Vector diagrams from /figures/ carry fine labels; on phones let them pan
