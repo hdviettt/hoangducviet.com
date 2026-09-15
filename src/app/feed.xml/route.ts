@@ -1,5 +1,5 @@
-import { getPosts } from "@/lib/posts";
 import { getGlobalMetadata } from "@/lib/global";
+import { getPosts } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +53,11 @@ export async function GET() {
     <title>${escapeXml(siteTitle)}</title>
     <link>${escapeXml(baseUrl)}</link>
     <description>${escapeXml(siteDescription)}</description>
-    <language>vi</language>
+    <!-- The site is written in English and <html> has said lang="en" all
+         along; only the feed still claimed Vietnamese, which tells a reader
+         and every aggregator the wrong thing about what they are subscribing
+         to. -->
+    <language>en</language>
     <atom:link href="${escapeXml(`${baseUrl}/feed.xml`)}" rel="self" type="application/rss+xml"/>
 ${items}
   </channel>

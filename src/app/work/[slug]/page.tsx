@@ -115,12 +115,12 @@ export default async function ProjectDeepDivePage({
       </nav>
 
       {/* ===== Hero ===== */}
-      <header className="mt-8">
-        <h1 className="max-w-[20ch] text-balance text-[1.875rem] font-medium leading-[1.05] tracking-[-0.03em] text-md-on-surface sm:text-[2.4375rem]">
+      <header className="mx-auto mt-8 mb-10 max-w-[55rem] text-center md:mb-14">
+        <h1 className="text-balance text-[1.875rem] font-medium leading-[1.12] tracking-tight text-md-on-surface sm:text-[2.25rem] md:text-[3rem] md:leading-[1.08]">
           {project.title}
         </h1>
         {project.description && (
-          <p className="mt-5 max-w-[66ch] text-[0.9375rem] leading-[1.55] text-md-on-surface-variant">
+          <p className="mx-auto mt-5 max-w-[38.75rem] text-[0.9375rem] leading-6 text-md-on-surface-variant md:mt-7">
             {project.description}
           </p>
         )}
@@ -136,7 +136,7 @@ export default async function ProjectDeepDivePage({
         // A set of files belongs together, at the top, in one carousel. It used
         // to show the first file here and push the rest into a second carousel
         // far below the stack table, so a reader met half the project twice.
-        <div className="work-carousel work-breakout mt-10 md:mt-12">
+        <div className="mt-10 md:mt-12">
           <MediaCarousel
             items={shown.map((m) => ({
               src: m.src,
@@ -153,7 +153,7 @@ export default async function ProjectDeepDivePage({
         // khung 1044 cua vo trang. Do tren bai cua Google: cot chu ~808px, anh
         // ~1305px — anh rong gap 1.6 lan cot chu. Bang dung cot chu thi no
         // khong bao gio "khong lo" duoc, du co keo cao den may.
-        <figure className="work-breakout mt-10 md:mt-12">
+        <figure className="work-media-breakout mt-10 md:mt-12">
           <div className="overflow-hidden rounded-2xl bg-md-surface-container-low">
             {hero.type === "video" ? (
               <FeaturedClip
@@ -223,7 +223,7 @@ export default async function ProjectDeepDivePage({
       {/* ===== The story ===== */}
       {project.content && (
         <div
-          className="article-content mt-14 md:mt-16"
+          className="article-content mx-auto mt-14 max-w-[38.75rem] md:mt-16"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted admin content
           dangerouslySetInnerHTML={{ __html: project.content }}
         />

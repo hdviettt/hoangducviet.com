@@ -1003,6 +1003,13 @@ html {
     margin-left: 50%;
     transform: translateX(-50%);
   }
+
+  /* Work detail heroes use the same breakout measure as article figures. */
+  .work-media-breakout {
+    width: min(1080px, calc(100vw - 5rem), calc(var(--shell-max) - 3rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 /* Vector diagrams from /figures/ carry fine labels; on phones let them pan
