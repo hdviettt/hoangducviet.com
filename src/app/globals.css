@@ -871,11 +871,10 @@ html {
    because a corner radius is a change in shape, not in colour. */
 .shape-response {
   transition: border-radius var(--md-sys-motion-spatial-fast)
-      var(--md-sys-motion-easing-spatial),
-    background-color var(--md-sys-motion-effects-fast)
-      var(--md-sys-motion-easing-effects-fast),
+    var(--md-sys-motion-easing-spatial), background-color
+    var(--md-sys-motion-effects-fast) var(--md-sys-motion-easing-effects-fast),
     border-color var(--md-sys-motion-effects-fast)
-      var(--md-sys-motion-easing-effects-fast);
+    var(--md-sys-motion-easing-effects-fast);
 }
 .shape-response:hover {
   border-radius: var(--md-sys-shape-corner-large-increased);
@@ -1429,11 +1428,7 @@ html {
     var(--md-sys-motion-easing-spatial);
 }
 .dark .fw-panel {
-  background: linear-gradient(
-    150deg,
-    hsl(220 6% 13%) 0%,
-    hsl(220 8% 9%) 100%
-  );
+  background: linear-gradient(150deg, hsl(220 6% 13%) 0%, hsl(220 8% 9%) 100%);
 }
 
 /* The prose takes the slack so the button lands on the panel's floor. It still
@@ -1626,6 +1621,30 @@ html {
 .fw-card .work-carousel .media-carousel__frame > img,
 .fw-card .work-carousel .media-carousel__frame > video {
   transition: transform 500ms var(--md-sys-motion-easing-standard);
+  /* Grow from the top edge, not the middle. With the crop below anchored to the
+     top, a centre-origin scale would pull the top edge up and shave a few
+     pixels off the one part of the frame that is supposed to be protected. */
+  transform-origin: top center;
+}
+
+/* Fill the frame, and crop off the bottom rather than the top.
+ *
+ * A screen recording is about 1.59:1 and this frame is 16:9, so `contain` left
+ * a bar of mat down each side: measured 787x443 of frame holding 706x443 of
+ * picture, 81px of it empty. `cover` scales the picture until it fills the
+ * width instead, which pushes roughly 50px of it past the bottom edge.
+ *
+ * Which 50px is the whole point. A UI capture is top-weighted — the query box,
+ * the answer, the thing being demonstrated all sit up top, and the bottom is
+ * whatever the page happened to run into. `object-position: top` keeps the top
+ * edge pinned and spends the overflow entirely on the bottom.
+ *
+ * The mat is excluded: it is the blurred backdrop, and it is already sized to
+ * cover. Under this rule it is also completely hidden, which is the point. */
+.fw-card .work-carousel .media-carousel__frame > img:not(.media-carousel__mat),
+.fw-card .work-carousel .media-carousel__frame > video {
+  object-fit: cover;
+  object-position: top center;
 }
 .fw-card .work-carousel:hover .media-carousel__frame > img,
 .fw-card .work-carousel:hover .media-carousel__frame > video {
