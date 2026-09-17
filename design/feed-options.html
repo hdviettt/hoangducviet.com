@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feed row: three treatments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Google+Sans+Text:wght@400;500;700&display=swap">
+<style>
+/* ---------------------------------------------------------------
+   The site's own tokens, copied from globals.css as they stand on
+   the design/google-pass-1 branch. Light and dark both real.
+   --------------------------------------------------------------- */
+:root{
+  --primary:221 100% 47%;
+  --on-surface:0 0% 4%;
+  --on-surface-variant:227 5% 32%;
+  --surface:0 0% 100%;
+  --surface-container-low:220 43% 98%;
+  --surface-container:220 38% 96%;
+  --surface-container-high:220 35% 93%;
+  --outline:220 4% 47%;
+  --outline-variant:220 6% 78%;
+  --font-display:"Google Sans Flex","Google Sans",system-ui,sans-serif;
+  --font-text:"Google Sans Text","Google Sans",system-ui,sans-serif;
+  --eff-fast:150ms; --spa-fast:350ms;
+  --ease-eff:cubic-bezier(.31,.94,.34,1);
+  --ease-spa:cubic-bezier(.27,1.06,.18,1);
+}
+:root[data-theme="dark"]{
+  --primary:220 100% 78%;
+  --on-surface:0 0% 78%;
+  --on-surface-variant:213 7% 63%;
+  --surface:0 0% 7%;
+  --surface-container-low:0 0% 6%;
+  --surface-container:0 0% 9%;
+  --surface-container-high:0 0% 11%;
+  --outline:0 0% 42%;
+  --outline-variant:0 0% 24%;
+}
+*{box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:hsl(var(--surface));color:hsl(var(--on-surface));
+  font-family:var(--font-text);font-size:1rem;line-height:1.55;letter-spacing:0;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color 240ms var(--ease-eff),color 240ms var(--ease-eff);
+}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+@media(min-width:900px){.wrap{padding:0 56px}}
+
+/* ---------- chrome ---------- */
+.bar{
+  position:sticky;top:0;z-index:20;
+  background:hsl(var(--surface)/.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid hsl(var(--outline-variant));
+}
+.bar-in{max-width:1140px;margin:0 auto;padding:12px 20px;display:flex;gap:10px;
+  align-items:center;flex-wrap:wrap}
+@media(min-width:900px){.bar-in{padding:12px 56px}}
+.bar-title{font-family:var(--font-display);font-size:15px;font-weight:500;margin-right:auto;
+  letter-spacing:-.006em}
+.btn{
+  height:36px;padding:0 16px;border-radius:9999px;border:1px solid hsl(var(--outline-variant));
+  background:transparent;color:hsl(var(--on-surface-variant));font-family:var(--font-text);
+  font-size:13px;font-weight:500;cursor:pointer;position:relative;isolation:isolate;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:color var(--eff-fast) var(--ease-eff),border-color var(--eff-fast) var(--ease-eff);
+}
+.btn::before{content:"";position:absolute;inset:0;border-radius:inherit;background:currentColor;
+  opacity:0;z-index:-1;transition:opacity var(--eff-fast) var(--ease-eff)}
+.btn:hover::before{opacity:.08}
+.btn:hover{color:hsl(var(--on-surface));border-color:hsl(var(--outline))}
+.btn[aria-pressed="true"]{background:hsl(var(--primary));color:hsl(var(--surface));border-color:transparent}
+.btn:focus-visible{outline:2px solid hsl(var(--primary));outline-offset:2px}
+
+header.top{padding:56px 0 8px}
+h1{font-family:var(--font-display);font-size:clamp(28px,4.4vw,42px);line-height:1.08;
+  letter-spacing:-.024em;font-weight:400;margin:0 0 14px;max-width:18ch}
+.lede{color:hsl(var(--on-surface-variant));font-size:16px;line-height:26px;max-width:62ch;margin:0 0 8px}
+
+/* ---------- option panel ---------- */
+.opt{padding:44px 0;border-top:1px solid hsl(var(--outline-variant))}
+.opt[hidden]{display:none!important}
+.opt-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:6px;flex-wrap:wrap}
+.tag{flex:0 0 auto;width:30px;height:30px;border-radius:9999px;display:grid;place-items:center;
+  background:hsl(var(--surface-container-high));color:hsl(var(--on-surface));
+  font-family:var(--font-display);font-size:14px;font-weight:500}
+.opt h2{font-family:var(--font-display);font-size:24px;line-height:32px;letter-spacing:-.014em;
+  font-weight:400;margin:0;flex:1 1 220px}
+.opt .src{font-size:12px;color:hsl(var(--on-surface-variant));font-family:var(--font-text);
+  border:1px solid hsl(var(--outline-variant));border-radius:9999px;padding:4px 11px;align-self:center}
+.opt .why{color:hsl(var(--on-surface-variant));font-size:14.5px;line-height:23px;max-width:70ch;margin:10px 0 0}
+.trade{display:grid;grid-template-columns:1fr;gap:8px;margin:16px 0 28px;max-width:70ch}
+@media(min-width:760px){.trade{grid-template-columns:1fr 1fr}}
+.trade div{font-size:13.5px;line-height:21px;padding:11px 14px;border-radius:12px;
+  background:hsl(var(--surface-container-low));border:1px solid hsl(var(--outline-variant))}
+.trade b{font-family:var(--font-text);font-weight:500;display:block;margin-bottom:3px;font-size:12px;
+  letter-spacing:.3px;text-transform:uppercase;color:hsl(var(--on-surface-variant))}
+
+/* the feed column, at the width it has on the real site */
+.stage{max-width:720px}
+
+/* =============================================================
+   A — RULED LIST  (what the site has today)
+   ============================================================= */
+.a-row{
+  display:grid;grid-template-columns:1fr;gap:6px 24px;
+  padding:21px 0;border-bottom:1px solid hsl(var(--outline-variant));
+  text-decoration:none;color:inherit;
+}
+@media(min-width:640px){.a-row{grid-template-columns:92px 1fr;align-items:baseline}}
+.a-date{font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;
+  color:hsl(var(--on-surface-variant));padding-top:3px}
+.a-title{font-family:var(--font-display);font-size:19px;line-height:1.25;letter-spacing:-.013em;
+  font-weight:500;color:hsl(var(--on-surface));text-wrap:balance;
+  transition:color 200ms cubic-bezier(.2,0,0,1)}
+.a-row:hover .a-title{color:hsl(var(--primary))}
+.a-row:focus-visible{outline:2px solid hsl(var(--primary));outline-offset:2px}
+/* series */
+.a-series{padding:26px 0;border-bottom:1px solid hsl(var(--outline-variant));
+  display:grid;grid-template-columns:1fr;gap:6px 24px}
+@media(min-width:640px){.a-series{grid-template-columns:92px 1fr}}
+.a-parts{display:grid;gap:0 40px;margin-top:14px}
+@media(min-width:640px){.a-parts{grid-template-columns:1fr 1fr}}
+.a-part{display:flex;gap:12px;align-items:baseline;padding:7px 0;text-decoration:none}
+.a-num{width:20px;flex:0 0 auto;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;
+  color:hsl(var(--primary)/.75)}
+.a-ptitle{font-size:15px;line-height:1.35;color:hsl(var(--on-surface-variant));
+  transition:color 200ms cubic-bezier(.2,0,0,1)}
+.a-part:hover .a-ptitle{color:hsl(var(--primary))}
+
+/* =============================================================
+   B — CARD LIST  (fonts.google.com)
+   ============================================================= */
+.b-list{display:flex;flex-direction:column;gap:10px}
+.b-card{
+  display:block;text-decoration:none;color:inherit;position:relative;isolation:isolate;
+  padding:18px 20px;border-radius:16px;
+  /* surface-container, not -low. In dark the page ground is surface at 7% and
+     surface-container-low is 6%, so a card built on it is DARKER than the page
+     it floats on. -container is 9% and reads as a card in both themes. */
+  background:hsl(var(--surface-container));
+  transition:border-radius var(--spa-fast) var(--ease-spa);
+}
+.b-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:currentColor;
+  opacity:0;z-index:-1;pointer-events:none;transition:opacity var(--eff-fast) var(--ease-eff)}
+.b-card:hover::before{opacity:.05}
+.b-card:active::before{opacity:.09}
+.b-card:hover{border-radius:22px}
+.b-card:focus-visible{outline:2px solid hsl(var(--primary));outline-offset:2px}
+.b-date{font-size:12.5px;font-weight:500;font-variant-numeric:tabular-nums;
+  color:hsl(var(--on-surface-variant));display:block;margin-bottom:5px}
+.b-title{font-family:var(--font-display);font-size:19px;line-height:1.28;letter-spacing:-.013em;
+  font-weight:500;text-wrap:balance;display:block}
+/* series card holds its parts */
+.b-series{padding:20px;border-radius:20px;background:hsl(var(--surface-container-high));}
+.b-chip{display:inline-block;font-size:11.5px;font-weight:500;letter-spacing:.2px;
+  padding:3px 10px;border-radius:9999px;background:hsl(var(--primary)/.12);
+  color:hsl(var(--primary));margin-bottom:9px}
+.b-parts{display:grid;gap:2px 28px;margin-top:12px}
+@media(min-width:640px){.b-parts{grid-template-columns:1fr 1fr}}
+.b-part{display:flex;gap:11px;align-items:baseline;padding:7px 10px;border-radius:9px;
+  text-decoration:none;color:inherit;position:relative;isolation:isolate}
+.b-part::before{content:"";position:absolute;inset:0;border-radius:inherit;background:currentColor;
+  opacity:0;z-index:-1;transition:opacity var(--eff-fast) var(--ease-eff)}
+.b-part:hover::before{opacity:.06}
+.b-pnum{width:19px;flex:0 0 auto;font-size:12.5px;font-weight:500;font-variant-numeric:tabular-nums;
+  color:hsl(var(--primary)/.8)}
+.b-ptitle{font-size:14.5px;line-height:1.35;color:hsl(var(--on-surface-variant))}
+
+/* =============================================================
+   C — WHITESPACE LIST  (google.com/search, news.google.com)
+   ============================================================= */
+.c-list{display:flex;flex-direction:column;gap:30px}
+.c-row{display:block;text-decoration:none;color:inherit;max-width:640px}
+.c-date{font-size:12.5px;font-weight:400;font-variant-numeric:tabular-nums;
+  color:hsl(var(--on-surface-variant));display:block;margin-bottom:4px;letter-spacing:.1px}
+.c-title{font-family:var(--font-display);font-size:21px;line-height:1.26;letter-spacing:-.016em;
+  font-weight:400;display:block;text-wrap:balance;
+  transition:color 200ms cubic-bezier(.2,0,0,1)}
+.c-row:hover .c-title{color:hsl(var(--primary));text-decoration:underline;text-underline-offset:3px;
+  text-decoration-thickness:1px}
+.c-row:focus-visible{outline:2px solid hsl(var(--primary));outline-offset:3px;border-radius:6px}
+.c-series{max-width:640px}
+.c-parts{margin-top:10px;padding-left:1px;display:grid;gap:1px}
+.c-part{display:flex;gap:10px;align-items:baseline;padding:5px 0;text-decoration:none;color:inherit}
+.c-pnum{width:18px;flex:0 0 auto;font-size:12.5px;font-variant-numeric:tabular-nums;
+  color:hsl(var(--on-surface-variant))}
+.c-ptitle{font-size:14.5px;line-height:1.4;color:hsl(var(--on-surface-variant))}
+.c-part:hover .c-ptitle{color:hsl(var(--primary));text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- measurements strip ---------- */
+.meas{margin-top:30px;border:1px solid hsl(var(--outline-variant));border-radius:14px;overflow-x:auto}
+.meas table{border-collapse:collapse;width:100%;font-size:13px;min-width:600px}
+.dim{color:hsl(var(--on-surface-variant))}
+.meas th{text-align:left;font-family:var(--font-text);font-weight:500;font-size:11.5px;
+  letter-spacing:.3px;text-transform:uppercase;color:hsl(var(--on-surface-variant));
+  padding:10px 14px;background:hsl(var(--surface-container-low));
+  border-bottom:1px solid hsl(var(--outline-variant));white-space:nowrap}
+.meas td{padding:9px 14px;border-bottom:1px solid hsl(var(--outline-variant)/.55);vertical-align:top}
+.meas tr:last-child td{border-bottom:0}
+.meas td:first-child{color:hsl(var(--on-surface-variant));white-space:nowrap}
+
+footer{padding:40px 0 80px;color:hsl(var(--on-surface-variant));font-size:13px;
+  border-top:1px solid hsl(var(--outline-variant));margin-top:40px}
+
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="bar-title">Feed row &middot; three treatments</span>
+    <button class="btn" id="theme" aria-pressed="false">Dark</button>
+    <button class="btn" data-show="all" aria-pressed="true">All</button>
+    <button class="btn" data-show="a" aria-pressed="false">A only</button>
+    <button class="btn" data-show="b" aria-pressed="false">B only</button>
+    <button class="btn" data-show="c" aria-pressed="false">C only</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <h1>The same eight posts, three ways</h1>
+    <p class="lede">Real titles, real dates, the real series block, at the real type sizes and the real
+    column width. Hover the rows. Tab through them. Flip to dark.</p>
+    <p class="lede">The series is the case that decides this. Six standalone posts and one nine-part
+    collection have to live in the same list, and the treatment that only looks good with flat rows is
+    not a treatment.</p>
+  </header>
+
+  <!-- ========================= A ========================= -->
+  <section class="opt" data-opt="a">
+    <div class="opt-head">
+      <span class="tag">A</span>
+      <h2>Ruled list</h2>
+      <span class="src">what the site has today</span>
+    </div>
+    <p class="why">A date column, a title, a hairline between. Hover changes the title colour and nothing
+    else, which the measurement says is the correct pair for a ruled row: across blog.google and
+    fonts.google.com, no element that gains a hover plate also carries a rule.</p>
+    <div class="trade">
+      <div><b>For</b> Dense. Nine parts of a series fit without the page getting long. The date column
+      gives every row the same left edge, which is what makes it scannable.</div>
+      <div><b>Against</b> It is the least Google-like of the three. No Google index surface uses rules
+      between rows. It reads editorial, closer to a newspaper index than to a product.</div>
+    </div>
+
+    <div class="stage">
+      <a class="a-row" href="#a"><span class="a-date">12.08.2026</span><span class="a-title">A brief history of SEO content writing with AI</span></a>
+      <a class="a-row" href="#a"><span class="a-date">03.08.2026</span><span class="a-title">I tried to train a cross-encoder from scratch and it sucked</span></a>
+      <a class="a-row" href="#a"><span class="a-date">01.08.2026</span><span class="a-title">A CMS-adaptable LLM pipeline for SEO-compliant content publishing</span></a>
+      <div class="a-series">
+        <span class="a-date">25.04.2026</span>
+        <div>
+          <a class="a-title" href="#a" style="display:inline-block;text-decoration:none">Building a mini search engine</a>
+          <div class="a-parts">
+            <div>
+              <a class="a-part" href="#a"><span class="a-num">01</span><span class="a-ptitle">Web crawling in search engines</span></a>
+              <a class="a-part" href="#a"><span class="a-num">02</span><span class="a-ptitle">Designing the web crawler</span></a>
+              <a class="a-part" href="#a"><span class="a-num">03</span><span class="a-ptitle">The inverted index</span></a>
+              <a class="a-part" href="#a"><span class="a-num">04</span><span class="a-ptitle">Ranking with BM25</span></a>
+              <a class="a-part" href="#a"><span class="a-num">05</span><span class="a-ptitle">Ranking with PageRank</span></a>
+            </div>
+            <div>
+              <a class="a-part" href="#a"><span class="a-num">06</span><span class="a-ptitle">AI Overviews</span></a>
+              <a class="a-part" href="#a"><span class="a-num">07</span><span class="a-ptitle">Neural reranking with BERT</span></a>
+              <a class="a-part" href="#a"><span class="a-num">08</span><span class="a-ptitle">Query understanding</span></a>
+              <a class="a-part" href="#a"><span class="a-num">09</span><span class="a-ptitle">Measuring search quality</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="a-row" href="#a"><span class="a-date">20.07.2026</span><span class="a-title">An agent platform for SEONGON, built around human procedures</span></a>
+      <a class="a-row" href="#a"><span class="a-date">28.04.2026</span><span class="a-title">Why our AI team failed</span></a>
+    </div>
+  </section>
+
+  <!-- ========================= B ========================= -->
+  <section class="opt" data-opt="b">
+    <div class="opt-head">
+      <span class="tag">B</span>
+      <h2>Card list</h2>
+      <span class="src">fonts.google.com</span>
+    </div>
+    <p class="why">No rules. Each row is a 16px-radius card on a tonal surface and the gap between cards
+    does the separating. Hover is the M3 state layer plus a radius response, which is the pattern the
+    plate was actually designed for. The series becomes one larger card holding its parts, which is the
+    only treatment here that gives the collection a visible container.</p>
+    <div class="trade">
+      <div><b>For</b> The most Google-like of the three, and the only one where hover can do something.
+      The series reads as a unit rather than as a row that happens to be taller.</div>
+      <div><b>Against</b> Heavier. Eight cards is a lot of surface on a page that currently has none, and
+      it pushes the list longer. Risks looking like a dashboard rather than a body of writing.</div>
+    </div>
+
+    <div class="stage">
+      <div class="b-list">
+        <a class="b-card" href="#b"><span class="b-date">12.08.2026</span><span class="b-title">A brief history of SEO content writing with AI</span></a>
+        <a class="b-card" href="#b"><span class="b-date">03.08.2026</span><span class="b-title">I tried to train a cross-encoder from scratch and it sucked</span></a>
+        <a class="b-card" href="#b"><span class="b-date">01.08.2026</span><span class="b-title">A CMS-adaptable LLM pipeline for SEO-compliant content publishing</span></a>
+        <div class="b-series">
+          <span class="b-chip">9-part series</span>
+          <span class="b-date">25.04.2026</span>
+          <a class="b-title" href="#b" style="text-decoration:none;color:inherit">Building a mini search engine</a>
+          <div class="b-parts">
+            <a class="b-part" href="#b"><span class="b-pnum">01</span><span class="b-ptitle">Web crawling in search engines</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">06</span><span class="b-ptitle">AI Overviews</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">02</span><span class="b-ptitle">Designing the web crawler</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">07</span><span class="b-ptitle">Neural reranking with BERT</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">03</span><span class="b-ptitle">The inverted index</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">08</span><span class="b-ptitle">Query understanding</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">04</span><span class="b-ptitle">Ranking with BM25</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">09</span><span class="b-ptitle">Measuring search quality</span></a>
+            <a class="b-part" href="#b"><span class="b-pnum">05</span><span class="b-ptitle">Ranking with PageRank</span></a>
+          </div>
+        </div>
+        <a class="b-card" href="#b"><span class="b-date">20.07.2026</span><span class="b-title">An agent platform for SEONGON, built around human procedures</span></a>
+        <a class="b-card" href="#b"><span class="b-date">28.04.2026</span><span class="b-title">Why our AI team failed</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= C ========================= -->
+  <section class="opt" data-opt="c">
+    <div class="opt-head">
+      <span class="tag">C</span>
+      <h2>Whitespace list</h2>
+      <span class="src">google.com/search &middot; news.google.com</span>
+    </div>
+    <p class="why">No rules and no cards. The date sits above the title as a quiet label, the title carries
+    the row at 21px, and 30px of space does the separating. Hover underlines, which is what a Google
+    search result does. This is what news.google.com actually renders: the probe found zero ruled rows
+    on it.</p>
+    <div class="trade">
+      <div><b>For</b> The lightest and the most confident. Nothing is drawn that is not content. Titles
+      get bigger because they no longer share a line with a date column.</div>
+      <div><b>Against</b> Loses the date column's shared left edge, so the list scans less like an index.
+      Nine series parts have no container at all and can drift into the posts around them.</div>
+    </div>
+
+    <div class="stage">
+      <div class="c-list">
+        <a class="c-row" href="#c"><span class="c-date">12.08.2026</span><span class="c-title">A brief history of SEO content writing with AI</span></a>
+        <a class="c-row" href="#c"><span class="c-date">03.08.2026</span><span class="c-title">I tried to train a cross-encoder from scratch and it sucked</span></a>
+        <a class="c-row" href="#c"><span class="c-date">01.08.2026</span><span class="c-title">A CMS-adaptable LLM pipeline for SEO-compliant content publishing</span></a>
+        <div class="c-series">
+          <span class="c-date">25.04.2026 &middot; 9 parts</span>
+          <a class="c-title" href="#c" style="text-decoration:none;color:inherit">Building a mini search engine</a>
+          <div class="c-parts">
+            <a class="c-part" href="#c"><span class="c-pnum">01</span><span class="c-ptitle">Web crawling in search engines</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">02</span><span class="c-ptitle">Designing the web crawler</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">03</span><span class="c-ptitle">The inverted index</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">04</span><span class="c-ptitle">Ranking with BM25</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">05</span><span class="c-ptitle">Ranking with PageRank</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">06</span><span class="c-ptitle">AI Overviews</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">07</span><span class="c-ptitle">Neural reranking with BERT</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">08</span><span class="c-ptitle">Query understanding</span></a>
+            <a class="c-part" href="#c"><span class="c-pnum">09</span><span class="c-ptitle">Measuring search quality</span></a>
+          </div>
+        </div>
+        <a class="c-row" href="#c"><span class="c-date">20.07.2026</span><span class="c-title">An agent platform for SEONGON, built around human procedures</span></a>
+        <a class="c-row" href="#c"><span class="c-date">28.04.2026</span><span class="c-title">Why our AI team failed</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="opt" data-opt="all-meas">
+    <div class="opt-head"><span class="tag">&middot;</span><h2>Side by side</h2></div>
+    <div class="meas">
+      <table>
+        <thead><tr><th></th><th>A &mdash; ruled</th><th>B &mdash; cards</th><th>C &mdash; whitespace</th></tr></thead>
+        <tbody>
+          <tr><td>Separator</td><td>1px rule</td><td>10px gap + tonal fill</td><td>30px gap</td></tr>
+          <tr><td>Title</td><td>19px / 500</td><td>19px / 500</td><td>21px / 400</td></tr>
+          <tr><td>Date</td><td>13px, 92px column</td><td>12.5px, above title</td><td>12.5px, above title</td></tr>
+          <tr><td>Hover</td><td>colour only</td><td>state layer + radius</td><td>colour + underline</td></tr>
+          <tr><td>Series</td><td>taller row, 2 columns</td><td>its own card, chip</td><td>indented, no container</td></tr>
+          <tr><td>Surfaces used</td><td>none</td><td>2 tonal steps</td><td>none</td></tr>
+          <tr><td>Seen at Google</td><td class="dim">not on any index surface measured</td><td>fonts.google.com</td><td>news.google.com, Search</td></tr>
+          <tr><td>Height of this list</td><td><span id="hA">&mdash;</span></td><td><span id="hB">&mdash;</span></td><td><span id="hC">&mdash;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Tokens copied from <code>globals.css</code> on <code>design/google-pass-1</code>. Type rendered in
+    Google Sans Flex and Google Sans Text. Nothing here has touched the site.
+  </footer>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('theme');
+  themeBtn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', dark ? 'light' : 'dark');
+    themeBtn.textContent = dark ? 'Dark' : 'Light';
+    themeBtn.setAttribute('aria-pressed', String(!dark));
+  });
+
+  var showBtns = [].slice.call(document.querySelectorAll('[data-show]'));
+  showBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var want = b.getAttribute('data-show');
+      showBtns.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      [].slice.call(document.querySelectorAll('.opt')).forEach(function (sec) {
+        var k = sec.getAttribute('data-opt');
+        sec.hidden = !(want === 'all' || k === want || k === 'all-meas');
+      });
+      measure();
+    });
+  });
+
+  function measure() {
+    [['a','hA'],['b','hB'],['c','hC']].forEach(function (pair) {
+      var sec = document.querySelector('[data-opt="' + pair[0] + '"] .stage');
+      var out = document.getElementById(pair[1]);
+      if (!sec || !out) return;
+      out.textContent = sec.hidden || sec.offsetParent === null
+        ? '—' : Math.round(sec.getBoundingClientRect().height) + 'px';
+    });
+  }
+  window.addEventListener('load', measure);
+  window.addEventListener('resize', measure);
+  measure();
+})();
+</script>
+</body>
+</html>

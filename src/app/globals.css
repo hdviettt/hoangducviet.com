@@ -282,13 +282,27 @@
     --md-sys-color-surface: 0 0% 7%;
     --md-sys-color-on-surface: 0 0% 78%; /* #C7C7C7, 11.08:1 */
     --md-sys-color-surface-variant: 0 0% 10%;
+    /* The skeleton bar has to clear the page too: it was reading against a
+       surface-container-highest that has since moved. */
     --md-sys-color-on-surface-variant: 213 7% 63%; /* #9AA0A6, 7.09:1 */
 
+    /* The ramp used to run 5, 6, 9, 11, 13 against a surface of 7, which put
+       BOTH -lowest and -low below the page ground. A container darker than the
+       page it sits on is not a container, it is a hole, and the site had five
+       of them: the prev/next cards under every post rendered #0f0f0f on #121212
+       and only became lighter than the page when hovered. The card was a recess
+       at rest and a card when pointed at, which is backwards.
+
+       Measured on Google's own M3 dark palette: surface #131314 at 7.6%, and of
+       the five containers only -lowest (5.5%) sits below it. -low is 10.6%,
+       -container 12.2%, -high 16.5%, -highest 20.8%. This is that shape against
+       this palette's 7% ground, kept a little tighter because the rest of the
+       dark design is quiet. -lowest keeps its job as the one recessed step. */
     --md-sys-color-surface-container-lowest: 0 0% 5%;
-    --md-sys-color-surface-container-low: 0 0% 6%;
-    --md-sys-color-surface-container: 0 0% 9%;
-    --md-sys-color-surface-container-high: 0 0% 11%;
-    --md-sys-color-surface-container-highest: 0 0% 13%;
+    --md-sys-color-surface-container-low: 0 0% 10%;
+    --md-sys-color-surface-container: 0 0% 12%;
+    --md-sys-color-surface-container-high: 0 0% 15%;
+    --md-sys-color-surface-container-highest: 0 0% 18%;
 
     --md-sys-color-outline: 0 0% 42%; /* #6B6B6B, 3.52:1 — operable */
     /* Raised from 16% (#2A2A2A, 1.31:1) to match what the light seam is now.
