@@ -27,7 +27,16 @@ import Link from "next/link";
  * column and drags its rail and captions out of alignment. A teaser wants one
  * still frame; the carousel belongs on the project page.
  */
-export default function FeaturedWork({ project }: { project: Project }) {
+export default function FeaturedWork({
+  project,
+  index = 0,
+}: {
+  project: Project;
+  // Which of the four washes this card wears. The caller owns it because only
+  // the caller knows the card's place in the list, and a tint that restarted
+  // per component would put two of the same colour next to each other.
+  index?: number;
+}) {
   const href = `/work/${project.slug}`;
   // Four fallbacks, strongest first: a hero image set as the thumbnail, then
   // the first media item (clip or screenshot), then the project's own numbers.
@@ -72,7 +81,10 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // gutters, so 880px of a 1320px row is gutter and the art column collapses
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
-    <article className={`fw-card ${visual ? "fw-card--split" : ""}`}>
+    <article
+      className={`fw-card ${visual ? "fw-card--split" : ""}`}
+      data-tint={index % 4}
+    >
       {/* Four parts: chips, heading, media, then the rest of the prose. On a
           phone the card is one column and DOM order wins, so the media lands
           directly under the title instead of after the whole pitch — it used

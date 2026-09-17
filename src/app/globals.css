@@ -1371,15 +1371,72 @@ html {
    rule. Corners respond on hover for the same reason they must not on the post
    feed -- a card has no separator for the shape to argue with.
    ================================ */
+/* Four soft washes, cycling, so six identical cards stop reading as one.
+ *
+ * The values are Google's, not invented: the 95 and 99 tones of the GM3
+ * reference palette, read off ai.google.dev. Those tones exist for exactly this
+ * -- blog.google's full-bleed band is a lavender-to-mint wash built from the
+ * same range. Using the published tones is what keeps four tinted cards from
+ * becoming four different opinions.
+ *
+ *   blue   #ecf3fe -> #fafbff     primary95  -> primary99
+ *   cyan   #dff3ff -> #f7fcff     secondary95 -> secondary99
+ *   green  #e7f8ed -> #f2ffee     tertiary95 -> tertiary99
+ *   warm   #fef7e0 -> #fffbf9     yellow50   -> error99
+ *
+ * Every wash runs the same angle, the same distance and the same two steps of
+ * the same scale, so the set reads as one material seen in four lights rather
+ * than as four materials. The end stop is within a point of white in all four,
+ * which is why the bottom of every card still agrees with the page.
+ */
 .fw-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   row-gap: 1.5rem;
-  background: hsl(var(--md-sys-color-surface-container-low));
+  --tint-a: 217 90% 96%;
+  --tint-b: 225 100% 99%;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--tint-a)) 0%,
+    hsl(var(--tint-b)) 100%
+  );
   border-radius: var(--md-sys-shape-corner-extra-large);
   padding: 1.5rem;
   transition: border-radius var(--md-sys-motion-spatial-fast)
     var(--md-sys-motion-easing-spatial);
+}
+.fw-card[data-tint="1"] {
+  --tint-a: 203 100% 94%;
+  --tint-b: 205 100% 99%;
+}
+.fw-card[data-tint="2"] {
+  --tint-a: 141 55% 94%;
+  --tint-b: 140 90% 98%;
+}
+.fw-card[data-tint="3"] {
+  --tint-a: 46 94% 94%;
+  --tint-b: 30 100% 99%;
+}
+
+/* Dark keeps the hues and drops the light. A 94% tone inverted is not a dark
+   tint, it is a grey, so these are set at the surface-container-low lightness
+   this palette already uses (10%) with just enough chroma to separate the
+   cards, fading to the 7% ground rather than to white. */
+.dark .fw-card {
+  --tint-a: 221 26% 12%;
+  --tint-b: 220 10% 9%;
+}
+.dark .fw-card[data-tint="1"] {
+  --tint-a: 199 28% 12%;
+  --tint-b: 205 10% 9%;
+}
+.dark .fw-card[data-tint="2"] {
+  --tint-a: 145 20% 11%;
+  --tint-b: 140 8% 9%;
+}
+.dark .fw-card[data-tint="3"] {
+  --tint-a: 40 24% 11%;
+  --tint-b: 35 10% 9%;
 }
 @media (hover: hover) {
   .fw-card:hover {

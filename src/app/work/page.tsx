@@ -49,9 +49,9 @@ export default async function WorkPage() {
           roi mot carousel toan man. Hai trang cung gioi thieu mot du an ma
           trinh bay khac nhau thi doc ra la hai san pham. */}
       <div className="work-breakout flex flex-col gap-4 pt-12 md:pt-16">
-        {projects.map((p) => (
+        {projects.map((p, i) => (
           <div key={p.slug}>
-            <FeaturedWork project={p} />
+            <FeaturedWork project={p} index={i} />
           </div>
         ))}
       </div>

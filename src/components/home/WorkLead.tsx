@@ -40,9 +40,9 @@ export default function WorkLead({ projects }: { projects: Project[] }) {
       {/* The same separators /work uses, so a project sits in the same frame on
           both pages rather than in a homepage-shaped one. */}
       <div className="work-breakout mt-9 flex flex-col gap-4 md:mt-12">
-        {projects.map((p) => (
+        {projects.map((p, i) => (
           <div key={p.slug}>
-            <FeaturedWork project={p} />
+            <FeaturedWork project={p} index={i} />
           </div>
         ))}
 
