@@ -12,7 +12,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", '"Google Sans"', "system-ui", "sans-serif"],
+        // `sans` is the default the <body> carries, so it is the reading face.
+        // Anything that wants the display face asks for it: `font-display`.
+        sans: ["var(--font-text)", '"Google Sans"', "system-ui", "sans-serif"],
+        display: [
+          "var(--font-inter)",
+          '"Google Sans"',
+          "system-ui",
+          "sans-serif",
+        ],
         mono: [
           "var(--font-mono)",
           '"Roboto Mono"',

@@ -8,7 +8,7 @@
 const ROWS = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"];
 
 const Bar = ({ className }: { className: string }) => (
-  <div className={`animate-pulse rounded bg-muted ${className}`} />
+  <div className={`skeleton ${className}`} />
 );
 
 export default function PostsLoading() {
@@ -36,7 +36,7 @@ export default function PostsLoading() {
               {/* Deterministic widths so the placeholder does not shimmer into
                   a different shape on every render. */}
               <div
-                className="h-5 animate-pulse rounded bg-muted"
+                className="skeleton h-5"
                 style={{ width: `${68 + ((i * 13) % 26)}%` }}
               />
             </div>

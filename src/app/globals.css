@@ -49,16 +49,49 @@
     --md-sys-color-surface-container-high: 220 13% 93%;
     --md-sys-color-surface-container-highest: 220 13% 91%;
 
-    --md-sys-color-outline: 220 9% 86%; /* #DADCE0 */
-    --md-sys-color-outline-variant: 213 21% 90%; /* #e1e6ec — deepmind hairline */
+    /* Two boundary tiers, and they were both in the decorative tier.
+       Measured against white: the old `outline` was 1.40:1 and `outline-variant`
+       1.27:1, so the token reached for when a boundary should be *seen* was
+       fainter than Google's `outline-variant` (#c4c7c5, 1.70:1), which is the
+       one Google uses when a boundary should go unnoticed. There was no
+       visible-hairline option in the system at all.
+
+       `outline` is now 4.55:1 and clears WCAG 1.4.11's 3:1 for a UI boundary,
+       matching Google's #747775 at 4.57:1.
+
+       `outline-variant` moves too, and it matters more, because it is the token
+       carrying all 147 of the site's hairlines: feed row rules, card edges, the
+       work block separators. Google's decorative seam is #c4c7c5 at 1.70:1;
+       this is the same value in the palette's own blue hue rather than Google's
+       green-grey. The old 1.27:1 is why the pages could read washed out at a
+       glance while the type was nearly black. */
+    --md-sys-color-outline: 220 4% 47%; /* #73767d, 4.55:1 — operable */
+    --md-sys-color-outline-variant: 220 6% 78%; /* #c4c6ca, 1.71:1 — seam */
+
+    /* The highlight that travels across a loading placeholder. It has to be
+       lighter than the bar in both themes, and the bar is a light grey in one
+       and a dark grey in the other, so it cannot be a surface role. */
+    --skeleton-sweep: 0 0% 100% / 0.9;
 
     --md-sys-color-inverse-surface: 220 7% 18%;
     --md-sys-color-inverse-on-surface: 220 14% 96%;
     --md-sys-color-inverse-primary: 223 100% 76%;
 
-    /* Google Sans Flex loaded via <link> in layout.tsx; the variable keeps its
-       historical name so every existing reference resolves to the new family. */
+    /* Two faces, the way Google actually sets type. Measured on
+       m3.material.io: display, headline and title-large resolve to Google Sans,
+       while body, label, title-medium and title-small resolve to Google Sans
+       Text. ai.google.dev and news.google.com do the same in production.
+
+       Google Sans Text is not a styling variant. It is cut for small sizes:
+       taller x-height, more open counters, less stroke contrast. Setting the
+       display face at 13px is the exact case it exists to fix, and it is most
+       of why the old global 0.5px of tracking felt necessary at all.
+
+       --font-inter keeps its historical name so the twenty-odd existing
+       references resolve unchanged. It is the display face. */
     --font-inter: "Google Sans Flex", "DM Sans", Arial, Helvetica, sans-serif;
+    --font-text: "Google Sans Text", "Google Sans Flex", "DM Sans", Arial,
+      Helvetica, sans-serif;
 
     /* ----- M3 shape (corner radius) ----- */
     --md-sys-shape-corner-none: 0;
@@ -165,7 +198,7 @@
        heading  #EDEDED  16.00:1      link       #8FB2FF   8.90:1
        body     #C7C7C7  11.08:1      link hover #B9CEFF  11.90:1
        muted    #9AA0A6   7.09:1      border     #6B6B6B   3.52:1  (1.4.11)
-       seam     #2A2A2A   1.31:1  decorative only, never the only separator
+       seam     #3d3d3d   1.72:1  the hairline under every feed row
 
      #121212 and not #000: a pure black panel behind light text is the
      large-area glare case. It is also the exact ground baked into the dark
@@ -207,8 +240,16 @@
     --md-sys-color-surface-container-high: 0 0% 11%;
     --md-sys-color-surface-container-highest: 0 0% 13%;
 
-    --md-sys-color-outline: 0 0% 42%; /* #6B6B6B, 3.52:1 */
-    --md-sys-color-outline-variant: 0 0% 16%; /* #2A2A2A, decorative */
+    --md-sys-color-outline: 0 0% 42%; /* #6B6B6B, 3.52:1 — operable */
+    /* Raised from 16% (#2A2A2A, 1.31:1) to match what the light seam is now.
+       The note above this block called the old value "decorative only, never
+       the only separator", but measurement says it is exactly that: the same
+       174 hairlines carry it in both themes, and in dark they were the only
+       thing separating a feed row from the next one. 1.72:1 on the #121212
+       ground is the same relationship the light seam has to white. */
+    --md-sys-color-outline-variant: 0 0% 24%; /* #3d3d3d, 1.72:1 — seam */
+
+    --skeleton-sweep: 0 0% 100% / 0.06;
 
     --md-sys-color-inverse-surface: 0 0% 90%;
     --md-sys-color-inverse-on-surface: 0 0% 7%;
@@ -323,10 +364,28 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-inter), "Google Sans", system-ui, -apple-system,
+    font-family: var(--font-text), "Google Sans", system-ui, -apple-system,
       sans-serif;
     font-feature-settings: "cv11", "ss01", "ss03";
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* One focus ring for the whole product.
+
+     Measured before this existed: tabbing the homepage reported
+     `outline: 1px auto rgb(16, 16, 16)`, which is Chrome's default, not a
+     decision. Only the theme toggle had a real ring, and `focus-visible`
+     appeared in three files across the entire public side. blog.google puts
+     `2px solid #1967d2` at `2px` offset on its very first tab stop and keeps
+     it identical everywhere.
+
+     `:focus-visible` rather than `:focus`, so a mouse click never draws it.
+     `border-radius: inherit` so the ring follows a pill, a card or a square
+     without each component restating it. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--md-sys-color-primary));
+    outline-offset: 2px;
+    border-radius: inherit;
   }
 
   /* Selection — M3 primary at 22% opacity */
@@ -339,104 +398,135 @@
 /* ================================
    TYPOGRAPHY — Material 3 type scale
    All bound to a 4dp grid for line-height.
+
+   Tracking was ported from the 2021 M3 spec and the spec has since moved.
+   Measured against m3.material.io's own stylesheet in September 2026, every
+   role is `0rem` except the three smallest, which carry 0.00625rem (0.1px).
+   Nine of the fifteen roles here disagreed with that.
+
+   The global `letter-spacing: 0.5px` that used to sit on this body rule was
+   the same 2021 value, and because tracking inherits it reached every element
+   on the site rather than the body-large role it was written for. At the 11.7px
+   the nav and the feed actually render, 0.5px is 0.043em. deepmind.google's
+   equivalent token is 0.01188em and every text run measured on ai.google.dev,
+   news.google.com and fonts.google.com came back at exactly zero. Google Sans
+   Flex is drawn to be set solid; the tracking was fighting the typeface.
    ================================ */
 
 body {
   font-size: 1rem;
   line-height: 1.5rem;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
   font-weight: 400;
 }
 
-/* M3 utility classes — explicit type roles */
+/* M3 utility classes — explicit type roles.
+   The font per role is the split m3.material.io itself ships: the display,
+   headline and title-large roles resolve to the display face, everything from
+   title-medium down resolves to the text face. */
 .md-display-large {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 3.5625rem;
   line-height: 4rem;
-  letter-spacing: -0.25px;
+  letter-spacing: 0;
   font-weight: 400;
 }
 .md-display-medium {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 2.8125rem;
   line-height: 3.25rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-display-small {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 2.25rem;
   line-height: 2.75rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-headline-large {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 2rem;
   line-height: 2.5rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-headline-medium {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 1.75rem;
   line-height: 2.25rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-headline-small {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 1.5rem;
   line-height: 2rem;
   letter-spacing: 0;
   font-weight: 400;
 }
 .md-title-large {
+  font-family: var(--font-inter), "Google Sans", system-ui, sans-serif;
   font-size: 1.375rem;
   line-height: 1.75rem;
   letter-spacing: 0;
   font-weight: 500;
 }
 .md-title-medium {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 1rem;
   line-height: 1.5rem;
-  letter-spacing: 0.15px;
+  letter-spacing: 0;
   font-weight: 500;
 }
 .md-title-small {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  letter-spacing: 0.1px;
+  letter-spacing: 0;
   font-weight: 500;
 }
 .md-body-large {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 1rem;
   line-height: 1.5rem;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
   font-weight: 400;
 }
 .md-body-medium {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  letter-spacing: 0.25px;
+  letter-spacing: 0;
   font-weight: 400;
 }
 .md-body-small {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 0.75rem;
   line-height: 1rem;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.00625rem;
   font-weight: 400;
 }
 .md-label-large {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  letter-spacing: 0.1px;
+  letter-spacing: 0;
   font-weight: 500;
 }
 .md-label-medium {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 0.75rem;
   line-height: 1rem;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.00625rem;
   font-weight: 500;
 }
 .md-label-small {
+  font-family: var(--font-text), "Google Sans", system-ui, sans-serif;
   font-size: 0.6875rem;
   line-height: 1rem;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.00625rem;
   font-weight: 500;
 }
 
@@ -638,6 +728,50 @@ html {
 }
 
 /* ================================
+   SKELETON
+
+   The bars were `bg-muted`, which resolves to #f9fafb against a #ffffff page:
+   1.03:1, which is to say invisible. A reader on a slow connection saw a blank
+   frame, not a page arriving, so the skeletons did none of the work they were
+   carefully built to do.
+
+   `animate-pulse` is also the wrong gesture. Fading a bar in and out says the
+   page is idling; a highlight travelling left to right says it is loading.
+   1.6s at the effects-default easing measured off blog.google.
+   ================================ */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: hsl(var(--md-sys-color-surface-container-highest));
+  border-radius: var(--md-sys-shape-corner-extra-small);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--skeleton-sweep)),
+    transparent
+  );
+  animation: skeleton-sweep 1.6s cubic-bezier(0.34, 0.8, 0.34, 1) infinite;
+}
+@keyframes skeleton-sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+/* A travelling highlight is exactly the kind of looping motion this setting is
+   for. The bar stays, so the layout still reads. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    display: none;
+  }
+}
+
+/* ================================
    ARTICLE CONTENT
    ================================ */
 
@@ -648,7 +782,9 @@ html {
   font-size: 1rem;
   line-height: 1.6;
   color: var(--article-text);
-  font-family: var(--font-inter), "Google Sans", system-ui, -apple-system,
+  /* Running prose takes the text face. The headings below keep the display
+     face, which is the split every Google property measured uses. */
+  font-family: var(--font-text), "Google Sans", system-ui, -apple-system,
     sans-serif;
   font-feature-settings: "kern" 1, "cv11", "ss01";
   letter-spacing: 0;

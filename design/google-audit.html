@@ -1,0 +1,1077 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Google's design language vs hoangducviet.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ROND,opsz,wdth,wght@0..100,6..144,75..125,1..1000&family=Google+Sans+Text:wght@400;500;700&family=Google+Sans+Code:wght@400;500&display=swap">
+<style>
+:root{
+  --g-grey-50:#f8f9fa; --g-grey-100:#f1f3f4; --g-grey-200:#e8eaed; --g-grey-300:#dadce0;
+  --g-grey-400:#bdc1c6; --g-grey-500:#9aa0a6; --g-grey-700:#5f6368; --g-grey-800:#3c4043; --g-grey-900:#202124;
+  --g-blue-600:#1a73e8; --g-blue-700:#1967d2; --g-primary-40:#0b57d0;
+  --g-outline:#747775; --g-outline-variant:#c4c7c5;
+  --g-surface-container:#f0f4f9; --g-surface-container-low:#f8fafd; --g-surface-container-high:#e9eef6;
+  --viet-blue:#004AEF;
+  --ink:#1f1f1f; --ink2:#444746; --ink3:#5f6368;
+  --bg:#ffffff; --hair:var(--g-outline-variant); --hair-strong:var(--g-outline);
+  --ok:#146c2e; --bad:#b3261e; --warn:#e37400;
+  --mono:"Google Sans Code","JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --display:"Google Sans Flex","Google Sans",system-ui,sans-serif;
+  --text:"Google Sans Text","Google Sans",system-ui,sans-serif;
+  --eff-fast:150ms; --eff-def:200ms; --eff-slow:300ms;
+  --spa-fast:350ms; --spa-def:500ms; --spa-slow:750ms;
+  --ease-eff-fast:cubic-bezier(.31,.94,.34,1);
+  --ease-eff-def:cubic-bezier(.34,.8,.34,1);
+  --ease-spa:cubic-bezier(.27,1.06,.18,1);
+  --ease-spa-expressive:cubic-bezier(.42,1.67,.21,.9);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--text);
+  font-size:16px;line-height:1.55;letter-spacing:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+@media(min-width:900px){.wrap{padding:0 56px}}
+
+.mast{border-bottom:1px solid var(--hair);padding:64px 0 40px}
+.kicker{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:.1px;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 18px}
+h1{font-family:var(--display);font-variation-settings:"ROND" 100,"wdth" 100,"opsz" 48;
+  font-size:clamp(32px,5.2vw,52px);line-height:1.06;letter-spacing:-.024em;font-weight:400;
+  margin:0 0 20px;color:var(--ink);max-width:20ch}
+.lede{font-size:18px;line-height:28px;color:var(--ink2);max-width:66ch;margin:0 0 26px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 14px;
+  border:1px solid var(--hair);border-radius:9999px;font-size:13px;color:var(--ink2);
+  background:var(--bg);transition:background-color var(--eff-fast) var(--ease-eff-fast),border-color var(--eff-fast) var(--ease-eff-fast)}
+.chip:hover{background:var(--g-grey-50);border-color:var(--hair-strong)}
+
+section{padding:52px 0;border-bottom:1px solid var(--hair)}
+section:last-of-type{border-bottom:0}
+h2{font-family:var(--display);font-variation-settings:"ROND" 100,"opsz" 32;
+  font-size:clamp(24px,3.2vw,32px);line-height:1.15;letter-spacing:-.018em;font-weight:400;margin:0 0 8px}
+h3{font-family:var(--display);font-size:20px;line-height:28px;letter-spacing:-.005em;
+  font-weight:500;margin:38px 0 10px}
+h4{font-family:var(--text);font-size:13px;font-weight:500;letter-spacing:.2px;
+  text-transform:uppercase;color:var(--ink3);margin:26px 0 10px}
+p{margin:0 0 14px;max-width:74ch}
+.sub{color:var(--ink3);font-size:15px;margin:0 0 26px;max-width:74ch}
+ul,ol{max-width:74ch;padding-left:22px;margin:0 0 14px}
+li{margin-bottom:7px}
+code{font-family:var(--mono);font-size:.875em;background:var(--g-surface-container-low);
+  border:1px solid var(--hair);border-radius:4px;padding:1px 5px;
+  overflow-wrap:anywhere;word-break:break-word}
+pre code{background:none;border:0;padding:0;overflow-wrap:normal;word-break:normal}
+strong{font-weight:500;color:var(--ink)}
+a{color:var(--g-blue-700)}
+
+.find{border:1px solid var(--hair);border-radius:16px;padding:22px 24px;margin:0 0 16px;
+  transition:border-color var(--eff-def) var(--ease-eff-def),border-radius var(--spa-fast) var(--ease-spa)}
+.find:hover{border-color:var(--hair-strong);border-radius:24px}
+.find-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.rank{flex:0 0 auto;width:30px;height:30px;border-radius:9999px;display:grid;place-items:center;
+  background:var(--g-surface-container);color:var(--g-primary-40);font-size:13px;font-weight:500;
+  font-family:var(--text)}
+.rank.hi{background:#fce8e6;color:var(--bad)}
+.rank.md{background:#fef7e0;color:var(--warn)}
+.find-title{font-family:var(--display);font-size:19px;line-height:26px;font-weight:500;
+  letter-spacing:-.006em;margin:2px 0 0;flex:1 1 260px}
+.impact{display:inline-block;font-size:11px;font-weight:500;letter-spacing:.3px;text-transform:uppercase;
+  padding:3px 9px;border-radius:9999px;flex:0 0 auto;white-space:nowrap;align-self:center}
+.i-hi{background:#fce8e6;color:var(--bad)}
+.i-md{background:#fef7e0;color:var(--warn)}
+.i-lo{background:var(--g-surface-container);color:var(--ink2)}
+
+.tbl-wrap{overflow-x:auto;margin:0 0 20px;border:1px solid var(--hair);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th{text-align:left;font-family:var(--text);font-weight:500;font-size:12px;letter-spacing:.2px;
+  text-transform:uppercase;color:var(--ink3);padding:12px 14px;border-bottom:1px solid var(--hair);
+  background:var(--g-surface-container-low);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--g-grey-100);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.num,th.num{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.good{color:var(--ok);font-weight:500}
+.bad{color:var(--bad);font-weight:500}
+.dim{color:var(--ink3)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.14);
+  vertical-align:-2px;margin-right:7px}
+
+.duo{display:grid;grid-template-columns:1fr;gap:16px;margin:20px 0 24px}
+@media(min-width:820px){.duo{grid-template-columns:1fr 1fr}}
+.pane{border:1px solid var(--hair);border-radius:16px;padding:20px;min-width:0}
+.pane.next{background:var(--g-surface-container-low);border-color:var(--g-surface-container-high)}
+.pane-tag{font-family:var(--text);font-size:11px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;
+  margin:0 0 14px;display:flex;align-items:center;gap:8px;color:var(--ink2)}
+.dot{width:7px;height:7px;border-radius:9999px;display:inline-block}
+.dot.r{background:var(--bad)} .dot.g{background:var(--ok)}
+
+.spec{padding:14px 0;border-bottom:1px dashed var(--g-grey-200)}
+.spec:last-child{border-bottom:0}
+.spec-lbl{font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin-bottom:6px;letter-spacing:0}
+.now-type{font-family:var(--display);letter-spacing:.5px}
+.next-type-d{font-family:var(--display);letter-spacing:0}
+.next-type-t{font-family:var(--text);letter-spacing:0}
+
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;
+  font-family:var(--text);text-decoration:none;position:relative;isolation:isolate}
+.b::before{content:"";position:absolute;inset:0;border-radius:inherit;background:currentColor;
+  opacity:0;z-index:-1;transition:opacity var(--eff-fast) var(--ease-eff-fast)}
+.b:hover::before{opacity:.08}
+.b:active::before{opacity:.12}
+.b:focus-visible{outline:2px solid var(--g-blue-700);outline-offset:2px}
+.b-now{height:29px;padding:0 21.6px;border-radius:9999px;font-size:13.5px;font-weight:500;
+  letter-spacing:.5px;border:1px solid #e0e5eb;background:transparent;color:#0a0a0a;font-family:var(--display)}
+.b-filled{height:40px;padding:0 24px;border-radius:9999px;font-size:14px;font-weight:500;
+  letter-spacing:0;background:var(--viet-blue);color:#fff}
+.b-outlined{height:40px;padding:0 23px;border-radius:9999px;font-size:14px;font-weight:500;
+  letter-spacing:0;background:transparent;color:var(--ink);border:1px solid var(--g-outline)}
+.b-tonal{height:40px;padding:0 24px;border-radius:9999px;font-size:14px;font-weight:500;
+  letter-spacing:0;background:var(--g-surface-container);color:var(--ink)}
+.b-text{height:40px;padding:0 12px;border-radius:9999px;font-size:14px;font-weight:500;
+  letter-spacing:0;background:transparent;color:var(--ink2)}
+
+.hcard{padding:14px 16px;border-radius:12px;border:1px solid var(--hair);cursor:default;margin-bottom:10px}
+.hcard-now{transition:color var(--eff-def) cubic-bezier(.2,0,0,1)}
+.hcard-now:hover{color:var(--viet-blue)}
+.hcard-next{transition:background-color var(--eff-fast) var(--ease-eff-fast),
+  border-color var(--eff-fast) var(--ease-eff-fast),border-radius var(--spa-fast) var(--ease-spa)}
+.hcard-next:hover{background:var(--g-surface-container-low);border-color:var(--g-outline);border-radius:20px}
+
+.skrow{display:flex;flex-direction:column;gap:9px}
+.sk{height:14px;border-radius:4px}
+.sk-now{background:#f9fafb;animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.sk-next{background:var(--g-grey-100);position:relative;overflow:hidden}
+.sk-next::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);
+  animation:shimmer 1.6s var(--ease-eff-def) infinite}
+@keyframes shimmer{100%{transform:translateX(100%)}}
+
+.focusdemo a{display:inline-block;padding:7px 12px;border-radius:8px;margin:0 8px 8px 0;
+  text-decoration:none;border:1px solid var(--hair);color:var(--ink2);font-size:14px}
+.fd-now:focus-visible{outline:1px auto #101010;outline-offset:1px}
+.fd-next:focus-visible{outline:2px solid var(--viet-blue);outline-offset:2px}
+
+.motionbox{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.mb{width:82px;height:82px;border-radius:14px;background:var(--g-surface-container);
+  display:grid;place-items:center;font-family:var(--mono);font-size:9.5px;color:var(--ink2);
+  text-align:center;padding:5px;cursor:pointer}
+.mb-legacy{transition:transform 200ms cubic-bezier(.2,0,0,1)}
+.mb-legacy:hover{transform:translateY(-10px)}
+.mb-spatial{transition:transform var(--spa-fast) var(--ease-spa),border-radius var(--spa-fast) var(--ease-spa)}
+.mb-spatial:hover{transform:translateY(-10px);border-radius:28px}
+.mb-expr{transition:transform var(--spa-fast) var(--ease-spa-expressive),border-radius var(--spa-fast) var(--ease-spa-expressive)}
+.mb-expr:hover{transform:translateY(-10px);border-radius:30px}
+
+.note{border-left:3px solid var(--g-primary-40);background:var(--g-surface-container-low);
+  border-radius:0 12px 12px 0;padding:16px 20px;margin:20px 0;font-size:14.5px}
+.note strong{color:var(--g-primary-40)}
+.warnbox{border-left:3px solid var(--warn);background:#fef7e0;border-radius:0 12px 12px 0;
+  padding:16px 20px;margin:20px 0;font-size:14.5px}
+.note p:last-child,.warnbox p:last-child{margin-bottom:0}
+
+pre{font-family:var(--mono);font-size:12.5px;line-height:1.7;background:var(--g-grey-900);
+  color:#e8eaed;padding:18px 20px;border-radius:12px;overflow-x:auto;margin:0 0 18px}
+pre .c{color:#9aa0a6}
+pre .k{color:#8ab4f8}
+pre .v{color:#81c995}
+
+.grid3{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0}
+@media(min-width:760px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.mini{border:1px solid var(--hair);border-radius:12px;padding:16px}
+.mini h5{font-family:var(--text);font-size:12px;font-weight:500;letter-spacing:.3px;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+.big{font-family:var(--display);font-size:30px;line-height:1.1;letter-spacing:-.02em;font-weight:400;margin:0 0 4px}
+.mini p.dim{font-size:13px;margin:0}
+
+footer{padding:40px 0 70px;color:var(--ink3);font-size:13px}
+.toc{columns:1;column-gap:32px;margin:0 0 8px;padding:0;list-style:none}
+@media(min-width:700px){.toc{columns:2}}
+.toc li{margin:0 0 9px;break-inside:avoid}
+.toc a{text-decoration:none;color:var(--ink2);font-size:14.5px}
+.toc a:hover{color:var(--g-blue-700);text-decoration:underline}
+.toc .n{font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin-right:8px}
+
+@media(prefers-reduced-motion:reduce){
+  .sk-now{animation:none}
+  .sk-next::after{display:none}
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <p class="kicker">Design audit &middot; 17 September 2026</p>
+  <h1>What Google actually does, and where your site is not doing it</h1>
+  <p class="lede">None of this is from memory or from an article about Material Design. Every number was
+  measured by driving a headless Chrome at sixteen live Google properties, reading their computed styles and
+  the design tokens they publish to the browser, then doing the same to hoangducviet.com.</p>
+  <div class="meta">
+    <span class="chip">16 Google properties measured</span>
+    <span class="chip">6 of your pages measured</span>
+    <span class="chip">11,542 design tokens read</span>
+  </div>
+</header>
+
+<section id="method">
+  <h2>How this was measured</h2>
+  <p class="sub">So you can check any of it, and re-run it once you have changed something.</p>
+  <p>Google ships its design tokens to the browser as CSS custom properties, which are readable on any machine
+  that loads the page. That turns the whole exercise from interpretation into measurement. Instead of guessing
+  what Google means by "body medium", you read <code>--typography-body-m-size: 16px</code> straight off
+  blog.google.</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Property</th><th>What it gave up</th><th class="num">Tokens</th></tr></thead>
+    <tbody>
+      <tr><td><strong>blog.google</strong></td><td>The complete 2026 editorial system: typography scale, the two-axis motion system, Google's colour ramps</td><td class="num">703</td></tr>
+      <tr><td><strong>gemini.google.com</strong></td><td><code>--gem-sys</code>: shape scale, motion tokens, and the variable-font axis settings for every type role</td><td class="num">1,856</td></tr>
+      <tr><td><strong>ai.google.dev</strong></td><td><code>--devsite-gm3</code>: the full GM3 reference palette and surface ramp</td><td class="num">1,492</td></tr>
+      <tr><td><strong>m3.material.io</strong></td><td>The current M3 type scale, shape scale and state-layer opacities, as the spec site itself uses them</td><td class="num">665</td></tr>
+      <tr><td><strong>deepmind.google</strong></td><td>Optical letter-spacing and line-height ramps, shape scale, spacing scale, measure widths</td><td class="num">561</td></tr>
+      <tr><td>fonts.google.com, news.google.com, aistudio.google.com, labs.google, store.google.com, research.google, about.google, developers.google.com, cloud.google.com/vertex-ai, material-web.dev</td><td>Rendered behaviour: type in use, radii in use, shadows, hover, focus, load states</td><td class="num">&mdash;</td></tr>
+      <tr><td class="dim">google.com/search</td><td class="dim">Blocked the headless client and returned a consent shell. Excluded rather than guessed at.</td><td class="num dim">0</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <p><strong>One caveat worth stating.</strong> This report loads Google Sans Flex, Google Sans Text and
+    Google Sans Code from Google Fonts so the specimens render in the real faces. Everything else in the file
+    is self-contained. Opened offline, the type falls back and the specimens stop being evidence.</p>
+  </div>
+</section>
+
+<section id="summary">
+  <h2>The short version</h2>
+  <p class="sub">Twelve findings, ordered by how much each changes the feel of the site per unit of work.</p>
+
+  <ol class="toc">
+    <li><span class="n">01</span><a href="#f1">A global <code>letter-spacing: 0.5px</code> that Google uses nowhere</a></li>
+    <li><span class="n">02</span><a href="#f2">A Material 3 type scale that exists in your CSS and is used zero times</a></li>
+    <li><span class="n">03</span><a href="#f3">One typeface where Google uses three</a></li>
+    <li><span class="n">04</span><a href="#f4">The fluid root font size fights the 8dp grid</a></li>
+    <li><span class="n">05</span><a href="#f5">Hairlines three times too faint to be seen</a></li>
+    <li><span class="n">06</span><a href="#f6">Article body is grey and 14.4px where Google's is near-black and 16px</a></li>
+    <li><span class="n">07</span><a href="#f7">Hover is colour-only. Google's is a tonal plate</a></li>
+    <li><span class="n">08</span><a href="#f8">The focus ring is the browser default</a></li>
+    <li><span class="n">09</span><a href="#f9">Your motion tokens are the ones Google now labels "legacy"</a></li>
+    <li><span class="n">10</span><a href="#f10">Skeletons are almost invisible, and only two routes have one</a></li>
+    <li><span class="n">11</span><a href="#f11">The shape scale is defined well and used at half strength</a></li>
+    <li><span class="n">12</span><a href="#f12">Google Sans Flex has four variable axes. You drive none of them</a></li>
+  </ol>
+
+  <div class="grid3">
+    <div class="mini"><h5>Fractional font sizes</h5><p class="big">8 of 8</p><p class="dim">on your homepage, including 17.1px and 17.28px together. blog.google: 0 of 6.</p></div>
+    <div class="mini"><h5>Hairline contrast</h5><p class="big">1.40:1</p><p class="dim">yours, against white. Google's outline is 4.53:1. WCAG 1.4.11 asks for 3.0.</p></div>
+    <div class="mini"><h5>Non-colour hover effects</h5><p class="big">0</p><p class="dim">out of every hover measured on your homepage.</p></div>
+  </div>
+
+  <p>The encouraging read: your foundation is genuinely good. You have a real M3 token layer, a considered
+  dark palette, a shape scale, motion tokens, state layers on buttons, and skeletons that mirror the real
+  layout instead of generic grey boxes. Very few personal sites have any of that. Almost everything below is
+  a correction to values rather than a rebuild, because the structure to hold the correct values already
+  exists.</p>
+</section>
+
+<section id="findings">
+  <h2>The twelve findings</h2>
+  <p class="sub">Each one states what was measured, what Google does instead, and what to change.</p>
+
+  <!-- 1 -->
+  <div class="find" id="f1">
+    <div class="find-head">
+      <span class="rank hi">01</span>
+      <p class="find-title">A global letter-spacing of 0.5px that Google uses nowhere</p>
+      <span class="impact i-hi">Highest impact</span>
+    </div>
+    <p>Your <code>globals.css</code> sets <code>body { letter-spacing: 0.5px }</code>, and because tracking
+    inherits, it lands on nearly every element on the site. Measured on your homepage, 0.5px appears on the
+    name, the role line, the bio, the nav, the section headings and the feed rows.</p>
+    <p>At your 11.7px UI text, 0.5px is <strong>0.043em</strong>. The equivalent Google token is
+    <code>--letter-spacing-base: 0.01188em</code> on deepmind.google, about a quarter of that. On ai.google.dev,
+    news.google.com and fonts.google.com, every single measured text run came back at exactly <code>0</code>.</p>
+    <p>This is the single biggest reason the site reads as "close to Google but not Google". Loose tracking on
+    small text is a 2014 Roboto habit. Google Sans Flex is drawn to be set solid.</p>
+
+    <div class="duo">
+      <div class="pane">
+        <p class="pane-tag"><span class="dot r"></span>Now &middot; 0.5px on everything</p>
+        <div class="spec"><p class="spec-lbl">name / 28.8px</p><div class="now-type" style="font-size:28.8px;line-height:35px;font-weight:400">Hoang Duc Viet</div></div>
+        <div class="spec"><p class="spec-lbl">role / 17.3px</p><div class="now-type" style="font-size:17.3px;line-height:24px">Agentic AI Leader / Engineer</div></div>
+        <div class="spec"><p class="spec-lbl">bio / 13.5px</p><div class="now-type" style="font-size:13.5px;line-height:21px;color:var(--ink2)">Former AI Leader at an SEO agency in Vietnam, where I led a team to deliver production AI systems.</div></div>
+      </div>
+      <div class="pane next">
+        <p class="pane-tag"><span class="dot g"></span>Google &middot; 0, optical below 14px</p>
+        <div class="spec"><p class="spec-lbl">display / 28.8px, -0.02em</p><div class="next-type-d" style="font-size:28.8px;line-height:35px;font-weight:400;letter-spacing:-.02em">Hoang Duc Viet</div></div>
+        <div class="spec"><p class="spec-lbl">title / 17.3px, 0</p><div class="next-type-d" style="font-size:17.3px;line-height:24px">Agentic AI Leader / Engineer</div></div>
+        <div class="spec"><p class="spec-lbl">body / 13.5px, 0</p><div class="next-type-t" style="font-size:13.5px;line-height:21px;color:var(--ink2)">Former AI Leader at an SEO agency in Vietnam, where I led a team to deliver production AI systems.</div></div>
+      </div>
+    </div>
+
+    <h4>The fix</h4>
+    <p>Delete the declaration from <code>body</code>. Set tracking per role instead, and only where it is not
+    zero: negative on display sizes, zero everywhere from 14px to 28px, a hair positive below 12px.</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="find" id="f2">
+    <div class="find-head">
+      <span class="rank hi">02</span>
+      <p class="find-title">A Material 3 type scale that exists in your CSS and is used zero times</p>
+      <span class="impact i-hi">Highest impact</span>
+    </div>
+    <p><code>globals.css</code> defines all fifteen M3 type roles, from <code>.md-display-large</code> to
+    <code>.md-label-small</code>, a hundred lines of correct sizes and line heights. A search across every
+    public component returns <strong>zero uses</strong>. What the pages actually use is 112 one-off arbitrary
+    sizes spanning 24 distinct values.</p>
+    <p>I expected this to show up as more type variation per page than Google has. It does not, and it is
+    worth being straight about that: your homepage renders 17 distinct type specifications, blog.google
+    renders 13, and ai.google.dev renders 27. On raw variety you are in the middle of the Google pack. Google
+    is also perfectly happy to run one size at several line heights, 14px carries eight different leadings on
+    ai.google.dev.</p>
+    <p>What separates them is not how many values there are. It is <strong>what kind of values they are</strong>.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Page</th><th class="num">Distinct sizes</th><th class="num">Fractional</th><th>The sizes as rendered</th></tr></thead>
+      <tbody>
+        <tr><td>hoangducviet.com home</td><td class="num">8</td><td class="num bad">8 of 8</td><td class="num">9.79, 11.7, 13.5, 14.4, 17.1, 17.28, 20.7, 28.8</td></tr>
+        <tr><td>hoangducviet.com post</td><td class="num">12</td><td class="num bad">7 of 12</td><td class="num">11.5, 12.5, 12.6, 13.5, 14.4, 25.2, 43.2 &hellip;</td></tr>
+        <tr><td>blog.google</td><td class="num">6</td><td class="num good">0 of 6</td><td class="num">14, 16, 18, 20, 28, 36</td></tr>
+        <tr><td>ai.google.dev</td><td class="num">7</td><td class="num good">1 of 7</td><td class="num">13, 14, 16, 18, 24, 32</td></tr>
+        <tr><td>deepmind.google</td><td class="num">7</td><td class="num good">2 of 7</td><td class="num">10, 20, 28, 32, 42</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Every size on your homepage is fractional, and two of them are <strong>17.1px and 17.28px</strong>,
+    0.18px apart on the same page. That is not a design decision anyone made, it is arithmetic: arbitrary rem
+    values multiplied by a fluid root that lands on 14.4px. Google's sizes are whole because Google's root is
+    fixed, which is finding 4 arriving early. The two findings are really one finding.</p>
+
+    <p>Separately, the scale you ported is the <strong>2021</strong> M3 spec. Measured against m3.material.io
+    today, your sizes and line heights are all correct and nine of fifteen roles have superseded tracking.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Role</th><th class="num">Size / line</th><th class="num">Your tracking</th><th class="num">M3 today</th><th>Font today</th></tr></thead>
+      <tbody>
+        <tr><td>display-large</td><td class="num">57 / 64</td><td class="num bad">-0.25px</td><td class="num">0</td><td>Google Sans</td></tr>
+        <tr><td>display-medium</td><td class="num">45 / 52</td><td class="num good">0</td><td class="num">0</td><td>Google Sans</td></tr>
+        <tr><td>display-small</td><td class="num">36 / 44</td><td class="num good">0</td><td class="num">0</td><td>Google Sans</td></tr>
+        <tr><td>headline-large</td><td class="num">32 / 40</td><td class="num good">0</td><td class="num">0</td><td>Google Sans</td></tr>
+        <tr><td>headline-medium</td><td class="num">28 / 36</td><td class="num good">0</td><td class="num">0</td><td>Google Sans</td></tr>
+        <tr><td>headline-small</td><td class="num">24 / 32</td><td class="num good">0</td><td class="num">0</td><td>Google Sans</td></tr>
+        <tr><td>title-large</td><td class="num">22 / 28</td><td class="num good">0</td><td class="num">0</td><td>Google Sans</td></tr>
+        <tr><td>title-medium</td><td class="num">16 / 24</td><td class="num bad">0.15px</td><td class="num">0</td><td>Google Sans Text</td></tr>
+        <tr><td>title-small</td><td class="num">14 / 20</td><td class="num bad">0.1px</td><td class="num">0</td><td>Google Sans Text</td></tr>
+        <tr><td>body-large</td><td class="num">16 / 24</td><td class="num bad">0.5px</td><td class="num">0</td><td>Google Sans Text</td></tr>
+        <tr><td>body-medium</td><td class="num">14 / 20</td><td class="num bad">0.25px</td><td class="num">0</td><td>Google Sans Text</td></tr>
+        <tr><td>body-small</td><td class="num">12 / 16</td><td class="num bad">0.4px</td><td class="num">0.1px</td><td>Google Sans Text</td></tr>
+        <tr><td>label-large</td><td class="num">14 / 20</td><td class="num bad">0.1px</td><td class="num">0</td><td>Google Sans Text</td></tr>
+        <tr><td>label-medium</td><td class="num">12 / 16</td><td class="num bad">0.5px</td><td class="num">0.1px</td><td>Google Sans Text</td></tr>
+        <tr><td>label-small</td><td class="num">11 / 16</td><td class="num bad">0.5px</td><td class="num">0.1px</td><td>Google Sans Text</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h4>The fix</h4>
+    <p>Correct the nine tracking values, then actually route components through the scale. The cheapest path is
+    Tailwind utilities backed by the tokens, so <code>text-[0.8125rem]</code> becomes something like
+    <code>text-label-lg</code> and the 42 places using it all move together the next time you change your mind.</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="find" id="f3">
+    <div class="find-head">
+      <span class="rank hi">03</span>
+      <p class="find-title">One typeface where Google uses three</p>
+      <span class="impact i-hi">Highest impact</span>
+    </div>
+    <p>You set Google Sans Flex for everything, headings and body alike. Google does not. Measured across the
+    properties, there is a consistent three-way split, and the M3 spec site encodes it directly in the type
+    scale tokens.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Face</th><th>Used for</th><th>Seen on</th><th>On Google Fonts</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Google Sans</strong> / Google Sans Flex</td><td>display, headline, title-large. The voice face.</td><td>every property measured</td><td class="good">Yes</td></tr>
+        <tr><td><strong>Google Sans Text</strong></td><td>body, label, title-medium and below. Running text and dense UI.</td><td>ai.google.dev, news.google.com, m3.material.io, gemini</td><td class="good">Yes</td></tr>
+        <tr><td><strong>Google Sans Code</strong></td><td>code, monospace UI</td><td>ai.google.dev</td><td class="good">Yes</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Google Sans Text is not a cosmetic variant. It is drawn for small sizes: taller x-height, more open
+    counters, less contrast. Using the display face at 13px is exactly the situation it was cut to fix, and it
+    is part of why your small text needed that 0.5px of tracking to stay legible in the first place. The two
+    problems are the same problem.</p>
+
+    <div class="duo">
+      <div class="pane">
+        <p class="pane-tag"><span class="dot r"></span>Now &middot; display face at 13.5px</p>
+        <p class="now-type" style="font-size:13.5px;line-height:21px;margin:0;color:var(--ink2)">A system of 20 and growing AI solutions hosted on one platform for a company of 120 people. It is the biggest project I led as a former AI leader, delivering observability, cost tracking and smart human-in-the-loop.</p>
+      </div>
+      <div class="pane next">
+        <p class="pane-tag"><span class="dot g"></span>Google Sans Text at 13.5px</p>
+        <p class="next-type-t" style="font-size:13.5px;line-height:21px;margin:0;color:var(--ink2)">A system of 20 and growing AI solutions hosted on one platform for a company of 120 people. It is the biggest project I led as a former AI leader, delivering observability, cost tracking and smart human-in-the-loop.</p>
+      </div>
+    </div>
+
+    <h4>The fix</h4>
+    <p>Add Google Sans Text to the font link and introduce a second family variable. Display roles keep
+    Google Sans Flex, body and label roles take Google Sans Text. Consider Google Sans Code in place of
+    JetBrains Mono, which is the one face on the site with no relationship to the rest of it.</p>
+  </div>
+
+  <!-- 4 -->
+  <div class="find" id="f4">
+    <div class="find-head">
+      <span class="rank hi">04</span>
+      <p class="find-title">The fluid root font size fights the 8dp grid</p>
+      <span class="impact i-hi">Structural</span>
+    </div>
+    <p>Your root is <code>clamp(12.8px, calc(var(--shell-max) * 0.0140351), 16px)</code>. At 1440 it resolves
+    to <strong>14.4px</strong>. Everything on the site is sized in rem, so every spacing value inherits that
+    scale and lands off the grid.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th class="num">rem</th><th class="num">Your px at 1440</th><th class="num">Google's px</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0.25</td><td class="num bad">3.6</td><td class="num">4</td><td>sub-pixel gap</td></tr>
+        <tr><td class="num">0.375</td><td class="num bad">5.4</td><td class="num">6</td><td>sub-pixel gap</td></tr>
+        <tr><td class="num">0.5</td><td class="num bad">7.2</td><td class="num">8</td><td>sub-pixel gap</td></tr>
+        <tr><td class="num">0.75</td><td class="num bad">10.8</td><td class="num">12</td><td>sub-pixel gap</td></tr>
+        <tr><td class="num">1</td><td class="num bad">14.4</td><td class="num">16</td><td>body text 10% small</td></tr>
+        <tr><td class="num">1.5</td><td class="num bad">21.6</td><td class="num">24</td><td>sub-pixel gap</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Fourteen distinct gap values were measured on your homepage, none of them whole numbers. blog.google
+    renders six, all of them from {2, 4, 8, 12, 16, 24}, with 24 used 32 times.</p>
+    <div class="warnbox" style="border-left-color:var(--bad);background:#fce8e6">
+      <p><strong>The clearest symptom is in your own documentation.</strong> <code>globals.css</code> declares
+      <code>.article-content { font-size: 1rem; line-height: 1.6 }</code> and your CLAUDE.md describes it as
+      "post typography (16px / 1.6 body)". The browser renders it at <strong>14.4px</strong>. The stylesheet
+      and the page disagree by 10% and have done for as long as the fluid root has been there, because 1rem
+      stopped meaning 16px and nothing in the file says so.</p>
+    </div>
+
+    <p>The downstream effect on type is worse than on spacing. Your rendered sizes are 9.79, 11.7, 13.5, 14.4,
+    17.1, 17.28, 20.7, 28.8. Google's, on every property with a fixed root, are whole: 12, 13, 14, 16, 18, 20,
+    24, 28, 32, 36. Fractional sizes give fractional line heights, which is how you end up with 13.5px carrying
+    four different leadings on one page.</p>
+
+    <div class="warnbox">
+      <p><strong>This is the one recommendation you should push back on if you disagree.</strong> The fluid
+      root is a deliberate decision with a long comment explaining it, and it does solve a real problem, which
+      is that a fixed design rendered at 1265 and at 1920 is two different densities. Google does use fluid
+      scaling on marketing surfaces: labs.google runs a 10px root and vw-derived display type.</p>
+      <p>The part that is not defensible is applying it to <em>reading</em> text. Every Google property that
+      is mostly words, blog.google included, pins the root: 16px there, 18px on blog.google. Body text does not
+      scale with the window at Google. Only display type does.</p>
+    </div>
+
+    <h4>The fix</h4>
+    <p>Keep the fluid idea, move it off the root. Pin <code>html</code> at 16px and drive only display-tier
+    type from <code>clamp()</code> against the viewport. Spacing then lands on whole pixels, reading text
+    stays 16px at every width, and the hero still scales.</p>
+  </div>
+
+  <!-- 5 -->
+  <div class="find" id="f5">
+    <div class="find-head">
+      <span class="rank hi">05</span>
+      <p class="find-title">Hairlines three times too faint to be seen</p>
+      <span class="impact i-hi">Highest impact</span>
+    </div>
+    <p>Your site separates almost everything with a 1px rule: feed rows, work blocks, the stack panel, card
+    edges. Those rules are drawn in <code>outline</code> or <code>outline-variant</code>. Both are lighter
+    than Google's <em>lightest</em> boundary colour.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Role</th><th class="num">Yours</th><th class="num">vs white</th><th class="num">Google</th><th class="num">vs white</th><th>WCAG 1.4.11</th></tr></thead>
+      <tbody>
+        <tr><td>outline</td><td class="num"><span class="sw" style="background:#d8dadf"></span>#d8dadf</td><td class="num bad">1.40:1</td><td class="num"><span class="sw" style="background:#747775"></span>#747775</td><td class="num good">4.53:1</td><td>yours fails, Google passes</td></tr>
+        <tr><td>outline-variant</td><td class="num"><span class="sw" style="background:#e0e5eb"></span>#e0e5eb</td><td class="num bad">1.27:1</td><td class="num"><span class="sw" style="background:#c4c7c5"></span>#c4c7c5</td><td class="num">1.70:1</td><td>decorative tier, both below 3.0</td></tr>
+        <tr><td>on-surface</td><td class="num"><span class="sw" style="background:#0a0a0a"></span>#0a0a0a</td><td class="num">19.80:1</td><td class="num"><span class="sw" style="background:#1f1f1f"></span>#1f1f1f</td><td class="num">16.48:1</td><td>yours is harsher than Google's</td></tr>
+        <tr><td>on-surface-variant</td><td class="num"><span class="sw" style="background:#4e4f56"></span>#4e4f56</td><td class="num">8.15:1</td><td class="num"><span class="sw" style="background:#444746"></span>#444746</td><td class="num">9.39:1</td><td>close, yours reads bluer</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Your <code>outline</code> at 1.40:1 is fainter than Google's <code>outline-variant</code> at 1.70:1. So
+    the token you reach for when you want a <em>visible</em> boundary is weaker than the token Google reaches
+    for when it wants a boundary you are not supposed to notice. There is no strong-hairline option in the
+    system at all, which is why the pages can read as washed out at a glance despite the type being nearly
+    black.</p>
+
+    <p>The other half of the colour finding: Google tints its surfaces toward the primary hue, and yours are
+    neutral grey.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Surface role</th><th class="num">Yours</th><th class="num">Google GM3</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>surface-container-low</td><td class="num"><span class="sw" style="background:#f9fafb"></span>#f9fafb</td><td class="num"><span class="sw" style="background:#f8fafd"></span>#f8fafd</td><td>close</td></tr>
+        <tr><td>surface-container</td><td class="num"><span class="sw" style="background:#f3f4f6"></span>#f3f4f6</td><td class="num"><span class="sw" style="background:#f0f4f9"></span>#f0f4f9</td><td>Google is visibly blue</td></tr>
+        <tr><td>surface-container-high</td><td class="num"><span class="sw" style="background:#ebecef"></span>#ebecef</td><td class="num"><span class="sw" style="background:#e9eef6"></span>#e9eef6</td><td>Google is visibly blue</td></tr>
+        <tr><td>surface-container-highest</td><td class="num"><span class="sw" style="background:#e5e7eb"></span>#e5e7eb</td><td class="num"><span class="sw" style="background:#dde3ea"></span>#dde3ea</td><td>Google is visibly blue</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>That blue is not decoration, it is the M3 tonal-palette algorithm: neutral surfaces are derived from the
+    primary hue at very low chroma. Your primary is #004AEF, a strong blue, so your surfaces should carry more
+    of it than Google's do, not less.</p>
+
+    <h4>The fix</h4>
+    <p>Darken <code>outline</code> to roughly #74777c so a deliberate boundary is actually 3:1, keep the
+    current value as <code>outline-variant</code> for decorative seams, and give the surface containers 2 to 4
+    points of chroma at the primary hue.</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="find" id="f6">
+    <div class="find-head">
+      <span class="rank md">06</span>
+      <p class="find-title">Article body is grey and 14.4px where Google's is near-black and 16px</p>
+      <span class="impact i-md">High</span>
+    </div>
+    <p>Measured on your post page at 1440: body paragraphs are <strong>14.4px / 23.04px</strong> in
+    <strong>#5f656d</strong>, in a 558px column at about 60 characters a line.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th></th><th class="num">Size / line</th><th class="num">Ink</th><th class="num">Contrast</th><th class="num">Measure</th></tr></thead>
+      <tbody>
+        <tr><td>Your article body</td><td class="num">14.4 / 23.04</td><td class="num"><span class="sw" style="background:#5f656d"></span>#5f656d</td><td class="num">5.88:1</td><td class="num">558px, ~60 cpl</td></tr>
+        <tr><td>blog.google article</td><td class="num good">16 / 26</td><td class="num"><span class="sw" style="background:#202124"></span>#202124</td><td class="num good">16.10:1</td><td class="num dim">not measured</td></tr>
+        <tr><td>M3 body-large</td><td class="num">16 / 24</td><td class="num"><span class="sw" style="background:#1f1f1f"></span>#1f1f1f</td><td class="num">16.48:1</td><td class="num dim">&mdash;</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Your column width and characters per line are good, genuinely in the ideal band. The two things that
+    are off are size and ink. Google reserves grey for metadata and secondary text; running prose is set in
+    the near-black. Your article body uses Google's <em>secondary</em> ink value as its primary reading
+    colour, which costs about two-thirds of the available contrast on the one surface where reading comfort
+    matters most.</p>
+    <p>This is a taste call more than the others, and plenty of good blogs set grey body text deliberately.
+    But it is not what Google does, and you asked specifically what Google does.</p>
+
+    <h4>The fix</h4>
+    <p>Article body to 16px / 26px in #1f1f1f. Keep #5f6368 for datelines, captions and figure labels. The
+    column already fits it: 16px at 558px is about 66 characters, still in the ideal band.</p>
+  </div>
+
+  <!-- 7 -->
+  <div class="find" id="f7">
+    <div class="find-head">
+      <span class="rank md">07</span>
+      <p class="find-title">Hover is colour-only. Google's is a tonal plate</p>
+      <span class="impact i-md">High</span>
+    </div>
+    <p>I drove a real mouse over every interactive element on your homepage and diffed computed styles before
+    and after. <strong>Every hover changed colour and nothing else.</strong> The outline colour moved with it, but
+    only because <code>outline-color</code> resolves to <code>currentColor</code>. No background, no surface,
+    no radius, no transform, no elevation.</p>
+    <p>The same probe on blog.google returns
+    <code>background-color: transparent &rarr; rgb(248, 249, 250)</code>. A grey plate appears under the
+    thing you are pointing at. That is the Google idiom, and it is the M3 state layer: the "on" colour at 8%
+    over the component, 10% on focus, 12% on press. You already implement it correctly in
+    <code>.md-btn::before</code>, but that class is used almost entirely in the admin, not on the public site.</p>
+
+    <div class="duo">
+      <div class="pane">
+        <p class="pane-tag"><span class="dot r"></span>Now &middot; point at these</p>
+        <div class="hcard hcard-now">Building a mini search engine #9</div>
+        <div class="hcard hcard-now">Measuring search quality</div>
+      </div>
+      <div class="pane next">
+        <p class="pane-tag"><span class="dot g"></span>State layer plus shape response</p>
+        <div class="hcard hcard-next">Building a mini search engine #9</div>
+        <div class="hcard hcard-next">Measuring search quality</div>
+      </div>
+    </div>
+
+    <p>The second thing in that panel is the current Google signature. blog.google carries
+    <code>transition: border-radius</code> on 14 separate elements: corners round out as you point at them.
+    It is the most recognisable single gesture in Google's 2026 vocabulary and the site has none of it.</p>
+
+    <h4>The fix</h4>
+    <p>Promote the state layer out of <code>.md-btn</code> into a utility any row, card or chip can take. Add
+    a radius response to cards and feed rows. Keep the colour change as well, they compose fine.</p>
+  </div>
+
+  <!-- 8 -->
+  <div class="find" id="f8">
+    <div class="find-head">
+      <span class="rank md">08</span>
+      <p class="find-title">The focus ring is the browser default</p>
+      <span class="impact i-md">High</span>
+    </div>
+    <p>Tabbing through your homepage, the first focusable element reports
+    <code>outline: 1px auto rgb(16, 16, 16)</code>. That is Chrome's default ring, not a designed one. Only
+    the theme toggle has a real one. Across your entire public codebase, <code>focus-visible</code> appears in
+    three files.</p>
+    <p>blog.google reports <code>outline: 2px solid rgb(25, 103, 210); outline-offset: 2px</code> on the very
+    first tab stop. Google's focus ring is a designed component and it is the same everywhere.</p>
+
+    <div class="duo">
+      <div class="pane focusdemo">
+        <p class="pane-tag"><span class="dot r"></span>Now &middot; tab into these</p>
+        <a href="#f8" class="fd-now">Work</a><a href="#f8" class="fd-now">Posts</a><a href="#f8" class="fd-now">About</a>
+      </div>
+      <div class="pane next focusdemo">
+        <p class="pane-tag"><span class="dot g"></span>2px solid, 2px offset</p>
+        <a href="#f8" class="fd-next">Work</a><a href="#f8" class="fd-next">Posts</a><a href="#f8" class="fd-next">About</a>
+      </div>
+    </div>
+
+    <h4>The fix</h4>
+    <p>One global rule. <code>:focus-visible { outline: 2px solid hsl(var(--md-sys-color-primary)); outline-offset: 2px; border-radius: inherit }</code>.
+    Roughly six lines of CSS for the largest single credibility gain per character in this document.</p>
+  </div>
+
+  <!-- 9 -->
+  <div class="find" id="f9">
+    <div class="find-head">
+      <span class="rank md">09</span>
+      <p class="find-title">Your motion tokens are the ones Google now labels "legacy"</p>
+      <span class="impact i-md">High</span>
+    </div>
+    <p>Your easing is <code>cubic-bezier(0.2, 0, 0, 1)</code> for both standard and emphasized, with durations
+    from 50 to 500ms. That was correct M3. blog.google still ships those exact curves, under these names:</p>
+    <pre><span class="c">/* measured on blog.google, September 2026 */</span>
+<span class="k">--motion-legacy-standard</span>:   <span class="v">cubic-bezier(0.2,0,0,1)</span>
+<span class="k">--motion-legacy-emphasized</span>: <span class="v">cubic-bezier(0.2,0,0,1)</span></pre>
+    <p>The live system alongside them is a two-axis grid. The axes are what moves, not how fast.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Track</th><th class="num">Fast</th><th class="num">Default</th><th class="num">Slow</th><th>Applies to</th></tr></thead>
+      <tbody>
+        <tr><td><strong>effects</strong></td><td class="num">150ms</td><td class="num">200ms</td><td class="num">300ms</td><td>colour, opacity, fill. Never overshoots.</td></tr>
+        <tr><td class="dim">standard easing</td><td class="num dim">.31,.94,.34,1</td><td class="num dim">.34,.8,.34,1</td><td class="num dim">.34,.88,.34,1</td><td class="dim">same for expressive</td></tr>
+        <tr><td><strong>spatial</strong></td><td class="num">350ms</td><td class="num">500ms</td><td class="num">750ms</td><td>transform, size, position. Overshoots.</td></tr>
+        <tr><td class="dim">standard easing</td><td class="num dim">.27,1.06,.18,1</td><td class="num dim">.27,1.06,.18,1</td><td class="num dim">.27,1.06,.18,1</td><td class="dim">gentle spring</td></tr>
+        <tr><td class="dim">expressive easing</td><td class="num dim">.42,1.67,.21,.9</td><td class="num dim">.38,1.21,.22,1</td><td class="num dim">.39,1.29,.35,.98</td><td class="dim">pronounced spring</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>The final control point above 1 is the whole point: anything that moves in space overshoots slightly
+    and settles. Anything that only changes colour does not. Your site uses one non-overshooting curve for
+    both, so movement reads mechanical.</p>
+
+    <p class="sub" style="margin-top:20px">Point at these three. Same distance, same intent, three vocabularies.</p>
+    <div class="motionbox">
+      <div class="mb mb-legacy">legacy<br>200ms<br>.2,0,0,1</div>
+      <div class="mb mb-spatial">spatial<br>350ms<br>.27,1.06,.18,1</div>
+      <div class="mb mb-expr">expressive<br>350ms<br>.42,1.67,.21,.9</div>
+    </div>
+
+    <div class="note">
+      <p><strong>Google runs two motion vocabularies and you should pick deliberately.</strong> Gemini and
+      AI Studio, which are <em>products</em>, still use the legacy M3 curves: gemini.google.com ships
+      <code>--gem-sys-motion--easing-standard: cubic-bezier(0.2,0,0,1)</code> exactly as you have it.
+      blog.google, deepmind.google and store.google.com, which are <em>editorial</em>, use the springs.
+      Your site is editorial with a tool inside it, so the springs are the right default and the legacy curves
+      are right for anything that behaves like a control.</p>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="find" id="f10">
+    <div class="find-head">
+      <span class="rank md">10</span>
+      <p class="find-title">Skeletons are almost invisible, and only two routes have one</p>
+      <span class="impact i-md">Medium</span>
+    </div>
+    <p>Your skeletons are the best-built thing in this report. They mirror the real layout in the real
+    containers at the real widths, with deterministic row widths so they do not reshuffle between renders.
+    Two problems, both small.</p>
+    <p>First, the colour. The bars are <code>bg-muted</code>, which resolves to <strong>#f9fafb</strong>
+    against a <strong>#ffffff</strong> page. That is <strong>1.03:1</strong>. The skeleton is very nearly
+    invisible, so the loading state reads as a blank page rather than as a page arriving.</p>
+    <p>Second, the animation. <code>animate-pulse</code> is a 2s opacity fade on a bar you can barely see.
+    Google's loading grey is #f1f3f4 or #e8eaed, and the motion is a shimmer sweep, which reads as progress
+    rather than as breathing.</p>
+
+    <div class="duo">
+      <div class="pane">
+        <p class="pane-tag"><span class="dot r"></span>Now &middot; #f9fafb, 1.03:1, pulse</p>
+        <div class="skrow">
+          <div class="sk sk-now" style="width:100%"></div>
+          <div class="sk sk-now" style="width:97%"></div>
+          <div class="sk sk-now" style="width:92%"></div>
+          <div class="sk sk-now" style="width:66%"></div>
+        </div>
+      </div>
+      <div class="pane next">
+        <p class="pane-tag"><span class="dot g"></span>#f1f3f4 with a shimmer sweep</p>
+        <div class="skrow">
+          <div class="sk sk-next" style="width:100%"></div>
+          <div class="sk sk-next" style="width:97%"></div>
+          <div class="sk sk-next" style="width:92%"></div>
+          <div class="sk sk-next" style="width:66%"></div>
+        </div>
+      </div>
+    </div>
+
+    <p>Coverage is the other half. Only <code>/</code> and <code>/posts</code> have a <code>loading.tsx</code>.
+    <code>/about</code>, <code>/work</code>, <code>/work/[slug]</code>, <code>/posts/[postSlug]</code> and
+    <code>/collection/[seriesSlug]</code> have none, so those routes hold a blank frame until the server
+    responds.</p>
+
+    <div class="note">
+      <p><strong>What the loading probe actually found.</strong> I put a 6x CPU throttle and a 180kbps pipe on
+      fonts.google.com, news.google.com, aistudio.google.com and blog.google, and logged every CSS animation
+      running at any point during the load. Not one of them presented a skeleton. The only loading affordance
+      that appeared was on blog.google, and it was a <strong>circular progress indicator</strong>: an SVG
+      running <code>spin 1.5s linear infinite</code> with a second <code>dash 1.7s ease-in-out infinite</code>
+      driving the stroke. That is Material's indeterminate circular progress, not a placeholder.</p>
+      <p>So the honest version of this finding is narrower than "make your skeletons shimmer". Google's answer
+      to waiting is usually a spinner over a settled layout, or content that streams in. The part of this that
+      is not a judgment call: <strong>#f9fafb on #ffffff is a 1.03:1 skeleton</strong>, which is invisible no
+      matter whose pattern you follow. Fix the colour first and treat the shimmer as optional.</p>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="find" id="f11">
+    <div class="find-head">
+      <span class="rank">11</span>
+      <p class="find-title">The shape scale is defined well and used at half strength</p>
+      <span class="impact i-lo">Medium</span>
+    </div>
+    <p>Your token scale is 4, 8, 12, 16, 24, 28, full. That is close to correct: M3 today is 4, 8, 12, 16, 28,
+    full, and Gemini extends it to 20, 24, 32, 40, 48, 56. The problem is what reaches the page. Measured on
+    your homepage, only three radii exist in production: pill (60 elements), 14.4px, and 7.2px.</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Site</th><th class="num">Radii actually rendered</th><th>Character</th></tr></thead>
+      <tbody>
+        <tr><td>hoangducviet.com</td><td class="num">pill, 14.4, 7.2</td><td>pills plus one card radius</td></tr>
+        <tr><td>blog.google</td><td class="num">48, 24, 16, 8, 120, plus asymmetric</td><td>large, and shapes that morph</td></tr>
+        <tr><td>deepmind.google</td><td class="num">4, 8, 16, 24, 36, 48, 60, pill</td><td>a full eight-step ramp</td></tr>
+        <tr><td>gemini.google.com</td><td class="num">4, 8, 12, 16, 20, 24, 28, 32, 40, 48, 56</td><td>plus directional variants</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Two specific gaps. Google's content cards are much rounder than yours: 24px and 48px are the common
+    values on editorial surfaces, against your 14.4px. And Google ships <em>directional</em> shape tokens,
+    <code>corner-large-top: 16px 16px 0 0</code> and <code>corner-large-start</code>, which is how a segmented
+    control or a stacked panel gets its ends shaped. blog.google renders
+    <code>border-radius: 48px 8px 8px 48px</code> on live elements.</p>
+
+    <h4>The fix</h4>
+    <p>Extend the scale to 20, 32, 40, 48, add the directional variants, and raise card radius from 1rem to
+    1.5rem on content surfaces.</p>
+  </div>
+
+  <!-- 12 -->
+  <div class="find" id="f12">
+    <div class="find-head">
+      <span class="rank">12</span>
+      <p class="find-title">Google Sans Flex has four variable axes. You drive none of them</p>
+      <span class="impact i-lo">Medium, and the most distinctive</span>
+    </div>
+    <p>You load the font as
+    <code>Google+Sans+Flex:opsz,wght@6..144,1..1000</code>. That requests two axes. The face has more, and
+    Gemini drives all of them. Straight from <code>--gem-sys-typography-type-scale</code>:</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Role</th><th class="num">size</th><th class="num">wght</th><th class="num">wdth</th><th class="num">ROND</th><th class="num">opsz</th></tr></thead>
+      <tbody>
+        <tr><td>display-m</td><td class="num">36px</td><td class="num">320</td><td class="num">100</td><td class="num">100</td><td class="num">36</td></tr>
+        <tr><td>emphasized-display-l</td><td class="num">42px</td><td class="num">280</td><td class="num">100</td><td class="num">100</td><td class="num">&mdash;</td></tr>
+        <tr><td>body-m</td><td class="num">15px</td><td class="num">400</td><td class="num">92</td><td class="num">0</td><td class="num">15</td></tr>
+        <tr><td>emphasized-body-m</td><td class="num">15px</td><td class="num">540</td><td class="num">92</td><td class="num">0</td><td class="num">15</td></tr>
+        <tr><td>label-m</td><td class="num">15px</td><td class="num">370</td><td class="num">92</td><td class="num">0</td><td class="num">15</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>Three things worth noticing. Weights are not multiples of 100: 280, 320, 370, 540. Body and label text
+    is set <strong>narrower</strong> than display text, <code>wdth 92</code> against 100. And
+    <code>ROND</code>, a roundness axis, is at <strong>100 on display type and 0 on body</strong>, so Google's
+    big type has rounded terminals and its small type does not.</p>
+    <p>The other inversion: Gemini's display weight is <strong>320</strong>, lighter than its body at 400.
+    Your h1 is 500, heavier than your body. Google sets big type light and tight. blog.google runs
+    <strong>weight 300</strong> on 18px buttons.</p>
+
+    <div class="duo">
+      <div class="pane">
+        <p class="pane-tag"><span class="dot r"></span>Now &middot; wght 500, no axes</p>
+        <div style="font-family:var(--display);font-size:34px;line-height:1.1;font-weight:500;letter-spacing:.5px">Measuring search quality</div>
+      </div>
+      <div class="pane next">
+        <p class="pane-tag"><span class="dot g"></span>wght 320, ROND 100, -0.024em</p>
+        <div style='font-family:var(--display);font-size:34px;line-height:1.1;letter-spacing:-.024em;font-variation-settings:"ROND" 100,"wdth" 100,"opsz" 34,"wght" 320'>Measuring search quality</div>
+      </div>
+    </div>
+
+    <p>Your font request has to change for this to work at all. Confirmed against the Google Fonts API: asking
+    for the wdth axis returns <code>font-stretch: 75% 125%</code> in the CSS, where your current request
+    returns <code>font-stretch: 100%</code>. Right now the axes are not merely unused, they are not being
+    delivered.</p>
+  </div>
+</section>
+<section id="sweetspot">
+  <h2>The sweet spot</h2>
+  <p class="sub">This was the actual question, so it gets its own answer rather than being implied by the findings.</p>
+
+  <p>There is no single Google look to copy, and that is the most useful thing the measurement turned up.
+  Google runs <strong>two distinct design vocabularies</strong> and the differences between them are larger
+  than the differences between either one and your site.</p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Axis</th><th>Product surfaces<br><span class="dim">Gemini, AI Studio, Fonts, News, Vertex</span></th><th>Editorial surfaces<br><span class="dim">blog.google, DeepMind, Labs, Store</span></th><th>Where you should land</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Root size</strong></td><td class="num">16px fixed</td><td class="num">16 to 18px fixed, display fluid</td><td>16px fixed, display fluid</td></tr>
+      <tr><td><strong>Body size</strong></td><td class="num">14px</td><td class="num">16 to 18px</td><td>16px. You are writing, not operating.</td></tr>
+      <tr><td><strong>Display weight</strong></td><td class="num">400 to 500</td><td class="num">300 to 400</td><td>Light. 320 to 400.</td></tr>
+      <tr><td><strong>Tracking</strong></td><td class="num">0</td><td class="num">0, negative on display</td><td>Identical either way. Zero.</td></tr>
+      <tr><td><strong>Button height</strong></td><td class="num">36 to 40px</td><td class="num">48px</td><td>40px. Editorial page, dense content.</td></tr>
+      <tr><td><strong>Button radius</strong></td><td class="num">12px or pill</td><td class="num">pill</td><td>Pill. You already do this.</td></tr>
+      <tr><td><strong>Card radius</strong></td><td class="num">12 to 16px</td><td class="num">24 to 48px</td><td>16 to 24px</td></tr>
+      <tr><td><strong>Motion</strong></td><td class="num">legacy M3, no overshoot</td><td class="num">two-axis springs</td><td>Springs for content, legacy for controls</td></tr>
+      <tr><td><strong>Shadows</strong></td><td class="num">floating elements only</td><td class="num">essentially none</td><td>None on content. Elevation only for menus.</td></tr>
+      <tr><td><strong>Hover</strong></td><td class="num">state layer</td><td class="num">tonal plate plus shape morph</td><td>Both. State layer plus radius response.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Your site is an editorial surface with a product inside it: long-form posts and a work section on one
+  side, a CMS and interactive figures on the other. The column labelled "where you should land" takes the
+  editorial answer for anything made of words and the product answer for anything that behaves like a control.</p>
+
+  <h3>What Google does not do, that you already correctly do not do</h3>
+  <p>Worth stating so you do not change these while changing everything else.</p>
+  <ul>
+    <li><strong>Shadows on content.</strong> blog.google, aistudio, news.google and labs rendered <strong>zero</strong>
+    box-shadows between them. Your work and post pages also render zero. That is correct and it is the
+    single most commonly missed thing about Google's look.</li>
+    <li><strong>Borders instead of fills.</strong> Google separates with hairlines and tonal surfaces, not
+    outlined boxes stacked on outlined boxes. So do you.</li>
+    <li><strong>A narrow ink ramp.</strong> Your homepage uses three text colours. That discipline is right.</li>
+    <li><strong>A reading measure that is actually correct.</strong> 558px at roughly 60 characters is in the
+    ideal band. DeepMind's own <code>max-width-inline</code> token is 624px.</li>
+  </ul>
+
+  <div class="note">
+    <p><strong>Where Google's elevation does appear</strong>, it is worth copying exactly. ai.google.dev renders
+    <code>rgba(60,64,67,0.3) 0 1px 2px, rgba(60,64,67,0.15) 0 2px 6px 2px</code>. The shadow colour is
+    <strong>#3c4043</strong>, Google's grey-800, not black. Your elevation tokens are Tailwind's default
+    black-based ramp. If you ever add a menu or a dialog to the public side, use the grey.</p>
+  </div>
+</section>
+
+<section id="spec">
+  <h2>The spec</h2>
+  <p class="sub">Drop-in values. Every number here was measured off a Google property or off the M3 spec site.</p>
+
+  <h3>Tokens</h3>
+  <pre><span class="c">/* ---- Type: two families, whole sizes, zero tracking ---- */</span>
+<span class="k">--font-display</span>: <span class="v">"Google Sans Flex", "Google Sans", system-ui, sans-serif;</span>
+<span class="k">--font-text</span>:    <span class="v">"Google Sans Text", "Google Sans", system-ui, sans-serif;</span>
+<span class="k">--font-code</span>:    <span class="v">"Google Sans Code", ui-monospace, monospace;</span>
+
+<span class="c">/* Tracking, corrected to the 2026 scale. Everything not listed is 0. */</span>
+<span class="k">--track-display</span>:  <span class="v">-0.024em;</span>   <span class="c">/* 32px and up. deepmind's -0.02333 to -0.027 */</span>
+<span class="k">--track-headline</span>: <span class="v">-0.018em;</span>   <span class="c">/* 24 to 32px */</span>
+<span class="k">--track-title</span>:    <span class="v">-0.005em;</span>   <span class="c">/* 20 to 24px */</span>
+<span class="k">--track-body</span>:     <span class="v">0;</span>          <span class="c">/* 14 to 18px. This is the big one. */</span>
+<span class="k">--track-small</span>:    <span class="v">0.00625rem;</span> <span class="c">/* below 12px only */</span>
+
+<span class="c">/* ---- Motion: the two-axis system, measured on blog.google ---- */</span>
+<span class="k">--motion-effects-fast</span>:    <span class="v">150ms;</span>
+<span class="k">--motion-effects-default</span>: <span class="v">200ms;</span>
+<span class="k">--motion-effects-slow</span>:    <span class="v">300ms;</span>
+<span class="k">--motion-spatial-fast</span>:    <span class="v">350ms;</span>
+<span class="k">--motion-spatial-default</span>: <span class="v">500ms;</span>
+<span class="k">--motion-spatial-slow</span>:    <span class="v">750ms;</span>
+
+<span class="k">--ease-effects-fast</span>:      <span class="v">cubic-bezier(0.31, 0.94, 0.34, 1);</span>
+<span class="k">--ease-effects-default</span>:   <span class="v">cubic-bezier(0.34, 0.8, 0.34, 1);</span>
+<span class="k">--ease-effects-slow</span>:      <span class="v">cubic-bezier(0.34, 0.88, 0.34, 1);</span>
+<span class="k">--ease-spatial</span>:           <span class="v">cubic-bezier(0.27, 1.06, 0.18, 1);</span>
+<span class="k">--ease-spatial-expressive</span>:<span class="v">cubic-bezier(0.42, 1.67, 0.21, 0.9);</span>
+
+<span class="c">/* ---- Colour: boundaries you can see, surfaces with the brand hue ---- */</span>
+<span class="k">--md-sys-color-outline</span>:          <span class="v">220 4% 47%;</span>   <span class="c">/* ~#74777c, 4.49:1. was 1.40:1 */</span>
+<span class="k">--md-sys-color-outline-variant</span>:  <span class="v">220 9% 86%;</span>   <span class="c">/* the old outline, now decorative */</span>
+<span class="k">--md-sys-color-on-surface</span>:       <span class="v">0 0% 12%;</span>    <span class="c">/* #1f1f1f, not #0a0a0a */</span>
+<span class="k">--md-sys-color-surface-container</span>:      <span class="v">221 33% 96%;</span> <span class="c">/* blue-tinted, from primary */</span>
+<span class="k">--md-sys-color-surface-container-high</span>: <span class="v">221 35% 93%;</span>
+
+<span class="c">/* ---- Shape: extended to Google's range ---- */</span>
+<span class="k">--md-sys-shape-corner-large-increased</span>: <span class="v">1.25rem;</span>  <span class="c">/* 20 */</span>
+<span class="k">--md-sys-shape-corner-extra-large-increased</span>: <span class="v">2rem;</span> <span class="c">/* 32 */</span>
+<span class="k">--md-sys-shape-corner-2xl</span>: <span class="v">3rem;</span>  <span class="c">/* 48, editorial cards */</span>
+<span class="k">--md-sys-shape-corner-large-top</span>:   <span class="v">1rem 1rem 0 0;</span>
+<span class="k">--md-sys-shape-corner-large-start</span>: <span class="v">1rem 0 0 1rem;</span>
+
+<span class="c">/* ---- Elevation, if you ever need it: Google's grey, not black ---- */</span>
+<span class="k">--md-sys-elevation-level1</span>: <span class="v">0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);</span>
+<span class="k">--md-sys-elevation-level2</span>: <span class="v">0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15);</span></pre>
+
+  <h3>The four rules that do most of the work</h3>
+  <pre><span class="c">/* 1. Stop tracking everything. This is the highest-leverage line here. */</span>
+body { <span class="k">letter-spacing</span>: <span class="v">0</span>; }
+
+<span class="c">/* 2. A focus ring that was designed rather than inherited. */</span>
+:focus-visible {
+  <span class="k">outline</span>: <span class="v">2px solid hsl(var(--md-sys-color-primary))</span>;
+  <span class="k">outline-offset</span>: <span class="v">2px</span>;
+  <span class="k">border-radius</span>: <span class="v">inherit</span>;
+}
+
+<span class="c">/* 3. A state layer any element can take, not just .md-btn. */</span>
+.state-layer { <span class="k">position</span>: relative; <span class="k">isolation</span>: isolate; }
+.state-layer::before {
+  <span class="k">content</span>: ""; <span class="k">position</span>: absolute; <span class="k">inset</span>: 0; <span class="k">z-index</span>: -1;
+  <span class="k">border-radius</span>: inherit; <span class="k">background</span>: currentColor; <span class="k">opacity</span>: 0;
+  <span class="k">transition</span>: <span class="v">opacity var(--motion-effects-fast) var(--ease-effects-fast)</span>;
+}
+.state-layer:hover::before        { <span class="k">opacity</span>: <span class="v">.08</span>; }
+.state-layer:focus-visible::before{ <span class="k">opacity</span>: <span class="v">.10</span>; }
+.state-layer:active::before       { <span class="k">opacity</span>: <span class="v">.12</span>; }
+
+<span class="c">/* 4. Pin the root, make only display type fluid. */</span>
+html { <span class="k">font-size</span>: <span class="v">16px</span>; }
+.display-fluid { <span class="k">font-size</span>: <span class="v">clamp(2rem, 1.2rem + 2.6vw, 3.5rem)</span>; }</pre>
+
+  <h3>The font link</h3>
+  <pre><span class="c">&lt;!-- was: two axes, wdth pinned at 100, no ROND --&gt;</span>
+&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?
+  family=Google+Sans+Flex:ROND,opsz,wdth,wght@0..100,6..144,75..125,1..1000
+  &amp;family=Google+Sans+Text:wght@400;500;700
+  &amp;display=swap"&gt;
+
+<span class="c">/* Then, per role, the way Gemini does it */</span>
+.display { <span class="k">font-variation-settings</span>: <span class="v">"ROND" 100, "wdth" 100, "wght" 340</span>; }
+.body    { <span class="k">font-variation-settings</span>: <span class="v">"ROND" 0,   "wdth" 92,  "wght" 400</span>; }</pre>
+
+  <h3>Buttons</h3>
+  <p class="sub">Yours renders at 29px, 32px and 40px tall. Google's floor is 36 for dense product UI and 48 for editorial.</p>
+  <div class="duo">
+    <div class="pane">
+      <p class="pane-tag"><span class="dot r"></span>Now &middot; h29, 13.5px, ls 0.5</p>
+      <div class="btnrow">
+        <button class="b b-now">View project</button>
+        <button class="b b-now">Read more</button>
+      </div>
+      <p class="dim" style="font-size:12.5px;margin:14px 0 0">Below Google's minimum height. Tracking on the label. One variant for every job.</p>
+    </div>
+    <div class="pane next">
+      <p class="pane-tag"><span class="dot g"></span>h40, 14px/500, ls 0, state layer</p>
+      <div class="btnrow">
+        <button class="b b-filled">View project</button>
+        <button class="b b-outlined">Read more</button>
+      </div>
+      <div class="btnrow">
+        <button class="b b-tonal">Tonal</button>
+        <button class="b b-text">Text</button>
+      </div>
+      <p class="dim" style="font-size:12.5px;margin:14px 0 0">Point at any of them. Tab to them.</p>
+    </div>
+  </div>
+</section>
+
+<section id="plan">
+  <h2>What to do, in order</h2>
+  <p class="sub">Ordered by change in feel per hour of work. The first group is most of the difference.</p>
+
+  <h3>Pass one: the values that are simply wrong</h3>
+  <p>Token edits and a handful of global rules. No component rewrites. This is where the site stops looking
+  approximately Google and starts looking Google.</p>
+  <ol>
+    <li>Remove <code>letter-spacing: 0.5px</code> from <code>body</code>. Correct the nine tracking values in
+    the M3 type scale. <span class="dim">Finding 1 and 2.</span></li>
+    <li>Darken <code>--md-sys-color-outline</code> so a boundary is visible, and demote the current value to
+    <code>outline-variant</code>. <span class="dim">Finding 5.</span></li>
+    <li>Add the global <code>:focus-visible</code> rule. <span class="dim">Finding 8.</span></li>
+    <li>Change the skeleton bar colour from <code>bg-muted</code> to the grey-100 equivalent and swap the
+    pulse for a shimmer. <span class="dim">Finding 10.</span></li>
+    <li>Add Google Sans Text, point body and label roles at it. <span class="dim">Finding 3.</span></li>
+  </ol>
+
+  <h3>Pass two: the system corrections</h3>
+  <ol start="6">
+    <li>Pin the root at 16px and move fluidity onto display type only. This one touches layout, so it wants
+    checking at 320, 390, 768, 1024, 1440 and 1920. <span class="dim">Finding 4.</span></li>
+    <li>Article body to 16px / 26px in #1f1f1f. <span class="dim">Finding 6.</span></li>
+    <li>Replace the motion tokens with the two-axis set, and split usage: effects for colour, spatial for
+    anything that moves. <span class="dim">Finding 9.</span></li>
+    <li>Promote the state layer out of <code>.md-btn</code> into a utility, and apply it to feed rows, work
+    blocks and chips. <span class="dim">Finding 7.</span></li>
+    <li>Give buttons a 40px height and a real variant set. <span class="dim">Spec section.</span></li>
+  </ol>
+
+  <h3>Pass three: the distinctive layer</h3>
+  <p>This is the part that stops it reading as a good Material clone and starts it reading as something with a
+  point of view. It is also the part most likely to go wrong, so it goes last.</p>
+  <ol start="11">
+    <li>Drive the variable axes: ROND 100 on display, wdth 92 on body, light display weights around 320 to 340.
+    Requires the font link change first. <span class="dim">Finding 12.</span></li>
+    <li>Add the radius response on hover for cards and feed rows. <span class="dim">Finding 7 and 11.</span></li>
+    <li>Extend the shape scale, raise content card radius, add the directional variants.
+    <span class="dim">Finding 11.</span></li>
+    <li>Add <code>loading.tsx</code> to the five routes that have none. <span class="dim">Finding 10.</span></li>
+  </ol>
+
+  <h3>Route the type scale through utilities at some point</h3>
+  <p>Not urgent and not glamorous, but 112 arbitrary sizes is the reason every one of these passes is more
+  work than it should be. Once <code>text-[0.8125rem]</code> is <code>text-label-lg</code> in 42 places,
+  the next time you want to change your mind it is one line rather than forty-two.</p>
+</section>
+
+<section id="honest">
+  <h2>Two things I am not confident about</h2>
+  <p class="sub">Separated out so they do not get mixed in with the measured claims.</p>
+  <ul>
+    <li><strong>Whether Google uses skeletons at all.</strong> Four throttled loads produced one spinner and
+    no skeletons, which tells me Google's default is a progress indicator rather than a placeholder, but four
+    pages is not a survey and a detector can miss things. The claim I stand behind is narrower: your skeleton
+    at 1.03:1 against the page is invisible, and that is true regardless of what Google does. Note also that
+    your skeletons are structurally better than a spinner would be, since they hold the real layout. Do not
+    throw them away on the strength of this.</li>
+    <li><strong>The fluid root.</strong> I am confident that reading text should not scale with the window,
+    because every text-heavy Google property pins it. I am less confident that your specific clamp is wrong
+    for <em>your</em> layout, because it was written to solve a real problem you had measured. If you disagree
+    with this one, the rest of the report survives without it.</li>
+  </ul>
+  <p>Everything else in this document is a measurement, and the scripts that produced it are in the scratchpad
+  if you want to re-run any of it against a changed site.</p>
+</section>
+
+<footer>
+  <p>Measured 17 September 2026 against live production sites. Chrome 152 headless, CDP, 1440x900, device
+  scale factor 1. Contrast computed per WCAG 2.1 relative luminance.</p>
+  <p>Sites measured: blog.google &middot; deepmind.google &middot; ai.google.dev &middot; m3.material.io &middot;
+  fonts.google.com &middot; gemini.google.com &middot; aistudio.google.com &middot; news.google.com &middot;
+  labs.google &middot; store.google.com &middot; research.google &middot; about.google &middot;
+  developers.google.com &middot; cloud.google.com/vertex-ai &middot; material-web.dev &middot; hoangducviet.com</p>
+</footer>
+
+</div>
+</body>
+</html>

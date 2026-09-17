@@ -17,7 +17,7 @@ const FEED_ROWS = ["f1", "f2", "f3", "f4", "f5", "f6"];
 const STACK_DOTS = ["s1", "s2", "s3", "s4", "s5"];
 
 const Bar = ({ className }: { className: string }) => (
-  <div className={`animate-pulse rounded bg-muted ${className}`} />
+  <div className={`skeleton ${className}`} />
 );
 
 export default function HomeLoading() {
@@ -27,7 +27,7 @@ export default function HomeLoading() {
       <section className="work-breakout pt-12 pb-8 sm:pt-14 md:pb-10 md:pt-16">
         <div className="max-w-[36rem]">
           <div className="flex flex-col items-start gap-4 sm:gap-5">
-            <div className="h-20 w-20 shrink-0 animate-pulse rounded-full bg-muted sm:h-24 sm:w-24 md:h-28 md:w-28" />
+            <div className="skeleton h-20 w-20 shrink-0 rounded-full sm:h-24 sm:w-24 md:h-28 md:w-28" />
             <Bar className="h-8 w-56 sm:h-9 sm:w-64 md:h-[2.3rem] md:w-72" />
           </div>
           <div className="mt-5 space-y-3">

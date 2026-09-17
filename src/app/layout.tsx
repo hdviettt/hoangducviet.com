@@ -7,11 +7,14 @@ import ClientFileExplorer from "@/components/layout/ClientFileExplorer";
 import SiteAnalytics from "@/components/providers/SiteAnalytics";
 import { getGlobalMetadata } from "@/lib/global";
 
-// Google Sans Flex — the variable font Google ships on deepmind.google (public
-// on Google Fonts since 2025; opsz 6..144 covers both display and text cuts).
-// Loaded via <link> in <head> because next/font's compiled list doesn't carry
-// it yet. globals.css defines --font-inter with this family first, so every
-// existing CSS reference keeps working.
+// Two faces, because Google uses two. Google Sans Flex is the display face and
+// Google Sans Text is the reading face, which is the split m3.material.io's own
+// type scale encodes: display/headline/title-large resolve to Google Sans, and
+// body/label/title-medium/title-small resolve to Google Sans Text.
+//
+// Both are loaded via <link> in <head> because next/font's compiled list does
+// not carry either one yet. globals.css maps them to --font-inter and
+// --font-text, so every existing CSS reference keeps working.
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "vietnamese"],
   variable: "--font-mono",
@@ -55,7 +58,7 @@ export default function RootLayout({
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Google+Sans+Text:wght@400;500;700&display=swap"
         />
       </head>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">
