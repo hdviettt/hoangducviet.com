@@ -234,9 +234,15 @@ export function KitDots({
   if (rows.length === 0) return null;
 
   return (
-    <dl className="kit-dots grid grid-cols-[auto_1fr] items-center">
+    <dl className="kit-dots grid grid-cols-[auto_1fr] items-start">
       {rows.map((r) => (
         <Fragment key={r.label}>
+          {/* items-start, not items-center. A centred label is correct only
+              while its row is one line: the moment "Built with" wraps to two,
+              the 63px value box centres a 20.8px label 21px down and it lines
+              up with neither row of dots. Measured at 1024, 1280 and 1366,
+              which is where the row wraps. The optical nudge below puts it on
+              the first row's centre instead. */}
           <dt className="text-md-on-surface-variant">{r.label}</dt>
           <dd>
             <Row shown={r.shown} rest={r.rest} />

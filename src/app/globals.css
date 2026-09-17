@@ -1489,6 +1489,11 @@ html {
 .kit-dots > dt {
   font-size: 0.8125rem;
   line-height: 1.6;
+  /* The grid aligns to the start now, so the label needs the difference between
+     a 28px disc and its own 20.8px line to sit on the first row's centre:
+     (1.75rem - 0.8125rem * 1.6) / 2. Written out rather than hardcoded to 3.6px
+     so it follows --dot-size if that changes again. */
+  padding-top: calc((var(--dot-size, 1.75rem) - 0.8125rem * 1.6) / 2);
 }
 
 @media (min-width: 640px) and (hover: hover) {
