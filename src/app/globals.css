@@ -1466,7 +1466,12 @@ html {
        slack under the button, where it reads as the bottom of a card rather
        than as a mistake. */
     grid-template-rows: auto auto 1fr;
-    column-gap: 2.75rem;
+    /* 1rem, not 2.75rem. blog.google puts 8px between its text panel and its
+       picture; 44px was reserving a gutter this card does not need, because
+       both sides sit on the same wash and there is no edge for the gap to
+       separate. The 28px goes to the picture, which is the only thing here
+       that gets better with width. */
+    column-gap: 1rem;
     row-gap: 0;
     padding: 2rem;
   }
