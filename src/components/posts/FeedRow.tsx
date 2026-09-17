@@ -32,9 +32,13 @@ const ROW_CLS =
 
 function PostRow({ item }: { item: Extract<FeedItem, { kind: "post" }> }) {
   return (
+    // state-layer gives the row Google's hover: a quiet plate appears under
+    // what you are pointing at, rather than the title alone changing colour.
+    // --bleed because the row has no padding of its own for the plate to fill,
+    // so it is bled past the text instead of the row being re-boxed.
     <Link
       href={`/posts/${item.post.slug}`}
-      className={`group items-baseline py-[1.3125rem] sm:grid-cols-[92px_1fr] ${ROW_CLS}`}
+      className={`group state-layer state-layer--bleed items-baseline py-[1.3125rem] sm:grid-cols-[92px_1fr] ${ROW_CLS}`}
     >
       <span className={`${DATE_CLS} sm:pt-[0.1875rem]`}>
         {feedRowDate(item.post.date_created)}
@@ -73,7 +77,7 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
                 <Link
                   key={part.slug}
                   href={`/posts/${part.slug}`}
-                  className="group/part flex items-baseline gap-3 py-[0.4375rem]"
+                  className="group/part state-layer state-layer--bleed flex items-baseline gap-3 py-[0.4375rem]"
                 >
                   <span className="w-5 shrink-0 text-[0.8125rem] font-medium tabular-nums text-[hsl(var(--md-sys-color-primary)/0.75)]">
                     {String(col.offset + i + 1).padStart(2, "0")}

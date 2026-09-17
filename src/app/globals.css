@@ -43,11 +43,17 @@
     --md-sys-color-surface-variant: 210 17% 98%; /* #F8F9FA */
     --md-sys-color-on-surface-variant: 227 5% 32%; /* #4e4f56 — deepmind secondary text */
 
+    /* M3 derives the neutral surfaces from the primary hue at low chroma, which
+       is why Google's are visibly blue: #f8fafd, #f0f4f9, #e9eef6, #dde3ea
+       measured on ai.google.dev. These were near-neutral greys, so a tonal
+       surface read as "slightly dirty white" rather than as a surface. The
+       primary here is #004AEF, a stronger blue than Google's, so the tint has
+       further to travel, not less. */
     --md-sys-color-surface-container-lowest: 0 0% 100%;
-    --md-sys-color-surface-container-low: 210 17% 98%;
-    --md-sys-color-surface-container: 220 14% 96%;
-    --md-sys-color-surface-container-high: 220 13% 93%;
-    --md-sys-color-surface-container-highest: 220 13% 91%;
+    --md-sys-color-surface-container-low: 220 43% 98%;
+    --md-sys-color-surface-container: 220 38% 96%;
+    --md-sys-color-surface-container-high: 220 35% 93%;
+    --md-sys-color-surface-container-highest: 220 30% 90%;
 
     /* Two boundary tiers, and they were both in the decorative tier.
        Measured against white: the old `outline` was 1.40:1 and `outline-variant`
@@ -100,8 +106,11 @@
     --md-sys-shape-corner-medium: 0.75rem;
     --md-sys-shape-corner-large: 1rem;
     /* deepmind.google's image radius — sits in M3 Expressive's expanded scale */
-    --md-sys-shape-corner-large-increased: 1.5rem;
-    --md-sys-shape-corner-extra-large: 1.75rem;
+    --md-sys-shape-corner-large-increased: 1.25rem; /* 20 */
+    --md-sys-shape-corner-large-max: 1.5rem; /* 24 — the editorial card */
+    --md-sys-shape-corner-extra-large: 1.75rem; /* 28 */
+    --md-sys-shape-corner-extra-large-increased: 2rem; /* 32 */
+    --md-sys-shape-corner-2xl: 3rem; /* 48 — blog.google's large card */
     --md-sys-shape-corner-full: 624.9375rem;
 
     /* ----- M3 elevation (light) ----- */
@@ -140,6 +149,39 @@
     --md-sys-motion-duration-long1: 450ms;
     --md-sys-motion-duration-long2: 500ms;
 
+    /* Google's live motion system, measured on blog.google. It has two axes,
+       and the axis is *what moves*, not how fast.
+
+       `effects` is anything that does not change position: colour, opacity,
+       fill. It never overshoots. `spatial` is transform, size and position, and
+       it always overshoots slightly and settles, which is why the final control
+       point is above 1. Using one curve for both is what makes movement read
+       mechanical.
+
+       blog.google ships the curves this site currently uses under the names
+       --motion-legacy-standard and --motion-legacy-emphasized. They are kept
+       above because they are still correct for controls: gemini.google.com and
+       aistudio.google.com, which are products rather than editorial surfaces,
+       still use them. This site is editorial with a tool inside it, so content
+       takes the springs and controls keep the legacy curves. */
+    --md-sys-motion-effects-fast: 150ms;
+    --md-sys-motion-effects-default: 200ms;
+    --md-sys-motion-effects-slow: 300ms;
+    --md-sys-motion-spatial-fast: 350ms;
+    --md-sys-motion-spatial-default: 500ms;
+    --md-sys-motion-spatial-slow: 750ms;
+
+    --md-sys-motion-easing-effects-fast: cubic-bezier(0.31, 0.94, 0.34, 1);
+    --md-sys-motion-easing-effects-default: cubic-bezier(0.34, 0.8, 0.34, 1);
+    --md-sys-motion-easing-effects-slow: cubic-bezier(0.34, 0.88, 0.34, 1);
+    --md-sys-motion-easing-spatial: cubic-bezier(0.27, 1.06, 0.18, 1);
+    --md-sys-motion-easing-spatial-expressive: cubic-bezier(
+      0.42,
+      1.67,
+      0.21,
+      0.9
+    );
+
     /* ----- Shadcn aliases (so existing utilities keep working) ----- */
     --background: var(--md-sys-color-background);
     --foreground: var(--md-sys-color-on-background);
@@ -173,8 +215,16 @@
     --chart-2: #c2410c;
     --chart-grid: hsl(var(--md-sys-color-outline-variant));
 
-    --article-text: hsl(213 7% 40%);
+    /* Running prose was hsl(213 7% 40%) = #5f656d, 5.88:1. That is Google's
+       *secondary* ink (#5f6368) doing duty as the primary reading colour, which
+       spends two-thirds of the available contrast on the one surface where
+       reading comfort matters most. blog.google sets article paragraphs in
+       #202124 at 16.10:1 and reserves the grey for datelines and captions.
+       This is #202124 in the palette's own hue. */
+    --article-text: hsl(225 6% 13%);
     --article-heading: hsl(220 7% 12%);
+    /* The grey keeps its job, it just stops being the body copy. */
+    --article-meta: hsl(213 7% 40%);
     --article-link: hsl(var(--md-sys-color-primary));
     --article-link-hover: hsl(221 100% 38%);
     --article-border: hsl(var(--md-sys-color-outline-variant));
@@ -257,6 +307,7 @@
 
     --article-text: hsl(0 0% 78%);
     --article-heading: hsl(0 0% 93%);
+    --article-meta: hsl(213 7% 63%);
     --article-link: hsl(220 100% 78%);
     --article-link-hover: hsl(220 100% 86%);
     --article-border: hsl(var(--md-sys-color-outline-variant));
@@ -605,35 +656,41 @@ h6 {
      gutter before anything was drawn. */
 }
 
-/* One knob for the whole public site.
+/* The root is fixed. Display type is what scales.
 
-   Everything reader-facing is sized in rem, so the root font size is the scale
-   of the page: type, leading, padding, gaps and column widths all ride it and
-   cannot drift apart. That is the point. The previous attempt gave two blocks
-   their own clamps against the viewport and left the rest of the site at fixed
-   px, which made the homepage scale and the feed under it not.
+   What was here derived the root from the reading column, so the whole page
+   rode one knob: `clamp(12.8px, --shell-max * 0.0140351, 16px)`, which lands
+   on 14.4px at 1440. The intent was right, that a design rendered at 1265 and
+   at 1920 should not be two different densities, but applying it to the root
+   put reading text on the same curve as layout, and reading text should not
+   move with the window.
 
-   0.0140351 is 16/1140: the root is 16px exactly when the column is at its
-   full 1140px, so a window at or above 1600px renders what it always did. The
-   12.8px floor is 80% and it is reached around 1280px, which is where the
-   design stops shrinking and stays put.
+   What it cost, measured: body copy rendered at 14.4px while this stylesheet
+   said `font-size: 1rem` and the project's own CLAUDE.md said "16px / 1.6
+   body". Every size on the homepage came out fractional (9.79, 11.7, 13.5,
+   14.4, 17.1, 17.28, 20.7, 28.8), two of them 0.18px apart, and every rem of
+   spacing missed the 8dp grid: 0.75rem drew 10.8px, 1.5rem drew 21.6px.
 
-   `--shell-max` is deliberately free of rem. The root size is derived from it,
-   and a rem inside it would make that derivation circular.
+   Every Google property that is mostly words pins its root. Measured: 16px on
+   ai.google.dev, news.google.com and fonts.google.com, 18px on blog.google.
+   Their type sizes are whole numbers because of it. Google does scale display
+   type against the viewport (labs.google runs a 10px root and vw-derived
+   headings), so the fluid idea moves rather than disappears: it lives on
+   `--display-fluid` below and on the display roles that opt into it.
 
-   Below 1024px the root goes back to 16px. A phone is not this layout shrunk,
-   it is a different one, and scaling it to 30% because the arithmetic says so
-   would be following the rule off a cliff. The boundary sits at 1024 because
-   the layout already changes there, so the one discontinuity in the scale
-   coincides with a reflow that happens anyway. */
+   `--shell-max` still governs the column, so the layout keeps the behaviour
+   the old rule was written to get. It is only the type that stops moving. */
 html {
-  font-size: 1rem;
+  font-size: 16px;
 }
 
-@media (min-width: 1024px) {
-  html {
-    font-size: clamp(12.8px, calc(var(--shell-max) * 0.0140351), 16px);
-  }
+/* The one thing that still scales with the window: display-tier type. Between
+   a 360px phone and a 1440px desktop this runs 2rem to 3.5rem, which is the
+   range the old fluid root was reaching for and never quite got, because it
+   was dragging the body text along with it. */
+:root {
+  --display-fluid: clamp(2rem, 1.2rem + 2.6vw, 3.5rem);
+  --display-fluid-sm: clamp(1.625rem, 1.1rem + 1.7vw, 2.5rem);
 }
 
 /* One grid for the whole page.
@@ -728,6 +785,74 @@ html {
 }
 
 /* ================================
+   STATE LAYER
+
+   M3's interaction primitive: the "on" colour laid over the component at 8%
+   hovered, 10% focused, 12% pressed. It existed here, but only inside
+   `.md-btn`, and `.md-btn` is used almost entirely in the admin. So the public
+   site had no state layer at all, and a mouse-over probe of every interactive
+   element on the homepage came back changing exactly one property: `color`.
+
+   blog.google's hover is `background-color: transparent -> #f8f9fa`: a quiet
+   plate appears under the thing you are pointing at. This is that, tokenised,
+   so a row, a card or a chip can take it without restating the opacities.
+   ================================ */
+.state-layer {
+  position: relative;
+  isolation: isolate;
+}
+.state-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-sys-motion-effects-fast)
+    var(--md-sys-motion-easing-effects-fast);
+}
+.state-layer:hover::before {
+  opacity: 0.08;
+}
+.state-layer:focus-visible::before {
+  opacity: 0.1;
+}
+.state-layer:active::before {
+  opacity: 0.12;
+}
+/* A state layer needs somewhere to be drawn. On a bare row there is no padding
+   to fill, so the plate is bled outward rather than the row being re-boxed. */
+.state-layer--bleed::before {
+  inset: -0.5rem -0.75rem;
+  border-radius: var(--md-sys-shape-corner-medium);
+}
+
+/* The other half of Google's current hover vocabulary: the corners respond.
+   blog.google carries `transition: border-radius` on 25 live elements, and it
+   is the most recognisable single gesture in the 2026 language. Spatial track,
+   because a corner radius is a change in shape, not in colour. */
+.shape-response {
+  transition: border-radius var(--md-sys-motion-spatial-fast)
+      var(--md-sys-motion-easing-spatial),
+    background-color var(--md-sys-motion-effects-fast)
+      var(--md-sys-motion-easing-effects-fast),
+    border-color var(--md-sys-motion-effects-fast)
+      var(--md-sys-motion-easing-effects-fast);
+}
+.shape-response:hover {
+  border-radius: var(--md-sys-shape-corner-large-increased);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .state-layer::before,
+  .shape-response {
+    transition: none;
+  }
+}
+
+/* ================================
    SKELETON
 
    The bars were `bg-muted`, which resolves to #f9fafb against a #ffffff page:
@@ -780,7 +905,9 @@ html {
      the line box is 25.6px either way, so a paragraph keeps its rhythm and
      only the type shrinks into the extra leading. */
   font-size: 1rem;
-  line-height: 1.6;
+  /* 26px at the 16px root, which is blog.google's article paragraph exactly
+     and lands on the 4dp grid. 1.6 drew 25.6. */
+  line-height: 1.625;
   color: var(--article-text);
   /* Running prose takes the text face. The headings below keep the display
      face, which is the split every Google property measured uses. */
@@ -1275,28 +1402,38 @@ html {
    the window while the rest of the site stood still. The scale lives in one
    place now and everything rides it. */
 .stack-row {
-  --dot-size: 2rem;
-  /* 7px, not 8. The reference row cleared its column by 4px of 319, so a 1%
-     difference anywhere flipped it onto a second line — and there is a 1%
-     difference by construction, because the root size stops at its 12.8px
-     floor a shade before the column stops shrinking. A row that depends on
-     four pixels is not a row that fits, it is one that has not failed yet. */
+  /* 1.75rem = 28px, down from 2rem.
+
+     The note that used to sit below this said a row clearing its column by
+     four pixels "is not a row that fits, it is one that has not failed yet".
+     That was right, and pinning the root is what made it fail: 2rem drew
+     28.8px against a fluid 14.4px root and draws 32px against a fixed 16px
+     one, so the widest row (eight discs in a 283px column) went from clearing
+     by 3px to overflowing by 27px and wrapping its last chip onto a line of
+     its own.
+
+     28px with the 7px gap puts the same row at 273px in 283: ten pixels of
+     clearance rather than three, and it no longer depends on the root staying
+     where it is. */
+  --dot-size: 1.75rem;
+  /* 7px, not 8, for the same reason the disc is 28 and not 32: the widest row
+     has to clear its column by more than a rounding error. */
   gap: 0.4375rem;
 }
+/* 2.25rem, not 2.5rem, and now it means the same thing at every width.
+
+   This was 2.5rem with a phone-only override down to 2.25rem, because the root
+   used to be fluid: one rem value drew a 40px disc on a phone at 16px and a
+   36px disc on a desktop at 14.4px, the small screen carrying the larger mark.
+   The override existed to cancel that.
+
+   With the root pinned at 16px, 2.5rem draws 40px everywhere, which is 4px more
+   than this row was ever designed around: the "Built with" row wrapped its last
+   chip onto a second line the moment the root stopped shrinking. 2.25rem is the
+   36px the desktop always rendered, now on both, and the override is gone
+   because there is nothing left to cancel. */
 .stack-row--fixed {
-  --dot-size: 2.5rem;
-}
-/* The root size is fluid and bottoms out at 12.8px on a wide screen while a
-   phone sits at the full 16px, so one rem value drew a 40px disc on the phone
-   and a 36px disc on the desktop — the small screen carrying the larger mark.
-   That cost height where height is scarcest, and it left the widest row (six
-   discs) clearing a 320px column by five pixels, which is not a row that fits
-   but one that has not failed yet. Matching the desktop size gives the same
-   disc on both and takes the clearance to thirty-odd pixels. */
-@media (max-width: 639px) {
-  .stack-row--fixed {
-    --dot-size: 2.25rem;
-  }
+  --dot-size: 2.25rem;
 }
 .stack-dot {
   width: var(--dot-size);
