@@ -1544,18 +1544,60 @@ html {
   --mc-peek: 0px;
 }
 
-/* The same argument, one size down. 4.5rem was set when this carousel sat in a
-   wider column; inside a card the media slot is 630px at 1440, so 72px of peek
-   was taking 11% of the width and 10% of the height off every slide. Measured
-   against the single-image cards either side of it: 558px against 630px, which
-   is exactly the inconsistency a reader notices without being able to name.
-
-   The peek does not go to zero, because unlike the one-slide case there really
-   is a neighbour and the edge of it is the cheapest way to say so. 1.25rem is
-   enough to read as "more to the right" and costs 3% instead of 11%. The dots
-   and arrows underneath carry the rest of that message. */
+/* On a teaser card the carousel gives up nothing at all.
+ *
+ * Inside an article a peeking neighbour and a rail of controls underneath are
+ * right: the reader is already stopped, and the strip is the subject. On a work
+ * card the picture is competing with five other cards for the same glance, and
+ * a carousel that renders 855x481 next to a single image at 875x537 just looks
+ * like the smaller one. Measured: 20px lost to peek, 20px more to the controls
+ * sitting below the frame.
+ *
+ * So the peek goes to zero and the controls move on top of the picture. A
+ * carousel card is now exactly the size of a single-media card, and the dots
+ * still say there is more. The article carousel is untouched. */
 .fw-card .work-carousel .media-carousel {
-  --mc-peek: 1.25rem;
+  --mc-peek: 0px;
+}
+.fw-card .work-carousel {
+  position: relative;
+}
+.fw-card .work-carousel .media-carousel__controls {
+  position: absolute;
+  inset: auto 0.875rem 0.875rem;
+  margin-top: 0;
+  padding-inline: 0;
+  pointer-events: none;
+  /* The slide track is transformed, which composites it into its own layer; an
+     absolutely positioned sibling at z-index auto hit-tests above it but can
+     paint below. An explicit stacking order settles it. */
+  z-index: 2;
+}
+.fw-card .work-carousel .media-carousel__controls > * {
+  pointer-events: auto;
+}
+/* Over a picture the controls need a ground that cannot match what is behind
+   them. The first attempt gave them the surface colour at 82%, which is white,
+   and every one of these screenshots is white: they rendered exactly where they
+   were supposed to and were invisible.
+   
+   The inverse pair is what M3 has for this. Dark in the light theme and light
+   in the dark one, so it contrasts with the page rather than agreeing with it,
+   and the same rule works in both. */
+.fw-card .work-carousel .media-carousel__dots,
+.fw-card .work-carousel .media-carousel__btn {
+  background: hsl(var(--md-sys-color-inverse-surface) / 0.86);
+  color: hsl(var(--md-sys-color-inverse-on-surface));
+}
+.fw-card .work-carousel .media-carousel__btn:hover:not(:disabled) {
+  background: hsl(var(--md-sys-color-inverse-surface) / 0.88);
+  color: hsl(var(--md-sys-color-inverse-on-surface));
+}
+.fw-card .work-carousel .media-carousel__dot {
+  background: hsl(var(--md-sys-color-inverse-on-surface) / 0.45);
+}
+.fw-card .work-carousel .media-carousel__dot.is-active {
+  background: hsl(var(--md-sys-color-inverse-on-surface));
 }
 
 /* Selected work breaks out past the 1044px content column, so a featured
