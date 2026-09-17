@@ -1,6 +1,7 @@
 "use client";
 
 import { useToast } from "@/components/admin/Toast";
+import { MAX_UPLOAD_LABEL, formatBytes, tooLarge } from "@/lib/upload-limits";
 import { useCallback, useEffect, useState } from "react";
 
 interface MediaItem {
@@ -28,6 +29,46 @@ interface MediaPickerProps {
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i;
 const isVideoUrl = (u: string) => VIDEO_EXT.test(u);
 
+/**
+ * POST one file to /api/media, reporting how much of it has gone out.
+ *
+ * XMLHttpRequest rather than fetch, for the one thing fetch cannot do: report
+ * upload progress. `fetch` has no equivalent of `xhr.upload.onprogress`, and
+ * without it a large upload is a word on a button and nothing else.
+ *
+ * Rejects with the server's own message so the caller can show it.
+ */
+function postFile(
+  file: File,
+  onProgress: (pct: number) => void,
+): Promise<{ url: string }> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/media");
+    xhr.upload.onprogress = (ev) => {
+      if (ev.lengthComputable) {
+        onProgress(Math.round((ev.loaded / ev.total) * 100));
+      }
+    };
+    xhr.onload = () => {
+      let body: { url?: string; error?: string } | null = null;
+      try {
+        body = JSON.parse(xhr.responseText);
+      } catch {}
+      if (xhr.status >= 200 && xhr.status < 300 && body?.url) {
+        resolve(body as { url: string });
+      } else {
+        reject(new Error(body?.error || `Upload failed (${xhr.status})`));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Upload failed: network error"));
+    xhr.onabort = () => reject(new Error("Upload cancelled"));
+    const formData = new FormData();
+    formData.append("file", file);
+    xhr.send(formData);
+  });
+}
+
 export default function MediaPicker({
   value,
   onChange,
@@ -40,6 +81,11 @@ export default function MediaPicker({
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  // null while idle, 0-100 while a file is going up. A number, not a word:
+  // a 20 MB file on a 3 Mbps uplink is 84 seconds, measured, and 84 seconds of
+  // the static word "Uploading…" is indistinguishable from a hang. It is what
+  // made a slow upload and a broken one look the same.
+  const [progress, setProgress] = useState<number | null>(null);
   const [search, setSearch] = useState("");
 
   const fetchMedia = useCallback(async () => {
@@ -56,20 +102,33 @@ export default function MediaPicker({
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    // Refuse it here, before a byte goes out. The route rejects on
+    // `content-length` without reading the body, and a browser that sends
+    // anyway never gets its request drained: the upload hangs and the button
+    // sticks on "Uploading…" for good. See lib/upload-limits.ts.
+    if (tooLarge(file.size)) {
+      toast(
+        `That file is ${formatBytes(file.size)}. The limit is ${MAX_UPLOAD_LABEL}, so compress it or trim the clip.`,
+        "error",
+      );
+      e.target.value = "";
+      return;
+    }
     setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
+    setProgress(0);
     try {
-      const res = await fetch("/api/media", { method: "POST", body: formData });
-      if (res.ok) {
-        const data = await res.json();
-        onChange(data.url);
-        setOpen(false);
-      }
-    } catch {
-      toast("Upload failed", "error");
+      const data = await postFile(file, setProgress);
+      onChange(data.url);
+      setOpen(false);
+    } catch (err) {
+      // Every failure says something now. This used to be `if (res.ok)` with
+      // no else, so a 413, a 401 or a 500 all did nothing at all: the modal
+      // stayed open, the button went back to "Upload new", and nothing on
+      // screen said the file had not been saved.
+      toast(err instanceof Error ? err.message : "Upload failed", "error");
     } finally {
       setUploading(false);
+      setProgress(null);
       e.target.value = "";
     }
   };
@@ -197,7 +256,11 @@ export default function MediaPicker({
                 className="md-field-dense flex-1"
               />
               <label className="md-btn md-btn-filled md-btn-sm cursor-pointer shrink-0">
-                {uploading ? "Uploading…" : "Upload new"}
+                {uploading
+                  ? progress === null || progress === 100
+                    ? "Saving…"
+                    : `Uploading ${progress}%`
+                  : "Upload new"}
                 <input
                   type="file"
                   accept={allowVideo ? "image/*,video/*" : "image/*"}
@@ -254,9 +317,20 @@ export default function MediaPicker({
                             className="w-full h-full object-cover"
                           />
                         ) : (
+                          // Lazy, because this grid is the whole library at
+                          // full size. Measured on production: opening the
+                          // picker fired 273 requests and pulled 125 MB in
+                          // thirty seconds, with 22 still in flight — 249
+                          // images at an average of 661 KB, eight of them
+                          // animated GIFs over 5 MB. It is not what made an
+                          // upload hang, but it did roughly double how long
+                          // one took: 8 MB went up in 39s against the 21s the
+                          // uplink alone accounts for.
                           <img
                             src={item.url}
                             alt={item.originalName}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                         )}

@@ -2,6 +2,11 @@ import { db } from "@/db";
 import { media } from "@/db/schema";
 import { requireAuth } from "@/lib/auth";
 import { uploadToR2 } from "@/lib/r2";
+import {
+  MAX_UPLOAD_BYTES,
+  MAX_UPLOAD_LABEL,
+  UPLOAD_SLACK_BYTES,
+} from "@/lib/upload-limits";
 import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -36,11 +41,30 @@ export async function POST(request: Request) {
     // Guard against oversized uploads (videos especially) — reject up front,
     // before buffering the whole body into memory. Cloudflare also caps request
     // bodies, so keep this comfortably under that.
-    const MAX_UPLOAD_BYTES = 50 * 1024 * 1024; // 50 MB
     const contentLength = Number(request.headers.get("content-length") || 0);
-    if (contentLength > MAX_UPLOAD_BYTES + 1024 * 1024) {
+    if (contentLength > MAX_UPLOAD_BYTES + UPLOAD_SLACK_BYTES) {
+      // Drain before answering. Replying while the client is still streaming
+      // leaves a body nobody is reading: curl notices the early reply and
+      // stops, but a browser's fetch() never settles, so the picker's button
+      // sat on "Uploading…" indefinitely. Measured against production: a 55 MB
+      // file hung for over five minutes; the same file through curl came back
+      // 413 in two seconds. Draining costs no memory — the chunks are read and
+      // dropped, never buffered — and it is what lets the client hear the 413.
+      try {
+        const body = request.body;
+        if (body) {
+          const reader = body.getReader();
+          while (!(await reader.read()).done) {
+            // discard
+          }
+        }
+      } catch {
+        // A client that gives up mid-stream is fine; the answer is the same.
+      }
       return NextResponse.json(
-        { error: "File too large. Maximum upload size is 50 MB." },
+        {
+          error: `File too large. Maximum upload size is ${MAX_UPLOAD_LABEL}.`,
+        },
         { status: 413 },
       );
     }
@@ -54,7 +78,9 @@ export async function POST(request: Request) {
 
     if (file.size > MAX_UPLOAD_BYTES) {
       return NextResponse.json(
-        { error: "File too large. Maximum upload size is 50 MB." },
+        {
+          error: `File too large. Maximum upload size is ${MAX_UPLOAD_LABEL}.`,
+        },
         { status: 413 },
       );
     }
