@@ -130,11 +130,11 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
 //
 // CSS-only, deliberately. This renders inside a server component, and a
 // tooltip that needs a client bundle to say "PostgreSQL" is a bad trade.
-function Dot({ item }: { item: ProjectLogo }) {
+function Dot({ item, className = "" }: { item: ProjectLogo; className?: string }) {
   const mark = resolveMark(item);
   const letter = mark ? null : item.letter || monogram(item.name);
   return (
-    <li className="group relative">
+    <li className={`group relative ${className}`}>
       <span
         aria-hidden="true"
         className="stack-dot flex items-center justify-center rounded-full border border-md-outline-variant bg-md-surface-container-high text-md-on-surface group-hover:border-md-outline"
@@ -193,17 +193,53 @@ function pick(items: ProjectLogo[], max: number, taken: Set<string>) {
   };
 }
 
+// How many discs fit on ONE line, per breakpoint, with the `+N` pill beside
+// them. Measured on the live block, not guessed: the label eats 54px plus a
+// 16px column gap, each disc is 28px plus a 7px gap, and the pill is 42px.
+//
+//   viewport   text column   room for discs   fits with +N
+//     768          176px          106px            1
+//    1024          277px          207px            4
+//    1280          309px          239px            5
+//    1440          353px          283px            6
+//    1600          397px          327px            8
+//
+// One fixed cap cannot serve that range, which is why `maxStack = 7` wrapped
+// to two lines below 1440 and left a label stranded between them. Below `lg`
+// the label moves above its row (see `.kit-dots`), which hands the discs the
+// whole column back and is why the base tier is 3 rather than 1.
+const TIERS = [
+  { n: 3, dot: "", pill: "lg:hidden" },
+  { n: 4, dot: "hidden lg:inline-flex", pill: "hidden lg:flex xl:hidden" },
+  { n: 5, dot: "hidden xl:inline-flex", pill: "hidden xl:flex 2xl:hidden" },
+  { n: 7, dot: "hidden 2xl:inline-flex", pill: "hidden 2xl:flex" },
+] as const;
+
 function Row({ shown, rest }: { shown: ProjectLogo[]; rest: number }) {
+  const total = shown.length + rest;
   return (
-    <ul className="stack-row flex flex-wrap items-center">
-      {shown.map((it) => (
-        <Dot key={it.name} item={it} />
-      ))}
-      {rest > 0 && (
-        <li className="stack-more flex items-center rounded-full border border-md-outline-variant bg-md-surface-container-high px-2.5 font-mono font-medium leading-none text-md-on-surface-variant">
-          +{rest}
-        </li>
-      )}
+    // nowrap, not wrap. The row is allowed exactly one line now; anything past
+    // the tier's count is hidden by CSS and counted into that tier's pill, so
+    // the number is always right for the width it is being read at.
+    <ul className="stack-row flex flex-nowrap items-center">
+      {shown.map((it, i) => {
+        const tier = TIERS.find((t) => i < t.n);
+        return (
+          <Dot key={it.name} item={it} className={tier ? tier.dot : "hidden"} />
+        );
+      })}
+      {TIERS.map((t) => {
+        const hidden = total - t.n;
+        if (hidden <= 0) return null;
+        return (
+          <li
+            key={t.n}
+            className={`stack-more items-center rounded-full border border-md-outline-variant bg-md-surface-container-high px-2.5 font-mono font-medium leading-none text-md-on-surface-variant ${t.pill} ${t.pill.startsWith("hidden") ? "" : "flex"}`}
+          >
+            +{hidden}
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -215,7 +251,10 @@ function Row({ shown, rest }: { shown: ProjectLogo[]; rest: number }) {
 export function KitDots({
   models,
   stack,
-  maxModels = 5,
+  // The caps feed the widest tier (7); narrower tiers hide the surplus in CSS
+  // and count it into their own pill, so these are upper bounds rather than
+  // what any one viewport shows.
+  maxModels = 7,
   maxStack = 7,
 }: {
   models: ProjectLogo[];
@@ -234,7 +273,7 @@ export function KitDots({
   if (rows.length === 0) return null;
 
   return (
-    <dl className="kit-dots grid grid-cols-[auto_1fr] items-start">
+    <dl className="kit-dots grid grid-cols-1 items-start lg:grid-cols-[auto_1fr]">
       {rows.map((r) => (
         <Fragment key={r.label}>
           {/* items-start, not items-center. A centred label is correct only

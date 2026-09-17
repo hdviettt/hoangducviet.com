@@ -743,14 +743,22 @@ html {
    to meet a picture. On desktop the rows put the heading and the body back in
    the left column with the media spanning both, which is the layout it had. */
 @media (min-width: 768px) {
+  /* Four rows, not three. The chips sit in row 1 on their own and the media
+     starts at row 2, which is where the title starts, so the top edge of a
+     screenshot lines up with the top of the heading rather than with a 36px
+     tag above it. */
   .site-grid:has(> .fw-media) > .fw-head {
     grid-row: 1;
+    margin-bottom: 0.75rem;
   }
-  .site-grid:has(> .fw-media) > .fw-body {
+  .site-grid:has(> .fw-media) > .fw-title {
     grid-row: 2;
   }
+  .site-grid:has(> .fw-media) > .fw-body {
+    grid-row: 3;
+  }
   .site-grid:has(> .fw-media) > .fw-media {
-    grid-row: 1 / span 2;
+    grid-row: 2 / span 2;
   }
 }
 
@@ -1489,11 +1497,19 @@ html {
 .kit-dots > dt {
   font-size: 0.8125rem;
   line-height: 1.6;
+  /* Below lg the label sits above its row, so the discs get the whole column
+     instead of losing 70px to a label beside them. At 768 that is the
+     difference between one disc fitting and three. */
+  padding-top: 0;
   /* The grid aligns to the start now, so the label needs the difference between
      a 28px disc and its own 20.8px line to sit on the first row's centre:
      (1.75rem - 0.8125rem * 1.6) / 2. Written out rather than hardcoded to 3.6px
      so it follows --dot-size if that changes again. */
-  padding-top: calc((var(--dot-size, 1.75rem) - 0.8125rem * 1.6) / 2);
+}
+@media (min-width: 1024px) {
+  .kit-dots > dt {
+    padding-top: calc((var(--dot-size, 1.75rem) - 0.8125rem * 1.6) / 2);
+  }
 }
 
 @media (min-width: 640px) and (hover: hover) {

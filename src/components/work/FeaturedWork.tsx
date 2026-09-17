@@ -90,7 +90,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
             the stack row further down the same block, where a border and a
             logo carry a tool. Two chip shapes for two different jobs. */}
         {project.categories.length > 0 && (
-          <ul className="mb-3 flex flex-wrap gap-2.5">
+          <ul className="flex flex-wrap gap-2.5">
             {project.categories.map((c) => (
               <li key={c.slug}>
                 {/* Links now. They were labels shaped like buttons for as long
@@ -105,8 +105,16 @@ export default function FeaturedWork({ project }: { project: Project }) {
             ))}
           </ul>
         )}
+      </div>
 
-        <h3 className="max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem] max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
+      {/* The chips are their own grid row now, and the media starts at the row
+          below them. Before this the media spanned rows 1-2 and row 1 began at
+          the chips, so a 1934px screenshot lined its top edge up with a 36px
+          tag instead of with the title. Measured: media top 689 against title
+          top 737, a 48px disagreement that read as the picture floating too
+          high. Nothing is offset by hand; the row boundary does it. */}
+      <div className={`${visual ? "col-1" : "col-2"} fw-title`}>
+        <h3 className="max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
           <Link
             href={href}
             className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
