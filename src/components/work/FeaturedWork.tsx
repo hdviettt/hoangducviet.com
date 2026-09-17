@@ -1,7 +1,7 @@
 import { Icon } from "@/components/ui/Icon";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import FeaturedClip from "@/components/work/FeaturedClip";
-import { LogoRow, flattenStack } from "@/components/work/StackChips";
+import { LogoRow, cardMarks } from "@/components/work/StackChips";
 import { darkTwin } from "@/lib/figure-theme";
 import type { Project } from "@/lib/projects";
 import Link from "next/link";
@@ -51,19 +51,16 @@ export default function FeaturedWork({ project }: { project: Project }) {
   // Four is what every project carries and what the 2x2 grid is built for; the
   // slice stops a fifth from silently breaking the panel.
   const metrics = project.metrics.slice(0, 4);
-  // Models first, then the tools, deduped by name and capped at five. Models
-  // lead because "what does it think with" is the question a reader of this
-  // site actually has; the tools are the answer to a follow-up.
-  const marks = (() => {
-    const seen = new Set<string>();
-    return [...project.models, ...flattenStack(project.stack, project.techTags)]
-      .filter((it) => {
-        if (seen.has(it.name)) return false;
-        seen.add(it.name);
-        return true;
-      })
-      .slice(0, 5);
-  })();
+  // Four marks and a `+N`, per `cardMarks`. Five bare logos said "these five";
+  // four and a count says "these four, of this many", which is the true
+  // statement and the one a reader can act on. Which four is the CMS's
+  // decision — the rule is stored order, models first — and WorkForm now shows
+  // the same four back and lets them be reordered.
+  const { shown: marks, hidden: marksHidden } = cardMarks(
+    project.models,
+    project.stack,
+    project.techTags,
+  );
   // Topics, or nothing. The eyebrow used to derive "Platform · 19 agents" from
   // a project's children and print "Project" for everyone else — one claim
   // about containment that the prose now makes, and one word that told a
@@ -84,9 +81,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // gutters, so 880px of a 1320px row is gutter and the art column collapses
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
-    <article
-      className={`fw-card ${visual ? "fw-card--split" : ""}`}
-    >
+    <article className={`fw-card ${visual ? "fw-card--split" : ""}`}>
       {/* Four parts: chips, heading, media, then the rest of the prose. On a
           phone the card is one column and DOM order wins, so the media lands
           directly under the title instead of after the whole pitch — it used
@@ -95,51 +90,48 @@ export default function FeaturedWork({ project }: { project: Project }) {
           and body rows in the right one. See .fw-card in globals.css for why
           the block stopped using .site-grid. */}
       <div className="fw-panel">
-
-      {/* The chips are their own grid row now, and the media starts at the row
+        {/* The chips are their own grid row now, and the media starts at the row
           below them. Before this the media spanned rows 1-2 and row 1 began at
           the chips, so a 1934px screenshot lined its top edge up with a 36px
           tag instead of with the title. Measured: media top 689 against title
           top 737, a 48px disagreement that read as the picture floating too
           high. Nothing is offset by hand; the row boundary does it. */}
-      <div className="fw-title">
-        <h3 className="max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
-          <Link
-            href={href}
-            className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-          >
-            {project.title}
-          </Link>
-        </h3>
-      </div>
+        <div className="fw-title">
+          <h3 className="max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
+            <Link
+              href={href}
+              className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+            >
+              {project.title}
+            </Link>
+          </h3>
+        </div>
 
+        <div className="fw-body">
+          {project.description && (
+            // Six lines, which is what fits beside the picture at 1440: the media
+            // is 399px tall and the chips, title and button spend 208 of it, so
+            // six 28px lines fill the rest exactly. Four was too tight and put an
+            // ellipsis mid-sentence on copy that is only a little long.
+            //
+            // This is a ceiling, not a plan. The budget at this width is about
+            // 290 characters; past that the clamp keeps the card from stretching
+            // but the sentence is better cut in the CMS than cut here.
+            <p className="mt-5 line-clamp-6 text-[0.9375rem] leading-7 text-md-on-surface-variant">
+              {project.description}
+            </p>
+          )}
 
-      <div className="fw-body">
-        {project.description && (
-          // Six lines, which is what fits beside the picture at 1440: the media
-          // is 399px tall and the chips, title and button spend 208 of it, so
-          // six 28px lines fill the rest exactly. Four was too tight and put an
-          // ellipsis mid-sentence on copy that is only a little long.
-          //
-          // This is a ceiling, not a plan. The budget at this width is about
-          // 290 characters; past that the clamp keeps the card from stretching
-          // but the sentence is better cut in the CMS than cut here.
-          <p className="mt-5 line-clamp-6 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-            {project.description}
-          </p>
-        )}
-
-        {marks.length > 0 && (
-          // Five logos, one row, no labels. The two labelled rows this replaces
-          // were ~110px on a card whose picture is the point; this is 28px and
-          // still answers "what is it made of" at a glance. The full stack,
-          // grouped and uncapped, is on /work/[slug].
-          <div className="mb-7 mt-6">
-            <LogoRow items={marks} />
-          </div>
-        )}
-
-      </div>
+          {marks.length > 0 && (
+            // Four logos and a count, one row, no labels. The two labelled rows
+            // this replaces were ~110px on a card whose picture is the point;
+            // this is 28px and still answers "what is it made of" at a glance.
+            // The full stack, grouped and uncapped, is on /work/[slug].
+            <div className="mb-7 mt-6">
+              <LogoRow items={marks} rest={marksHidden} />
+            </div>
+          )}
+        </div>
 
         <Link
           href={href}
@@ -152,10 +144,23 @@ export default function FeaturedWork({ project }: { project: Project }) {
 
       <div className="fw-media">
         {isSet ? (
-          // Not wrapped in a Link: the slides scroll and the controls are
-          // buttons, so a link around them would swallow both. The title and
-          // the View project button already go to the project.
-          <div className="work-carousel">
+          // The same affordance a still has: it grows on hover and it opens the
+          // project. A Link cannot wrap this — the slides scroll and the
+          // controls are buttons, and a link around them swallows both — so it
+          // is a sibling laid over the picture instead. It sits above the
+          // slides and below the controls in the stacking order, which is the
+          // whole trick: the arrows and dots keep their own clicks, and every
+          // other pixel of the picture opens the project.
+          //
+          // `group` is here rather than on .fw-media because the hover has to
+          // start at the picture, not at the card: a still only scales when the
+          // pointer is on the still, and the carousel now matches that.
+          <div className="work-carousel group">
+            <Link
+              href={href}
+              aria-label={project.title}
+              className="work-carousel__hit"
+            />
             <MediaCarousel
               items={shown.map((m) => ({
                 src: m.src,

@@ -130,7 +130,10 @@ export function Chips({ items }: { items: ProjectLogo[] }) {
 //
 // CSS-only, deliberately. This renders inside a server component, and a
 // tooltip that needs a client bundle to say "PostgreSQL" is a bad trade.
-function Dot({ item, className = "" }: { item: ProjectLogo; className?: string }) {
+function Dot({
+  item,
+  className = "",
+}: { item: ProjectLogo; className?: string }) {
   const mark = resolveMark(item);
   const letter = mark ? null : item.letter || monogram(item.name);
   return (
@@ -304,9 +307,13 @@ export function KitDots({
 export function LogoRow({
   items,
   fixed = false,
+  rest = 0,
 }: {
   items: ProjectLogo[];
   fixed?: boolean;
+  // How many marks the row is not drawing. Rendered as the last cell so the
+  // row reads "these four, of this many" rather than "these five".
+  rest?: number;
 }) {
   return (
     <ul
@@ -317,12 +324,44 @@ export function LogoRow({
       {items.map((it) => (
         <Dot key={it.name} item={it} />
       ))}
+      {rest > 0 && (
+        <li className="stack-more flex items-center rounded-full border border-md-outline-variant bg-md-surface-container-high px-2.5 font-mono font-medium leading-none text-md-on-surface-variant">
+          +{rest}
+        </li>
+      )}
     </ul>
   );
 }
 
 // Flatten a grouped stack into a single chip list (for compact card views),
 // falling back to legacy flat techTags when stack is empty.
+// How many marks a work card draws before it starts counting instead.
+export const MARKS_SHOWN = 4;
+
+// Which marks a work card shows, and how many it does not.
+//
+// Models first, then the stack in stored order, deduped by name. Order is the
+// whole interface: it is what the CMS edits and what decides the four, so this
+// has to be the single definition of the rule. The admin form renders a preview
+// from this same function — a preview that reimplemented it would eventually
+// disagree with the card, and a preview that lies is worse than none.
+export function cardMarks(
+  models: ProjectLogo[],
+  stack: { group: string; items: ProjectLogo[] }[],
+  techTags?: string[] | null,
+): { shown: ProjectLogo[]; hidden: number } {
+  const seen = new Set<string>();
+  const all = [...models, ...flattenStack(stack, techTags)].filter((it) => {
+    if (seen.has(it.name)) return false;
+    seen.add(it.name);
+    return true;
+  });
+  return {
+    shown: all.slice(0, MARKS_SHOWN),
+    hidden: Math.max(0, all.length - MARKS_SHOWN),
+  };
+}
+
 export function flattenStack(
   stack: { group: string; items: ProjectLogo[] }[],
   techTags?: string[] | null,
