@@ -770,16 +770,36 @@ html {
   .site-grid:has(> .fw-media) {
     row-gap: 1.5rem;
   }
-  /* And the media runs past the prose gutter. A screenshot is the one thing
-     on the block that is hurt most by being small, and it is the one thing
-     that loses nothing by touching the edges. */
-  .fw-media {
-    margin-inline: -0.75rem;
-  }
+  /* The media used to carry a -12px inline margin here, left over from when it
+     was a child of the prose grid and bleeding to the screen edge made sense.
+     Against a rounded panel it only read as misalignment: measured 374px wide
+     at x=8 against a 350px panel at x=20. It is gone; see the stacking rule
+     below for the rest. */
   /* Less peek, so the slide you are looking at gets the width instead of its
      neighbour. */
   .work-carousel .media-carousel {
     --mc-peek: 2rem;
+  }
+}
+
+/* Wherever the card is one column, the picture leads.
+ *
+ * This is how blog.google stacks the same thing, measured at 390: the media
+ * and the text sit at an identical left edge and width (326px at x=32), the
+ * media comes first, and 16px separates them. Nothing hangs past anything.
+ *
+ * Here the panel is a single block, so source order put the entire pitch and
+ * the button ahead of the picture — the media started 388px below the title,
+ * which is the very thing the comment in FeaturedWork claims was fixed and
+ * which the two-box split quietly undid. `order` puts it back without cutting
+ * the panel in half, which is the only other way up and costs the card its
+ * shape.
+ *
+ * 899px, not 767px: the split does not begin until 900, so a tablet at 800
+ * is still one column and had the same problem. */
+@media (max-width: 899px) {
+  .fw-card--split .fw-media {
+    order: -1;
   }
 }
 
