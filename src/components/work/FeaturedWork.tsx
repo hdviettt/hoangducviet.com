@@ -1,7 +1,6 @@
 import { Icon } from "@/components/ui/Icon";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import FeaturedClip from "@/components/work/FeaturedClip";
-import { KitDots, flattenStack } from "@/components/work/StackChips";
 import { darkTwin } from "@/lib/figure-theme";
 import type { Project } from "@/lib/projects";
 import Link from "next/link";
@@ -66,7 +65,6 @@ export default function FeaturedWork({
   // reader nothing they could not see. An untagged project simply opens with
   // its title.
 
-  const stack = flattenStack(project.stack, project.techTags);
   // Khong anh, khong clip, khong so lieu thi khong co cot phai. Thieu cai nay,
   // mot du an bi xoa het metrics trong CMS se render ra mot <dl> rong, tuc la
   // mot vach mau mong nam giua trang.
@@ -266,16 +264,25 @@ export default function FeaturedWork({
 
       <div className="fw-body">
         {project.description && (
-          <p className="mt-5 text-[0.9375rem] leading-7 text-md-on-surface-variant">
+          // Six lines, which is what fits beside the picture at 1440: the media
+          // is 399px tall and the chips, title and button spend 208 of it, so
+          // six 28px lines fill the rest exactly. Four was too tight and put an
+          // ellipsis mid-sentence on copy that is only a little long.
+          //
+          // This is a ceiling, not a plan. The budget at this width is about
+          // 290 characters; past that the clamp keeps the card from stretching
+          // but the sentence is better cut in the CMS than cut here.
+          <p className="mt-5 line-clamp-6 text-[0.9375rem] leading-7 text-md-on-surface-variant">
             {project.description}
           </p>
         )}
 
-        {(project.models.length > 0 || stack.length > 0) && (
-          <div className="mt-7">
-            <KitDots models={project.models} stack={stack} />
-          </div>
-        )}
+        {/* The Models / Built with rows are gone from the teaser. They were two
+            labelled rows plus their discs, roughly 110px, and on a card whose
+            picture is already shorter than its text that is 110px spent making
+            the imbalance worse. Nothing is lost: /work/[slug] carries the full
+            stack in its own section, ungrouped and uncapped, which is the page
+            a reader who cares about the tooling is going to. */}
 
         <Link
           href={href}

@@ -1453,7 +1453,19 @@ html {
    card exists to widen. */
 @media (min-width: 900px) {
   .fw-card--split {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    /* 4/8, not 5/7. Google's hero gives the words 427px of a 1296px row and
+       the picture 861 -- 33/67. This was 42/58, which made the picture the
+       smaller half of a block whose picture is the point. At the card's real
+       1186px the text still gets ~360px, about 47 characters a line, so the
+       measure stays inside the band while the media gains 100px. */
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    /* The media spans rows 2 and 3 and is taller than the title and body
+       together, so without this the browser shares the slack between both rows
+       and opens a 90px hole between the heading and the first sentence. Pinning
+       rows 1 and 2 to their content and giving row 3 the remainder puts the
+       slack under the button, where it reads as the bottom of a card rather
+       than as a mistake. */
+    grid-template-rows: auto auto 1fr;
     column-gap: 2.75rem;
     row-gap: 0;
     padding: 2rem;
