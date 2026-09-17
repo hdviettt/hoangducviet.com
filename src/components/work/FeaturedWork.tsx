@@ -90,6 +90,7 @@ export default function FeaturedWork({
           head and body in the left column with the media spanning the title
           and body rows in the right one. See .fw-card in globals.css for why
           the block stopped using .site-grid. */}
+      <div className="fw-panel">
       <div className="fw-head">
         {/* Chips when the project is tagged, the derived line when it is not.
             Not links: nothing on this site answers /topics/seo, and a chip that
@@ -133,6 +134,40 @@ export default function FeaturedWork({
             {project.title}
           </Link>
         </h3>
+      </div>
+
+
+      <div className="fw-body">
+        {project.description && (
+          // Six lines, which is what fits beside the picture at 1440: the media
+          // is 399px tall and the chips, title and button spend 208 of it, so
+          // six 28px lines fill the rest exactly. Four was too tight and put an
+          // ellipsis mid-sentence on copy that is only a little long.
+          //
+          // This is a ceiling, not a plan. The budget at this width is about
+          // 290 characters; past that the clamp keeps the card from stretching
+          // but the sentence is better cut in the CMS than cut here.
+          <p className="mt-5 line-clamp-6 text-[0.9375rem] leading-7 text-md-on-surface-variant">
+            {project.description}
+          </p>
+        )}
+
+        {/* The Models / Built with rows are gone from the teaser. They were two
+            labelled rows plus their discs, roughly 110px, and on a card whose
+            picture is already shorter than its text that is 110px spent making
+            the imbalance worse. Nothing is lost: /work/[slug] carries the full
+            stack in its own section, ungrouped and uncapped, which is the page
+            a reader who cares about the tooling is going to. */}
+
+      </div>
+
+        <Link
+          href={href}
+          className="md-btn md-btn-outlined md-btn-pill md-btn-lg mt-8 no-underline"
+        >
+          View project
+          <Icon name="arrow_forward" size={20} aria-hidden="true" />
+        </Link>
       </div>
 
       <div className="fw-media">
@@ -260,37 +295,6 @@ export default function FeaturedWork({
             ))}
           </dl>
         )}
-      </div>
-
-      <div className="fw-body">
-        {project.description && (
-          // Six lines, which is what fits beside the picture at 1440: the media
-          // is 399px tall and the chips, title and button spend 208 of it, so
-          // six 28px lines fill the rest exactly. Four was too tight and put an
-          // ellipsis mid-sentence on copy that is only a little long.
-          //
-          // This is a ceiling, not a plan. The budget at this width is about
-          // 290 characters; past that the clamp keeps the card from stretching
-          // but the sentence is better cut in the CMS than cut here.
-          <p className="mt-5 line-clamp-6 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-            {project.description}
-          </p>
-        )}
-
-        {/* The Models / Built with rows are gone from the teaser. They were two
-            labelled rows plus their discs, roughly 110px, and on a card whose
-            picture is already shorter than its text that is 110px spent making
-            the imbalance worse. Nothing is lost: /work/[slug] carries the full
-            stack in its own section, ungrouped and uncapped, which is the page
-            a reader who cares about the tooling is going to. */}
-
-        <Link
-          href={href}
-          className="md-btn md-btn-outlined md-btn-pill md-btn-lg mt-8 no-underline"
-        >
-          View project
-          <Icon name="arrow_forward" size={20} aria-hidden="true" />
-        </Link>
       </div>
     </article>
   );
