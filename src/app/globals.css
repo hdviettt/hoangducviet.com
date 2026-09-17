@@ -1468,6 +1468,20 @@ html {
   --mc-peek: 0px;
 }
 
+/* The same argument, one size down. 4.5rem was set when this carousel sat in a
+   wider column; inside a card the media slot is 630px at 1440, so 72px of peek
+   was taking 11% of the width and 10% of the height off every slide. Measured
+   against the single-image cards either side of it: 558px against 630px, which
+   is exactly the inconsistency a reader notices without being able to name.
+
+   The peek does not go to zero, because unlike the one-slide case there really
+   is a neighbour and the edge of it is the cheapest way to say so. 1.25rem is
+   enough to read as "more to the right" and costs 3% instead of 11%. The dots
+   and arrows underneath carry the rest of that message. */
+.fw-card .work-carousel .media-carousel {
+  --mc-peek: 1.25rem;
+}
+
 /* Selected work breaks out past the 1044px content column, so a featured
    project reads as a spread rather than as one more row of the page. The
    writing feed underneath stays on the column, and that contrast is what makes
