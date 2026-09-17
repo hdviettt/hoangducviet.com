@@ -112,17 +112,20 @@ export default function HomeLoading() {
               <Bar className="h-4 w-10" />
             </div>
           </aside>
+          {/* The feed is a whitespace list now: a date label over a title, 40px
+              between items, no rules. The placeholder has to be the same shape
+              or the hand-off moves the page, which is the whole reason this
+              file mirrors the real layout instead of drawing generic boxes. */}
           <div className="col-2">
-            {FEED_ROWS.map((id) => (
-              <div
-                key={id}
-                className="grid grid-cols-1 gap-y-1.5 border-b border-md-outline-variant py-[1.3125rem] sm:grid-cols-[92px_1fr] sm:gap-x-6"
-              >
-                <Bar className="h-4 w-20 sm:mt-[0.1875rem]" />
-                <Bar className="h-5 w-[85%]" />
-              </div>
-            ))}
-            <Bar className="mt-8 h-5 w-28" />
+            <div className="flex flex-col gap-12">
+              {FEED_ROWS.map((id) => (
+                <div key={id} className="max-w-[40rem]">
+                  <Bar className="h-3 w-[4.5rem]" />
+                  <Bar className="mt-2 h-[1.625rem] w-[88%]" />
+                </div>
+              ))}
+            </div>
+            <Bar className="mt-10 h-5 w-28" />
           </div>
         </div>
       </section>

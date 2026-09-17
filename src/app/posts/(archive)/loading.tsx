@@ -1,8 +1,8 @@
 // Archive skeleton.
 //
 // The page is a sticky aside in col-1 and the feed in col-2, inside
-// work-breakout, and every row is the same 92px date column plus title that
-// FeedRow renders. The previous version drew a full-width stack of year groups
+// work-breakout, and every row is the date label over a title that FeedRow
+// renders, 40px apart with no rules between them. The previous version drew a full-width stack of year groups
 // with no aside at all, so the real page arrived as a two-column layout on top
 // of a one-column placeholder.
 const ROWS = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"];
@@ -26,17 +26,14 @@ export default function PostsLoading() {
           </div>
         </aside>
 
-        <div className="col-2">
+        <div className="col-2 flex flex-col gap-12">
           {ROWS.map((id, i) => (
-            <div
-              key={id}
-              className="grid grid-cols-1 gap-y-1.5 border-b border-md-outline-variant py-[1.3125rem] sm:grid-cols-[92px_1fr] sm:gap-x-6"
-            >
-              <Bar className="h-4 w-20 sm:mt-[0.1875rem]" />
+            <div key={id} className="max-w-[40rem]">
+              <Bar className="h-3 w-[4.5rem]" />
               {/* Deterministic widths so the placeholder does not shimmer into
                   a different shape on every render. */}
               <div
-                className="skeleton h-5"
+                className="skeleton mt-2 h-[1.625rem]"
                 style={{ width: `${68 + ((i * 13) % 26)}%` }}
               />
             </div>
