@@ -97,7 +97,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
                     as nothing answered /topics/<slug>; something does. */}
                 <Link
                   href={`/topics/${c.slug}`}
-                  className="inline-flex items-center rounded-full bg-md-surface-container-high px-4 py-2 text-[0.8125rem] leading-5 text-md-on-surface transition-colors hover:text-primary"
+                  className="state-layer inline-flex items-center rounded-full bg-md-surface-container-high px-4 py-2 text-[0.8125rem] leading-5 text-md-on-surface transition-colors hover:text-primary"
                 >
                   {c.title}
                 </Link>
@@ -169,7 +169,10 @@ export default function FeaturedWork({ project }: { project: Project }) {
           // edges — the side of a UI recording where the panel being
           // demonstrated usually is. Showing the whole frame costs a little
           // vertical rhythm and is worth it.
-          <Link href={href} className="group block overflow-hidden rounded-xl">
+          <Link
+            href={href}
+            className="group block overflow-hidden rounded-[var(--md-sys-shape-corner-large-max)] ring-1 ring-inset ring-md-outline-variant"
+          >
             <FeaturedClip
               src={clip.src}
               poster={clip.poster}
@@ -181,7 +184,18 @@ export default function FeaturedWork({ project }: { project: Project }) {
           // A screenshot is not art: it has hard edges and a white ground, so
           // it still needs the rounded box that the art does not. What it does
           // not need is a crop — see the clip branch above.
-          <Link href={href} className="group block overflow-hidden rounded-xl">
+          // 24px and a hairline ring, where this was a 16px radius on a
+          // transparent box. Sampled at 2x, the corner of a UI screenshot on
+          // the white page was white meeting white: the box the comment above
+          // says a screenshot needs was being drawn, but nothing made it
+          // visible, so the 16px radius had no edge to round. The ring gives
+          // the screenshot the boundary the art deliberately does without, and
+          // 24px is the radius deepmind.google and blog.google use on a
+          // content card (--shape-corner-lg), against the 16 this had.
+          <Link
+            href={href}
+            className="group block overflow-hidden rounded-[var(--md-sys-shape-corner-large-max)] ring-1 ring-inset ring-md-outline-variant"
+          >
             <img
               src={shot.src}
               alt={shot.caption || project.title}
