@@ -1371,32 +1371,32 @@ html {
    rule. Corners respond on hover for the same reason they must not on the post
    feed -- a card has no separator for the shape to argue with.
    ================================ */
-/* Four soft washes, cycling, so six identical cards stop reading as one.
+/* Four washes, cycling, so six cards stop reading as one card repeated.
  *
- * The values are Google's, not invented: the 95 and 99 tones of the GM3
- * reference palette, read off ai.google.dev. Those tones exist for exactly this
- * -- blog.google's full-bleed band is a lavender-to-mint wash built from the
- * same range. Using the published tones is what keeps four tinted cards from
- * becoming four different opinions.
+ * The depth is the part that took two tries. The first pass ran a GM3 95 tone
+ * to a 99 tone, which fades to white: measured beside blog.google's hero panel
+ * (#e8f0fe -> #bbe2ff, ending at 87% lightness) it read as a stain rather than
+ * a decision. The second pass copied that 87% ending and was worse the other
+ * way -- Google spends it on a 427px panel and this is a 1026px card, so the
+ * same gradient over 2.4x the area came out loud.
  *
- *   blue   #ecf3fe -> #fafbff     primary95  -> primary99
- *   cyan   #dff3ff -> #f7fcff     secondary95 -> secondary99
- *   green  #e7f8ed -> #f2ffee     tertiary95 -> tertiary99
- *   warm   #fef7e0 -> #fffbf9     yellow50   -> error99
+ * These end at 91%. Deep enough to be a colour rather than a tint, shallow
+ * enough that four of them down a page stay quiet. The start tones are the GM3
+ * 95s; the ends are their 90s, so both stops are published values and the four
+ * cards are four steps of one scale rather than four opinions.
  *
- * Every wash runs the same angle, the same distance and the same two steps of
- * the same scale, so the set reads as one material seen in four lights rather
- * than as four materials. The end stop is within a point of white in all four,
- * which is why the bottom of every card still agrees with the page.
+ * The hues stay cool and close: blue, cyan, violet, mint, spanning 137deg
+ * rather than the full wheel. A yellow card in the set was the single thing
+ * that made it look like a palette demo.
  */
 .fw-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   row-gap: 1.5rem;
   --tint-a: 217 90% 96%;
-  --tint-b: 225 100% 99%;
+  --tint-b: 217 91% 91%;
   background: linear-gradient(
-    135deg,
+    150deg,
     hsl(var(--tint-a)) 0%,
     hsl(var(--tint-b)) 100%
   );
@@ -1406,37 +1406,16 @@ html {
     var(--md-sys-motion-easing-spatial);
 }
 .fw-card[data-tint="1"] {
-  --tint-a: 203 100% 94%;
-  --tint-b: 205 100% 99%;
+  --tint-a: 203 100% 95%;
+  --tint-b: 204 100% 91%;
 }
 .fw-card[data-tint="2"] {
-  --tint-a: 141 55% 94%;
-  --tint-b: 140 90% 98%;
+  --tint-a: 250 80% 96%;
+  --tint-b: 250 70% 92%;
 }
 .fw-card[data-tint="3"] {
-  --tint-a: 46 94% 94%;
-  --tint-b: 30 100% 99%;
-}
-
-/* Dark keeps the hues and drops the light. A 94% tone inverted is not a dark
-   tint, it is a grey, so these are set at the surface-container-low lightness
-   this palette already uses (10%) with just enough chroma to separate the
-   cards, fading to the 7% ground rather than to white. */
-.dark .fw-card {
-  --tint-a: 221 26% 12%;
-  --tint-b: 220 10% 9%;
-}
-.dark .fw-card[data-tint="1"] {
-  --tint-a: 199 28% 12%;
-  --tint-b: 205 10% 9%;
-}
-.dark .fw-card[data-tint="2"] {
-  --tint-a: 145 20% 11%;
-  --tint-b: 140 8% 9%;
-}
-.dark .fw-card[data-tint="3"] {
-  --tint-a: 40 24% 11%;
-  --tint-b: 35 10% 9%;
+  --tint-a: 150 55% 95%;
+  --tint-b: 150 45% 91%;
 }
 @media (hover: hover) {
   .fw-card:hover {
@@ -1449,6 +1428,26 @@ html {
   }
 }
 
+/* Dark keeps the hue and drops the light. A 95% tone inverted is a grey, so
+   these sit near the dark ramp's own lightness with just enough chroma to
+   separate, and deepen across the card the way the light ones do. */
+.dark .fw-card {
+  --tint-a: 218 22% 13%;
+  --tint-b: 218 26% 9%;
+}
+.dark .fw-card[data-tint="1"] {
+  --tint-a: 200 24% 13%;
+  --tint-b: 203 28% 9%;
+}
+.dark .fw-card[data-tint="2"] {
+  --tint-a: 250 20% 14%;
+  --tint-b: 250 24% 10%;
+}
+.dark .fw-card[data-tint="3"] {
+  --tint-a: 150 18% 12%;
+  --tint-b: 150 22% 9%;
+}
+
 /* One column until there is room for two. 900 rather than 768 because at 768
    a 5fr share of the shell is 260px, which is narrower than the column this
    card exists to widen. */
@@ -1459,8 +1458,6 @@ html {
     row-gap: 0;
     padding: 2rem;
   }
-  /* Chips get their own row so the media can start level with the title
-     rather than with a 36px tag above it. */
   .fw-card--split > .fw-head {
     grid-column: 1;
     grid-row: 1;
