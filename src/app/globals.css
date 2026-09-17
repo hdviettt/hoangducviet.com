@@ -1414,9 +1414,17 @@ html {
   }
 }
 
+/* Each wash carries its own ink and chip ground, because a neutral grey chip
+   on a blue panel is the thing that reads as out of place. blog.google sets
+   its eyebrow and heading to rgb(25,41,103) on a panel ending in #bbe2ff --
+   a deep tone of the panel's own hue, at 9.93:1, rather than a grey borrowed
+   from the page. These are that, per tint, measured at 7.9 to 8.9:1 on the
+   panel and 7.0 to 7.9:1 on the chip. */
 .fw-panel {
   display: flex;
   flex-direction: column;
+  --tint-ink: 217 62% 26%;
+  --tint-chip: 217 70% 86%;
   /* Children size to their content, not to the panel. Without this the flex
      column stretches the CTA across the full width and a pill that was 168px
      becomes 365px, which is not a button any more. */
@@ -1450,14 +1458,20 @@ html {
 .fw-card[data-tint="1"] .fw-panel {
   --tint-a: 203 100% 95%;
   --tint-b: 204 100% 91%;
+  --tint-ink: 204 66% 24%;
+  --tint-chip: 204 80% 86%;
 }
 .fw-card[data-tint="2"] .fw-panel {
   --tint-a: 250 80% 96%;
   --tint-b: 250 70% 92%;
+  --tint-ink: 250 48% 32%;
+  --tint-chip: 250 60% 88%;
 }
 .fw-card[data-tint="3"] .fw-panel {
   --tint-a: 150 55% 95%;
   --tint-b: 150 45% 91%;
+  --tint-ink: 150 52% 21%;
+  --tint-chip: 150 40% 85%;
 }
 @media (hover: hover) {
   .fw-card:hover .fw-panel {
@@ -1474,18 +1488,46 @@ html {
 .dark .fw-panel {
   --tint-a: 218 22% 13%;
   --tint-b: 218 26% 9%;
+  --tint-ink: 217 60% 84%;
+  --tint-chip: 217 24% 20%;
 }
 .dark .fw-card[data-tint="1"] .fw-panel {
   --tint-a: 200 24% 13%;
+  --tint-ink: 200 58% 82%;
+  --tint-chip: 200 22% 20%;
   --tint-b: 203 28% 9%;
 }
 .dark .fw-card[data-tint="2"] .fw-panel {
   --tint-a: 250 20% 14%;
+  --tint-ink: 250 55% 86%;
+  --tint-chip: 250 20% 22%;
   --tint-b: 250 24% 10%;
 }
 .dark .fw-card[data-tint="3"] .fw-panel {
   --tint-a: 150 18% 12%;
+  --tint-ink: 150 45% 80%;
+  --tint-chip: 150 18% 19%;
   --tint-b: 150 22% 9%;
+}
+
+/* Chips and the button belong to the panel, not to the page. They used to take
+   surface-container-high and outline-variant -- two neutrals, correct anywhere
+   else on the site and wrong on a coloured ground, which is what made them look
+   borrowed. Google's button on the same panel is a transparent pill with a 1px
+   border in the ink colour, so this is that. */
+.fw-panel .fw-head a {
+  background: hsl(var(--tint-chip));
+  color: hsl(var(--tint-ink));
+}
+.fw-panel .fw-head a:hover {
+  color: hsl(var(--tint-ink));
+}
+.fw-panel .md-btn-outlined {
+  border-color: hsl(var(--tint-ink) / 0.4);
+  color: hsl(var(--tint-ink));
+}
+.fw-panel .md-btn-outlined:hover {
+  border-color: hsl(var(--tint-ink));
 }
 
 /* The picture is its own box on the page ground, at the panel's radius, and it
@@ -1562,6 +1604,29 @@ html {
 .fw-card .work-carousel {
   position: relative;
 }
+/* A soft scrim along the bottom of the picture, so the controls sit on a
+   gradient rather than on whatever pixels happen to be under them. It is the
+   cheapest way to make them legible over a screenshot whose bottom edge could
+   be anything, and it costs nothing when the picture is already dark there. */
+.fw-card .work-carousel::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 5.5rem;
+  /* Fixed dark, not the inverse role. The inverse pair flips with the theme,
+     but what is under these controls is a screenshot, and the screenshots are
+     light in both themes. Tying the scrim to the page meant that in dark mode a
+     light scrim and light pills sat on a white screenshot and vanished. What
+     they overlay does not change, so neither should they. */
+  background: linear-gradient(
+    to top,
+    rgba(16, 18, 22, 0.42),
+    rgba(16, 18, 22, 0)
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
 .fw-card .work-carousel .media-carousel__controls {
   position: absolute;
   inset: auto 0.875rem 0.875rem;
@@ -1586,18 +1651,18 @@ html {
    and the same rule works in both. */
 .fw-card .work-carousel .media-carousel__dots,
 .fw-card .work-carousel .media-carousel__btn {
-  background: hsl(var(--md-sys-color-inverse-surface) / 0.86);
-  color: hsl(var(--md-sys-color-inverse-on-surface));
+  background: rgba(16, 18, 22, 0.8);
+  color: #fff;
 }
 .fw-card .work-carousel .media-carousel__btn:hover:not(:disabled) {
-  background: hsl(var(--md-sys-color-inverse-surface) / 0.88);
-  color: hsl(var(--md-sys-color-inverse-on-surface));
+  background: rgba(16, 18, 22, 0.92);
+  color: #fff;
 }
 .fw-card .work-carousel .media-carousel__dot {
-  background: hsl(var(--md-sys-color-inverse-on-surface) / 0.45);
+  background: rgba(255, 255, 255, 0.45);
 }
 .fw-card .work-carousel .media-carousel__dot.is-active {
-  background: hsl(var(--md-sys-color-inverse-on-surface));
+  background: #fff;
 }
 
 /* Selected work breaks out past the 1044px content column, so a featured
