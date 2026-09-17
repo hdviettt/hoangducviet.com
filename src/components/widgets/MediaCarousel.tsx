@@ -183,9 +183,25 @@ export default function MediaCarousel({
     const sync = () => {
       for (const v of videos) {
         if (inViewRef.current && centeredRef.current.has(v)) {
-          v.play().catch(() => {
-            /* autoplay may still be blocked — leave it paused */
-          });
+          // Only act on the paused -> playing edge, and rewind when we do.
+          //
+          // Without the rewind the element keeps whatever currentTime it had
+          // when it was paused, so a clip you scroll past and come back to
+          // resumes from the middle and its opening is never seen again.
+          // Measured on the work page before this: scrolling away and back
+          // rejoined a 32.5s clip at 8.38s. These are demos whose first
+          // seconds are the setup — the empty search box, the query being
+          // typed — so the beginning is the part that must not be skipped.
+          if (v.paused) {
+            try {
+              v.currentTime = 0;
+            } catch {
+              /* no metadata yet; the next sync will catch it */
+            }
+            v.play().catch(() => {
+              /* autoplay may still be blocked — leave it paused */
+            });
+          }
         } else if (!v.paused) {
           v.pause();
         }
@@ -205,12 +221,24 @@ export default function MediaCarousel({
     );
     for (const v of videos) centred.observe(v);
 
+    // Half the strip on screen, not a sliver of it. At the old 0.15 a clip
+    // started playing while it was still mostly below the fold, so by the time
+    // it was fully in view it was already 1.34s in — measured. Starting later
+    // and starting from zero are the same fix from two directions.
+    //
+    // The second clause is for a carousel taller than the window, where the
+    // ratio can never reach 0.5: if it covers most of the viewport, it counts.
+    const PAGE_VISIBLE = 0.5;
     const onPage = new IntersectionObserver(
       (entries) => {
-        inViewRef.current = entries.some((e) => e.isIntersecting);
+        inViewRef.current = entries.some(
+          (e) =>
+            e.intersectionRatio >= PAGE_VISIBLE ||
+            e.intersectionRect.height >= window.innerHeight * 0.8,
+        );
         sync();
       },
-      { threshold: 0.15 },
+      { threshold: [0, PAGE_VISIBLE] },
     );
     onPage.observe(root);
 
