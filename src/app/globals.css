@@ -1604,30 +1604,17 @@ html {
 /* A carousel opens the project, and grows when you point at it, exactly as a
    still does.
  *
- * A still is an <img> inside a <Link>; a carousel cannot be, because the link
- * would swallow the horizontal scroll and the control buttons. So the link is
- * a transparent sibling stretched over the picture. Three things make that
- * safe rather than clever:
- *
- * - It is z-index 1 and the controls are z-index 2, so the arrows and dots get
- *   their own clicks and every other pixel goes to the project.
- * - It is `inset: 0` on a wrapper that hugs the picture, so it covers the
- *   photograph and nothing else.
- * - It only exists where a pointer does. On touch the gesture over a carousel
- *   is a swipe, and an overlay would eat it — the wrapper is not the scroller,
- *   so the drag would find nothing to scroll. Touch keeps the swipe and reaches
- *   the project through the title or the button, both of which are two
- *   centimetres away. */
-.work-carousel__hit {
-  display: none;
-}
+ * The click is handled in CarouselOpen, on the wrapper, and deliberately not by
+ * an element laid over the picture. A transparent <a> stretched across it did
+ * work for clicks, and it silently broke scrolling: the pointer hit-tests to
+ * whatever is on top, so every horizontal wheel event targeted the overlay and
+ * the slide track was not even in the event's composedPath. The carousel could
+ * not be scrolled at all, and the gesture chained to the page, where a
+ * horizontal swipe with nothing to scroll reads as a browser history
+ * navigation. All that is left here is the cursor. */
 @media (hover: hover) and (pointer: fine) {
-  .fw-card .work-carousel__hit {
-    display: block;
-    position: absolute;
-    inset: 0;
-    border-radius: var(--md-sys-shape-corner-large);
-    z-index: 1;
+  .fw-card .work-carousel {
+    cursor: pointer;
   }
 }
 

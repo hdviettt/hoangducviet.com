@@ -1,5 +1,6 @@
 import { Icon } from "@/components/ui/Icon";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
+import CarouselOpen from "@/components/work/CarouselOpen";
 import FeaturedClip from "@/components/work/FeaturedClip";
 import { LogoRow, cardMarks } from "@/components/work/StackChips";
 import { darkTwin } from "@/lib/figure-theme";
@@ -146,21 +147,12 @@ export default function FeaturedWork({ project }: { project: Project }) {
         {isSet ? (
           // The same affordance a still has: it grows on hover and it opens the
           // project. A Link cannot wrap this — the slides scroll and the
-          // controls are buttons, and a link around them swallows both — so it
-          // is a sibling laid over the picture instead. It sits above the
-          // slides and below the controls in the stacking order, which is the
-          // whole trick: the arrows and dots keep their own clicks, and every
-          // other pixel of the picture opens the project.
-          //
-          // `group` is here rather than on .fw-media because the hover has to
-          // start at the picture, not at the card: a still only scales when the
-          // pointer is on the still, and the carousel now matches that.
-          <div className="work-carousel group">
-            <Link
-              href={href}
-              aria-label={project.title}
-              className="work-carousel__hit"
-            />
+          // controls are buttons, and a link around them swallows both — and a
+          // transparent link laid *over* it is worse, because then the pointer
+          // hit-tests to the overlay and the track never sees a wheel event.
+          // CarouselOpen handles the click on the wrapper instead, leaving the
+          // slides unobstructed. See that file for the traced evidence.
+          <CarouselOpen href={href}>
             <MediaCarousel
               items={shown.map((m) => ({
                 src: m.src,
@@ -170,7 +162,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
               }))}
               label={`${project.title}: media`}
             />
-          </div>
+          </CarouselOpen>
         ) : !visual ? null : art ? (
           // Purpose-drawn hero art, and the whole point of it is that it has no
           // frame: it sits on the page's own ground the way blog.google's
