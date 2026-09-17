@@ -1371,23 +1371,20 @@ html {
    rule. Corners respond on hover for the same reason they must not on the post
    feed -- a card has no separator for the shape to argue with.
    ================================ */
-/* Two boxes, not one. A tinted panel of words beside an untinted picture, the
- * way blog.google's hero is built: measured at 1920, a 427x574 panel running a
- * gradient at 24px radius and 24px padding, an 861x574 image at the same
- * radius, 8px between them, and no container around the pair.
+/* Two boxes, not one. A panel of words beside a picture, the way blog.google's
+ * hero is built: measured at 1920, a 427x574 panel at 24px radius and 24px
+ * padding, an 861x574 image at the same radius, 8px between them, and no
+ * container around the pair.
  *
- * The first attempt at this was reverted, for two reasons that were both mine
- * rather than the structure's. The wash copied Google's 87% end stop, which is
- * right on a 427px panel and loud across a whole card. And the panel stretched
- * past the picture, because at the time the teaser still carried the Models and
- * Built with rows and a six-line description. Both are fixed now: the tint ends
- * at 91%, and with the tech rows gone the text is shorter than the picture, so
- * the panel is the one that stretches to match.
+ * The panel is grey. It ran four soft hues for a while -- blue, cyan, violet,
+ * mint, cycling -- to stop six cards reading as one card repeated. The colour
+ * worked and was not wanted: a portfolio that is entirely AI does not need four
+ * moods, and the washes made the page busier than the work is. What differentiates
+ * a card here is its picture, which is the honest answer anyway.
  *
- * Which is why the CTA is pushed to the bottom of the panel rather than sitting
- * under the last sentence. Google does the same with its byline and button, and
- * it is what turns leftover height into the bottom of a designed box instead of
- * a gap under a paragraph.
+ * The gradient stays, because a flat fill and a gradient are not the same
+ * quiet: 98% to 94% across the panel is enough to read as a made surface and
+ * not enough to read as a colour.
  */
 .fw-card {
   display: grid;
@@ -1414,65 +1411,41 @@ html {
   }
 }
 
-/* Each wash carries its own ink and chip ground, because a neutral grey chip
-   on a blue panel is the thing that reads as out of place. blog.google sets
-   its eyebrow and heading to rgb(25,41,103) on a panel ending in #bbe2ff --
-   a deep tone of the panel's own hue, at 9.93:1, rather than a grey borrowed
-   from the page. These are that, per tint, measured at 7.9 to 8.9:1 on the
-   panel and 7.0 to 7.9:1 on the chip. */
 .fw-panel {
   display: flex;
   flex-direction: column;
-  --tint-ink: 217 62% 26%;
-  --tint-chip: 217 70% 86%;
   /* Children size to their content, not to the panel. Without this the flex
      column stretches the CTA across the full width and a pill that was 168px
      becomes 365px, which is not a button any more. */
   align-items: flex-start;
-  --tint-a: 217 90% 96%;
-  --tint-b: 217 91% 91%;
   background: linear-gradient(
     150deg,
-    hsl(var(--tint-a)) 0%,
-    hsl(var(--tint-b)) 100%
+    hsl(220 16% 98%) 0%,
+    hsl(220 12% 94%) 100%
   );
   border-radius: var(--md-sys-shape-corner-extra-large);
   padding: 1.75rem;
   transition: border-radius var(--md-sys-motion-spatial-fast)
     var(--md-sys-motion-easing-spatial);
 }
+.dark .fw-panel {
+  background: linear-gradient(
+    150deg,
+    hsl(220 6% 13%) 0%,
+    hsl(220 8% 9%) 100%
+  );
+}
+
 /* The prose takes the slack so the button lands on the panel's floor. It still
    needs full width, which align-items: flex-start above would otherwise take. */
 .fw-panel > .fw-body,
-.fw-panel > .fw-head,
 .fw-panel > .fw-title {
   width: 100%;
 }
 .fw-panel > .fw-body {
   flex: 1;
 }
-.fw-panel > .fw-head {
-  margin-bottom: 0.75rem;
-}
 
-.fw-card[data-tint="1"] .fw-panel {
-  --tint-a: 203 100% 95%;
-  --tint-b: 204 100% 91%;
-  --tint-ink: 204 66% 24%;
-  --tint-chip: 204 80% 86%;
-}
-.fw-card[data-tint="2"] .fw-panel {
-  --tint-a: 250 80% 96%;
-  --tint-b: 250 70% 92%;
-  --tint-ink: 250 48% 32%;
-  --tint-chip: 250 60% 88%;
-}
-.fw-card[data-tint="3"] .fw-panel {
-  --tint-a: 150 55% 95%;
-  --tint-b: 150 45% 91%;
-  --tint-ink: 150 52% 21%;
-  --tint-chip: 150 40% 85%;
-}
 @media (hover: hover) {
   .fw-card:hover .fw-panel {
     border-radius: var(--md-sys-shape-corner-extra-large-increased);
@@ -1482,52 +1455,6 @@ html {
   .fw-panel {
     transition: none;
   }
-}
-
-/* Dark keeps the hue and drops the light. A 95% tone inverted is a grey. */
-.dark .fw-panel {
-  --tint-a: 218 22% 13%;
-  --tint-b: 218 26% 9%;
-  --tint-ink: 217 60% 84%;
-  --tint-chip: 217 24% 20%;
-}
-.dark .fw-card[data-tint="1"] .fw-panel {
-  --tint-a: 200 24% 13%;
-  --tint-ink: 200 58% 82%;
-  --tint-chip: 200 22% 20%;
-  --tint-b: 203 28% 9%;
-}
-.dark .fw-card[data-tint="2"] .fw-panel {
-  --tint-a: 250 20% 14%;
-  --tint-ink: 250 55% 86%;
-  --tint-chip: 250 20% 22%;
-  --tint-b: 250 24% 10%;
-}
-.dark .fw-card[data-tint="3"] .fw-panel {
-  --tint-a: 150 18% 12%;
-  --tint-ink: 150 45% 80%;
-  --tint-chip: 150 18% 19%;
-  --tint-b: 150 22% 9%;
-}
-
-/* Chips and the button belong to the panel, not to the page. They used to take
-   surface-container-high and outline-variant -- two neutrals, correct anywhere
-   else on the site and wrong on a coloured ground, which is what made them look
-   borrowed. Google's button on the same panel is a transparent pill with a 1px
-   border in the ink colour, so this is that. */
-.fw-panel .fw-head a {
-  background: hsl(var(--tint-chip));
-  color: hsl(var(--tint-ink));
-}
-.fw-panel .fw-head a:hover {
-  color: hsl(var(--tint-ink));
-}
-.fw-panel .md-btn-outlined {
-  border-color: hsl(var(--tint-ink) / 0.4);
-  color: hsl(var(--tint-ink));
-}
-.fw-panel .md-btn-outlined:hover {
-  border-color: hsl(var(--tint-ink));
 }
 
 /* The picture is its own box on the page ground, at the panel's radius, and it

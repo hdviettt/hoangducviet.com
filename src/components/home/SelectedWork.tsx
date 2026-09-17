@@ -53,9 +53,9 @@ export default function SelectedWork({ projects }: { projects: Project[] }) {
       </div>
 
       <div className="work-breakout mt-9 flex flex-col gap-4 md:mt-12">
-        {projects.map((p, i) => (
+        {projects.map((p) => (
           <div key={p.slug}>
-            <FeaturedWork project={p} index={i} />
+            <FeaturedWork project={p} />
           </div>
         ))}
 

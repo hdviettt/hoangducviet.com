@@ -1,6 +1,7 @@
 import { Icon } from "@/components/ui/Icon";
 import MediaCarousel from "@/components/widgets/MediaCarousel";
 import FeaturedClip from "@/components/work/FeaturedClip";
+import { LogoRow, flattenStack } from "@/components/work/StackChips";
 import { darkTwin } from "@/lib/figure-theme";
 import type { Project } from "@/lib/projects";
 import Link from "next/link";
@@ -26,16 +27,7 @@ import Link from "next/link";
  * column and drags its rail and captions out of alignment. A teaser wants one
  * still frame; the carousel belongs on the project page.
  */
-export default function FeaturedWork({
-  project,
-  index = 0,
-}: {
-  project: Project;
-  // Which of the four washes this card wears. The caller owns it because only
-  // the caller knows the card's place in the list, and a tint that restarted
-  // per component would put two of the same colour next to each other.
-  index?: number;
-}) {
+export default function FeaturedWork({ project }: { project: Project }) {
   const href = `/work/${project.slug}`;
   // Four fallbacks, strongest first: a hero image set as the thumbnail, then
   // the first media item (clip or screenshot), then the project's own numbers.
@@ -59,6 +51,19 @@ export default function FeaturedWork({
   // Four is what every project carries and what the 2x2 grid is built for; the
   // slice stops a fifth from silently breaking the panel.
   const metrics = project.metrics.slice(0, 4);
+  // Models first, then the tools, deduped by name and capped at five. Models
+  // lead because "what does it think with" is the question a reader of this
+  // site actually has; the tools are the answer to a follow-up.
+  const marks = (() => {
+    const seen = new Set<string>();
+    return [...project.models, ...flattenStack(project.stack, project.techTags)]
+      .filter((it) => {
+        if (seen.has(it.name)) return false;
+        seen.add(it.name);
+        return true;
+      })
+      .slice(0, 5);
+  })();
   // Topics, or nothing. The eyebrow used to derive "Platform · 19 agents" from
   // a project's children and print "Project" for everyone else — one claim
   // about containment that the prose now makes, and one word that told a
@@ -81,7 +86,6 @@ export default function FeaturedWork({
     // means what it says.
     <article
       className={`fw-card ${visual ? "fw-card--split" : ""}`}
-      data-tint={index % 4}
     >
       {/* Four parts: chips, heading, media, then the rest of the prose. On a
           phone the card is one column and DOM order wins, so the media lands
@@ -91,33 +95,6 @@ export default function FeaturedWork({
           and body rows in the right one. See .fw-card in globals.css for why
           the block stopped using .site-grid. */}
       <div className="fw-panel">
-      <div className="fw-head">
-        {/* Chips when the project is tagged, the derived line when it is not.
-            Not links: nothing on this site answers /topics/seo, and a chip that
-            looks clickable and lands on a 404 is worse than a chip that does
-            not. They become links the day an archive exists to point at.
-
-            `rounded-full` with a filled surface and no border, because the
-            outlined chip in this codebase already means something else — it is
-            the stack row further down the same block, where a border and a
-            logo carry a tool. Two chip shapes for two different jobs. */}
-        {project.categories.length > 0 && (
-          <ul className="flex flex-wrap gap-2.5">
-            {project.categories.map((c) => (
-              <li key={c.slug}>
-                {/* Links now. They were labels shaped like buttons for as long
-                    as nothing answered /topics/<slug>; something does. */}
-                <Link
-                  href={`/topics/${c.slug}`}
-                  className="state-layer inline-flex items-center rounded-full bg-md-surface-container-high px-4 py-2 text-[0.8125rem] leading-5 text-md-on-surface transition-colors hover:text-primary"
-                >
-                  {c.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
 
       {/* The chips are their own grid row now, and the media starts at the row
           below them. Before this the media spanned rows 1-2 and row 1 began at
@@ -152,12 +129,15 @@ export default function FeaturedWork({
           </p>
         )}
 
-        {/* The Models / Built with rows are gone from the teaser. They were two
-            labelled rows plus their discs, roughly 110px, and on a card whose
-            picture is already shorter than its text that is 110px spent making
-            the imbalance worse. Nothing is lost: /work/[slug] carries the full
-            stack in its own section, ungrouped and uncapped, which is the page
-            a reader who cares about the tooling is going to. */}
+        {marks.length > 0 && (
+          // Five logos, one row, no labels. The two labelled rows this replaces
+          // were ~110px on a card whose picture is the point; this is 28px and
+          // still answers "what is it made of" at a glance. The full stack,
+          // grouped and uncapped, is on /work/[slug].
+          <div className="mb-7 mt-6">
+            <LogoRow items={marks} />
+          </div>
+        )}
 
       </div>
 
