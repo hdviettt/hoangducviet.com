@@ -39,12 +39,9 @@ export default function WorkLead({ projects }: { projects: Project[] }) {
 
       {/* The same separators /work uses, so a project sits in the same frame on
           both pages rather than in a homepage-shaped one. */}
-      <div className="work-breakout mt-9 flex flex-col md:mt-12">
+      <div className="work-breakout mt-9 flex flex-col gap-4 md:mt-12">
         {projects.map((p) => (
-          <div
-            key={p.slug}
-            className="border-t border-md-outline-variant py-14 first:border-t-0 first:pt-0 md:py-20"
-          >
+          <div key={p.slug}>
             <FeaturedWork project={p} />
           </div>
         ))}

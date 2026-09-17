@@ -72,14 +72,15 @@ export default function FeaturedWork({ project }: { project: Project }) {
     // gutters, so 880px of a 1320px row is gutter and the art column collapses
     // to about 742px. Three columns has two gutters, and the 1:2 split then
     // means what it says.
-    <article className="site-grid items-start">
-      {/* Three parts, not two: the heading, the media, then the rest of the
-          prose. On a phone the grid is one column and DOM order wins, so the
-          media lands directly under the title instead of after the whole
-          pitch — it used to sit 611px below it at 390px wide. On desktop the
-          rows put head and body back in the left column with the media
-          spanning both, which is the layout it always had. */}
-      <div className={`${visual ? "col-1" : "col-2"} fw-head`}>
+    <article className={`fw-card ${visual ? "fw-card--split" : ""}`}>
+      {/* Four parts: chips, heading, media, then the rest of the prose. On a
+          phone the card is one column and DOM order wins, so the media lands
+          directly under the title instead of after the whole pitch — it used
+          to sit 611px below it at 390px wide. From 900 up the rows put chips,
+          head and body in the left column with the media spanning the title
+          and body rows in the right one. See .fw-card in globals.css for why
+          the block stopped using .site-grid. */}
+      <div className="fw-head">
         {/* Chips when the project is tagged, the derived line when it is not.
             Not links: nothing on this site answers /topics/seo, and a chip that
             looks clickable and lands on a 404 is worse than a chip that does
@@ -113,7 +114,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
           tag instead of with the title. Measured: media top 689 against title
           top 737, a 48px disagreement that read as the picture floating too
           high. Nothing is offset by hand; the row boundary does it. */}
-      <div className={`${visual ? "col-1" : "col-2"} fw-title`}>
+      <div className="fw-title">
         <h3 className="max-w-[17ch] text-balance text-[1.4375rem] font-normal leading-[1.22] tracking-[-0.25px] text-md-on-surface sm:text-[1.75rem] lg:text-[2rem]">
           <Link
             href={href}
@@ -124,7 +125,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
         </h3>
       </div>
 
-      <div className="col-2 fw-media">
+      <div className="fw-media">
         {isSet ? (
           // Not wrapped in a Link: the slides scroll and the controls are
           // buttons, so a link around them would swallow both. The title and
@@ -251,7 +252,7 @@ export default function FeaturedWork({ project }: { project: Project }) {
         )}
       </div>
 
-      <div className={`${visual ? "col-1" : "col-2"} fw-body`}>
+      <div className="fw-body">
         {project.description && (
           <p className="mt-5 text-[0.9375rem] leading-7 text-md-on-surface-variant">
             {project.description}

@@ -1351,6 +1351,80 @@ html {
 }
 
 /* ================================
+   FEATURED WORK CARD
+
+   The block owns its grid now instead of borrowing .site-grid's. That grid
+   gives the text 1 of 3 columns, which measured 277px at 1024 and 397px at
+   1920: 35 to 50 characters a line, under the 45-75 band at every width below
+   1440. A narrow column makes tall text, tall text outruns a fixed-ratio
+   image, and the result was 291px of empty column beside the text at 1024.
+
+   .site-grid could not simply be widened. It has ten usages across six files,
+   including the post feed, the archive and the topics pages, so changing its
+   ratio to suit the showcase would have moved three other layouts. A card that
+   carries its own 5fr/7fr split fixes the measure here and touches none of
+   them.
+
+   The card also replaces the hairline that used to separate one project from
+   the next, which is the pairing Google keeps: fonts.google.com's plated rows
+   are cards with no rules, and nothing that gains a surface also carries a
+   rule. Corners respond on hover for the same reason they must not on the post
+   feed -- a card has no separator for the shape to argue with.
+   ================================ */
+.fw-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 1.5rem;
+  background: hsl(var(--md-sys-color-surface-container-low));
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  padding: 1.5rem;
+  transition: border-radius var(--md-sys-motion-spatial-fast)
+    var(--md-sys-motion-easing-spatial);
+}
+@media (hover: hover) {
+  .fw-card:hover {
+    border-radius: var(--md-sys-shape-corner-extra-large-increased);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fw-card {
+    transition: none;
+  }
+}
+
+/* One column until there is room for two. 900 rather than 768 because at 768
+   a 5fr share of the shell is 260px, which is narrower than the column this
+   card exists to widen. */
+@media (min-width: 900px) {
+  .fw-card--split {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 2.75rem;
+    row-gap: 0;
+    padding: 2rem;
+  }
+  /* Chips get their own row so the media can start level with the title
+     rather than with a 36px tag above it. */
+  .fw-card--split > .fw-head {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: 0.75rem;
+  }
+  .fw-card--split > .fw-title {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .fw-card--split > .fw-body {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .fw-card--split > .fw-media {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: start;
+  }
+}
+
+/* ================================
    MEDIA CAROUSEL  (```widget:carousel```)
    ================================ */
 
