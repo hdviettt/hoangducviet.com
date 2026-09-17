@@ -1,4 +1,3 @@
-import CompactWork from "@/components/work/CompactWork";
 import FeaturedWork from "@/components/work/FeaturedWork";
 import type { Project } from "@/lib/projects";
 import Link from "next/link";
@@ -40,24 +39,12 @@ export default function WorkLead({ projects }: { projects: Project[] }) {
 
       {/* The same separators /work uses, so a project sits in the same frame on
           both pages rather than in a homepage-shaped one. */}
-      {/* Same shape as /work: two lead the section, the remainder sit two-up.
-          On the homepage this matters more than on /work, because the writing
-          feed underneath was 3.76 screens down and every full-width block was
-          pushing it further. */}
       <div className="work-breakout mt-9 flex flex-col gap-4 md:mt-12">
-        {projects.slice(0, 2).map((p) => (
+        {projects.map((p) => (
           <div key={p.slug}>
             <FeaturedWork project={p} />
           </div>
         ))}
-
-        {projects.length > 2 && (
-          <div className="work-grid">
-            {projects.slice(2).map((p) => (
-              <CompactWork key={p.slug} project={p} />
-            ))}
-          </div>
-        )}
 
         <div className="flex items-center gap-5 md:gap-8">
           <span
