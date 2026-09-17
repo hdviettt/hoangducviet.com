@@ -4,6 +4,11 @@ import MediaPicker from "@/components/admin/MediaPicker";
 import RichEditor from "@/components/admin/RichEditor";
 import { useToast } from "@/components/admin/Toast";
 import { MARK_IDS } from "@/components/home/logo-marks";
+import {
+  LogoRow as MarkRow,
+  MARKS_SHOWN,
+  cardMarks,
+} from "@/components/work/StackChips";
 import type {
   ProjectLogo,
   ProjectMedia,
@@ -39,18 +44,62 @@ interface WorkFormProps {
 const removeBtn =
   "shrink-0 h-8 w-8 inline-flex items-center justify-center rounded-lg text-md-on-surface-variant hover:bg-md-error/10 hover:text-md-error";
 
+const moveBtn =
+  "shrink-0 h-8 w-6 inline-flex items-center justify-center rounded-lg text-md-on-surface-variant hover:bg-md-on-surface/[0.08] hover:text-md-on-surface disabled:opacity-25 disabled:hover:bg-transparent";
+
+// Move one item within a list. Order is content here, not presentation: a work
+// card draws the first four marks it finds, so which four appear on the
+// homepage is decided by exactly this operation. Before it existed the only way
+// to promote a model was to delete the ones above it and type them back.
+function move<T>(arr: T[], from: number, to: number): T[] {
+  if (to < 0 || to >= arr.length) return arr;
+  const next = arr.slice();
+  const [it] = next.splice(from, 1);
+  next.splice(to, 0, it);
+  return next;
+}
+
 // Shared editor for a single {name, mark?, letter?} logo chip.
 function LogoRow({
   item,
   onChange,
   onRemove,
+  onMove,
+  first,
+  last,
 }: {
   item: ProjectLogo;
   onChange: (patch: Partial<ProjectLogo>) => void;
   onRemove: () => void;
+  // Optional so the callers that do not order anything stay unchanged.
+  onMove?: (dir: -1 | 1) => void;
+  first?: boolean;
+  last?: boolean;
 }) {
   return (
     <div className="flex items-center gap-2">
+      {onMove && (
+        <div className="flex shrink-0">
+          <button
+            type="button"
+            onClick={() => onMove(-1)}
+            disabled={first}
+            className={moveBtn}
+            aria-label="Move up"
+          >
+            &uarr;
+          </button>
+          <button
+            type="button"
+            onClick={() => onMove(1)}
+            disabled={last}
+            className={moveBtn}
+            aria-label="Move down"
+          >
+            &darr;
+          </button>
+        </div>
+      )}
       <input
         value={item.name}
         onChange={(e) => onChange({ name: e.target.value })}
@@ -119,6 +168,9 @@ export default function WorkForm({
   const [stack, setStack] = useState<ProjectStackGroup[]>(
     initialData?.stack ?? [],
   );
+  // Derived, not stored: the exact four a card will draw, recomputed on every
+  // keystroke and every reorder.
+  const cardPreview = cardMarks(models, stack);
   const [media, setMedia] = useState<ProjectMedia[]>(initialData?.media ?? []);
   // These render as the "by the numbers" panel on the project page. They have
   // always been real database rows; there was simply no way to edit them here,
@@ -269,6 +321,33 @@ export default function WorkForm({
         </div>
       </div>
 
+      {/* What a work card will actually draw, from the same function the card
+          uses. The card shows four marks and then a count, and the four are
+          simply the first four here: every model in order, then every stack
+          item in order, deduped by name. That rule is invisible from a form
+          made of two separate repeaters, so the form states it and shows the
+          answer, live, as the arrows move things around. */}
+      <div className="rounded-xl border border-md-outline-variant bg-md-surface-container-low p-3">
+        <div className="mb-2 flex items-baseline justify-between gap-3">
+          <span className="md-field-label !mb-0">on work cards</span>
+          <span className="text-[0.6875rem] text-md-on-surface-variant">
+            first {MARKS_SHOWN}: models, then stack. Reorder with the arrows.
+          </span>
+        </div>
+        {cardPreview.shown.length > 0 ? (
+          <div className="flex items-center gap-3">
+            <MarkRow items={cardPreview.shown} rest={cardPreview.hidden} />
+            <span className="truncate text-xs text-md-on-surface-variant">
+              {cardPreview.shown.map((m) => m.name).join(", ")}
+            </span>
+          </div>
+        ) : (
+          <p className="text-xs text-md-on-surface-variant">
+            No models or stack items yet, so cards show no marks.
+          </p>
+        )}
+      </div>
+
       {/* Models repeater */}
       <div>
         <label className="md-field-label">models</label>
@@ -277,6 +356,9 @@ export default function WorkForm({
             <LogoRow
               key={i}
               item={m}
+              first={i === 0}
+              last={i === models.length - 1}
+              onMove={(dir) => setModels((p) => move(p, i, i + dir))}
               onChange={(patch) =>
                 setModels((p) =>
                   p.map((x, idx) => (idx === i ? { ...x, ...patch } : x)),
@@ -307,6 +389,28 @@ export default function WorkForm({
               className="rounded-xl border border-md-outline-variant p-3"
             >
               <div className="mb-2 flex items-center gap-2">
+                {/* Groups are ordered too: the card flattens them top to
+                    bottom, so moving a group moves everything in it. */}
+                <div className="flex shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setStack((p) => move(p, gi, gi - 1))}
+                    disabled={gi === 0}
+                    className={moveBtn}
+                    aria-label="Move group up"
+                  >
+                    &uarr;
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStack((p) => move(p, gi, gi + 1))}
+                    disabled={gi === stack.length - 1}
+                    className={moveBtn}
+                    aria-label="Move group down"
+                  >
+                    &darr;
+                  </button>
+                </div>
                 <input
                   value={g.group}
                   onChange={(e) =>
@@ -335,6 +439,17 @@ export default function WorkForm({
                   <LogoRow
                     key={ii}
                     item={it}
+                    first={ii === 0}
+                    last={ii === g.items.length - 1}
+                    onMove={(dir) =>
+                      setStack((p) =>
+                        p.map((x, idx) =>
+                          idx === gi
+                            ? { ...x, items: move(x.items, ii, ii + dir) }
+                            : x,
+                        ),
+                      )
+                    }
                     onChange={(patch) =>
                       setStack((p) =>
                         p.map((x, idx) =>
