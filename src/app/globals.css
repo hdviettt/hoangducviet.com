@@ -822,8 +822,22 @@ html {
 .state-layer:active::before {
   opacity: 0.12;
 }
-/* A state layer needs somewhere to be drawn. On a bare row there is no padding
-   to fill, so the plate is bled outward rather than the row being re-boxed. */
+/* NOT for a row that carries a separator rule.
+
+   Measured on blog.google and fonts.google.com: of every element that gains a
+   hover plate, none carries a border rule. Google treats the two as
+   alternative ways of bounding a row. fonts.google.com's plated rows are
+   24px-radius cards with no rules; news.google.com's lists have no rules at
+   all and separate on whitespace; a ruled list gets a colour change and
+   nothing else.
+
+   The reason is geometric, not stylistic. A rule is drawn at the row's border
+   edge and a bled plate extends past it, so the rule cuts through the plate
+   and stops short of its rounded corners. Two bounding shapes for one row,
+   disagreeing about where the row ends.
+
+   So this bleed variant only belongs on a row with no rule. The site's feed
+   has rules, which is why it does not use it. */
 .state-layer--bleed::before {
   inset: -0.5rem -0.75rem;
   border-radius: var(--md-sys-shape-corner-medium);
