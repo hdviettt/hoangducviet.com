@@ -795,9 +795,9 @@ html {
  * the panel in half, which is the only other way up and costs the card its
  * shape.
  *
- * 1279px, not 767px: the split does not begin until 1280, so everything from
- * a phone up to a small laptop is one column and had the same problem. */
-@media (max-width: 1279px) {
+ * 899px, not 767px: the split does not begin until 900, so a tablet at 800
+ * is still one column and had the same problem. */
+@media (max-width: 899px) {
   .fw-card--split .fw-media {
     order: -1;
   }
@@ -1411,82 +1411,18 @@ html {
   gap: 1rem;
 }
 
-/* The split starts at 1280, not 900, and the reason is arithmetic.
- *
- * The panel's height is its text: 78px of title, six 28px lines, the marks,
- * the button and the padding come to 478px, and it is 478px at every width.
- * The picture's height is its width divided by its aspect, so it grows: 332px
- * at 1100, 387 at 1280, 436 at 1440, 485 at 1920. The two only meet near 1920.
- * Everywhere below it the panel wins the row and the media column is left with
- * a ragged bottom of bare page -- measured 146px of it at 1100.
- *
- * Filling that space is not available. The box at 1100 is 600 wide by 478
- * tall; a 1.78 screenshot scaled to cover it renders 850 wide and loses 125px
- * off each side, and cropping the bottom cannot fix a picture that is too
- * short. So the picture has to be the taller element instead, and then the row
- * follows it and the panel -- a filled box -- simply stretches, which is
- * invisible.
- *
- * At 1100 that is impossible: the panel's fixed parts alone (title, marks,
- * button, padding) are 310px against a 332px picture, leaving no room for a
- * description at all. So below 1280 the card stacks, which is the one-column
- * layout that already has no gap in it. */
-@media (min-width: 1280px) {
+@media (min-width: 900px) {
   .fw-card--split {
+    /* 4/8 at every width, because narrowing the panel past that costs more
+       than it buys. The panel's height is its text, so a narrower column wraps
+       more lines and grows taller: measured at 1100, 4/8 gives a 343x478 panel
+       beside 685px of media, and 3/9 gives 257x556 beside 771px. The media box
+       gets wider and the row gets taller with it, so the shape of the box
+       barely moves -- 1.43 against 1.39 -- and the words lose a third of their
+       column for nothing. 5/7 was worse again at 1.25. */
     grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
     gap: 0.5rem;
     align-items: stretch;
-  }
-}
-
-/* How many lines of description the panel can afford, per width.
- *
- * The budget is the picture's height minus the panel's fixed parts, and the
- * picture grows with the column while the fixed parts do not. Measured against
- * a 4/8 split: the picture is 393px at 1280, 443 at 1440 and 492 at 1920,
- * against roughly 310px of title, marks, button and padding. That leaves about
- * 3, 4 and 6 lines of 28px respectively.
- *
- * Six lines everywhere is what put 146px of bare page under the picture. This
- * is the same clamp doing the same job it always did -- a ceiling, not a plan
- * -- just told the truth about how much room there is. Copy that needs all six
- * lines should be cut in the CMS, which was already true. */
-@media (min-width: 1280px) {
-  .fw-panel .fw-body p {
-    -webkit-line-clamp: 3;
-  }
-}
-@media (min-width: 1440px) {
-  .fw-panel .fw-body p {
-    -webkit-line-clamp: 4;
-  }
-}
-@media (min-width: 1920px) {
-  .fw-panel .fw-body p {
-    -webkit-line-clamp: 6;
-  }
-}
-
-/* At the narrow end of the split the title takes a step down, 2rem to 1.75rem.
-   A long one wraps to three lines there, and the third line is 39px the
-   description does not get -- measured, it was the only card still leaving a
-   gap at 1280. Shrinking the type keeps every word, where clamping the title
-   would eat one. */
-@media (min-width: 1280px) and (max-width: 1439px) {
-  .fw-panel .fw-title h3 {
-    font-size: 1.75rem;
-  }
-}
-
-/* Tighter vertical rhythm inside the panel once it is beside a picture, which
-   buys back about 40px of the budget above without touching the type. */
-@media (min-width: 1280px) {
-  .fw-panel .stack-row {
-    margin-top: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-  .fw-panel > .md-btn {
-    margin-top: 1.25rem;
   }
 }
 
@@ -1534,6 +1470,99 @@ html {
 
 /* The picture is its own box on the page ground, at the panel's radius, and it
    fills the row it shares with the panel. */
+/* What decides WHICH edge gets cropped.
+ *
+ * `cover` spends the difference between the box and the picture on whichever
+ * axis is short. Where the box is wider than the picture's aspect the loss is
+ * vertical and `object-position: top` sends it to the bottom, which is the
+ * edge worth losing. Where the box is taller the loss is horizontal instead,
+ * and that takes a slice off each side of a UI capture -- measured at 24% a
+ * side at 1280 before this block existed.
+ *
+ * The box is as tall as the panel, so the panel is the thing that decides it.
+ * It has to come in under box-width over picture-aspect, which is 437px at
+ * 1440, 388 at 1280 and 353 at 1024. Six lines of description put it at 478
+ * everywhere, so it lost on all three.
+ *
+ * Hence a ladder: tighter margins throughout, a smaller title where a long one
+ * would wrap to a third line, and a clamp that says how many lines actually
+ * fit rather than how many would be nice. */
+@media (min-width: 900px) {
+  .fw-panel .stack-row {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .fw-panel > .md-btn {
+    margin-top: 1.25rem;
+  }
+  .fw-panel .fw-body p {
+    -webkit-line-clamp: 2;
+  }
+  .fw-panel .fw-title h3 {
+    font-size: 1.625rem;
+  }
+}
+@media (min-width: 1024px) {
+  .fw-panel .fw-body p {
+    -webkit-line-clamp: 3;
+  }
+}
+@media (min-width: 1280px) {
+  .fw-panel .fw-body p {
+    -webkit-line-clamp: 4;
+  }
+  .fw-panel .fw-title h3 {
+    font-size: 1.75rem;
+  }
+}
+@media (min-width: 1600px) {
+  .fw-panel .fw-body p {
+    -webkit-line-clamp: 6;
+  }
+  .fw-panel .fw-title h3 {
+    font-size: 2rem;
+  }
+}
+
+/* Beside the panel, the picture fills its box. No bare page under it, ever.
+ *
+ * The row is as tall as the panel, and the picture's natural height is its own
+ * width over its aspect, so the two only agreed near 1920 and everywhere below
+ * it the media column ended in a ragged edge -- measured 146px of it at 1100.
+ * `cover` scales the picture until the box is full and spends the difference
+ * on a crop; `object-position: top` decides which difference. Where the box is
+ * wider than the picture's aspect that is the bottom, which is the one to
+ * lose: a UI capture is top-weighted, and the bottom is wherever the page
+ * happened to run out.
+ *
+ * The carousel needs the whole chain told the same thing, because its frame
+ * sizes itself from an aspect ratio rather than from the box it sits in. */
+@media (min-width: 900px) {
+  .fw-card--split .fw-media > a,
+  .fw-card--split .fw-media > .work-carousel {
+    height: 100%;
+  }
+  .fw-card--split .fw-media img:not(.media-carousel__mat),
+  .fw-card--split .fw-media video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .fw-card--split .work-carousel {
+    align-self: stretch;
+  }
+  .fw-card--split .work-carousel .media-carousel,
+  .fw-card--split .work-carousel .media-carousel__track,
+  .fw-card--split .work-carousel .media-carousel__slide {
+    height: 100%;
+  }
+  .fw-card--split .work-carousel .media-carousel__frame {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+}
+
 .fw-media {
   border-radius: var(--md-sys-shape-corner-extra-large);
   overflow: hidden;
