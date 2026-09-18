@@ -19,10 +19,24 @@ import Link from "next/link";
 // 763 and lands at 11.4px, which reads. It is the same arrangement a work card
 // takes when it is one column: picture first, then the panel.
 //
-// The words below the cover are not in a panel, and there are only two of them:
-// a date and a title. /work puts its words in a filled box because a project
-// card is a unit with a button in it, something you act on; a post is something
-// you read, and a cover plus a title is already a whole item.
+// The words come FIRST, then the drawing they belong to. That ordering is the
+// whole point of this component.
+//
+// With the cover on top, a reader met a drawing before knowing what it was for,
+// read the title underneath, and had to associate backwards -- and since the
+// title sits between two covers, "which visual is for which post" is a real
+// question the layout was asking them. Distance did not settle it: the title
+// was already 20px from its own cover and 112px from the next, 5.6:1, and it
+// still read as ambiguous, because the eye resolves ambiguity by reading order
+// before it resolves it by proximity.
+//
+// Title first removes the question instead of arguing with it. You read what
+// the piece is, then you see its picture, and the picture cannot belong to
+// anything else because nothing else has been introduced yet.
+//
+// The words are not in a panel. /work puts its words in a filled box because a
+// project card is a unit with a button in it, something you act on; a post is
+// something you read, and a title plus its drawing is already a whole item.
 //
 // No description here. The index is for choosing what to read, and a paragraph
 // under every drawing turned the choosing into reading.
@@ -89,10 +103,7 @@ function PostRow({ item }: { item: Extract<FeedItem, { kind: "post" }> }) {
 
   return (
     <article className="feed-item group">
-      <Cover src={cover} />
-      <span className={`${DATE_CLS} mt-5`}>
-        {feedRowDate(post.date_created)}
-      </span>
+      <span className={DATE_CLS}>{feedRowDate(post.date_created)}</span>
       <h3 className={`mt-2 ${TITLE_CLS}`}>
         <Link
           href={href}
@@ -101,6 +112,7 @@ function PostRow({ item }: { item: Extract<FeedItem, { kind: "post" }> }) {
           {post.title}
         </Link>
       </h3>
+      <Cover src={cover} />
     </article>
   );
 }
@@ -113,8 +125,7 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
   return (
     <div>
       <article className="feed-item group">
-        <Cover src={cover} />
-        <span className={`${DATE_CLS} mt-5`}>
+        <span className={DATE_CLS}>
           {feedRowDate(item.lastDate)}
           {parts.length > 1 && (
             <>
@@ -131,33 +142,37 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
             {series.title}
           </Link>
         </h3>
-      </article>
 
-      {/* Indented past the title's left edge, the way they were in the list
-          this grew out of: three signals say these belong to the title above
-          them -- the indent, the size step down, and a pitch far tighter than
-          the space between one feed item and the next. */}
-      <div className="feed-parts mt-4 ml-5 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
-        {parts.map((part, i) => (
-          <Link
-            key={part.slug}
-            href={`/posts/${part.slug}`}
-            className="group/part flex items-baseline gap-3 rounded-sm py-[0.1875rem]"
-          >
-            <span className="w-5 shrink-0 text-[0.78125rem] tabular-nums text-md-on-surface-variant">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <span
-              className="text-[0.90625rem] leading-[1.4] text-md-on-surface-variant
+        {/* The parts come before the drawing, not after it. They are the series'
+            contents and they belong to the title directly above; putting 405px
+            of art between a title and its own table of contents pushes them
+            into different groups. Indented past the title's left edge, a step
+            down in size, and a pitch far tighter than the space between feed
+            items -- three signals, all saying the same thing. */}
+        <div className="feed-parts mt-4 ml-5 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+          {parts.map((part, i) => (
+            <Link
+              key={part.slug}
+              href={`/posts/${part.slug}`}
+              className="group/part flex items-baseline gap-3 rounded-sm py-[0.1875rem]"
+            >
+              <span className="w-5 shrink-0 text-[0.78125rem] tabular-nums text-md-on-surface-variant">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span
+                className="text-[0.90625rem] leading-[1.4] text-md-on-surface-variant
                 transition-colors duration-200 ease-md-standard
                 group-hover/part:text-primary group-hover/part:underline
                 group-hover/part:decoration-1 group-hover/part:underline-offset-2"
-            >
-              {stripPartPrefix(part.title)}
-            </span>
-          </Link>
-        ))}
-      </div>
+              >
+                {stripPartPrefix(part.title)}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <Cover src={cover} />
+      </article>
     </div>
   );
 }

@@ -1449,6 +1449,10 @@ html {
   width: 100%;
   align-self: stretch;
   background: none;
+  /* Close under the title it belongs to. The next item's date is 112px away,
+     so the drawing is five times nearer the words above it than the words
+     below -- and now those are the words it illustrates. */
+  margin-top: 1.25rem;
 }
 .feed-item .fw-media img {
   height: auto;
