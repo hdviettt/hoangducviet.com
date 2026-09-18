@@ -1405,6 +1405,31 @@ html {
  * quiet: 98% to 94% across the panel is enough to read as a made surface and
  * not enough to read as a colour.
  */
+/* The space between one project and the next.
+ *
+ * It was 16px, against 8px between the panel and the picture inside a card.
+ * Two to one is not a separation: proximity reads the whole column as one
+ * group, and with the pictures running edge to edge, consecutive screenshots
+ * ran together into a single strip.
+ *
+ * Google's stacked lists sit far wider apart than that -- 73px between cards
+ * on deepmind.google/discover/blog, 152 and 236 on blog.google/technology/ai,
+ * measured at 1440. 64px here is eight times the internal gap, which is the
+ * ratio that does the work, and it lands inside Google's band without leaving
+ * the page feeling sparse.
+ *
+ * Space, not a rule. Nothing else on this site separates content with a line,
+ * and a card that already has a surface has nothing for a rule to argue with. */
+.fw-list {
+  /* Stacked, the internal gap is 16px rather than 8, so this is 3x it. */
+  gap: 3rem;
+}
+@media (min-width: 900px) {
+  .fw-list {
+    gap: 4rem;
+  }
+}
+
 .fw-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

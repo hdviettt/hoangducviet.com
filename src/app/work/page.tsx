@@ -48,7 +48,7 @@ export default async function WorkPage() {
           rieng. Truoc day trang nay dung WorkSection: tieu de, mot doan mo ta,
           roi mot carousel toan man. Hai trang cung gioi thieu mot du an ma
           trinh bay khac nhau thi doc ra la hai san pham. */}
-      <div className="work-breakout flex flex-col gap-4 pt-12 md:pt-16">
+      <div className="work-breakout fw-list flex flex-col pt-12 md:pt-16">
         {projects.map((p) => (
           <div key={p.slug}>
             <FeaturedWork project={p} />
