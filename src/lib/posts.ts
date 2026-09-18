@@ -185,8 +185,6 @@ export type FeedItem =
         slug: string;
         title: string;
         summary: string | null;
-        // The feed draws covers now, and a series has one of its own.
-        thumbnail: string | null;
       };
       parts: {
         slug: string;
@@ -209,7 +207,6 @@ export async function getFeedItems(options?: {
       seriesSlug: series.slug,
       seriesTitle: series.title,
       seriesSummary: series.summary,
-      seriesThumbnail: series.thumbnail,
     })
     .from(posts)
     .leftJoin(seriesPosts, eq(seriesPosts.postSlug, posts.slug))
@@ -271,7 +268,6 @@ export async function getFeedItems(options?: {
             slug: r.seriesSlug,
             title: r.seriesTitle,
             summary: r.seriesSummary,
-            thumbnail: r.seriesThumbnail ?? null,
           },
           parts: [],
           firstDate: dateIso,
