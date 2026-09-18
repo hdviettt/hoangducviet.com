@@ -1,22 +1,29 @@
 import type { FeedItem } from "@/lib/posts";
 import Link from "next/link";
 
-// Post-index rows, set as a whitespace list rather than a ruled one.
+// Post-index rows, as cards with their cover art, the same shape /work uses.
 //
-// What was here put a 92px date column beside the title and a 1px rule under
-// every row. That is a newspaper index, and it is the one shape no Google
-// surface uses: probing news.google.com for rows carrying a border returned
-// zero, and of every element across blog.google and fonts.google.com that
-// gains a hover plate, none carries a rule. Google separates an index on
-// whitespace and lets the title carry the row.
+// This replaced a whitespace list, and the reason is that the covers exist and
+// were being wasted. Every published post has one -- 18 of 18 -- drawn as a
+// 1200x630 SVG in `/covers`, and until now they were only ever sent to Twitter
+// and LinkedIn as share images. Nobody reading the site had seen them.
 //
-// So: the date drops to a quiet label above the title, the title comes up to
-// 21px at weight 400, and the gap between items does the separating. Hover
-// underlines, which is what a search result does.
+// The size they are shown at is not a taste call. These are not title cards:
+// the drawing carries its own content, set at 18px on a 1200px canvas. Rendered
+// 380px wide, in the kind of grid a card layout wants, that type lands at about
+// 6px and the artwork becomes a smudge. Measured, it needs about 820px to read.
 //
-// The cost of losing the date column is that the list no longer has one shared
-// left edge to scan down. The gain is that the title is the widest thing on the
-// row instead of the second widest, and it is the title people are reading.
+// That is why the card is stacked rather than split like /work. The feed sits
+// in col-2 of the site grid, 763px wide, and splitting it would leave the cover
+// 509px -- 7.6px type, which is the smudge. Stacked, the cover gets the whole
+// 763 and lands at 11.4px, which reads. It is the same arrangement a work card
+// takes when it is one column: picture first, then the panel.
+//
+// Unlike /work, nothing here is cropped. A screenshot has a dull bottom edge
+// that can be spent; a drawing has four edges that are all the drawing. The
+// panel is short enough to fit inside the cover's height instead -- no button,
+// a clamped description -- so the cover sizes the row and the panel stretches,
+// which is invisible because it is a filled box.
 
 // DD.MM.YYYY — kept for the post-detail and series pages that already use it.
 export function feedRowDate(iso: string | null | undefined): string {
@@ -34,79 +41,122 @@ function stripPartPrefix(title: string): string {
   return (title || "").replace(/^.*?#\d+:\s*/, "");
 }
 
-// 21px at 400, not 19px at 500. Without a date column beside it the title has
-// the full measure, so it can be set bigger and lighter and still not shout.
-// The tracking follows the size: -0.016em at 21px, where the ruled row's 19px
-// took -0.013em.
-const TITLE_CLS =
-  "block font-display text-[1.3125rem] leading-[1.26] tracking-[-0.016em] " +
-  "font-normal text-md-on-surface [text-wrap:balance] " +
-  "transition-colors duration-200 ease-md-standard " +
-  "group-hover:text-primary group-hover:underline " +
-  "group-hover:decoration-1 group-hover:underline-offset-[3px]";
-
-// The date is a label now, not a column. Regular weight rather than medium:
-// it sits above the title instead of beside it, so it no longer needs weight
-// to hold its own against one.
 const DATE_CLS =
-  "block mb-1 text-[0.78125rem] tabular-nums text-md-on-surface-variant";
+  "block text-[0.78125rem] tabular-nums text-md-on-surface-variant";
+
+const TITLE_CLS =
+  "font-display text-[1.375rem] leading-[1.2] tracking-[-0.016em] " +
+  "font-normal text-md-on-surface [text-wrap:balance] sm:text-[1.625rem] " +
+  "lg:text-[1.75rem]";
+
+/** The cover, or nothing. A post with no art gets a panel-only card.
+ *
+ * Decorative: the title next to it says the same thing, so an alt would be the
+ * heading read twice. */
+function Cover({ src }: { src: string | null }) {
+  if (!src) return null;
+  return (
+    // A hairline, the same one a screenshot gets on a work card. The drawing
+    // sits on its own white ground and the page is white, so without an edge
+    // the cover has no boundary at all and the art floats in the column. The
+    // ring is what makes it a block.
+    <div className="fw-media ring-1 ring-inset ring-md-outline-variant">
+      <img
+        src={src}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        className="w-full transition-transform duration-500 ease-md-standard group-hover:scale-[1.015]"
+      />
+    </div>
+  );
+}
 
 function PostRow({ item }: { item: Extract<FeedItem, { kind: "post" }> }) {
+  const { post } = item;
+  const href = `/posts/${post.slug}`;
+  const cover = post.thumbnail?.trim() || null;
+
   return (
-    <Link
-      href={`/posts/${item.post.slug}`}
-      className="group block max-w-[40rem] rounded-sm focus-visible:outline-2"
-    >
-      <span className={DATE_CLS}>{feedRowDate(item.post.date_created)}</span>
-      <span className={TITLE_CLS}>{item.post.title}</span>
-    </Link>
+    <article className="fw-card feed-card group">
+      <Cover src={cover} />
+      <div className="fw-panel">
+        <div className="fw-title">
+          <span className={DATE_CLS}>{feedRowDate(post.date_created)}</span>
+          <h3 className={`mt-2 ${TITLE_CLS}`}>
+            <Link
+              href={href}
+              className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+            >
+              {post.title}
+            </Link>
+          </h3>
+        </div>
+
+        {post.description && (
+          <div className="fw-body">
+            <p className="mt-4 text-[0.9375rem] leading-7 text-md-on-surface-variant">
+              {post.description}
+            </p>
+          </div>
+        )}
+      </div>
+    </article>
   );
 }
 
 function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
   const { parts, series } = item;
+  const href = `/collection/${series.slug}`;
+  const cover = series.thumbnail?.trim() || null;
 
   return (
-    <div className="max-w-[40rem]">
-      <Link
-        href={`/collection/${series.slug}`}
-        className="group block rounded-sm"
-      >
-        <span className={DATE_CLS}>
-          {feedRowDate(item.lastDate)}
-          {parts.length > 1 && (
-            <>
-              <span className="mx-1.5 opacity-60">·</span>
-              {parts.length} parts
-            </>
+    <div>
+      <article className="fw-card feed-card group">
+        <Cover src={cover} />
+        <div className="fw-panel">
+          <div className="fw-title">
+            <span className={DATE_CLS}>
+              {feedRowDate(item.lastDate)}
+              {parts.length > 1 && (
+                <>
+                  <span className="mx-1.5 opacity-60">·</span>
+                  {parts.length} parts
+                </>
+              )}
+            </span>
+            <h3 className={`mt-2 ${TITLE_CLS}`}>
+              <Link
+                href={href}
+                className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+              >
+                {series.title}
+              </Link>
+            </h3>
+          </div>
+
+          {series.summary && (
+            <div className="fw-body">
+              <p className="mt-4 text-[0.9375rem] leading-7 text-md-on-surface-variant">
+                {series.summary}
+              </p>
+            </div>
           )}
-        </span>
-        <span className={TITLE_CLS}>{series.title}</span>
-      </Link>
+        </div>
+      </article>
 
-      {/* The one thing a whitespace list has to earn: making nine parts read as
-          belonging to the title above them, with no box and no rule to bind
-          them.
-
-          Three signals do it, and they compound. The parts are indented past
-          the title's left edge, so the group has its own margin. They drop from
-          21px to 14.5px, which is the largest size step anywhere in this
-          component and reads as subordination on its own. And their pitch is
-          28px against the 48px between feed items in FeedBlocks, a ratio of
-          1.7, which is where proximity starts carrying weight rather than
-          merely not contradicting the other two. The first draft had 34px
-          against 40px, a ratio of 1.18, and the comment claimed proximity was
-          doing the work when measurement said it was doing none.
-
-          A left thread rule was the obvious fourth signal and is deliberately
-          not here: the premise of this treatment is that nothing is drawn which
-          is not content, and three signals already settle it. */}
-      <div className="mt-2.5 ml-5 grid gap-x-10 sm:grid-cols-2">
+      {/* The parts sit under the whole card rather than inside the panel.
+          Nine of them are 140px of list, which would push the panel past the
+          cover's height and start the card cropping art to fit. Below it they
+          get the full row and read as what they are: the contents of the thing
+          above them. */}
+      <div className="feed-parts mt-5 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
         {parts.map((part, i) => (
           <Link
             key={part.slug}
             href={`/posts/${part.slug}`}
-            className="group/part flex items-baseline gap-3 py-[0.125rem] rounded-sm"
+            className="group/part flex items-baseline gap-3 rounded-sm py-[0.1875rem]"
           >
             <span className="w-5 shrink-0 text-[0.78125rem] tabular-nums text-md-on-surface-variant">
               {String(i + 1).padStart(2, "0")}

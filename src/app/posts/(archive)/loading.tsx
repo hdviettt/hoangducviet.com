@@ -1,10 +1,11 @@
 // Archive skeleton.
 //
 // The page is a sticky aside in col-1 and the feed in col-2, inside
-// work-breakout, and every row is the date label over a title that FeedRow
-// renders, 40px apart with no rules between them. The previous version drew a full-width stack of year groups
-// with no aside at all, so the real page arrived as a two-column layout on top
-// of a one-column placeholder.
+// work-breakout. The feed is cards now -- a 1200x630 cover with a panel of
+// date, title and description under it -- so this mirrors that shape and its
+// `.fw-list` spacing. Drawing the old two-bar text row here meant the
+// placeholder was about a third of the real height and the page jumped the
+// moment the feed arrived.
 const ROWS = ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10"];
 
 const Bar = ({ className }: { className: string }) => (
@@ -26,16 +27,23 @@ export default function PostsLoading() {
           </div>
         </aside>
 
-        <div className="col-2 flex flex-col gap-12">
+        <div className="col-2 fw-list flex flex-col">
           {ROWS.map((id, i) => (
-            <div key={id} className="max-w-[40rem]">
-              <Bar className="h-3 w-[4.5rem]" />
-              {/* Deterministic widths so the placeholder does not shimmer into
-                  a different shape on every render. */}
-              <div
-                className="skeleton mt-2 h-[1.625rem]"
-                style={{ width: `${68 + ((i * 13) % 26)}%` }}
-              />
+            <div key={id}>
+              {/* The cover, at the ratio every cover has: 1200x630. It is the
+                  tallest part of a card by far, so a placeholder that skips it
+                  collapses to a third of the height and the page jumps when
+                  the real feed lands. */}
+              <div className="skeleton aspect-[1200/630] w-full rounded-[var(--md-sys-shape-corner-extra-large)]" />
+              <div className="mt-4 rounded-[var(--md-sys-shape-corner-extra-large)] bg-md-surface-container-low p-7">
+                <Bar className="h-3 w-[4.5rem]" />
+                <div
+                  className="skeleton mt-3 h-[1.75rem]"
+                  style={{ width: `${60 + ((i * 13) % 26)}%` }}
+                />
+                <Bar className="mt-4 h-3 w-full" />
+                <Bar className="mt-2 h-3 w-[82%]" />
+              </div>
             </div>
           ))}
         </div>

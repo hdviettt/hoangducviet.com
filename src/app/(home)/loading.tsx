@@ -7,7 +7,7 @@
 //   WorkLead      "Selected work", then three site-grid blocks separated by
 //                 rules, text in col-1 and the clip in col-2
 //   Articles      work-breakout, site-grid, sticky aside in col-1 and the feed
-//                 in col-2
+//                 in col-2, where every item is a cover card
 //
 // The previous version centred the hero and skipped the work section entirely,
 // which is what made the load flash from a centred column to a left-aligned
@@ -117,11 +117,23 @@ export default function HomeLoading() {
               or the hand-off moves the page, which is the whole reason this
               file mirrors the real layout instead of drawing generic boxes. */}
           <div className="col-2">
-            <div className="flex flex-col gap-12">
-              {FEED_ROWS.map((id) => (
-                <div key={id} className="max-w-[40rem]">
-                  <Bar className="h-3 w-[4.5rem]" />
-                  <Bar className="mt-2 h-[1.625rem] w-[88%]" />
+            {/* Cards, matching FeedRow: a 1200x630 cover with a panel of date,
+                title and description under it, spaced by `.fw-list`. Two text
+                bars here drew about a third of the real height, so the page
+                jumped when the feed arrived. */}
+            <div className="fw-list flex flex-col">
+              {FEED_ROWS.map((id, i) => (
+                <div key={id}>
+                  <div className="skeleton aspect-[1200/630] w-full rounded-[var(--md-sys-shape-corner-extra-large)]" />
+                  <div className="mt-4 rounded-[var(--md-sys-shape-corner-extra-large)] bg-md-surface-container-low p-7">
+                    <Bar className="h-3 w-[4.5rem]" />
+                    <div
+                      className="skeleton mt-3 h-[1.75rem]"
+                      style={{ width: `${62 + ((i * 11) % 24)}%` }}
+                    />
+                    <Bar className="mt-4 h-3 w-full" />
+                    <Bar className="mt-2 h-3 w-[80%]" />
+                  </div>
                 </div>
               ))}
             </div>
