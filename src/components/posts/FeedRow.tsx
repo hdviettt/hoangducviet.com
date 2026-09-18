@@ -19,11 +19,15 @@ import Link from "next/link";
 // 763 and lands at 11.4px, which reads. It is the same arrangement a work card
 // takes when it is one column: picture first, then the panel.
 //
-// Unlike /work, nothing here is cropped. A screenshot has a dull bottom edge
-// that can be spent; a drawing has four edges that are all the drawing. The
-// panel is short enough to fit inside the cover's height instead -- no button,
-// a clamped description -- so the cover sizes the row and the panel stretches,
-// which is invisible because it is a filled box.
+// The words below the cover are not in a panel. /work puts them in one because
+// a project card is a unit with a button in it, something you act on; a post is
+// something you read, and the cover plus a title is already a whole item. A
+// filled box around the text would be a second frame inside the first and would
+// make the index look like a product listing.
+//
+// Nothing is cropped either. A screenshot has a dull bottom edge that can be
+// spent to fill a box; a drawing has four edges that are all the drawing, and
+// these covers run their dialogue out to the margins.
 
 // DD.MM.YYYY — kept for the post-detail and series pages that already use it.
 export function feedRowDate(iso: string | null | undefined): string {
@@ -79,29 +83,24 @@ function PostRow({ item }: { item: Extract<FeedItem, { kind: "post" }> }) {
   const cover = post.thumbnail?.trim() || null;
 
   return (
-    <article className="fw-card feed-card group">
+    <article className="feed-item group">
       <Cover src={cover} />
-      <div className="fw-panel">
-        <div className="fw-title">
-          <span className={DATE_CLS}>{feedRowDate(post.date_created)}</span>
-          <h3 className={`mt-2 ${TITLE_CLS}`}>
-            <Link
-              href={href}
-              className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-            >
-              {post.title}
-            </Link>
-          </h3>
-        </div>
-
-        {post.description && (
-          <div className="fw-body">
-            <p className="mt-4 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-              {post.description}
-            </p>
-          </div>
-        )}
-      </div>
+      <span className={`${DATE_CLS} mt-5`}>
+        {feedRowDate(post.date_created)}
+      </span>
+      <h3 className={`mt-2 ${TITLE_CLS}`}>
+        <Link
+          href={href}
+          className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        >
+          {post.title}
+        </Link>
+      </h3>
+      {post.description && (
+        <p className="mt-3 max-w-[38rem] text-[0.9375rem] leading-7 text-md-on-surface-variant">
+          {post.description}
+        </p>
+      )}
     </article>
   );
 }
@@ -113,45 +112,37 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
 
   return (
     <div>
-      <article className="fw-card feed-card group">
+      <article className="feed-item group">
         <Cover src={cover} />
-        <div className="fw-panel">
-          <div className="fw-title">
-            <span className={DATE_CLS}>
-              {feedRowDate(item.lastDate)}
-              {parts.length > 1 && (
-                <>
-                  <span className="mx-1.5 opacity-60">·</span>
-                  {parts.length} parts
-                </>
-              )}
-            </span>
-            <h3 className={`mt-2 ${TITLE_CLS}`}>
-              <Link
-                href={href}
-                className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-              >
-                {series.title}
-              </Link>
-            </h3>
-          </div>
-
-          {series.summary && (
-            <div className="fw-body">
-              <p className="mt-4 text-[0.9375rem] leading-7 text-md-on-surface-variant">
-                {series.summary}
-              </p>
-            </div>
+        <span className={`${DATE_CLS} mt-5`}>
+          {feedRowDate(item.lastDate)}
+          {parts.length > 1 && (
+            <>
+              <span className="mx-1.5 opacity-60">·</span>
+              {parts.length} parts
+            </>
           )}
-        </div>
+        </span>
+        <h3 className={`mt-2 ${TITLE_CLS}`}>
+          <Link
+            href={href}
+            className="rounded-sm transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+          >
+            {series.title}
+          </Link>
+        </h3>
+        {series.summary && (
+          <p className="mt-3 max-w-[38rem] text-[0.9375rem] leading-7 text-md-on-surface-variant">
+            {series.summary}
+          </p>
+        )}
       </article>
 
-      {/* The parts sit under the whole card rather than inside the panel.
-          Nine of them are 140px of list, which would push the panel past the
-          cover's height and start the card cropping art to fit. Below it they
-          get the full row and read as what they are: the contents of the thing
-          above them. */}
-      <div className="feed-parts mt-5 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Indented past the summary's left edge, the way they were in the list
+          this grew out of: three signals say these belong to the title above
+          them -- the indent, the size step down, and a pitch far tighter than
+          the space between one feed item and the next. */}
+      <div className="feed-parts mt-4 ml-5 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
         {parts.map((part, i) => (
           <Link
             key={part.slug}

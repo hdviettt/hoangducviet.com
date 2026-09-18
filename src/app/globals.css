@@ -1405,39 +1405,34 @@ html {
  * quiet: 98% to 94% across the panel is enough to read as a made surface and
  * not enough to read as a colour.
  */
-/* A writing card is a work card with one rule reversed: nothing is cropped.
+/* A feed item is a cover with words under it, not a card.
  *
- * /work shows screenshots, which have a dull bottom edge that can be spent to
- * fill a box. These are drawings, and every edge of a drawing is the drawing --
- * the covers carry dialogue boxes out to their margins, so a crop cuts the
- * joke. So the cover keeps its own 1200x630 shape and sizes the row, and the
- * panel, having no button and a clamped description, fits inside that height
- * and stretches to it. A filled box stretching is invisible; a picture missing
- * its edges is not.
+ * It borrows the media box from /work for the rounded, clipped frame and
+ * nothing else: no panel, no fill, no button. A project card is a unit you act
+ * on; a post is one you read, and a box around the text would be a frame inside
+ * a frame.
  *
- * The clamp is the thing keeping that true. At 1440 the cover is 787 wide and
- * therefore 413 tall, and the panel spends about 160 of that on the date, the
- * title and its padding, which leaves nine lines. Four is comfortably inside
- * it and still says what the piece is. */
-.feed-card .fw-media img {
+ * The cover keeps its own 1200x630 shape. /work crops a screenshot to fill a
+ * box because a screenshot has a dull bottom edge to spend; these covers carry
+ * their dialogue out to the margins, so every edge is the drawing. */
+.feed-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.feed-item .fw-media {
+  width: 100%;
+  align-self: stretch;
+  background: none;
+}
+.feed-item .fw-media img {
   height: auto;
   width: 100%;
   object-fit: contain;
 }
-.feed-card .fw-media {
-  align-self: start;
-  background: none;
-}
-@media (min-width: 900px) {
-  .feed-card .fw-panel .fw-body p {
-    -webkit-line-clamp: 4;
-  }
-}
 
-/* The parts of a series, under the card rather than in it. Three columns once
-   there is room: nine parts in two columns is five rows, which is taller than
-   the gap between one feed item and the next and starts to read as its own
-   section rather than as the contents of the card above it. */
+/* The parts of a series. Tight enough against each other, and loose enough
+   against the next feed item, that proximity says which title they belong to. */
 .feed-parts {
   row-gap: 0.125rem;
 }

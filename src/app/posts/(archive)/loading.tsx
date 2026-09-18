@@ -35,15 +35,13 @@ export default function PostsLoading() {
                   collapses to a third of the height and the page jumps when
                   the real feed lands. */}
               <div className="skeleton aspect-[1200/630] w-full rounded-[var(--md-sys-shape-corner-extra-large)]" />
-              <div className="mt-4 rounded-[var(--md-sys-shape-corner-extra-large)] bg-md-surface-container-low p-7">
-                <Bar className="h-3 w-[4.5rem]" />
-                <div
-                  className="skeleton mt-3 h-[1.75rem]"
-                  style={{ width: `${60 + ((i * 13) % 26)}%` }}
-                />
-                <Bar className="mt-4 h-3 w-full" />
-                <Bar className="mt-2 h-3 w-[82%]" />
-              </div>
+              <Bar className="mt-5 h-3 w-[4.5rem]" />
+              <div
+                className="skeleton mt-2 h-[1.75rem]"
+                style={{ width: `${60 + ((i * 11) % 24)}%` }}
+              />
+              <Bar className="mt-3 h-3 w-[min(38rem,100%)]" />
+              <Bar className="mt-2 h-3 w-[min(30rem,80%)]" />
             </div>
           ))}
         </div>

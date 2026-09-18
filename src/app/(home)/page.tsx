@@ -189,18 +189,29 @@ export default async function Home() {
 
           <div className="col-2">
             <FeedBlocks items={homeFeed} viewCounts={viewCounts} />
-            <Link
-              href="/posts"
-              className="group mt-8 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-md-on-surface transition-colors hover:text-primary"
-            >
-              All writing
+            {/* The same close as "All work": a pill sitting on a rule that
+                breaks around it. These are the two section endings on the page
+                and they were not the same thing -- this one was a small text
+                link with an arrow, which read as a footnote where the other
+                read as a door. A button on a rule cannot be mistaken for a
+                heading for whatever comes next, and needs no arrow, because it
+                is standing on a line rather than sitting in one. */}
+            <div className="mt-12 flex items-center gap-5 md:gap-8">
               <span
                 aria-hidden="true"
-                className="transition-transform duration-200 group-hover:translate-x-0.5"
+                className="h-px flex-1 bg-md-outline-variant"
+              />
+              <Link
+                href="/posts"
+                className="md-btn md-btn-outlined md-btn-pill md-btn-lg shrink-0 no-underline"
               >
-                &#8594;
-              </span>
-            </Link>
+                All writing
+              </Link>
+              <span
+                aria-hidden="true"
+                className="h-px flex-1 bg-md-outline-variant"
+              />
+            </div>
           </div>
         </div>
       </section>

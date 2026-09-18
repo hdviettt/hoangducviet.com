@@ -125,15 +125,13 @@ export default function HomeLoading() {
               {FEED_ROWS.map((id, i) => (
                 <div key={id}>
                   <div className="skeleton aspect-[1200/630] w-full rounded-[var(--md-sys-shape-corner-extra-large)]" />
-                  <div className="mt-4 rounded-[var(--md-sys-shape-corner-extra-large)] bg-md-surface-container-low p-7">
-                    <Bar className="h-3 w-[4.5rem]" />
-                    <div
-                      className="skeleton mt-3 h-[1.75rem]"
-                      style={{ width: `${62 + ((i * 11) % 24)}%` }}
-                    />
-                    <Bar className="mt-4 h-3 w-full" />
-                    <Bar className="mt-2 h-3 w-[80%]" />
-                  </div>
+                  <Bar className="mt-5 h-3 w-[4.5rem]" />
+                  <div
+                    className="skeleton mt-2 h-[1.75rem]"
+                    style={{ width: `${62 + ((i * 11) % 24)}%` }}
+                  />
+                  <Bar className="mt-3 h-3 w-[min(38rem,100%)]" />
+                  <Bar className="mt-2 h-3 w-[min(30rem,80%)]" />
                 </div>
               ))}
             </div>
