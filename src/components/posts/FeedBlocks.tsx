@@ -3,10 +3,8 @@ import type { FeedItem } from "@/lib/posts";
 
 // The list, shared by / and /posts.
 //
-// Spacing comes from `.fw-list`, the same class the project list uses: 64px
-// between items on a desktop and 48 stacked. These are cards now rather than
-// rows of text, so they separate the way the project cards do, and a reader
-// moving between /posts and /work meets one rhythm instead of two.
+// Spacing is its own, not the project list's, because the two lists are made of
+// different material. See `.feed-list` in globals.css for the measurement.
 export default function FeedBlocks({
   items,
   viewCounts,
@@ -18,7 +16,7 @@ export default function FeedBlocks({
     // Khong khoa 680px nua. O luoi chua no rong 780 (1044 - 200 rail - 64 gap),
     // nen cai khoa nay de thua dung 100px ben phai — tren /posts, noi khong con
     // gi khac de lap, do ra la ca trang lech 100px sang trai.
-    <div className="fw-list flex flex-col">
+    <div className="feed-list flex flex-col">
       {items.map((item) => {
         const key =
           item.kind === "series"

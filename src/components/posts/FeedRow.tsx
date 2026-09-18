@@ -19,11 +19,13 @@ import Link from "next/link";
 // 763 and lands at 11.4px, which reads. It is the same arrangement a work card
 // takes when it is one column: picture first, then the panel.
 //
-// The words below the cover are not in a panel. /work puts them in one because
-// a project card is a unit with a button in it, something you act on; a post is
-// something you read, and the cover plus a title is already a whole item. A
-// filled box around the text would be a second frame inside the first and would
-// make the index look like a product listing.
+// The words below the cover are not in a panel, and there are only two of them:
+// a date and a title. /work puts its words in a filled box because a project
+// card is a unit with a button in it, something you act on; a post is something
+// you read, and a cover plus a title is already a whole item.
+//
+// No description here. The index is for choosing what to read, and a paragraph
+// under every drawing turned the choosing into reading.
 //
 // Nothing is cropped either. A screenshot has a dull bottom edge that can be
 // spent to fill a box; a drawing has four edges that are all the drawing, and
@@ -48,10 +50,13 @@ function stripPartPrefix(title: string): string {
 const DATE_CLS =
   "block text-[0.78125rem] tabular-nums text-md-on-surface-variant";
 
+// Bigger than it was, because it is now the only text an item has. With the
+// description gone the title is what a reader scans, and at 1.75rem under a
+// 405px drawing it was the smaller half of its own item.
 const TITLE_CLS =
-  "font-display text-[1.375rem] leading-[1.2] tracking-[-0.016em] " +
-  "font-normal text-md-on-surface [text-wrap:balance] sm:text-[1.625rem] " +
-  "lg:text-[1.75rem]";
+  "font-display text-[1.5rem] leading-[1.18] tracking-[-0.018em] " +
+  "font-normal text-md-on-surface [text-wrap:balance] sm:text-[1.75rem] " +
+  "lg:text-[2rem]";
 
 /** The cover, or nothing. A post with no art gets a panel-only card.
  *
@@ -96,11 +101,6 @@ function PostRow({ item }: { item: Extract<FeedItem, { kind: "post" }> }) {
           {post.title}
         </Link>
       </h3>
-      {post.description && (
-        <p className="mt-3 max-w-[38rem] text-[0.9375rem] leading-7 text-md-on-surface-variant">
-          {post.description}
-        </p>
-      )}
     </article>
   );
 }
@@ -131,14 +131,9 @@ function SeriesRow({ item }: { item: Extract<FeedItem, { kind: "series" }> }) {
             {series.title}
           </Link>
         </h3>
-        {series.summary && (
-          <p className="mt-3 max-w-[38rem] text-[0.9375rem] leading-7 text-md-on-surface-variant">
-            {series.summary}
-          </p>
-        )}
       </article>
 
-      {/* Indented past the summary's left edge, the way they were in the list
+      {/* Indented past the title's left edge, the way they were in the list
           this grew out of: three signals say these belong to the title above
           them -- the indent, the size step down, and a pitch far tighter than
           the space between one feed item and the next. */}

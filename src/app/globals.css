@@ -1415,6 +1415,31 @@ html {
  * The cover keeps its own 1200x630 shape. /work crops a screenshot to fill a
  * box because a screenshot has a dull bottom edge to spend; these covers carry
  * their dialogue out to the margins, so every edge is the drawing. */
+/* How far apart two posts sit, and why it is not the project list's number.
+ *
+ * Proximity is a ratio, and by that measure the old 64px was already right:
+ * deepmind.google/discover/blog runs 73px gaps between 603px items, 12%, and
+ * 64 against a 559px item here is 11.4%. It still read as one long column.
+ *
+ * The ratio is not the whole story because the material is not the same. Their
+ * cards are photographs -- each one a block of colour that ends where the page
+ * begins. These covers are blue line art on a white ground, on a white page, so
+ * a cover does not announce its own edges and the eye has only the gap to go
+ * on. Low-contrast material needs more of it.
+ *
+ * So 7rem, a little over twice Google's ratio at 22% of an item. Space rather
+ * than a rule, still: nothing else on this site separates content with a line,
+ * and the measurement that established that -- zero ruled rows across Google's
+ * own indexes -- has not changed. */
+.feed-list {
+  gap: 4rem;
+}
+@media (min-width: 900px) {
+  .feed-list {
+    gap: 7rem;
+  }
+}
+
 .feed-item {
   display: flex;
   flex-direction: column;
