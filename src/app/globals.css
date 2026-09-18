@@ -795,9 +795,9 @@ html {
  * the panel in half, which is the only other way up and costs the card its
  * shape.
  *
- * 899px, not 767px: the split does not begin until 900, so a tablet at 800
- * is still one column and had the same problem. */
-@media (max-width: 899px) {
+ * 1279px, not 767px: the split does not begin until 1280, so everything from
+ * a phone up to a small laptop is one column and had the same problem. */
+@media (max-width: 1279px) {
   .fw-card--split .fw-media {
     order: -1;
   }
@@ -1411,22 +1411,82 @@ html {
   gap: 1rem;
 }
 
-@media (min-width: 900px) {
+/* The split starts at 1280, not 900, and the reason is arithmetic.
+ *
+ * The panel's height is its text: 78px of title, six 28px lines, the marks,
+ * the button and the padding come to 478px, and it is 478px at every width.
+ * The picture's height is its width divided by its aspect, so it grows: 332px
+ * at 1100, 387 at 1280, 436 at 1440, 485 at 1920. The two only meet near 1920.
+ * Everywhere below it the panel wins the row and the media column is left with
+ * a ragged bottom of bare page -- measured 146px of it at 1100.
+ *
+ * Filling that space is not available. The box at 1100 is 600 wide by 478
+ * tall; a 1.78 screenshot scaled to cover it renders 850 wide and loses 125px
+ * off each side, and cropping the bottom cannot fix a picture that is too
+ * short. So the picture has to be the taller element instead, and then the row
+ * follows it and the panel -- a filled box -- simply stretches, which is
+ * invisible.
+ *
+ * At 1100 that is impossible: the panel's fixed parts alone (title, marks,
+ * button, padding) are 310px against a 332px picture, leaving no room for a
+ * description at all. So below 1280 the card stacks, which is the one-column
+ * layout that already has no gap in it. */
+@media (min-width: 1280px) {
   .fw-card--split {
-    /* 5/7 until there is room for 4/8. Google's 33/67 gives its panel 427px
-       because its row is 1296 wide; at 1024 this row is 952, and a third of
-       that is 317px, which is 42 characters a line and under the readable
-       band. The picture only gets two thirds once two thirds still leaves the
-       words a column. */
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
     gap: 0.5rem;
     align-items: stretch;
   }
 }
 
+/* How many lines of description the panel can afford, per width.
+ *
+ * The budget is the picture's height minus the panel's fixed parts, and the
+ * picture grows with the column while the fixed parts do not. Measured against
+ * a 4/8 split: the picture is 393px at 1280, 443 at 1440 and 492 at 1920,
+ * against roughly 310px of title, marks, button and padding. That leaves about
+ * 3, 4 and 6 lines of 28px respectively.
+ *
+ * Six lines everywhere is what put 146px of bare page under the picture. This
+ * is the same clamp doing the same job it always did -- a ceiling, not a plan
+ * -- just told the truth about how much room there is. Copy that needs all six
+ * lines should be cut in the CMS, which was already true. */
 @media (min-width: 1280px) {
-  .fw-card--split {
-    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  .fw-panel .fw-body p {
+    -webkit-line-clamp: 3;
+  }
+}
+@media (min-width: 1440px) {
+  .fw-panel .fw-body p {
+    -webkit-line-clamp: 4;
+  }
+}
+@media (min-width: 1920px) {
+  .fw-panel .fw-body p {
+    -webkit-line-clamp: 6;
+  }
+}
+
+/* At the narrow end of the split the title takes a step down, 2rem to 1.75rem.
+   A long one wraps to three lines there, and the third line is 39px the
+   description does not get -- measured, it was the only card still leaving a
+   gap at 1280. Shrinking the type keeps every word, where clamping the title
+   would eat one. */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .fw-panel .fw-title h3 {
+    font-size: 1.75rem;
+  }
+}
+
+/* Tighter vertical rhythm inside the panel once it is beside a picture, which
+   buys back about 40px of the budget above without touching the type. */
+@media (min-width: 1280px) {
+  .fw-panel .stack-row {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .fw-panel > .md-btn {
+    margin-top: 1.25rem;
   }
 }
 
