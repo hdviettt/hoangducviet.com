@@ -102,7 +102,10 @@ export interface Highlight {
 
 export interface Role {
   title: string;
-  type: string; // Full-time / Internship / Apprenticeship
+  // Optional, because LinkedIn does not always carry one: the Agentic AI
+  // Leader role has no employment type on the profile, and inventing
+  // "Full-time" to fill the field would be inventing a fact.
+  type?: string; // Full-time / Internship / Apprenticeship
   start: string; // "YYYY-MM"
   end?: string; // "YYYY-MM"; omit for a current (Present) role
   note?: string;
@@ -120,61 +123,73 @@ export interface Company {
   roles: Role[]; // newest first
 }
 
+// Transcribed from the LinkedIn profile itself, September 2026. The wording of
+// the highlights is Viet's own from that profile, not a paraphrase of it.
+//
+// The version that was restored from git first had five roles and was wrong on
+// four of them: an "Artificial Intelligence Leader" starting Aug 2025 (it is
+// Agentic AI Leader, from May), plus an "AI Software Developer" and a "Startup
+// Operations" apprenticeship that do not exist, and an intern role three months
+// too short. That is what an old hand-typed copy decays into, and it is the
+// argument for checking this against the profile whenever it changes.
+//
+// The four durations this produces match what LinkedIn prints, which is the
+// cheapest available check that the dates were read correctly: 1 yr 4 mos,
+// 6 mos, 6 mos, and 2 yrs 2 mos for the company.
 export const EXPERIENCE: Company[] = [
   {
     company: "SEONGON",
     url: "https://seongon.com",
+    // The official gradient mark. seongon.com itself only ships a 1920x278
+    // wordmark set at 10% opacity as a background flourish, which is not a
+    // thing you can put in a 24px square.
     logo: "/seongon-mark.png",
     location: "Hanoi, Vietnam · On-site",
     roles: [
       {
-        title: "Artificial Intelligence Leader",
-        type: "Full-time",
-        start: "2025-08",
+        // No employment type on this one: the profile does not give it one.
+        title: "Agentic AI Leader",
+        start: "2025-05",
         end: "2026-08",
         highlights: [
-          { text: "Founded the AI team and led five people." },
           {
-            text: "Built the platform 120 people work on, with over twenty AI solutions running on it: agents, LLM workflows and machine learning.",
+            text: "Founded and led an AI team of 5 to deliver AI systems that transformed how the company does search marketing workloads.",
+          },
+          {
+            text: "Built a Human-Agent collaboration platform serving 120 people, with over 20 AI solutions spanning AI Agents, LLM Workflows, and several Machine Learning workflows.",
             proof: { label: "The platform", slug: "agentic-ai-platform" },
           },
           {
-            text: "Wrote the standards every agent runs under: nonhuman identity, observability, evals, human-in-the-loop, feedback as a feature, cost tracking.",
+            text: "Designed and implemented the platform's AI system standards: Nonhuman Identity, Observability, Evaluation, Human-in-the-loop (HITL), Feedback-as-a-feature, and Cost tracking.",
           },
           {
-            text: "Halved the time the SEO production chain takes. Internal linking and content outlines run up to five times faster, at the quality of senior staff.",
+            text: "Delivered a 2x time reduction across the SEO production chain, with tasks like internal linking and content-outline generation taking up to 5 times less time than before, at the same quality as senior staff.",
             proof: { label: "The writing agent", slug: "content-seo-ai" },
           },
           {
-            text: "Trained 80% of the company to work with agentic AI, and more than fifty measurable outcomes came out of it.",
+            text: "Trained 80% of the company to use agentic AI (Claude Code), with more than 50 measurable outcomes after training.",
           },
         ],
-      },
-      {
-        title: "AI Software Developer",
-        type: "Full-time",
-        start: "2025-05",
-        end: "2025-08",
-        note: "Built the first production AI systems for the SEO chain. The AI team formed around this work.",
       },
       {
         title: "CEO Operations Assistant",
         type: "Full-time",
         start: "2024-12",
         end: "2025-05",
-        note: "Daily operations and quarterly planning with the CEO, plus the market research that shaped where the company put AI first. Promoted into the AI role from here.",
+        highlights: [
+          {
+            text: "Leveling up the company's operational quality with process optimization and application of AI and Automations (Larksuite, n8n).",
+          },
+          {
+            text: "Assisting the CEO in managing the operational processes throughout the company.",
+          },
+        ],
       },
       {
-        title: "Startup Operations",
-        type: "Apprenticeship",
-        start: "2024-09",
-        end: "2024-12",
-      },
-      {
-        title: "Startup Idea Creator Intern",
+        title: "Operation Intern",
         type: "Internship",
         start: "2024-07",
-        end: "2024-09",
+        end: "2024-12",
       },
     ],
   },
