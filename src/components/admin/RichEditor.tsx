@@ -32,6 +32,9 @@ import { TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableRow } from "@tiptap/extension-table-row";
 import { type Editor, EditorContent, useEditor } from "@tiptap/react";
+// Tiptap 3 moved the React menu components to their own entry point; the root
+// package no longer exports BubbleMenu.
+import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
 import { common, createLowlight } from "lowlight";
 import {
@@ -767,6 +770,110 @@ export default function RichEditor({
 
   if (!editor) return null;
 
+  /**
+   * The selection menu. It exists because links did not.
+   *
+   * The Link extension has been registered here for a long time, but nothing
+   * could invoke it: the toolbar was removed, the slash menu only inserts
+   * blocks, and Link ships no keyboard shortcut. Cmd+K is the command palette.
+   * So a link could only arrive by pasting markdown, and the comment above the
+   * removed toolbar claimed selection formatting "stays on the bubble menu" —
+   * a bubble menu that was never built.
+   *
+   * Selection-scoped is the right home for it: a link needs text to attach to,
+   * which is exactly the state this menu appears in. Bold, italic and code come
+   * along because they were in the same position — reachable only by shortcut.
+   */
+  function SelectionMenu({ editor }: { editor: Editor }) {
+    const promptForLink = () => {
+      const previous = editor.getAttributes("link").href ?? "";
+      const url = window.prompt("Link URL", previous);
+      // Cancel leaves the text alone; clearing the box removes the link.
+      if (url === null) return;
+      if (url.trim() === "") {
+        editor.chain().focus().extendMarkRange("link").unsetLink().run();
+        return;
+      }
+      // A bare domain is a relative path to the browser, so it would resolve
+      // against the admin. Anything that is not clearly a scheme or a
+      // site-internal path gets https://.
+      const href = /^(https?:\/\/|mailto:|\/|#)/i.test(url.trim())
+        ? url.trim()
+        : `https://${url.trim()}`;
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href, target: href.startsWith("/") ? null : "_blank" })
+        .run();
+    };
+
+    const item =
+      "h-8 min-w-8 px-2 inline-flex items-center justify-center rounded-lg text-[13px] leading-none text-md-on-surface-variant hover:bg-md-on-surface/[0.08] hover:text-md-on-surface";
+    const active = "bg-md-on-surface/[0.12] text-md-on-surface";
+
+    return (
+      <BubbleMenu
+        editor={editor}
+        // Not on an image or a code block: neither takes a text mark, and a
+        // menu offering bold over a picture is a menu that lies.
+        shouldShow={({ editor: e, from, to }) =>
+          from !== to && !e.isActive("codeBlock") && !e.isActive("image")
+        }
+        className="flex items-center gap-0.5 rounded-xl border border-md-outline-variant bg-md-surface-container-high p-1 shadow-md-2"
+      >
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={`${item} ${editor.isActive("bold") ? active : ""} font-semibold`}
+          title="Bold"
+        >
+          B
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={`${item} ${editor.isActive("italic") ? active : ""} italic`}
+          title="Italic"
+        >
+          I
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          className={`${item} ${editor.isActive("code") ? active : ""} font-mono`}
+          title="Code"
+        >
+          {"<>"}
+        </button>
+        <span
+          aria-hidden="true"
+          className="mx-0.5 h-5 w-px bg-md-outline-variant"
+        />
+        <button
+          type="button"
+          onClick={promptForLink}
+          className={`${item} ${editor.isActive("link") ? active : ""}`}
+          title="Link (paste or type a URL)"
+        >
+          Link
+        </button>
+        {editor.isActive("link") && (
+          <button
+            type="button"
+            onClick={() =>
+              editor.chain().focus().extendMarkRange("link").unsetLink().run()
+            }
+            className={item}
+            title="Remove link"
+          >
+            Unlink
+          </button>
+        )}
+      </BubbleMenu>
+    );
+  }
+
   return (
     <div ref={editorRef} className="relative flex flex-col h-full">
       {/* The toolbar was removed here.
@@ -777,9 +884,12 @@ export default function RichEditor({
           permanently occupying the top of the writing surface.
 
           Selection-scoped formatting stays on the bubble menu, which is the
-          one case where a floating control genuinely beats a menu. */}
+          one case where a floating control genuinely beats a menu. That menu
+          is SelectionMenu, below — it did not exist when this comment was
+          written, which is why links could not be made at all. */}
       {/* Editor Content */}
       <div ref={contentRef} className="flex-1 overflow-y-auto min-h-0 relative">
+        {editor && <SelectionMenu editor={editor} />}
         <EditorContent editor={editor} />
 
         {/* Streak Effects */}

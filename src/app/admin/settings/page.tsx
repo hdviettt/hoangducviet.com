@@ -13,6 +13,7 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [experience, setExperience] = useState<ExperienceCompany[]>([]);
+  const [profileHeadline, setProfileHeadline] = useState("");
   const [siteTitle, setSiteTitle] = useState("");
   const [tagline, setTagline] = useState("");
   const [profileName, setProfileName] = useState("");
@@ -35,6 +36,7 @@ export default function AdminSettingsPage() {
           setProfileImage(data.profile.image || "");
           setProfileAboutHtml(data.profile.aboutHtml || "");
           setExperience(data.profile.experience || []);
+          setProfileHeadline(data.profile.headline || "");
         }
       }
       setLoading(false);
@@ -57,6 +59,7 @@ export default function AdminSettingsPage() {
             image: profileImage,
             aboutHtml: profileAboutHtml,
             experience,
+            headline: profileHeadline,
           },
         }),
       });
@@ -89,7 +92,12 @@ export default function AdminSettingsPage() {
           </h2>
           <div className="space-y-3">
             <div>
-              <label className="md-field-label">Title</label>
+              {/* Associated, unlike its neighbours. The other five labels in
+                  this form are bare and have been flagged for a while; this
+                  one is new, so it may as well be right. */}
+              <label className="md-field-label" htmlFor="profile-headline">
+                Title
+              </label>
               <input
                 type="text"
                 value={siteTitle}
@@ -123,6 +131,28 @@ export default function AdminSettingsPage() {
                 className="md-field"
               />
             </div>
+            <div>
+              {/* Associated, unlike its neighbours. The other five labels in
+                  this form are bare and have been flagged for a while; this
+                  one is new, so it may as well be right. */}
+              <label className="md-field-label" htmlFor="profile-headline">
+                Title
+              </label>
+              {/* The role line under the name, on the homepage and the About
+                  page. A " / " splits it into two halves and the slash is set
+                  quieter than the words, which is why the default reads
+                  "Agentic AI Leader / Engineer" rather than being two fields.
+                  Leave it empty to fall back to the built-in default. */}
+              <input
+                id="profile-headline"
+                type="text"
+                value={profileHeadline}
+                onChange={(e) => setProfileHeadline(e.target.value)}
+                placeholder="Agentic AI Leader / Engineer"
+                className="md-field"
+              />
+            </div>
+
             <div>
               <label className="md-field-label">Description</label>
               <RichEditor

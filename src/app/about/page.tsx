@@ -53,6 +53,7 @@ export default async function AboutPage() {
     description?: string | null;
     image?: string | null;
     aboutHtml?: string | null;
+    headline?: string | null;
   } | null = null;
   try {
     const rows = await getProfile();
@@ -73,7 +74,7 @@ export default async function AboutPage() {
   // va yeu cau go.
   const body = (profile?.aboutHtml ?? "").trim();
   const hasBody = body.replace(/<[^>]*>/g, "").trim().length > 0;
-  const jsonLd = createAboutPageSchema();
+  const jsonLd = createAboutPageSchema({ jobTitle: profile?.headline });
 
   return (
     <div className="pb-16 md:pb-24">
@@ -88,6 +89,7 @@ export default async function AboutPage() {
         name={profile?.name}
         description={profile?.description}
         imageUrl={profile?.image ?? null}
+        jobTitle={profile?.headline}
       />
 
       {/* Cai stack, dat ngay duoi phan gioi thieu dung chung voi trang chu.
@@ -100,17 +102,25 @@ export default async function AboutPage() {
           van rong 620px, nhung no bat dau o mep trai cua trang chu khong phai
           can giua, de ba khoi cua trang About cung mot mep. */}
       {hasBody && (
-        <section className="work-breakout mt-14 max-w-[38.75rem] px-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
-          <div className="article-content">
-            {/* The experience timeline is drawn from the database, not from
+        <section className="work-breakout mt-14 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
+          {/* The measure goes on an inner div, not on the breakout itself.
+              `work-breakout` centres what it wraps -- margin-left:50% plus a
+              -50% translate -- so putting a 620px max-width on the same
+              element centred the column inside the 1188px row and started it
+              at x=410 while the hero and the stack above it both started at
+              126. The comment here used to claim the opposite. */}
+          <div className="max-w-[38.75rem]">
+            <div className="article-content">
+              {/* The experience timeline is drawn from the database, not from
                 the fence the author typed, so the page hands it down. See
                 MarkdownContent's `widgetData`. */}
-            <MarkdownContent
-              content={body}
-              widgetData={{
-                experience: { companies: profile?.experience ?? [] },
-              }}
-            />
+              <MarkdownContent
+                content={body}
+                widgetData={{
+                  experience: { companies: profile?.experience ?? [] },
+                }}
+              />
+            </div>
           </div>
         </section>
       )}

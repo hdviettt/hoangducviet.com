@@ -1,5 +1,7 @@
 import WorkLead from "@/components/home/WorkLead";
 import ProfileHero from "@/components/layout/ProfileHero";
+import Experience from "@/components/about/Experience";
+import { Icon } from "@/components/ui/Icon";
 import FeedBlocks from "@/components/posts/FeedBlocks";
 import { getGlobalMetadata } from "@/lib/global";
 import { IDENTITY } from "@/lib/identity";
@@ -127,7 +129,10 @@ export default async function Home() {
   const series = allItems.find((i) => i.kind === "series");
   const homeFeed = series && !head.includes(series) ? [...head, series] : head;
 
-  const jsonLd = createEntityGraph({ image: profileImageUrl });
+  const jsonLd = createEntityGraph({
+    image: profileImageUrl,
+    jobTitle: mainProfile.headline,
+  });
 
   // Distinct years present in the feed, newest first — a small index in the rail.
   const years = Array.from(
@@ -154,6 +159,25 @@ export default async function Home() {
         name={mainProfile.name}
         description={mainProfile.description}
         imageUrl={imageUrl}
+        jobTitle={mainProfile.headline}
+        aside={
+          mainProfile.experience?.length ? (
+            <div className="animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
+              {/* Compact: titles and dates, no result lines. The full version
+                  is five paragraphs against a three-line bio, which would
+                  have made the career the longest thing on the homepage and
+                  pushed the work below the fold. */}
+              <Experience compact companies={mainProfile.experience} />
+              <Link
+                href="/about"
+                className="md-btn md-btn-outlined md-btn-pill mt-6 no-underline"
+              >
+                More about me
+                <Icon name="arrow_forward" size={20} aria-hidden="true" />
+              </Link>
+            </div>
+          ) : null
+        }
       />
 
       {/* Selected work: featured projects, rendered from the projects table. */}

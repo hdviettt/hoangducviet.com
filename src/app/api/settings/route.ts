@@ -50,6 +50,11 @@ export async function PUT(request: Request) {
           description: body.profile.description,
           image: body.profile.image,
           aboutHtml: body.profile.aboutHtml,
+          // Only when sent, same reasoning as `experience`: a client that
+          // predates the field must not blank it.
+          ...(typeof body.profile.headline === "string"
+            ? { headline: body.profile.headline }
+            : {}),
           // Only when the caller actually sends it. This route overwrites
           // whatever it is given, so a client that does not know about the
           // field would otherwise wipe the whole career history on any save.

@@ -3,6 +3,7 @@ import { IDENTITY, SOCIAL_PROFILES } from "@/lib/identity";
 // Brand marks aren't in Material Symbols — keep lucide for these four only.
 import { Facebook, Github, Instagram, Linkedin } from "lucide-react";
 import Image from "next/image";
+import type { ReactNode } from "react";
 
 // lucide brand marks keyed by the identity.ts social labels (UI layer only).
 const SOCIAL_ICONS = {
@@ -16,6 +17,26 @@ interface ProfileHeroProps {
   name?: string | null;
   description?: string | null; // HTML bio
   imageUrl?: string | null;
+  /**
+   * The role line under the name, from the CMS (`profile.headline`).
+   *
+   * Falls back to IDENTITY.jobTitle, which is also what the entity graph
+   * emits, so an empty field shows the same words as before rather than a
+   * gap. A " / " in the string still splits into two halves.
+   */
+  jobTitle?: string | null;
+  /**
+   * Optional second column, beside the identity stack rather than under it.
+   *
+   * The homepage puts a condensed career timeline here. The comment below
+   * argues against two columns and it is still right about the thing it was
+   * arguing against — splitting the identity block itself, which pushed the
+   * name below the bio. This is a different split: the identity stack stays
+   * whole on the left and something unrelated sits next to it, which is only
+   * possible at all because that stack is capped at 36rem and the row is
+   * 1188.
+   */
+  aside?: ReactNode;
 }
 
 // The identity block at the top of BOTH the homepage and the About page, so
@@ -25,15 +46,23 @@ export default function ProfileHero({
   name,
   description,
   imageUrl,
+  jobTitle,
+  aside,
 }: ProfileHeroProps) {
   // "Agentic AI Leader / Engineer" -> the two halves either side of the slash,
   // so the separator can be set quieter than the words it separates without
   // the string being written twice.
-  const jobTitleParts = IDENTITY.jobTitle.split(" / ");
+  const jobTitleParts = (jobTitle?.trim() || IDENTITY.jobTitle).split(" / ");
 
   return (
     <section className="work-breakout pt-12 pb-8 sm:pt-14 md:pb-10 md:pt-16">
-      <div className="max-w-[36rem]">
+      <div
+        className={
+          aside
+            ? "grid items-start gap-10 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)] lg:gap-16"
+            : "max-w-[36rem]"
+        }
+      >
         {/* One left-aligned stack, not two columns.
             Split across the grid, the photo pushed the name 132px below the
             first line of the bio — so the most important words in the block
@@ -78,10 +107,17 @@ export default function ProfileHero({
                   disappearing the way the outline colour did. */}
               <p className="mt-1.5 text-[1.0625rem] leading-6 tracking-[-0.02em] text-md-on-surface sm:mt-2 md:text-[1.2rem] md:leading-7">
                 {jobTitleParts[0]}
-                <span className="mx-[0.28em] text-md-on-surface-variant">
-                  /
-                </span>
-                {jobTitleParts[1]}
+                {/* Only when there are two halves. A title typed without a
+                    slash used to render the separator and then nothing after
+                    it. */}
+                {jobTitleParts.length > 1 && (
+                  <>
+                    <span className="mx-[0.28em] text-md-on-surface-variant">
+                      /
+                    </span>
+                    {jobTitleParts.slice(1).join(" / ")}
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -124,6 +160,11 @@ export default function ProfileHero({
             </a>
           </div>
         </div>
+
+        {/* Below lg this lands under the identity stack rather than beside it:
+            at 1024 the two columns would be about 470px each, and the bio
+            would be down to 60 characters a line. */}
+        {aside && <div className="min-w-0">{aside}</div>}
       </div>
     </section>
   );

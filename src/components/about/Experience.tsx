@@ -77,8 +77,19 @@ function fmtDuration(months: number): string {
 
 export default function Experience({
   companies = [],
+  compact = false,
 }: {
   companies?: ExperienceCompany[];
+  /**
+   * Titles and dates only: no result lines, no notes.
+   *
+   * The homepage runs this beside the identity block, where the full version
+   * is five paragraphs of results against a bio of three — it would have been
+   * the longest thing on the page and buried the work below it. Compact, the
+   * column says where he has been and how long, and "More about me" carries
+   * anyone who wants the rest to the page that has room for it.
+   */
+  compact?: boolean;
 }) {
   // An empty timeline draws nothing rather than an empty frame. The widget can
   // be in the body before the data is filled in.
@@ -144,7 +155,11 @@ export default function Experience({
                   this site's "space, not lines" rule and it earns it: five
                   roles at one company are a sequence, and the line is what
                   says they are the same thread rather than five jobs. */}
-              <ol className="mt-5 ml-1 space-y-6 border-l border-md-outline-variant">
+              <ol
+                className={`mt-5 ml-1 border-l border-md-outline-variant ${
+                  compact ? "space-y-4" : "space-y-6"
+                }`}
+              >
                 {company.roles.map((role) => {
                   const period = `${fmtMonth(role.start)} — ${
                     role.end ? fmtMonth(role.end) : "Present"
@@ -169,35 +184,37 @@ export default function Experience({
                         <span className="tabular-nums">{length}</span>
                       </p>
 
-                      {role.note && (
+                      {!compact && role.note && (
                         <p className="mt-2 text-[0.875rem] leading-6 text-md-on-surface-variant">
                           {role.note}
                         </p>
                       )}
 
-                      {role.highlights && role.highlights.length > 0 && (
-                        <ul className="mt-3 space-y-2">
-                          {role.highlights.map((h) => (
-                            <li
-                              key={h.text}
-                              className="relative ml-0 pl-4 text-[0.875rem] leading-6 text-md-on-surface-variant before:absolute before:left-0 before:top-[0.6875rem] before:h-[3px] before:w-[3px] before:rounded-full before:bg-md-outline"
-                            >
-                              {h.text}
-                              {h.proof && (
-                                <>
-                                  {" "}
-                                  <Link
-                                    href={`/work/${h.proof.slug}`}
-                                    className="whitespace-nowrap font-medium text-primary underline decoration-1 underline-offset-2"
-                                  >
-                                    {h.proof.label}
-                                  </Link>
-                                </>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      {!compact &&
+                        role.highlights &&
+                        role.highlights.length > 0 && (
+                          <ul className="mt-3 space-y-2">
+                            {role.highlights.map((h) => (
+                              <li
+                                key={h.text}
+                                className="relative ml-0 pl-4 text-[0.875rem] leading-6 text-md-on-surface-variant before:absolute before:left-0 before:top-[0.6875rem] before:h-[3px] before:w-[3px] before:rounded-full before:bg-md-outline"
+                              >
+                                {h.text}
+                                {h.proof && (
+                                  <>
+                                    {" "}
+                                    <Link
+                                      href={`/work/${h.proof.slug}`}
+                                      className="whitespace-nowrap font-medium text-primary underline decoration-1 underline-offset-2"
+                                    >
+                                      {h.proof.label}
+                                    </Link>
+                                  </>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                     </li>
                   );
                 })}

@@ -16,6 +16,13 @@ import { CERTIFICATIONS, EDUCATION } from "./resume";
 // not four loose nodes. This is the piece that makes hoangducviet.com the
 // entity home rather than just another page that mentions the name.
 export function createEntityGraph(params?: {
+  /**
+   * The role line as edited in the CMS. identity.ts promises the page and the
+   * entity graph cannot disagree about what he does, and making the visible
+   * title editable would have broken that promise silently: the hero would
+   * say one thing and Person.jobTitle another.
+   */
+  jobTitle?: string | null;
   description?: string;
   image?: string;
   dateModified?: string;
@@ -54,7 +61,7 @@ export function createEntityGraph(params?: {
         url: SITE_ORIGIN,
         ...(params?.image && { image: params.image }),
         email: IDENTITY.email,
-        jobTitle: IDENTITY.jobTitle,
+        jobTitle: params?.jobTitle?.trim() || IDENTITY.jobTitle,
         description,
         alumniOf: { "@id": ORG_ID },
         knowsAbout: [...IDENTITY.knowsAbout],
@@ -73,7 +80,10 @@ export function createEntityGraph(params?: {
 // The /about page. A distinct AboutPage that resolves to the SAME #person node
 // as the homepage — it corroborates the entity home rather than competing with
 // it, and gives AI a clean declarative bio surface to lift.
-export function createAboutPageSchema(params?: { description?: string }) {
+export function createAboutPageSchema(params?: {
+  description?: string;
+  jobTitle?: string | null;
+}) {
   const description = params?.description || IDENTITY.description;
   return {
     "@context": "https://schema.org",
@@ -98,7 +108,7 @@ export function createAboutPageSchema(params?: { description?: string }) {
         name: IDENTITY.name,
         alternateName: IDENTITY.alternateName,
         url: SITE_ORIGIN,
-        jobTitle: IDENTITY.jobTitle,
+        jobTitle: params?.jobTitle?.trim() || IDENTITY.jobTitle,
         description,
         // Truong hoc dung nghia cua alumniOf. SEONGON van o lai vi trang nay
         // noi ve ca hai, nhung mot Person hoc o dau la thu Google doi chieu
