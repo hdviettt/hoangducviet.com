@@ -11,6 +11,20 @@ import RenderedVisual from "./RenderedVisual";
 
 interface MarkdownContentProps {
   content: string;
+  /**
+   * Extra props for widgets, keyed by widget name.
+   *
+   * A widget fence carries whatever JSON the author typed, which is fine while
+   * a widget's content IS what the author typed. It stops working when the
+   * widget draws something out of the database: WidgetBlock is a client
+   * boundary, so the widget cannot read the DB itself, and nobody is going to
+   * paste a career history into a code fence by hand.
+   *
+   * So the page, which is a server component and has already loaded the data,
+   * hands it down. Anything the author writes in the fence still wins, so a
+   * one-off override in a single post stays possible.
+   */
+  widgetData?: Record<string, Record<string, unknown>>;
 }
 
 // Helper function to generate heading IDs from text
@@ -72,7 +86,10 @@ const HeadingWithAnchor = ({ level, children, ...props }: any) => {
   );
 };
 
-export default function MarkdownContent({ content }: MarkdownContentProps) {
+export default function MarkdownContent({
+  content,
+  widgetData,
+}: MarkdownContentProps) {
   // Fix malformed markdown where image and heading are concatenated without
   // a blank line (caused by tiptap-markdown's image serializer missing closeBlock)
   const fixedContent = content.replace(
@@ -140,7 +157,12 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                 widgetProps = { children: raw };
               }
             }
-            return <WidgetBlock name={widgetName} props={widgetProps} />;
+            return (
+              <WidgetBlock
+                name={widgetName}
+                props={{ ...(widgetData?.[widgetName] ?? {}), ...widgetProps }}
+              />
+            );
           }
           // Real fenced code block → highlighted CodeBlock with header + copy/download
           const raw = String(codeEl?.props?.children ?? "").replace(/\n$/, "");

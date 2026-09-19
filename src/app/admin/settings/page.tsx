@@ -1,15 +1,18 @@
 "use client";
 
+import ExperienceEditor from "@/components/admin/ExperienceEditor";
 import MediaPicker from "@/components/admin/MediaPicker";
 import PageHeader from "@/components/admin/PageHeader";
 import RichEditor from "@/components/admin/RichEditor";
 import { useToast } from "@/components/admin/Toast";
+import type { ExperienceCompany } from "@/db/schema";
 import { useEffect, useState } from "react";
 
 export default function AdminSettingsPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [experience, setExperience] = useState<ExperienceCompany[]>([]);
   const [siteTitle, setSiteTitle] = useState("");
   const [tagline, setTagline] = useState("");
   const [profileName, setProfileName] = useState("");
@@ -31,6 +34,7 @@ export default function AdminSettingsPage() {
           setProfileDescription(data.profile.description || "");
           setProfileImage(data.profile.image || "");
           setProfileAboutHtml(data.profile.aboutHtml || "");
+          setExperience(data.profile.experience || []);
         }
       }
       setLoading(false);
@@ -52,6 +56,7 @@ export default function AdminSettingsPage() {
             description: profileDescription,
             image: profileImage,
             aboutHtml: profileAboutHtml,
+            experience,
           },
         }),
       });
@@ -152,6 +157,27 @@ export default function AdminSettingsPage() {
               />
             </div>
           </div>
+        </section>
+
+        <section>
+          <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4 pb-2 border-b border-md-outline-variant">
+            Experience
+          </h2>
+          {/* Edited here, drawn wherever the Body puts
+              ```widget:experience```. Keeping the two separate means the
+              timeline can sit anywhere in the writing rather than being
+              pinned to the bottom of the page.
+
+              Durations are not entered: every "1 yr 4 mos" on the page is
+              computed from the start and end months at render, so the page
+              cannot drift out of date the way a typed duration would. */}
+          <p className="mb-4 text-[13px] leading-[19px] text-md-on-surface-variant">
+            Shown wherever the About body contains{" "}
+            <code className="font-mono">```widget:experience```</code>. Roles
+            newest first. Leave an end month blank for a role you are still in.
+            Durations are calculated, not typed.
+          </p>
+          <ExperienceEditor value={experience} onChange={setExperience} />
         </section>
 
         <button

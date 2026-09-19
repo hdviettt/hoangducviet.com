@@ -50,6 +50,12 @@ export async function PUT(request: Request) {
           description: body.profile.description,
           image: body.profile.image,
           aboutHtml: body.profile.aboutHtml,
+          // Only when the caller actually sends it. This route overwrites
+          // whatever it is given, so a client that does not know about the
+          // field would otherwise wipe the whole career history on any save.
+          ...(Array.isArray(body.profile.experience)
+            ? { experience: body.profile.experience }
+            : {}),
         })
         .where(eq(profile.id, 1));
     }

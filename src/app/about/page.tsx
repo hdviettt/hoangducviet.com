@@ -48,6 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AboutPage() {
   let profile: {
+    experience?: import("@/db/schema").ExperienceCompany[];
     name?: string | null;
     description?: string | null;
     image?: string | null;
@@ -101,7 +102,15 @@ export default async function AboutPage() {
       {hasBody && (
         <section className="work-breakout mt-14 max-w-[38.75rem] px-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
           <div className="article-content">
-            <MarkdownContent content={body} />
+            {/* The experience timeline is drawn from the database, not from
+                the fence the author typed, so the page hands it down. See
+                MarkdownContent's `widgetData`. */}
+            <MarkdownContent
+              content={body}
+              widgetData={{
+                experience: { companies: profile?.experience ?? [] },
+              }}
+            />
           </div>
         </section>
       )}

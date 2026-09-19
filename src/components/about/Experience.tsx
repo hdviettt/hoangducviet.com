@@ -1,4 +1,4 @@
-import { EXPERIENCE } from "@/lib/resume";
+import type { ExperienceCompany } from "@/db/schema";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,11 +6,15 @@ import Link from "next/link";
  * The experience timeline, as a widget you place in the About body with
  * ```widget:experience```.
  *
- * It is worth being blunt in the file itself, because the page it came from
- * claimed otherwise: this is NOT synced from LinkedIn. There has never been a
- * sync. The data is hand-written in lib/resume.ts, and keeping it current means
- * editing that file. LinkedIn does not expose your own positions to a plain API
- * call without partner access, so a real sync is not a small change.
+ * The data comes from the CMS -- `profile.experience`, edited in
+ * /admin/settings -- and is handed down by the About page, because this is a
+ * client boundary and cannot read the database itself.
+ *
+ * Worth being blunt here, because the page this came from claimed otherwise:
+ * nothing is synced from LinkedIn. There has never been a sync, and LinkedIn
+ * does not expose your own positions to a plain API call without partner
+ * access, so there will not be one. What exists instead is an editor: the
+ * profile changes, you paste the change into the CMS, and the site follows.
  *
  * What the page does that a CV cannot, and the reason it is drawn rather than
  * typed out:
@@ -71,14 +75,21 @@ function fmtDuration(months: number): string {
   return parts.join(" ") || "1 mo";
 }
 
-export default function Experience() {
+export default function Experience({
+  companies = [],
+}: {
+  companies?: ExperienceCompany[];
+}) {
+  // An empty timeline draws nothing rather than an empty frame. The widget can
+  // be in the body before the data is filled in.
+  if (!companies.length) return null;
   // One clock for the whole render, so two durations on the same page cannot
   // disagree because the month turned over between them.
   const now = new Date();
 
   return (
     <div className="exp-timeline my-10 space-y-12">
-      {EXPERIENCE.map((company) => {
+      {companies.map((company) => {
         // Roles are newest first, so the span runs from the last one's start to
         // the first one's end.
         const earliest = company.roles[company.roles.length - 1].start;
@@ -89,23 +100,25 @@ export default function Experience() {
 
         return (
           <div key={company.company} className="flex gap-4">
-            <a
-              href={company.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0"
-              aria-label={company.company}
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-md-outline-variant bg-md-surface-container-low">
-                <Image
-                  src={company.logo}
-                  alt=""
-                  width={44}
-                  height={44}
-                  className="h-6 w-6 object-contain"
-                />
-              </span>
-            </a>
+            {company.logo && (
+              <a
+                href={company.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0"
+                aria-label={company.company}
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-md-outline-variant bg-md-surface-container-low">
+                  <Image
+                    src={company.logo}
+                    alt=""
+                    width={44}
+                    height={44}
+                    className="h-6 w-6 object-contain"
+                  />
+                </span>
+              </a>
+            )}
 
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-baseline gap-2">

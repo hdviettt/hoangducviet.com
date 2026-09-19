@@ -41,6 +41,36 @@ export const global = pgTable("global", {
 });
 
 // Profile / author data (single row, replaces Directus "hdviet" collection)
+/** One line of a role's results. `proof` turns the claim into a link. */
+export interface ExperienceHighlight {
+  text: string;
+  // Optional link to the project page that demonstrates the claim. A line
+  // saying the platform runs twenty solutions is an assertion; the same line
+  // pointing at the platform is evidence.
+  proof?: { label: string; slug: string };
+}
+
+export interface ExperienceRole {
+  title: string;
+  // Optional: LinkedIn does not always carry one, and filling it in to satisfy
+  // a type would be inventing a fact.
+  type?: string; // Full-time / Internship / Apprenticeship
+  start: string; // "YYYY-MM"
+  end?: string; // "YYYY-MM"; omit for a role still running
+  note?: string;
+  highlights?: ExperienceHighlight[];
+}
+
+export interface ExperienceCompany {
+  company: string;
+  url?: string;
+  logo?: string;
+  location?: string;
+  // Newest first, which is the order the timeline draws and the order the
+  // company's own span is derived from.
+  roles: ExperienceRole[];
+}
+
 export const profile = pgTable("profile", {
   id: integer("id").primaryKey().default(1),
   name: text("name"),
@@ -48,6 +78,14 @@ export const profile = pgTable("profile", {
   image: text("image"), // R2 URL or legacy /uploads/ path
   headline: text("headline"), // About page — short H1 line
   aboutHtml: text("about_html"), // About page — long-form bio (HTML)
+  // The career timeline. It lived in src/lib/resume.ts as a hand-typed
+  // constant, which meant only a deploy could change it -- and it silently
+  // rotted: when it was checked against the real profile, four of its five
+  // roles were wrong. Here it is editable in the CMS like everything else.
+  experience: jsonb("experience")
+    .$type<ExperienceCompany[]>()
+    .notNull()
+    .default([]),
 });
 
 // Post categories
