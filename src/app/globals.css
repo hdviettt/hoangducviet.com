@@ -1092,6 +1092,21 @@ html {
   color: var(--article-text);
 }
 
+/* The experience widget draws its own list markers, so the article's have to
+   go. `.article-content ol` is 0,1,1 and Tailwind's `list-none` is 0,1,0, so
+   the utility loses and every role rendered a "1." next to the timeline dot,
+   and every highlight got a disc beside its own. Scoping through the wrapper
+   is 0,2,1, which wins without an !important. */
+.article-content .exp-timeline ul,
+.article-content .exp-timeline ol {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style-type: none;
+}
+.article-content .exp-timeline li {
+  margin-bottom: 0;
+}
+
 .article-content a {
   color: var(--article-link);
   text-decoration: none;

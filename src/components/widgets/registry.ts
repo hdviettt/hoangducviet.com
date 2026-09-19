@@ -18,6 +18,13 @@ export const widgetRegistry: Record<string, WidgetInfo> = {
     icon: "CV",
     defaultProps: {},
   },
+  experience: {
+    name: "Experience",
+    description:
+      "Career timeline from lib/resume.ts. Durations recompute on every render",
+    icon: "CV",
+    defaultProps: {},
+  },
 };
 
 // Note: `carousel` is deliberately absent. It has its own editor node (see
