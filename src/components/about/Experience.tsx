@@ -173,7 +173,9 @@ export default function Experience({
                 }
               >
                 {company.roles.map((role) => {
-                  const period = `${fmtMonth(role.start)} — ${
+                  // A hyphen, not an em dash. This is a date range, and the
+                  // source it is read against writes it with a hyphen.
+                  const period = `${fmtMonth(role.start)} - ${
                     role.end ? fmtMonth(role.end) : "Present"
                   }`;
                   const length = fmtDuration(
@@ -194,11 +196,24 @@ export default function Experience({
                       <h3 className="text-[0.9375rem] font-medium leading-6 text-md-on-surface">
                         {role.title}
                       </h3>
+                      {/* Dates first on every row, always.
+                          The employment type led this line when it was set and
+                          was simply absent when it was not, so of three roles
+                          one began with a date, one with "Full-time" and one
+                          with "Internship" — three shapes, and the dates
+                          landed in a different place on each. They are the one
+                          field every role has, so they set the column, and the
+                          type trails as the optional thing it is. */}
                       <p className="mt-0.5 text-[0.8125rem] leading-5 text-md-on-surface-variant">
-                        {role.type && <>{role.type} · </>}
                         <span className="tabular-nums">{period}</span>
                         <span className="mx-1.5 opacity-60">·</span>
                         <span className="tabular-nums">{length}</span>
+                        {role.type && (
+                          <>
+                            <span className="mx-1.5 opacity-60">·</span>
+                            {role.type}
+                          </>
+                        )}
                       </p>
 
                       {!compact && role.note && (

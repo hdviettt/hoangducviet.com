@@ -92,12 +92,6 @@ export default async function AboutPage() {
         jobTitle={profile?.headline}
       />
 
-      {/* Cai stack, dat ngay duoi phan gioi thieu dung chung voi trang chu.
-          No la du lieu chu khong phai van xuoi, nen no di truoc than bai: ai
-          den day de biet Viet lam bang gi thi doc xong trong mot cai liec, con
-          ai den de doc thi cuon qua. */}
-      <TechStack />
-
       {/* Than bai, dung ong render cua bai viet. Khong con `mx-auto`: cot doc
           van rong 620px, nhung no bat dau o mep trai cua trang chu khong phai
           can giua, de ba khoi cua trang About cung mot mep. */}
@@ -124,6 +118,14 @@ export default async function AboutPage() {
           </div>
         </section>
       )}
+
+      {/* Cai stack xuong cuoi trang.
+          Truoc no nam ngay duoi phan gioi thieu, voi ly do la du lieu thi doc
+          nhanh hon van xuoi nen cho di truoc. Nhung cai nguoi ta den trang
+          About de doc la qua trinh lam viec, va mot bang cong nghe chen vao
+          giua tieu su va dong thoi gian la thu duy nhat dung giua hai thu von
+          lien mach. Nguoi doc muon xem Viet dung gi van cuon xuong duoc. */}
+      <TechStack />
     </div>
   );
 }

@@ -21,7 +21,11 @@ import { Fragment } from "react";
 // that broke.
 export default function TechStack() {
   return (
-    <section className="work-breakout border-t border-md-outline-variant pt-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300 fill-mode-backwards">
+    // mt-14/16 to match the gap above the body, and delay-700 to come in after
+    // it: this block sits at the foot of the page now, not directly under the
+    // hero, so it needs the same air the body was given and should be the last
+    // thing to arrive rather than the second.
+    <section className="work-breakout mt-14 border-t border-md-outline-variant pt-8 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-700 fill-mode-backwards md:mt-16">
       <h2 className="mb-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
         What I build with
       </h2>

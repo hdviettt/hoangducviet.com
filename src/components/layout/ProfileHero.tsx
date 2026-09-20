@@ -163,8 +163,22 @@ export default function ProfileHero({
 
         {/* Below lg this lands under the identity stack rather than beside it:
             at 1024 the two columns would be about 470px each, and the bio
-            would be down to 60 characters a line. */}
-        {aside && <div className="min-w-0">{aside}</div>}
+            would be down to 60 characters a line.
+
+            The offset lines the column up with the name rather than with the
+            photo. Level with the photo it started against a 112px circle and
+            the first thing in it, a company row, had nothing to be level with
+            — the two columns began at the same y and agreed on nothing. The
+            name is the line it should answer.
+
+            8.25rem is the photo plus the gap above the name: md:h-28 is 7rem
+            and the stack's sm:gap-5 is 1.25rem. In rem, so it tracks the root
+            scale. Only when there is a photo to clear. */}
+        {aside && (
+          <div className={`min-w-0 ${imageUrl ? "lg:mt-[8.25rem]" : ""}`}>
+            {aside}
+          </div>
+        )}
       </div>
     </section>
   );
