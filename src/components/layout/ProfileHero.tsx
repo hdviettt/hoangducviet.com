@@ -56,10 +56,29 @@ export default function ProfileHero({
 
   return (
     <section className="work-breakout pt-12 pb-8 sm:pt-14 md:pb-10 md:pt-16">
+      {/* Three equal columns with a 4rem gutter: the same geometry as
+          .site-grid, which is the grid the rest of this page is on.
+
+          What was here was its own thing, [36rem, 1fr] with a 4rem gap, and
+          it put the timeline's left edge at x=789 on a 1618px screen. The
+          writing section below it draws its columns at 149, 610 and 1071, so
+          789 was an edge the page used exactly once. The hero's ink also
+          stopped at 1100 while every block under it ran to 1469, which is
+          what made the right third read as a hole rather than as margin.
+
+          Identity spans two columns and still caps at 36rem inside them, so
+          the bio measure does not change. The timeline takes the third
+          column, which puts it on a line the page already draws and ends it
+          flush with everything below.
+
+          xl, not lg. The third column is (w - 128) / 3, so it is about 309px
+          at 1280 and would be near 250 at 1024 -- and 60px of that is the
+          company logo and its gap. Below xl the column stacks instead, which
+          is what it already did below lg. */}
       <div
         className={
           aside
-            ? "grid items-start gap-10 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)] lg:gap-16"
+            ? "grid items-start gap-10 xl:grid-cols-3 xl:gap-x-16"
             : "max-w-[36rem]"
         }
       >
@@ -71,8 +90,14 @@ export default function ProfileHero({
             whose article measure was just brought down to 75.
             It is also one two-column relationship fewer at the top of a page
             that already has two more underneath, each splitting on different
-            things. */}
-        <div>
+            things.
+
+            The 36rem cap lives here now rather than on the grid column. It
+            used to come from the column definition, which meant that when the
+            hero stacked -- below the side-by-side breakpoint, with an aside
+            present -- nothing capped the bio at all and it ran the full
+            width. */}
+        <div className="max-w-[36rem] xl:col-span-2">
           <div className="flex flex-col items-start gap-4 sm:gap-5 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
             {imageUrl && (
               <Image
@@ -175,7 +200,7 @@ export default function ProfileHero({
             and the stack's sm:gap-5 is 1.25rem. In rem, so it tracks the root
             scale. Only when there is a photo to clear. */}
         {aside && (
-          <div className={`min-w-0 ${imageUrl ? "lg:mt-[8.25rem]" : ""}`}>
+          <div className={`min-w-0 ${imageUrl ? "xl:mt-[8.25rem]" : ""}`}>
             {aside}
           </div>
         )}
