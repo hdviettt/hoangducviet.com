@@ -108,13 +108,21 @@ function CompanyBlock({
       className="shrink-0"
       aria-label={company.company}
     >
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-md-outline-variant bg-md-surface-container-low">
+      {/* 36px in compact, not 44. The header there is a single line of
+          text, about 24px tall, and a 44px tile beside it hung 20px below
+          the name it belongs to -- the name's centre measured 10px above
+          the tile's. It was two lines tall until the location came off. */}
+      <span
+        className={`flex items-center justify-center rounded-xl border border-md-outline-variant bg-md-surface-container-low ${
+          compact ? "h-9 w-9" : "h-11 w-11"
+        }`}
+      >
         <Image
           src={company.logo}
           alt=""
           width={44}
           height={44}
-          className="h-6 w-6 object-contain"
+          className={`object-contain ${compact ? "h-5 w-5" : "h-6 w-6"}`}
         />
       </span>
     </a>
@@ -127,7 +135,11 @@ function CompanyBlock({
           href={company.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[1.0625rem] font-medium leading-6 text-md-on-surface no-underline transition-colors hover:text-primary"
+          className={`no-underline transition-colors hover:text-primary ${
+            compact
+              ? "text-[0.8125rem] font-medium leading-5 text-md-on-surface-variant"
+              : "text-[1.0625rem] font-medium leading-6 text-md-on-surface"
+          }`}
         >
           {company.company}
         </a>
@@ -159,7 +171,14 @@ function CompanyBlock({
     <ol
       className={
         compact
-          ? "mt-4 space-y-3.5"
+          ? // The rule starts under the logo's centre -- ml is half the 36px
+            // tile -- so it reads as one thread descending from the company
+            // rather than as a border on a list. The li padding puts role
+            // titles at 52px, which is where the company name already sits
+            // (36 + the 1rem gap), so the column keeps one left edge. The
+            // padding is 33px rather than 34 because the rule's own 1px sits
+            // inside the measurement.
+            "ml-[1.125rem] space-y-4 border-l border-md-outline-variant pt-4"
           : "mt-5 ml-1 space-y-6 border-l border-md-outline-variant"
       }
     >
@@ -174,14 +193,15 @@ function CompanyBlock({
         return (
           <li
             key={role.title}
-            className={`relative ml-0 ${compact ? "pl-0" : "pl-5"}`}
+            className={`relative ml-0 ${compact ? "pl-[2.0625rem]" : "pl-5"}`}
           >
-            {!compact && (
-              <span
-                aria-hidden="true"
-                className="absolute left-0 top-[0.5625rem] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-md-outline"
-              />
-            )}
+            {/* The node on the rule. Compact has one now too: without it the
+                rule was a plain border and the rows had nothing sitting on
+                it. */}
+            <span
+              aria-hidden="true"
+              className="absolute left-0 top-[0.5625rem] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-md-outline"
+            />
             <h3 className="text-[0.9375rem] font-medium leading-6 text-md-on-surface">
               {role.title}
             </h3>
@@ -244,13 +264,21 @@ function CompanyBlock({
     </ol>
   );
 
-  // One structure at both sizes: the logo on the left, everything about the
-  // company to the right of it. Compact briefly pulled the roles out to the
-  // column's left edge to stop a meta line wrapping, and that cost the thing
-  // the indent was buying -- three job titles in a row with nothing saying
-  // they were three titles at one company. The line is shorter now that the
-  // type is gone, so the indent comes back.
-  return (
+  // Compact hangs the roles off the logo rather than nesting them in a
+  // content column, because that is what lets the rule start under the logo's
+  // centre. The grouping the indent used to carry is carried by the rule now,
+  // which is the stronger signal and the one a timeline is expected to have.
+  // The full version keeps the nested column: its roles hold notes and result
+  // lists, so they want the wider measure.
+  return compact ? (
+    <div>
+      <div className="flex items-center gap-4">
+        {logo}
+        {heading}
+      </div>
+      {roles}
+    </div>
+  ) : (
     <div className="flex gap-4">
       {logo}
       <div className="min-w-0 flex-1">
