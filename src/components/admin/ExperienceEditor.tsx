@@ -6,6 +6,8 @@ import type {
   ExperienceHighlight,
   ExperienceRole,
 } from "@/db/schema";
+import { Link2, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The career timeline, editable.
@@ -20,6 +22,13 @@ import type {
  * that proves it. Each level can be reordered, because order is content here —
  * the timeline draws roles newest-first and derives the company's total span
  * from the first and last of them.
+ *
+ * Layout rule, and the reason every button sits on the right: each field at
+ * each level starts at the same x. The first version put the reorder arrows
+ * before the title input, which pushed that one input 72px in while the row
+ * beneath it stayed at the card edge. Three ragged left edges per card, and
+ * nothing to scan down. Controls belong in one cluster at the end of the row;
+ * content belongs on the margin.
  */
 
 const btn =
@@ -35,19 +44,69 @@ function move<T>(arr: T[], from: number, to: number): T[] {
   return next;
 }
 
-function Reorder({
+/**
+ * A textarea that is as tall as its text.
+ *
+ * These hold result lines that run to three or four lines, and a fixed box
+ * means scrolling inside a small window to read what you already wrote. The
+ * height is set from scrollHeight on every change and once on mount, so an
+ * existing entry opens at full height instead of hiding most of itself.
+ */
+function GrowTextarea({
+  value,
+  onChange,
+  ...rest
+}: {
+  value: string;
+  onChange: (v: string) => void;
+} & Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "value" | "onChange"
+>) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: re-measure whenever the text changes
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Collapse first: without this the box can only ever grow, because
+    // scrollHeight is never smaller than the current height.
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      rows={1}
+      {...rest}
+    />
+  );
+}
+
+/**
+ * The buttons at the end of a row: move up, move down, anything this level
+ * adds, then delete. One cluster, one order, at all three levels.
+ */
+function RowControls({
   onMove,
   first,
   last,
   label,
+  onDelete,
+  children,
 }: {
   onMove: (dir: -1 | 1) => void;
   first: boolean;
   last: boolean;
   label: string;
+  onDelete: () => void;
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="flex shrink-0">
+    <div className="flex shrink-0 items-center">
       <button
         type="button"
         onClick={() => onMove(-1)}
@@ -66,6 +125,106 @@ function Reorder({
       >
         &darr;
       </button>
+      {children}
+      <button
+        type="button"
+        onClick={onDelete}
+        className={delBtn}
+        aria-label={`Remove ${label}`}
+      >
+        <Trash2 size={15} strokeWidth={1.75} />
+      </button>
+    </div>
+  );
+}
+
+/**
+ * One result line, and the optional link that turns it into evidence.
+ *
+ * The proof pair is collapsed, and its toggle is an icon in the control
+ * cluster rather than a "+ proof link" button on a line of its own. Shown
+ * always, the pair put two more inputs under every result: five results meant
+ * fifteen fields, most of them empty. Given its own line, the button spent
+ * seven rows of height to say nothing.
+ *
+ * Both halves or neither: a label with no slug links nowhere and a slug with
+ * no label has nothing to click, so emptying both clears the pair rather than
+ * storing half of one.
+ */
+function HighlightRow({
+  highlight,
+  onChange,
+  onDelete,
+  onMove,
+  first,
+  last,
+}: {
+  highlight: ExperienceHighlight;
+  onChange: (h: ExperienceHighlight) => void;
+  onDelete: () => void;
+  onMove: (dir: -1 | 1) => void;
+  first: boolean;
+  last: boolean;
+}) {
+  const [showProof, setShowProof] = useState(Boolean(highlight.proof));
+  const label = highlight.proof?.label ?? "";
+  const slug = highlight.proof?.slug ?? "";
+
+  const setProof = (next: { label: string; slug: string }) =>
+    onChange({
+      ...highlight,
+      proof: next.label || next.slug ? next : undefined,
+    });
+
+  return (
+    <div className="flex items-start gap-2">
+      <div className="min-w-0 flex-1 space-y-2">
+        <GrowTextarea
+          value={highlight.text}
+          onChange={(v) => onChange({ ...highlight, text: v })}
+          placeholder="One result, one line"
+          className="md-field-dense"
+        />
+        {showProof && (
+          <div className="flex items-center gap-2">
+            <input
+              value={label}
+              onChange={(e) => setProof({ label: e.target.value, slug })}
+              placeholder="Link text, e.g. The platform"
+              className="md-field-dense min-w-0 flex-1"
+            />
+            <input
+              value={slug}
+              onChange={(e) => setProof({ label, slug: e.target.value })}
+              placeholder="work-project-slug"
+              className="md-field-dense min-w-0 flex-1 font-mono"
+            />
+          </div>
+        )}
+      </div>
+      <RowControls
+        label="result"
+        first={first}
+        last={last}
+        onMove={onMove}
+        onDelete={onDelete}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            // Closing it clears the pair, so a hidden field cannot keep
+            // publishing a link the editor believes it removed.
+            if (showProof) onChange({ ...highlight, proof: undefined });
+            setShowProof(!showProof);
+          }}
+          className={`${btn} ${showProof ? "text-primary" : ""}`}
+          aria-pressed={showProof}
+          title={showProof ? "Remove proof link" : "Add a proof link"}
+          aria-label={showProof ? "Remove proof link" : "Add a proof link"}
+        >
+          <Link2 size={15} strokeWidth={1.75} />
+        </button>
+      </RowControls>
     </div>
   );
 }
@@ -104,26 +263,19 @@ export default function ExperienceEditor({
           className="rounded-2xl border border-md-outline-variant p-4"
         >
           <div className="mb-3 flex items-center gap-2">
-            <Reorder
-              label="company"
-              first={ci === 0}
-              last={ci === value.length - 1}
-              onMove={(d) => onChange(move(value, ci, ci + d))}
-            />
             <input
               value={company.company}
               onChange={(e) => setCompany(ci, { company: e.target.value })}
               placeholder="Company"
-              className="md-field-dense flex-1 font-medium"
+              className="md-field-dense min-w-0 flex-1 font-medium"
             />
-            <button
-              type="button"
-              onClick={() => onChange(value.filter((_, i) => i !== ci))}
-              className={delBtn}
-              aria-label="Remove company"
-            >
-              &times;
-            </button>
+            <RowControls
+              label="company"
+              first={ci === 0}
+              last={ci === value.length - 1}
+              onMove={(d) => onChange(move(value, ci, ci + d))}
+              onDelete={() => onChange(value.filter((_, i) => i !== ci))}
+            />
           </div>
 
           <div className="mb-3 grid gap-2 sm:grid-cols-2">
@@ -133,7 +285,7 @@ export default function ExperienceEditor({
                 setCompany(ci, { url: e.target.value || undefined })
               }
               placeholder="https://company.com"
-              className="md-field-dense"
+              className="md-field-dense w-full"
             />
             <input
               value={company.location ?? ""}
@@ -141,7 +293,7 @@ export default function ExperienceEditor({
                 setCompany(ci, { location: e.target.value || undefined })
               }
               placeholder="Hanoi, Vietnam · On-site"
-              className="md-field-dense"
+              className="md-field-dense w-full"
             />
           </div>
 
@@ -163,33 +315,26 @@ export default function ExperienceEditor({
                 className="rounded-xl bg-md-surface-container-low p-3"
               >
                 <div className="mb-2 flex items-center gap-2">
-                  <Reorder
+                  <input
+                    value={role.title}
+                    onChange={(e) => setRole(ci, ri, { title: e.target.value })}
+                    placeholder="Job title"
+                    className="md-field-dense min-w-0 flex-1 font-medium"
+                  />
+                  <RowControls
                     label="role"
                     first={ri === 0}
                     last={ri === company.roles.length - 1}
                     onMove={(d) =>
                       setRoles(ci, move(company.roles, ri, ri + d))
                     }
-                  />
-                  <input
-                    value={role.title}
-                    onChange={(e) => setRole(ci, ri, { title: e.target.value })}
-                    placeholder="Job title"
-                    className="md-field-dense flex-1 font-medium"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
+                    onDelete={() =>
                       setRoles(
                         ci,
                         company.roles.filter((_, i) => i !== ri),
                       )
                     }
-                    className={delBtn}
-                    aria-label="Remove role"
-                  >
-                    &times;
-                  </button>
+                  />
                 </div>
 
                 <div className="mb-2 grid gap-2 sm:grid-cols-3">
@@ -199,7 +344,7 @@ export default function ExperienceEditor({
                       setRole(ci, ri, { type: e.target.value || undefined })
                     }
                     placeholder="Full-time (optional)"
-                    className="md-field-dense"
+                    className="md-field-dense w-full"
                   />
                   {/* Months, not dates. Every duration on the page is computed
                       from these, and a day would be precision the source does
@@ -209,7 +354,7 @@ export default function ExperienceEditor({
                     onChange={(e) => setRole(ci, ri, { start: e.target.value })}
                     placeholder="2025-05"
                     pattern="\d{4}-\d{2}"
-                    className="md-field-dense font-mono"
+                    className="md-field-dense w-full font-mono"
                   />
                   <input
                     value={role.end ?? ""}
@@ -217,119 +362,45 @@ export default function ExperienceEditor({
                       setRole(ci, ri, { end: e.target.value || undefined })
                     }
                     placeholder="2026-08 or blank = Present"
-                    className="md-field-dense font-mono"
+                    className="md-field-dense w-full font-mono"
                   />
                 </div>
 
-                <textarea
+                <GrowTextarea
                   value={role.note ?? ""}
-                  onChange={(e) =>
-                    setRole(ci, ri, { note: e.target.value || undefined })
-                  }
+                  onChange={(v) => setRole(ci, ri, { note: v || undefined })}
                   placeholder="A sentence about the role (optional)"
-                  rows={2}
-                  className="md-field-dense mb-2 w-full"
+                  className="md-field-dense mb-2"
                 />
 
                 <div className="space-y-2">
                   {(role.highlights ?? []).map((h, hi) => {
                     const hs = role.highlights ?? [];
                     return (
-                      <div
+                      <HighlightRow
                         // biome-ignore lint/suspicious/noArrayIndexKey: positional and reorderable
                         key={hi}
-                        className="flex items-start gap-2"
-                      >
-                        <Reorder
-                          label="result"
-                          first={hi === 0}
-                          last={hi === hs.length - 1}
-                          onMove={(d) =>
-                            setHighlights(ci, ri, move(hs, hi, hi + d))
-                          }
-                        />
-                        <div className="min-w-0 flex-1 space-y-2">
-                          <textarea
-                            value={h.text}
-                            onChange={(e) =>
-                              setHighlights(
-                                ci,
-                                ri,
-                                hs.map((x, i) =>
-                                  i === hi ? { ...x, text: e.target.value } : x,
-                                ),
-                              )
-                            }
-                            placeholder="One result, one line"
-                            rows={2}
-                            className="md-field-dense w-full"
-                          />
-                          {/* Proof turns a claim into a link. Both halves or
-                              neither — a label with no slug links nowhere. */}
-                          <div className="grid gap-2 sm:grid-cols-2">
-                            <input
-                              value={h.proof?.label ?? ""}
-                              onChange={(e) =>
-                                setHighlights(
-                                  ci,
-                                  ri,
-                                  hs.map((x, i) =>
-                                    i === hi
-                                      ? {
-                                          ...x,
-                                          proof: e.target.value
-                                            ? {
-                                                label: e.target.value,
-                                                slug: x.proof?.slug ?? "",
-                                              }
-                                            : undefined,
-                                        }
-                                      : x,
-                                  ),
-                                )
-                              }
-                              placeholder="Proof link text (optional)"
-                              className="md-field-dense"
-                            />
-                            <input
-                              value={h.proof?.slug ?? ""}
-                              onChange={(e) =>
-                                setHighlights(
-                                  ci,
-                                  ri,
-                                  hs.map((x, i) =>
-                                    i === hi
-                                      ? {
-                                          ...x,
-                                          proof: {
-                                            label: x.proof?.label ?? "",
-                                            slug: e.target.value,
-                                          },
-                                        }
-                                      : x,
-                                  ),
-                                )
-                              }
-                              placeholder="work-project-slug"
-                              className="md-field-dense font-mono"
-                            />
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setHighlights(
-                              ci,
-                              ri,
-                              hs.filter((_, i) => i !== hi),
-                            )
-                          }
-                          className={delBtn}
-                          aria-label="Remove result"
-                        >
-                          &times;
-                        </button>
-                      </div>
+                        highlight={h}
+                        first={hi === 0}
+                        last={hi === hs.length - 1}
+                        onChange={(next) =>
+                          setHighlights(
+                            ci,
+                            ri,
+                            hs.map((x, i) => (i === hi ? next : x)),
+                          )
+                        }
+                        onMove={(d) =>
+                          setHighlights(ci, ri, move(hs, hi, hi + d))
+                        }
+                        onDelete={() =>
+                          setHighlights(
+                            ci,
+                            ri,
+                            hs.filter((_, i) => i !== hi),
+                          )
+                        }
+                      />
                     );
                   })}
                   <button
@@ -340,7 +411,7 @@ export default function ExperienceEditor({
                         { text: "" },
                       ])
                     }
-                    className="md-btn md-btn-text md-btn-sm"
+                    className="md-btn md-btn-text md-btn-sm -ml-2"
                   >
                     + result
                   </button>

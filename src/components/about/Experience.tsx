@@ -99,7 +99,11 @@ export default function Experience({
   const now = new Date();
 
   return (
-    <div className="exp-timeline my-10 space-y-12">
+    // No vertical margin in compact: beside the identity block that 40px top
+    // margin pushed the column 40px below the photo, and the same margin at
+    // the bottom stacked with the button's own to leave a 64px hole — four
+    // times the gap between roles.
+    <div className={`exp-timeline space-y-12 ${compact ? "" : "my-10"}`}>
       {companies.map((company) => {
         // Roles are newest first, so the span runs from the last one's start to
         // the first one's end.
@@ -155,10 +159,18 @@ export default function Experience({
                   this site's "space, not lines" rule and it earns it: five
                   roles at one company are a sequence, and the line is what
                   says they are the same thread rather than five jobs. */}
+              {/* No spine when compact. The rule and its dots are timeline
+                  furniture that needs density to read as a line; against three
+                  short rows it started below the logo instead of running
+                  through it, so it looked like something left behind rather
+                  than drawn. The indent under the company name does the
+                  grouping on its own at this size. */}
               <ol
-                className={`mt-5 ml-1 border-l border-md-outline-variant ${
-                  compact ? "space-y-4" : "space-y-6"
-                }`}
+                className={
+                  compact
+                    ? "mt-4 space-y-3.5"
+                    : "mt-5 ml-1 space-y-6 border-l border-md-outline-variant"
+                }
               >
                 {company.roles.map((role) => {
                   const period = `${fmtMonth(role.start)} — ${
@@ -169,11 +181,16 @@ export default function Experience({
                   );
 
                   return (
-                    <li key={role.title} className="relative ml-0 pl-5">
-                      <span
-                        aria-hidden="true"
-                        className="absolute left-0 top-[0.5625rem] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-md-outline"
-                      />
+                    <li
+                      key={role.title}
+                      className={`relative ml-0 ${compact ? "pl-0" : "pl-5"}`}
+                    >
+                      {!compact && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-0 top-[0.5625rem] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-md-outline"
+                        />
+                      )}
                       <h3 className="text-[0.9375rem] font-medium leading-6 text-md-on-surface">
                         {role.title}
                       </h3>

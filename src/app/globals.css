@@ -2599,6 +2599,27 @@ select.md-field {
     var(--md-sys-motion-easing-standard), box-shadow
     var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 }
+/* The dense field is built for one-line inputs: `height: 2rem` and
+   `width: auto`. On a textarea both are wrong, and both were visible — the
+   box clipped to 32px so text was cut off mid-word, and the width fell back
+   to the browser's default column count, which is why a result field rendered
+   about 175px wide while the inputs beneath it ran the full row. `w-full` did
+   not help: it is the same specificity and loses on order.
+
+   `textarea.md-field-dense` is 0,1,1, so it wins without an !important. This
+   mirrors textarea.md-field above, which had the same fix long ago. */
+textarea.md-field-dense {
+  width: 100%;
+  height: auto;
+  /* One line, not three. The autosizing textarea sets its own height from
+     scrollHeight, but min-height beats height, so a generous floor here would
+     hold every empty optional field open at three lines: the form had four of
+     them and they read as unfinished work rather than as blank options. */
+  min-height: 2rem;
+  padding: 0.4375rem 0.625rem;
+  resize: vertical;
+}
+
 .md-field-dense:hover {
   border-color: hsl(var(--md-sys-color-outline));
 }

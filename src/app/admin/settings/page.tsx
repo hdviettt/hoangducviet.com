@@ -82,23 +82,30 @@ export default function AdminSettingsPage() {
     );
 
   return (
-    <div className="max-w-2xl">
+    // 4xl, not 2xl. The simple sections keep the 2xl measure on
+    // themselves, because a single-line input does not want to be 900px
+    // wide. The Experience repeater does: it nests three levels, and at
+    // 672px a result row had about 500px left for the text after the
+    // card padding and the buttons.
+    <div className="max-w-4xl">
       <PageHeader title="Settings" />
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <section className="rounded-xl border border-md-outline-variant p-5">
+        <section className="max-w-2xl rounded-xl border border-md-outline-variant p-5">
           <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4 pb-2 border-b border-md-outline-variant">
             Site
           </h2>
           <div className="space-y-3">
             <div>
-              {/* Associated, unlike its neighbours. The other five labels in
-                  this form are bare and have been flagged for a while; this
-                  one is new, so it may as well be right. */}
-              <label className="md-field-label" htmlFor="profile-headline">
+              {/* This is the site title, not the profile headline. The
+                  htmlFor here read "profile-headline" — copied along with the
+                  comment from the field two sections down — so clicking this
+                  label scrolled away and focused the wrong input. */}
+              <label className="md-field-label" htmlFor="site-title">
                 Title
               </label>
               <input
+                id="site-title"
                 type="text"
                 value={siteTitle}
                 onChange={(e) => setSiteTitle(e.target.value)}
@@ -117,7 +124,7 @@ export default function AdminSettingsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-md-outline-variant p-5">
+        <section className="max-w-2xl rounded-xl border border-md-outline-variant p-5">
           <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4 pb-2 border-b border-md-outline-variant">
             Profile
           </h2>
@@ -171,7 +178,7 @@ export default function AdminSettingsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-md-outline-variant p-5">
+        <section className="max-w-2xl rounded-xl border border-md-outline-variant p-5">
           <h2 className="text-[13px] leading-[18px] text-md-on-surface-variant mb-4 pb-2 border-b border-md-outline-variant">
             About page
           </h2>

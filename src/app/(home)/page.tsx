@@ -1,8 +1,8 @@
+import Experience from "@/components/about/Experience";
 import WorkLead from "@/components/home/WorkLead";
 import ProfileHero from "@/components/layout/ProfileHero";
-import Experience from "@/components/about/Experience";
-import { Icon } from "@/components/ui/Icon";
 import FeedBlocks from "@/components/posts/FeedBlocks";
+import { Icon } from "@/components/ui/Icon";
 import { getGlobalMetadata } from "@/lib/global";
 import { IDENTITY } from "@/lib/identity";
 import { createEntityGraph } from "@/lib/jsonld";
