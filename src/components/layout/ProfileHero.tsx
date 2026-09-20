@@ -56,29 +56,22 @@ export default function ProfileHero({
 
   return (
     <section className="work-breakout pt-12 pb-8 sm:pt-14 md:pb-10 md:pt-16">
-      {/* Three equal columns with a 4rem gutter: the same geometry as
-          .site-grid, which is the grid the rest of this page is on.
+      {/* Two columns: the identity at its 36rem measure, then the aside one
+          4rem gutter later.
 
-          What was here was its own thing, [36rem, 1fr] with a 4rem gap, and
-          it put the timeline's left edge at x=789 on a 1618px screen. The
-          writing section below it draws its columns at 149, 610 and 1071, so
-          789 was an edge the page used exactly once. The hero's ink also
-          stopped at 1100 while every block under it ran to 1469, which is
-          what made the right third read as a hole rather than as margin.
-
-          Identity spans two columns and still caps at 36rem inside them, so
-          the bio measure does not change. The timeline takes the third
-          column, which puts it on a line the page already draws and ends it
-          flush with everything below.
-
-          xl, not lg. The third column is (w - 128) / 3, so it is about 309px
-          at 1280 and would be near 250 at 1024 -- and 60px of that is the
-          company logo and its gap. Below xl the column stacks instead, which
-          is what it already did below lg. */}
+          This was briefly a three-column grid matching .site-grid, to put the
+          aside on a line the page already drew and end it flush right. It did
+          both, and it also pushed the column out to x=1071 on a 1618px window
+          -- half the row away from the block it belongs to. A shared grid line
+          is not worth reading as a separate page element, so the aside comes
+          back to sit beside the identity. The empty width to its right is
+          margin, which is what it was always going to be: the identity caps at
+          36rem for the measure and the timeline is intrinsically about 310px
+          of text, so no arrangement fills 1320px with them. */}
       <div
         className={
           aside
-            ? "grid items-start gap-10 xl:grid-cols-3 xl:gap-x-16"
+            ? "grid items-start gap-10 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)] lg:gap-16"
             : "max-w-[36rem]"
         }
       >
@@ -97,8 +90,8 @@ export default function ProfileHero({
             hero stacked -- below the side-by-side breakpoint, with an aside
             present -- nothing capped the bio at all and it ran the full
             width. */}
-        <div className="max-w-[36rem] xl:col-span-2">
-          <div className="flex flex-col items-start gap-4 sm:gap-5 animate-in fade-in slide-in-from-bottom-3 duration-500 fill-mode-backwards">
+        <div className="max-w-[36rem]">
+          <div className="flex flex-col items-start gap-4 sm:gap-5">
             {imageUrl && (
               <Image
                 src={imageUrl}
@@ -149,12 +142,12 @@ export default function ProfileHero({
           {description &&
             description.replace(/<[^>]*>/g, "").trim().length > 0 && (
               <div
-                className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline mt-5 [&_p]:text-[0.9375rem] [&_p]:leading-7 [&_p]:mb-3 [&_p:last-child]:mb-0 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-150 fill-mode-backwards"
+                className="text-md-on-surface-variant [&_a]:text-primary [&_a]:no-underline [&_a:hover]:underline mt-5 [&_p]:text-[0.9375rem] [&_p]:leading-7 [&_p]:mb-3 [&_p:last-child]:mb-0"
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             )}
 
-          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200 fill-mode-backwards">
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
             {SOCIAL_PROFILES.map(({ href, label }) => {
               // href/label come from identity.ts so the visible links and the
               // JSON-LD sameAs stay in lockstep; only the icon lives in the UI.
@@ -200,7 +193,7 @@ export default function ProfileHero({
             and the stack's sm:gap-5 is 1.25rem. In rem, so it tracks the root
             scale. Only when there is a photo to clear. */}
         {aside && (
-          <div className={`min-w-0 ${imageUrl ? "xl:mt-[8.25rem]" : ""}`}>
+          <div className={`min-w-0 ${imageUrl ? "lg:mt-[8.25rem]" : ""}`}>
             {aside}
           </div>
         )}

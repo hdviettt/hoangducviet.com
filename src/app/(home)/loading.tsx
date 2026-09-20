@@ -3,7 +3,9 @@
 // It mirrors what the page actually renders, in the same containers and at the
 // same widths, so the hand-off to real content does not move anything:
 //
-//   ProfileHero   work-breakout, max-w-[36rem], LEFT aligned
+//   ProfileHero   work-breakout, identity at max-w-[36rem] with the compact
+//                 career timeline beside it from lg, offset to start level
+//                 with the name
 //   WorkLead      "Selected work", then three site-grid blocks separated by
 //                 rules, text in col-1 and the clip in col-2
 //   Articles      work-breakout, site-grid, sticky aside in col-1 and the feed
@@ -12,6 +14,7 @@
 // The previous version centred the hero and skipped the work section entirely,
 // which is what made the load flash from a centred column to a left-aligned
 // page with three large blocks in it.
+const HERO_ROLES = ["h1", "h2", "h3"];
 const WORK_BLOCKS = ["w1", "w2", "w3"];
 const FEED_ROWS = ["f1", "f2", "f3", "f4", "f5", "f6"];
 const STACK_DOTS = ["s1", "s2", "s3", "s4", "s5"];
@@ -25,24 +28,53 @@ export default function HomeLoading() {
     <div className="pb-16" aria-hidden>
       {/* ---- ProfileHero ---- */}
       <section className="work-breakout pt-12 pb-8 sm:pt-14 md:pb-10 md:pt-16">
-        <div className="max-w-[36rem]">
-          <div className="flex flex-col items-start gap-4 sm:gap-5">
-            <div className="skeleton h-20 w-20 shrink-0 rounded-full sm:h-24 sm:w-24 md:h-28 md:w-28" />
-            <Bar className="h-8 w-56 sm:h-9 sm:w-64 md:h-[2.3rem] md:w-72" />
+        {/* Two columns from lg, as the real hero has since the career
+            timeline moved up here. Drawing a single 36rem column meant the
+            hand-off painted a whole second column that the placeholder never
+            reserved. */}
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)] lg:gap-16">
+          <div className="max-w-[36rem]">
+            <div className="flex flex-col items-start gap-4 sm:gap-5">
+              <div className="skeleton h-20 w-20 shrink-0 rounded-full sm:h-24 sm:w-24 md:h-28 md:w-28" />
+              <div>
+                <Bar className="h-8 w-56 sm:h-9 sm:w-64 md:h-[2.3rem] md:w-72" />
+                <Bar className="mt-2 h-6 w-44 md:h-7 md:w-52" />
+              </div>
+            </div>
+            <div className="mt-5 space-y-3">
+              <Bar className="h-4 w-full" />
+              <Bar className="h-4 w-[97%]" />
+              <Bar className="h-4 w-[92%]" />
+              <Bar className="h-4 w-2/3" />
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Bar className="h-5 w-5 rounded-full" />
+              <Bar className="h-5 w-5 rounded-full" />
+              <Bar className="h-5 w-5 rounded-full" />
+              <Bar className="h-5 w-5 rounded-full" />
+              <span className="hidden h-4 w-px bg-md-outline-variant sm:block" />
+              <Bar className="h-4 w-48" />
+            </div>
           </div>
-          <div className="mt-5 space-y-3">
-            <Bar className="h-4 w-full" />
-            <Bar className="h-4 w-[97%]" />
-            <Bar className="h-4 w-[92%]" />
-            <Bar className="h-4 w-2/3" />
-          </div>
-          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <Bar className="h-5 w-5 rounded-full" />
-            <Bar className="h-5 w-5 rounded-full" />
-            <Bar className="h-5 w-5 rounded-full" />
-            <Bar className="h-5 w-5 rounded-full" />
-            <span className="hidden h-4 w-px bg-md-outline-variant sm:block" />
-            <Bar className="h-4 w-48" />
+
+          {/* 8.25rem is the photo plus the gap above the name, the same offset
+              the real column uses to start level with the name. */}
+          <div className="min-w-0 lg:mt-[8.25rem]">
+            <div className="flex gap-4">
+              <Bar className="h-11 w-11 shrink-0 rounded-xl" />
+              <div className="min-w-0 flex-1">
+                <Bar className="h-6 w-36" />
+                <div className="mt-4 space-y-3.5">
+                  {HERO_ROLES.map((r) => (
+                    <div key={r}>
+                      <Bar className="h-6 w-48" />
+                      <Bar className="mt-1 h-4 w-56" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <Bar className="mt-6 h-10 w-40 rounded-full" />
           </div>
         </div>
       </section>

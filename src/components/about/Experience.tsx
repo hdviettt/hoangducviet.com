@@ -135,7 +135,10 @@ function CompanyBlock({
           · {companyDuration}
         </span>
       </div>
-      {company.location && (
+      {/* Where the office is, and whether it is on-site, is not something
+          the hero column has to answer. Detail belongs on the page that
+          exists for detail. */}
+      {!compact && company.location && (
         <p className="mt-0.5 text-[0.8125rem] text-md-on-surface-variant">
           {company.location}
         </p>
@@ -194,7 +197,11 @@ function CompanyBlock({
               <span className="tabular-nums">{period}</span>
               <span className="mx-1.5 opacity-60">·</span>
               <span className="tabular-nums">{length}</span>
-              {role.type && (
+              {/* Not in the hero. "Internship" after a title that already
+                  reads "Operation Intern" is the same fact twice, and it
+                  was the field that made one row longer than the next.
+                  Title and dates are what the column is for. */}
+              {!compact && role.type && (
                 <>
                   <span className="mx-1.5 opacity-60">·</span>
                   {role.type}
@@ -237,21 +244,13 @@ function CompanyBlock({
     </ol>
   );
 
-  // Compact puts the roles under the header at the column's full width
-  // rather than indented past the logo. The indent is 60px, the logo plus
-  // its gap, and in the hero's third column -- 309px at a 1280px window --
-  // that left 249px for a meta line that wants about 270, so "Full-time"
-  // broke across two lines as "Full-" and "time". The logo still leads the
-  // company name; only the list below it moves out.
-  return compact ? (
-    <div>
-      <div className="flex items-center gap-4">
-        {logo}
-        {heading}
-      </div>
-      {roles}
-    </div>
-  ) : (
+  // One structure at both sizes: the logo on the left, everything about the
+  // company to the right of it. Compact briefly pulled the roles out to the
+  // column's left edge to stop a meta line wrapping, and that cost the thing
+  // the indent was buying -- three job titles in a row with nothing saying
+  // they were three titles at one company. The line is shorter now that the
+  // type is gone, so the indent comes back.
+  return (
     <div className="flex gap-4">
       {logo}
       <div className="min-w-0 flex-1">

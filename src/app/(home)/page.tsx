@@ -162,7 +162,7 @@ export default async function Home() {
         jobTitle={mainProfile.headline}
         aside={
           mainProfile.experience?.length ? (
-            <div className="animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200 fill-mode-backwards">
+            <div>
               {/* Compact: titles and dates, no result lines. The full version
                   is five paragraphs against a three-line bio, which would
                   have made the career the longest thing on the homepage and

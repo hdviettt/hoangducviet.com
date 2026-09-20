@@ -96,7 +96,7 @@ export default async function AboutPage() {
           van rong 620px, nhung no bat dau o mep trai cua trang chu khong phai
           can giua, de ba khoi cua trang About cung mot mep. */}
       {hasBody && (
-        <section className="work-breakout mt-14 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-500 fill-mode-backwards md:mt-16">
+        <section className="work-breakout mt-14 md:mt-16">
           {/* The measure goes on an inner div, not on the breakout itself.
               `work-breakout` centres what it wraps -- margin-left:50% plus a
               -50% translate -- so putting a 620px max-width on the same
