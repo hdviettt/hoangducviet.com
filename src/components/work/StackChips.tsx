@@ -307,10 +307,17 @@ export function KitDots({
 export function LogoRow({
   items,
   fixed = false,
+  compact = false,
   rest = 0,
 }: {
   items: ProjectLogo[];
   fixed?: boolean;
+  /**
+   * A 30px disc rather than 36, with the mark and the monogram scaled up
+   * against it so nothing drops below 10px. For places that want the row
+   * quieter than a work card does.
+   */
+  compact?: boolean;
   // How many marks the row is not drawing. Rendered as the last cell so the
   // row reads "these four, of this many" rather than "these five".
   rest?: number;
@@ -319,7 +326,7 @@ export function LogoRow({
     <ul
       className={`stack-row flex flex-wrap items-center ${
         fixed ? "stack-row--fixed" : ""
-      }`}
+      } ${compact ? "stack-row--compact" : ""}`}
     >
       {items.map((it) => (
         <Dot key={it.name} item={it} />

@@ -1124,12 +1124,13 @@ html {
    silently did nothing: a 0.75rem section label rendered at the article
    heading size, and a 1rem role title at 1.25rem. These are 0,2,1, so the
    values here are the values that paint. */
+/* Sentence case, not shouted. Small caps at a heavy weight makes a two-word
+   label the loudest thing in a section it is only introducing. */
 .article-content .exp-timeline h2 {
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: normal;
   color: hsl(var(--md-sys-color-on-surface-variant));
 }
 .article-content .exp-timeline h3 {
@@ -1983,6 +1984,23 @@ html {
 .stack-row--fixed {
   --dot-size: 2.25rem;
 }
+/* A smaller disc for the About stack, without taking the monograms with it.
+
+   Six marks there are letters rather than logos -- SQL, UMAP, Hd, Ag, Un, V
+   -- set at 0.29 of the disc. At 36px that is 10.4px, and shrinking the disc
+   alone would have put them under 9. The ratio goes up as the disc comes
+   down, so 30px still reads at 10.2px. */
+.stack-row--compact {
+  --dot-size: 1.875rem;
+}
+.stack-row--compact .stack-dot > svg {
+  width: calc(var(--dot-size) * 0.5);
+  height: calc(var(--dot-size) * 0.5);
+}
+.stack-row--compact .stack-dot > .stack-mono {
+  font-size: calc(var(--dot-size) * 0.34);
+}
+
 .stack-dot {
   width: var(--dot-size);
   height: var(--dot-size);

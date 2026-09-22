@@ -24,8 +24,10 @@ export default function TechStack() {
     // the page now, not directly under the hero, so it needs the same air the
     // body was given.
     <section className="work-breakout mt-14 border-t border-md-outline-variant pt-8 md:mt-16">
-      <h2 className="mb-4 text-[0.9375rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
-        What I build with
+      {/* Same size and weight as the timeline section labels above it, so
+          the About page has one heading voice rather than two. */}
+      <h2 className="mb-4 text-[0.8125rem] font-medium text-md-on-surface-variant">
+        My technical stack
       </h2>
       {/* Label above its marks, four groups to a row.
 
@@ -55,10 +57,10 @@ export default function TechStack() {
             key={g.group}
             className="flex items-center gap-2.5 sm:flex-col sm:items-start sm:gap-2"
           >
-            <span className="whitespace-nowrap text-[0.75rem] font-medium uppercase leading-4 tracking-[0.06em] text-md-on-surface-variant">
+            <span className="whitespace-nowrap text-[0.75rem] leading-4 text-md-on-surface-variant">
               {g.group}
             </span>
-            <LogoRow items={g.items} fixed />
+            <LogoRow items={g.items} compact />
           </div>
         ))}
       </div>
