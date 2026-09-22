@@ -1,8 +1,4 @@
-import type {
-  ExperienceCompany,
-  ExperienceRole,
-  ExperienceTone,
-} from "@/db/schema";
+import type { ExperienceCompany, ExperienceRole } from "@/db/schema";
 import {
   fmtDuration,
   fmtMonth,
@@ -15,64 +11,25 @@ import Link from "next/link";
 
 /**
  * The career and the education on one year axis: work down the left, school
- * down the right, every block as tall as the span it covers.
+ * down the right.
  *
- * Two tracks means the blocks are placed, not stacked -- a degree and a job
- * run at the same time, and a flow layout cannot put two things at the same
- * y. So each block is positioned from its own dates against a shared ruler,
- * which is also what makes the two sides comparable at a glance.
+ * Two things are drawn, and they answer different questions. The bar is drawn
+ * to time -- it spans exactly the months of its entry, against a shared year
+ * ruler, so two bars are directly comparable. The card is drawn to what it
+ * says, and carries everything: the title, the organisation, the note, and
+ * the result lines.
  *
- * The consequence, and the reason the blocks are terse: a placed block cannot
- * push the next one down, so anything that does not fit would overlap. Every
- * block therefore carries only what fits in the shortest span on the chart --
- * a title, the organisation, and the dates. The result lines live under the
- * chart instead, where they can be as long as they need to be.
+ * The cards flow down their own track rather than being pinned to their bars.
+ * Each sits in a slot as tall as the drop to the next card, so when the
+ * content fits -- which is the normal case -- the card lands exactly on its
+ * bar. When a card has more to say than its slot allows, it pushes the ones
+ * below it down instead of overlapping them, and the bars stay where they
+ * are. The chart never lies about duration; at worst a card sits a little
+ * below the bar it belongs to.
  *
- * Heights and positions both come from the same month arithmetic, so a block
- * that looks twice as tall as another covers twice the time.
+ * Colour is used once, to say which track a bar belongs to. Nothing else here
+ * is coloured, because nothing else here is data.
  */
-
-// The months-to-pixels scale lives in the stylesheet, as --exp-scale, because
-// it has to change with the width and breakpoints belong in CSS. This file
-// emits unitless month counts and lets the stylesheet multiply.
-//
-// The floor is the shortest span on the chart, because a block that cannot
-// fit its own text would be clipped by its neighbour. The shortest here is a
-// 5-month role. Wide, that block is 376px across, its title sits on one line,
-// and 92px is enough: 1.25rem a month clears it. Narrow, the same title wraps
-// to two lines and wants about 104px, so the scale steps up to 1.75rem below
-// 1024px, which is also where the block stops getting the wider measure.
-//
-// The ceiling is the page. The axis runs Sep 2020 to Jun 2027 once education
-// is on it -- 81 months, against the 25 that work alone spanned -- so every
-// extra pixel a month costs 81 of them. That is why the blocks lost their
-// result lines when school arrived: at the 3rem a month this chart used when
-// it held work only, it would now be 3,900px tall.
-
-// The default cycle, used when a row has not picked a tone. Starts on the
-// site blue so an untouched chart still looks like this site, then walks far
-// enough round the wheel that two neighbouring blocks never read as the same
-// colour.
-const DEFAULT_TONES: ExperienceTone[] = [
-  "blue",
-  "violet",
-  "teal",
-  "green",
-  "amber",
-  "rose",
-];
-
-// What a card needs before it can carry its result lines inside itself.
-//
-// The card is content-sized now, so the constraint is no longer its own span
-// but the drop to the next card on the same side: a card that grows past that
-// would sit on top of its neighbour. Both numbers are the narrow case -- the
-// header, note and dates at about 100px, and a result line allowed to wrap to
-// two at 56. Deliberately pessimistic, because being wrong here puts one card
-// through another.
-const BLOCK_CHROME_PX = 100;
-const RESULT_LINE_PX = 56;
-const NARROW_SCALE_PX = 20;
 
 type Track = "work" | "education";
 
@@ -82,9 +39,7 @@ type Entry = {
   track: Track;
   from: number;
   to: number;
-  tone: ExperienceTone;
   showMark: boolean;
-  resultsFit: boolean;
 };
 
 function Mark({ org }: { org: ExperienceCompany }) {
@@ -102,46 +57,7 @@ function Mark({ org }: { org: ExperienceCompany }) {
   );
 }
 
-function Results({
-  role,
-  muted,
-}: {
-  role: ExperienceRole;
-  muted: boolean;
-}) {
-  if (!role.highlights?.length) return null;
-  return (
-    <ul className="flex flex-col gap-2">
-      {role.highlights.map((h) => (
-        <li
-          key={h.text}
-          className={`relative ml-0 pl-4 text-[0.8125rem] leading-5 before:absolute before:left-0 before:top-[0.5625rem] before:h-[3px] before:w-[3px] before:rounded-full ${
-            muted
-              ? "chart-muted before:bg-[var(--chart-bullet)]"
-              : "text-md-on-surface-variant before:bg-md-outline"
-          }`}
-        >
-          {h.text}
-          {h.proof && (
-            <>
-              {" "}
-              <Link
-                href={`/work/${h.proof.slug}`}
-                className={`whitespace-nowrap font-medium underline decoration-1 underline-offset-2 ${
-                  muted ? "" : "text-primary"
-                }`}
-              >
-                {h.proof.label}
-              </Link>
-            </>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function Block({
+function Card({
   entry,
   now,
   showSlot,
@@ -150,10 +66,11 @@ function Block({
   now: Date;
   showSlot: boolean;
 }) {
-  const { role, org, tone, showMark, resultsFit } = entry;
+  const { role, org, showMark } = entry;
+
   // A span that ends in the future is a plan, not a fact. The degree read
   // "Sep 2023 - Jun 2027 . 3 yrs 10 mos" in September 2026, counting ten
-  // months that have not happened. The range still shows what is planned,
+  // months that had not happened. The range still shows what is planned,
   // marked as such; the duration counts only up to today.
   const today = nowIndex(now);
   const endIdx = role.end ? monthIndex(role.end) : today;
@@ -165,23 +82,8 @@ function Block({
   const length = fmtDuration(Math.max(elapsed, 1));
 
   return (
-    // The mark sits outside the text column rather than inside the first row
-    // of it, so the title, the note and the dates share one left edge. When
-    // the mark was in the header row, the title was indented past it and the
-    // two lines below it were not: three lines, two edges, in a block 376px
-    // wide.
-    // The bar is what is drawn to time; the card is drawn to its content.
-    //
-    // They used to be the same element, which meant a 45-month degree was a
-    // 1,400px rectangle holding three lines of text, with its end date most
-    // of a screen below its title. Splitting them keeps the measurement
-    // exact -- the bar still spans precisely its months -- and lets the card
-    // be the size of what it says.
-    <>
-      <span className={`exp-chart__bar exp-tone--${tone}`} aria-hidden="true" />
-      <article
-        className={`exp-chart__card exp-tone--${tone} flex gap-2 rounded-xl border p-3`}
-      >
+    <article className="exp-chart__card rounded-xl border border-md-outline-variant bg-md-surface-container-low p-3.5">
+      <div className="flex gap-2.5">
         {/* Reserved only when something in this track has a mark, so a track
             of schools with no logos is not indented past an empty square.
             Within a track that does have one, the slot is held for the rows
@@ -194,10 +96,10 @@ function Block({
 
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <div className="flex min-w-0 flex-col">
-            <h3 className="text-[0.9375rem] font-medium leading-5">
+            <h3 className="text-[0.9375rem] font-medium leading-5 text-md-on-surface">
               {role.title}
             </h3>
-            <p className="chart-muted text-[0.8125rem] leading-4">
+            <p className="text-[0.8125rem] leading-4 text-md-on-surface-variant">
               <a
                 href={org.url}
                 target="_blank"
@@ -206,26 +108,48 @@ function Block({
               >
                 {org.company}
               </a>
+              <span className="mx-1.5 opacity-60">&middot;</span>
+              <span className="tabular-nums">{period}</span>
+              <span className="mx-1.5 opacity-60">&middot;</span>
+              <span className="tabular-nums">{length}</span>
             </p>
           </div>
 
           {role.note && (
-            <p className="chart-muted text-[0.75rem] leading-4">{role.note}</p>
+            <p className="text-[0.8125rem] leading-5 text-md-on-surface-variant">
+              {role.note}
+            </p>
           )}
 
-          {/* Only when the next card in this track is far enough below that
-              these lines cannot reach it. The rest of the time they are
-              under the chart. */}
-          {resultsFit && <Results role={role} muted />}
-
-          <p className="chart-muted text-[0.75rem] leading-4 tabular-nums">
-            {period}
-            <span className="mx-1 opacity-60">&middot;</span>
-            {length}
-          </p>
+          {/* What the role actually produced. This belongs with the role, not
+              in a list somewhere below the chart: splitting them left the
+              chart saying where he was and nothing saying what came of it. */}
+          {role.highlights && role.highlights.length > 0 && (
+            <ul className="mt-0.5 flex flex-col gap-1.5">
+              {role.highlights.map((h) => (
+                <li
+                  key={h.text}
+                  className="relative ml-0 pl-3.5 text-[0.8125rem] leading-5 text-md-on-surface-variant before:absolute before:left-0 before:top-[0.5625rem] before:h-[3px] before:w-[3px] before:rounded-full before:bg-md-outline"
+                >
+                  {h.text}
+                  {h.proof && (
+                    <>
+                      {" "}
+                      <Link
+                        href={`/work/${h.proof.slug}`}
+                        className="whitespace-nowrap font-medium text-primary underline decoration-1 underline-offset-2"
+                      >
+                        {h.proof.label}
+                      </Link>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </article>
-    </>
+      </div>
+    </article>
   );
 }
 
@@ -255,55 +179,36 @@ export default function ExperienceChart({
   if (!usable.length) return null;
 
   const lastOrg: Record<Track, string | null> = { work: null, education: null };
-  const entries: Entry[] = usable.map((e, i) => {
+  const entries: Entry[] = usable.map((e) => {
     const showMark = lastOrg[e.track] !== e.org.company;
     lastOrg[e.track] = e.org.company;
-    const lines = e.role.highlights?.length ?? 0;
-    // Cards are anchored to the top of their span, so the room a card has is
-    // the drop to the next card on its own side. The last on a side has the
-    // rest of the chart.
-    const next = usable.slice(i + 1).find((o) => o.track === e.track);
-    const room = next
-      ? (e.to - next.to) * NARROW_SCALE_PX
-      : Number.POSITIVE_INFINITY;
-    return {
-      ...e,
-      tone: e.role.tone ?? DEFAULT_TONES[i % DEFAULT_TONES.length],
-      showMark,
-      resultsFit: lines > 0 && room >= BLOCK_CHROME_PX + lines * RESULT_LINE_PX,
-    };
+    return { ...e, showMark };
   });
 
   const top = Math.max(...entries.map((e) => e.to));
   const bottom = Math.min(...entries.map((e) => e.from));
   const span = Math.max(top - bottom, 1);
-  const offset = (idx: number) => top - idx;
 
   const years: number[] = [];
   for (let y = Math.ceil(bottom / 12); januaryIndex(y) <= top; y++) {
     if (januaryIndex(y) > bottom) years.push(y);
   }
 
+  const tracks: Track[] = ["work", "education"];
   const hasEducation = entries.some((e) => e.track === "education");
   const trackHasMark: Record<Track, boolean> = {
     work: entries.some((e) => e.track === "work" && e.org.logo),
     education: entries.some((e) => e.track === "education" && e.org.logo),
   };
-  // Whatever did not fit inside a block, in the order the chart draws it.
-  const withResults = entries.filter(
-    (e) => e.role.highlights?.length && !e.resultsFit,
-  );
 
   return (
     // exp-timeline carries the rule that strips list markers inside
-    // .article-content, which the results list below still needs.
+    // .article-content, which the result lists still need.
     <div className="exp-timeline exp-chart my-10">
       {/* Which side is which, said once at the top. Without it the reader has
-          to infer the split from the content, and the two education blocks
-          happen to sit where a reader scanning down the right would meet them
-          last. */}
+          to infer the split from the content. */}
       {hasEducation && (
-        <div className="exp-chart__legend mb-3 hidden md:flex">
+        <div className="exp-chart__legend mb-3 hidden lg:flex">
           <span className="flex-1 text-[0.75rem] font-medium uppercase leading-4 tracking-[0.06em] text-md-on-surface-variant">
             Work
           </span>
@@ -325,47 +230,72 @@ export default function ExperienceChart({
             key={y}
             className="exp-chart__year absolute -translate-y-1/2 rounded-full bg-md-surface px-1.5 text-[0.75rem] leading-4 tabular-nums text-md-on-surface-variant"
             style={
-              { "--exp-top": offset(januaryIndex(y)) } as React.CSSProperties
+              { "--exp-top": top - januaryIndex(y) } as React.CSSProperties
             }
           >
             {y}
           </span>
         ))}
 
+        {/* The bars: the only thing here drawn to time, and the only thing
+            here that is coloured. */}
         {entries.map((e) => (
-          <div
-            key={`${e.track}-${e.org.company}-${e.role.title}`}
-            className={`exp-chart__item exp-chart__item--${e.track} absolute`}
+          <span
+            key={`bar-${e.track}-${e.org.company}-${e.role.title}`}
+            aria-hidden="true"
+            className={`exp-chart__bar exp-chart__bar--${e.track} absolute`}
             style={
               {
-                "--exp-top": offset(e.to),
+                "--exp-top": top - e.to,
                 "--exp-span": Math.max(e.to - e.from, 1),
               } as React.CSSProperties
             }
-          >
-            <Block entry={e} now={now} showSlot={trackHasMark[e.track]} />
-          </div>
+          />
         ))}
-      </div>
 
-      {/* The chart says when and for how long; this says what came of it. It
-          sits outside the plot because a placed block cannot grow and these
-          lines need to. */}
-      {withResults.length > 0 && (
-        <div className="mt-10 flex flex-col gap-6">
-          {withResults.map((e) => (
-            <div key={`${e.org.company}-${e.role.title}`}>
-              <h3 className="text-[0.9375rem] font-medium leading-6 text-md-on-surface">
-                {e.role.title}
-              </h3>
-              <p className="mt-0.5 mb-2 text-[0.8125rem] leading-5 text-md-on-surface-variant">
-                {e.org.company}
-              </p>
-              <Results role={e.role} muted={false} />
+        {tracks.map((track) => {
+          const list = entries.filter((e) => e.track === track);
+          if (!list.length) return null;
+          return (
+            <div
+              key={track}
+              className={`exp-chart__track exp-chart__track--${track} absolute top-0`}
+            >
+              {/* The drop from the top of the chart to the first card on this
+                  side. */}
+              <div
+                className="exp-chart__lead"
+                style={
+                  { "--exp-slot": top - list[0].to } as React.CSSProperties
+                }
+              />
+              {list.map((e, i) => {
+                const next = list[i + 1];
+                return (
+                  <div
+                    key={`${e.org.company}-${e.role.title}`}
+                    className="exp-chart__slot"
+                    style={
+                      {
+                        // As tall as the drop to the next card, so a card that
+                        // fits lands exactly on its bar and one that does not
+                        // pushes rather than overlaps.
+                        "--exp-slot": next ? e.to - next.to : 0,
+                      } as React.CSSProperties
+                    }
+                  >
+                    <Card
+                      entry={e}
+                      now={now}
+                      showSlot={trackHasMark[e.track]}
+                    />
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }

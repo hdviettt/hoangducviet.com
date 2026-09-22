@@ -50,20 +50,6 @@ export interface ExperienceHighlight {
   proof?: { label: string; slug: string };
 }
 
-/**
- * The named tones a chart block can take. Keys, not colours: the actual pair
- * of values lives in globals.css, so light and dark both derive from one
- * choice and neither can be stored wrong.
- */
-export type ExperienceTone =
-  | "blue"
-  | "violet"
-  | "teal"
-  | "green"
-  | "amber"
-  | "rose"
-  | "neutral";
-
 export interface ExperienceRole {
   title: string;
   // Optional: LinkedIn does not always carry one, and filling it in to satisfy
@@ -73,11 +59,6 @@ export interface ExperienceRole {
   end?: string; // "YYYY-MM"; omit for a role still running
   note?: string;
   highlights?: ExperienceHighlight[];
-  /**
-   * The block colour on the About chart. Left unset, the chart cycles a
-   * default palette so a fresh row is never colourless.
-   */
-  tone?: ExperienceTone;
 }
 
 export interface ExperienceCompany {

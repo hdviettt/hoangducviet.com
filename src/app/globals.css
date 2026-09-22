@@ -1107,99 +1107,55 @@ html {
   margin-bottom: 0;
 }
 
-/* Chart tones: a bar drawn to time, and a card drawn to its content.
+/* The chart: a bar drawn to time, a card drawn to its content.
 
-   The bar carries the colour. The card only takes a wash of the same hue,
-   because the card is text and the bar is the measurement -- when the card
-   was the saturated thing, a 45-month degree became 1,400px of flat lilac
-   holding three lines, and five of those made the page read as a toy.
-
-   One hue per entry and everything derives from it, in two rules, one per
-   theme. Lightness does the contrast work and hue only tints, which is what
-   keeps every tone legible without a per-colour exception. Saturation is a
-   second variable only so the neutral tone can flatten to grey. */
-.exp-chart__card {
-  --chart-sat: 70%;
-  background: hsl(var(--chart-hue) var(--chart-sat) 97.5%);
-  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 88%);
-  --chart-ink: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.9) 22%);
-  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 32%);
-  --chart-bullet: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 58%);
+   Colour appears once, on the bars, and only to say which track a bar
+   belongs to. An earlier version gave every entry its own hue and painted
+   the cards with it; that was decoration standing in for data, and at a
+   45-month span it turned one card into a wall. The cards are surfaces now,
+   like every other card on this site. */
+/* 2.25rem a month, and the number is the tightest card divided by its slot.
+   Measured at the width this chart gets: the 5-month CEO role carries a
+   165px card, which with the 12px below it wants 35.4px a month, so 36
+   clears it and nothing has to push. Loosen this and cards start sliding
+   below the bars they belong to -- at 1.25rem the third card sat 272px
+   under its own bar, which is worse than a long page. */
+.exp-chart__plot {
+  height: calc(var(--exp-months) * var(--exp-scale));
 }
-.exp-chart__bar {
-  --chart-sat: 70%;
-  background: hsl(var(--chart-hue) var(--chart-sat) 62%);
-}
-.dark .exp-chart__card {
-  background: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.3) 14%);
-  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.3) 26%);
-  --chart-ink: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.8) 90%);
-  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.35) 76%);
-  --chart-bullet: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 60%);
-}
-.dark .exp-chart__bar {
-  background: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.7) 46%);
+@media (min-width: 1024px) {
+  .exp-chart__plot {
+    --exp-scale: 2.25rem;
+  }
 }
 
-.exp-tone--blue {
-  --chart-hue: 221;
-}
-.exp-tone--violet {
-  --chart-hue: 268;
-}
-.exp-tone--teal {
-  --chart-hue: 186;
-}
-.exp-tone--green {
-  --chart-hue: 148;
-}
-.exp-tone--amber {
-  --chart-hue: 36;
-}
-.exp-tone--rose {
-  --chart-hue: 348;
-}
-.exp-tone--neutral {
-  --chart-hue: 220;
-  --chart-sat: 9%;
-}
-
-/* The bar spans its entry exactly; the card hangs off the top of it.
-   The bar sits against the axis on both sides, so the two tracks read as
-   one ruler rather than as two lists that happen to be near each other. */
 .exp-chart__bar {
   position: absolute;
-  top: 0;
-  bottom: 0;
   width: 0.375rem;
   border-radius: 999px;
+  top: calc(var(--exp-top) * var(--exp-scale));
+  height: calc(var(--exp-span) * var(--exp-scale));
 }
-.exp-chart__card {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 1.5rem;
+.exp-chart__bar--work {
+  background: hsl(var(--md-sys-color-primary));
 }
-.exp-chart__bar {
-  left: 0;
-}
-
-@media (min-width: 768px) {
-  .exp-chart__plot:not(.exp-chart__plot--single)
-    .exp-chart__item--work
-    .exp-chart__bar {
-    left: auto;
-    right: 0;
-  }
-  .exp-chart__plot:not(.exp-chart__plot--single)
-    .exp-chart__item--work
-    .exp-chart__card {
-    left: 0;
-    right: 1.5rem;
-  }
+/* Not a grey: the axis is grey, and a grey bar 12px from it read as a
+   second rule rather than as data. Tertiary is the palette colour furthest
+   from primary that still belongs to this site. */
+.exp-chart__bar--education {
+  background: hsl(var(--md-sys-color-tertiary));
 }
 
-/* A card lifts a little under the pointer. */
+/* A card sits in a slot as tall as the drop to the next card, so the common
+   case -- content that fits -- puts it exactly on its bar, and the awkward
+   case pushes the cards below it instead of overlapping them. */
+.exp-chart__lead,
+.exp-chart__slot {
+  min-height: calc(var(--exp-slot) * var(--exp-scale));
+}
+.exp-chart__slot {
+  padding-bottom: 0.75rem;
+}
 .exp-chart__card {
   transition: box-shadow var(--md-sys-motion-duration-short4)
     var(--md-sys-motion-easing-standard);
@@ -1213,103 +1169,90 @@ html {
   }
 }
 
-/* A chart block carries its own ink.
+/* The article's prose margins leak into the cards otherwise.
 
-   `.article-content h3` / `p` / `li` / `a` are all 0,1,1 and a Tailwind colour
-   class is 0,1,0, so every colour the block set was being overridden by the
-   article's body colour. Measured, the top block's title and its meta line
-   came out 3/255 apart: no hierarchy at all, and the link took the site blue
-   on a primary-container fill, which is the same hue two lightness steps away.
-
-   These are 0,2,2 and read the colour off a custom property the block sets
-   per tone, so the tone is chosen in one place and the cascade follows. */
-.article-content .exp-chart article,
-.article-content .exp-chart article h3,
-.article-content .exp-chart article p,
-.article-content .exp-chart article li,
-.article-content .exp-chart article a {
-  color: var(--chart-ink);
-}
-.article-content .exp-chart article .chart-muted,
-.article-content .exp-chart article .chart-muted a {
-  color: var(--chart-ink-muted);
-}
-/* A block sets its own rhythm.
-
-   `.article-content h3` / `p` / `li` carry the article's prose margins, and at
-   0,1,1 they beat any Tailwind spacing class. Measured, that put 123px into a
-   block header holding 44px of text, and since the chart's scale is set by
-   whichever block is tightest, the leak was inflating every block on the page
-   and forcing the months-to-pixels ratio up with it.
-
+   `.article-content h3` / `p` / `li` are 0,1,1 and beat any Tailwind spacing
+   class. Measured, that put 123px into a card header holding 44px of text.
    `:where()` adds no specificity, so this lands at 0,2,1: enough to win, and
-   the block does its own spacing with flex gaps, which nothing can override. */
+   the card does its own spacing with flex gaps. */
 .article-content .exp-chart__card :where(h3, p, ul, ol, li) {
   margin: 0;
 }
-.article-content .exp-chart article li::before {
-  background: var(--chart-bullet);
+.article-content .exp-chart__card a {
+  color: inherit;
 }
-.article-content .exp-chart article a:hover {
+.article-content .exp-chart__card a:hover {
   text-decoration: underline;
 }
+.article-content .exp-chart__card a[href^="/work/"] {
+  color: hsl(var(--md-sys-color-primary));
+}
 
-/* Two tracks around one axis: work on the left, school on the right.
-
-   The axis is centred only when there is something on both sides. With work
-   alone the right half would be empty, so the rule moves to the left edge and
-   the single track takes the width -- same component, no second layout to
-   keep in step.
-
-   Below md both tracks share the left rail, because two 45% columns at phone
-   width are two columns of about 150px, and a job title does not fit in
+/* Narrow: one rail on the left, both tracks stacked against it. Two columns
+   at phone width would be about 150px each, and a job title does not fit in
    one. */
-.exp-chart__plot {
-  --exp-scale: 1.75rem;
-  height: calc(var(--exp-months) * var(--exp-scale));
-}
+.exp-chart__axis,
 .exp-chart__year {
-  top: calc(var(--exp-top) * var(--exp-scale));
-}
-.exp-chart__item {
-  top: calc(var(--exp-top) * var(--exp-scale));
-  height: calc(var(--exp-span) * var(--exp-scale));
-}
-/* 1024 is where the chart gets the wider measure, so a block goes from about
-   300px across to 376 and its title stops wrapping. That is what lets a month
-   be worth less height here than it is on a phone. */
-@media (min-width: 1024px) {
-  .exp-chart__plot {
-    --exp-scale: 1.25rem;
-  }
-}
-
-.exp-chart__axis {
   left: 1.25rem;
 }
 .exp-chart__year {
-  left: 1.25rem;
   transform: translate(-50%, -50%);
+  top: calc(var(--exp-top) * var(--exp-scale));
+  z-index: 1;
 }
-.exp-chart__item {
+.exp-chart__track {
   left: 3rem;
   right: 0;
 }
+.exp-chart__bar {
+  left: 1.0625rem;
+}
 
-@media (min-width: 768px) {
+/* Narrow: no chart. Positioning cards by date needs room that is not there,
+   so the bars, the axis and the year marks come off and the same DOM reads
+   as two dated lists. Nothing is hidden -- every card and every line it
+   carries is still on the page. */
+@media (max-width: 1023px) {
+  .exp-chart__plot {
+    height: auto;
+  }
+  .exp-chart__axis,
+  .exp-chart__year,
+  .exp-chart__bar,
+  .exp-chart__legend {
+    display: none;
+  }
+  .exp-chart__track {
+    position: static;
+  }
+  .exp-chart__lead,
+  .exp-chart__slot {
+    min-height: 0;
+  }
+}
+
+/* Wide: the axis runs between the two tracks, and each bar sits against it
+   on its own side. Only when there is something on both sides -- with work
+   alone the right half would be empty, so the single layout above is kept. */
+@media (min-width: 1024px) {
   .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__axis,
   .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__year {
     left: 50%;
   }
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__item--work {
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__track--work {
     left: 0;
-    right: auto;
-    width: calc(50% - 2.5rem);
+    right: calc(50% + 3.25rem);
   }
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__item--education {
-    left: auto;
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__track--education {
+    left: calc(50% + 3.25rem);
     right: 0;
-    width: calc(50% - 2.5rem);
+  }
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__bar--work {
+    left: auto;
+    right: calc(50% + 2.25rem);
+  }
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__bar--education {
+    left: calc(50% + 2.25rem);
   }
 }
 
@@ -1327,11 +1270,7 @@ html {
    sits in so it can never push past the page. */
 @media (min-width: 1024px) {
   .article-content .exp-chart {
-    width: min(
-      52rem,
-      calc(var(--shell-max) * 1.158),
-      calc(100vw - 4rem)
-    );
+    width: min(calc(var(--shell-max) * 1.158), calc(100vw - 4rem));
   }
 }
 
