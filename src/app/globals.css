@@ -1149,6 +1149,21 @@ html {
   line-height: 1.25rem;
   color: hsl(var(--md-sys-color-on-surface-variant));
 }
+/* The rule sits on the mark's centre line.
+
+   The margin reset above is 0,2,1 and kills a Tailwind `ml-*` at 0,1,0, so
+   the rule was drawing at the group's left edge instead of 18px in, which
+   also pulled every role title 18px left of the organisation name above it.
+   This is 0,3,1 and wins. */
+.article-content .exp-timeline ol.exp-rule {
+  margin-left: 1.125rem;
+}
+
+.article-content .exp-timeline .exp-orgname {
+  font-size: 1rem;
+  font-weight: 500;
+  color: hsl(var(--md-sys-color-on-surface));
+}
 .article-content .exp-timeline .exp-result {
   font-size: 0.875rem;
   line-height: 1.5rem;
@@ -1174,8 +1189,8 @@ html {
    component asked for and turned a 20px line into a 64px one. */
 .article-content .exp-timeline img {
   display: inline-block;
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   margin: 0;
   border-radius: 0;
   box-shadow: none;
