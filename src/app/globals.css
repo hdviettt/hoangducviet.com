@@ -1107,172 +1107,80 @@ html {
   margin-bottom: 0;
 }
 
-/* The chart: a bar drawn to time, a card drawn to its content.
+/* The timeline sets its own rhythm.
 
-   Colour appears once, on the bars, and only to say which track a bar
-   belongs to. An earlier version gave every entry its own hue and painted
-   the cards with it; that was decoration standing in for data, and at a
-   45-month span it turned one card into a wall. The cards are surfaces now,
-   like every other card on this site. */
-/* 2.25rem a month, and the number is the tightest card divided by its slot.
-   Measured at the width this chart gets: the 5-month CEO role carries a
-   165px card, which with the 12px below it wants 35.4px a month, so 36
-   clears it and nothing has to push. Loosen this and cards start sliding
-   below the bars they belong to -- at 1.25rem the third card sat 272px
-   under its own bar, which is worse than a long page. */
-.exp-chart__plot {
-  height: calc(var(--exp-months) * var(--exp-scale));
-}
-@media (min-width: 1024px) {
-  .exp-chart__plot {
-    --exp-scale: 2.25rem;
-  }
-}
-
-.exp-chart__bar {
-  position: absolute;
-  width: 0.375rem;
-  border-radius: 999px;
-  top: calc(var(--exp-top) * var(--exp-scale));
-  height: calc(var(--exp-span) * var(--exp-scale));
-}
-.exp-chart__bar--work {
-  background: hsl(var(--md-sys-color-primary));
-}
-/* Not a grey: the axis is grey, and a grey bar 12px from it read as a
-   second rule rather than as data. Tertiary is the palette colour furthest
-   from primary that still belongs to this site. */
-.exp-chart__bar--education {
-  background: hsl(var(--md-sys-color-tertiary));
-}
-
-/* A card sits in a slot as tall as the drop to the next card, so the common
-   case -- content that fits -- puts it exactly on its bar, and the awkward
-   case pushes the cards below it instead of overlapping them. */
-.exp-chart__lead,
-.exp-chart__slot {
-  min-height: calc(var(--exp-slot) * var(--exp-scale));
-}
-.exp-chart__slot {
-  padding-bottom: 0.75rem;
-}
-.exp-chart__card {
-  transition: box-shadow var(--md-sys-motion-duration-short4)
-    var(--md-sys-motion-easing-standard);
-}
-.exp-chart__card:hover {
-  box-shadow: var(--md-sys-elevation-2);
-}
-@media (prefers-reduced-motion: reduce) {
-  .exp-chart__card {
-    transition: none;
-  }
-}
-
-/* The article's prose margins leak into the cards otherwise.
-
-   `.article-content h3` / `p` / `li` are 0,1,1 and beat any Tailwind spacing
-   class. Measured, that put 123px into a card header holding 44px of text.
+   `.article-content h2` / `h3` / `p` / `li` carry the article prose margins,
+   and at 0,1,1 they beat any Tailwind spacing class. Measured on the version
+   before this one, that put 123px into a header holding 44px of text.
    `:where()` adds no specificity, so this lands at 0,2,1: enough to win, and
-   the card does its own spacing with flex gaps. */
-.article-content .exp-chart__card :where(h3, p, ul, ol, li) {
+   the component spaces itself with flex gaps, which nothing can override. */
+.article-content .exp-timeline :where(h2, h3, p, ul, ol, li) {
   margin: 0;
 }
-.article-content .exp-chart__card a {
+/* The timeline sets its own type as well as its own spacing.
+
+   Size, weight and colour come from `.article-content h2` / `h3` / `p` at
+   0,1,1, which beats any Tailwind class. Setting them from the component
+   silently did nothing: a 0.75rem section label rendered at the article
+   heading size, and a 1rem role title at 1.25rem. These are 0,2,1, so the
+   values here are the values that paint. */
+.article-content .exp-timeline h2 {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+}
+.article-content .exp-timeline h3 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  color: hsl(var(--md-sys-color-on-surface));
+}
+.article-content .exp-timeline .exp-meta {
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+}
+.article-content .exp-timeline .exp-org {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+}
+.article-content .exp-timeline .exp-result {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: hsl(var(--md-sys-color-on-surface-variant));
+}
+
+/* The organisation link is not an article link: the article blue on a name
+   sitting next to a mark reads as a call to action rather than as a label. */
+.article-content .exp-timeline p a {
   color: inherit;
 }
-.article-content .exp-chart__card a:hover {
+.article-content .exp-timeline p a:hover {
   text-decoration: underline;
 }
-.article-content .exp-chart__card a[href^="/work/"] {
+.article-content .exp-timeline .exp-result a {
   color: hsl(var(--md-sys-color-primary));
 }
 
-/* Narrow: one rail on the left, both tracks stacked against it. Two columns
-   at phone width would be about 150px each, and a job title does not fit in
-   one. */
-.exp-chart__axis,
-.exp-chart__year {
-  left: 1.25rem;
-}
-.exp-chart__year {
-  transform: translate(-50%, -50%);
-  top: calc(var(--exp-top) * var(--exp-scale));
-  z-index: 1;
-}
-.exp-chart__track {
-  left: 3rem;
-  right: 0;
-}
-.exp-chart__bar {
-  left: 1.0625rem;
+/* An organisation mark is not an article figure.
+
+   `.article-content img` is written for images a post embeds -- block, full
+   measure, with a figure's margins around it. At 0,1,1 it beat the 16px the
+   component asked for and turned a 20px line into a 64px one. */
+.article-content .exp-timeline img {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-/* Narrow: no chart. Positioning cards by date needs room that is not there,
-   so the bars, the axis and the year marks come off and the same DOM reads
-   as two dated lists. Nothing is hidden -- every card and every line it
-   carries is still on the page. */
-@media (max-width: 1023px) {
-  .exp-chart__plot {
-    height: auto;
-  }
-  .exp-chart__axis,
-  .exp-chart__year,
-  .exp-chart__bar,
-  .exp-chart__legend {
-    display: none;
-  }
-  .exp-chart__track {
-    position: static;
-  }
-  .exp-chart__lead,
-  .exp-chart__slot {
-    min-height: 0;
-  }
-}
-
-/* Wide: the axis runs between the two tracks, and each bar sits against it
-   on its own side. Only when there is something on both sides -- with work
-   alone the right half would be empty, so the single layout above is kept. */
-@media (min-width: 1024px) {
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__axis,
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__year {
-    left: 50%;
-  }
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__track--work {
-    left: 0;
-    right: calc(50% + 3.25rem);
-  }
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__track--education {
-    left: calc(50% + 3.25rem);
-    right: 0;
-  }
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__bar--work {
-    left: auto;
-    right: calc(50% + 2.25rem);
-  }
-  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__bar--education {
-    left: calc(50% + 2.25rem);
-  }
-}
-
-/* The chart is wider than the prose it sits in.
-
-   620px is a reading measure, and a measure is for lines you read left to
-   right. This is scanned, and at 620px the result text was setting the block
-   heights instead of the tenure -- a 5-month role rendered 273px against a
-   15-month role's 513px, a ratio of 1.9 where the truth is 3.0, so the one
-   thing the chart exists to show was the thing it got wrong. Wider lines wrap
-   less, the text fits inside the tenure, and the blocks go back to being
-   drawn to time.
-
-   Same left edge as the prose; it grows to the right, bounded by the row it
-   sits in so it can never push past the page. */
-@media (min-width: 1024px) {
-  .article-content .exp-chart {
-    width: min(calc(var(--shell-max) * 1.158), calc(100vw - 4rem));
-  }
-}
 
 .article-content a {
   color: var(--article-link);

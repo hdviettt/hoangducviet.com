@@ -1,4 +1,4 @@
-import ExperienceChart from "@/components/about/ExperienceChart";
+import ExperienceTimeline from "@/components/about/ExperienceTimeline";
 import type { ExperienceCompany } from "@/db/schema";
 import { fmtDuration, fmtMonth, monthsInclusive } from "@/lib/experience-time";
 import Image from "next/image";
@@ -264,11 +264,11 @@ export default function Experience({
   // be in the body before the data is filled in.
   if (!companies.length) return null;
 
-  // The full view is a chart now: a year axis with a block per role, sized by
-  // the time it took. Only the homepage column stays a list, because at 310px
-  // wide and beside a bio there is no room for an axis, and the question there
-  // is "where has he been" rather than "for how long".
-  if (!compact) return <ExperienceChart companies={companies} />;
+  // The full view is its own component: a vertical timeline in two sections,
+  // with the room that notes and result lines need. Only the homepage column
+  // stays this compact list, because at 310px beside a bio the question is
+  // where he has been, not what came of it.
+  if (!compact) return <ExperienceTimeline companies={companies} />;
 
   // Work only in the column beside the bio. The chart shows school because it
   // has an axis to hang it on and a second track to put it in; a 310px list
