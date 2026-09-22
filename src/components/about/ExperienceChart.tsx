@@ -1,4 +1,8 @@
-import type { ExperienceCompany, ExperienceRole } from "@/db/schema";
+import type {
+  ExperienceCompany,
+  ExperienceRole,
+  ExperienceTone,
+} from "@/db/schema";
 import {
   fmtDuration,
   fmtMonth,
@@ -46,32 +50,27 @@ import Link from "next/link";
 // result lines when school arrived: at the 3rem a month this chart used when
 // it held work only, it would now be 3,900px tall.
 
-const TONES = [
-  {
-    block: "bg-md-primary-container border-transparent",
-    ink: "hsl(var(--md-sys-color-on-primary-container))",
-    muted: "hsl(var(--md-sys-color-on-primary-container) / 0.78)",
-    bullet: "hsl(var(--md-sys-color-on-primary-container) / 0.45)",
-  },
-  {
-    block: "bg-md-surface-container-high border-md-outline-variant",
-    ink: "hsl(var(--md-sys-color-on-surface))",
-    muted: "hsl(var(--md-sys-color-on-surface-variant))",
-    bullet: "hsl(var(--md-sys-color-outline))",
-  },
-  {
-    block: "bg-md-surface-container border-md-outline-variant",
-    ink: "hsl(var(--md-sys-color-on-surface))",
-    muted: "hsl(var(--md-sys-color-on-surface-variant))",
-    bullet: "hsl(var(--md-sys-color-outline))",
-  },
-  {
-    block: "bg-md-surface-container-low border-md-outline-variant",
-    ink: "hsl(var(--md-sys-color-on-surface))",
-    muted: "hsl(var(--md-sys-color-on-surface-variant))",
-    bullet: "hsl(var(--md-sys-color-outline))",
-  },
+// The default cycle, used when a row has not picked a tone. Starts on the
+// site blue so an untouched chart still looks like this site, then walks far
+// enough round the wheel that two neighbouring blocks never read as the same
+// colour.
+const DEFAULT_TONES: ExperienceTone[] = [
+  "blue",
+  "violet",
+  "teal",
+  "green",
+  "amber",
+  "rose",
 ];
+
+// What a block needs before it can carry its result lines inside itself.
+// A placed block cannot grow, so anything that does not fit is clipped -- the
+// lines go under the chart instead. Both numbers are the narrow case: the
+// header, note and dates at about 100px, and a result line allowed to wrap to
+// two at 56. Deliberately pessimistic, because being wrong here loses text.
+const BLOCK_CHROME_PX = 100;
+const RESULT_LINE_PX = 56;
+const NARROW_SCALE_PX = 20;
 
 type Track = "work" | "education";
 
@@ -81,8 +80,9 @@ type Entry = {
   track: Track;
   from: number;
   to: number;
-  tone: number;
+  tone: ExperienceTone;
   showMark: boolean;
+  resultsFit: boolean;
 };
 
 function Mark({ org }: { org: ExperienceCompany }) {
@@ -100,6 +100,45 @@ function Mark({ org }: { org: ExperienceCompany }) {
   );
 }
 
+function Results({
+  role,
+  muted,
+}: {
+  role: ExperienceRole;
+  muted: boolean;
+}) {
+  if (!role.highlights?.length) return null;
+  return (
+    <ul className="flex flex-col gap-2">
+      {role.highlights.map((h) => (
+        <li
+          key={h.text}
+          className={`relative ml-0 pl-4 text-[0.8125rem] leading-5 before:absolute before:left-0 before:top-[0.5625rem] before:h-[3px] before:w-[3px] before:rounded-full ${
+            muted
+              ? "chart-muted before:bg-[var(--chart-bullet)]"
+              : "text-md-on-surface-variant before:bg-md-outline"
+          }`}
+        >
+          {h.text}
+          {h.proof && (
+            <>
+              {" "}
+              <Link
+                href={`/work/${h.proof.slug}`}
+                className={`whitespace-nowrap font-medium underline decoration-1 underline-offset-2 ${
+                  muted ? "" : "text-primary"
+                }`}
+              >
+                {h.proof.label}
+              </Link>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function Block({
   entry,
   now,
@@ -109,8 +148,7 @@ function Block({
   now: Date;
   showSlot: boolean;
 }) {
-  const { role, org, tone, showMark } = entry;
-  const t = TONES[tone];
+  const { role, org, tone, showMark, resultsFit } = entry;
   const period = `${fmtMonth(role.start)} - ${
     role.end ? fmtMonth(role.end) : "Present"
   }`;
@@ -123,14 +161,7 @@ function Block({
     // two lines below it were not: three lines, two edges, in a block 376px
     // wide.
     <article
-      className={`flex h-full gap-2 overflow-hidden rounded-xl border p-3 ${t.block}`}
-      style={
-        {
-          "--chart-ink": t.ink,
-          "--chart-ink-muted": t.muted,
-          "--chart-bullet": t.bullet,
-        } as React.CSSProperties
-      }
+      className={`exp-chart__block exp-tone--${tone} flex h-full gap-2 overflow-hidden rounded-xl border p-3`}
     >
       {/* Reserved only when something in this track has a mark, so a track of
           schools with no logos is not indented past an empty square. Within a
@@ -140,7 +171,7 @@ function Block({
         <div className="h-7 w-7 shrink-0">{showMark && <Mark org={org} />}</div>
       )}
 
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div className="flex min-w-0 flex-col">
           <h3 className="text-[0.9375rem] font-medium leading-5">
             {role.title}
@@ -160,6 +191,10 @@ function Block({
         {role.note && (
           <p className="chart-muted text-[0.75rem] leading-4">{role.note}</p>
         )}
+
+        {/* Only when the span is long enough to hold them without clipping.
+            The rest of the time they are under the chart. */}
+        {resultsFit && <Results role={role} muted />}
 
         {/* The span sits on the bottom edge. A block drawn to time is mostly
             empty when a long span has little to say about itself, and an
@@ -201,15 +236,18 @@ export default function ExperienceChart({
 
   if (!usable.length) return null;
 
-  // Tone by recency within each track, so the newest job and the newest
-  // qualification are each the strongest thing on their own side.
-  const rank: Record<Track, number> = { work: 0, education: 0 };
   const lastOrg: Record<Track, string | null> = { work: null, education: null };
-  const entries: Entry[] = usable.map((e) => {
-    const tone = Math.min(rank[e.track]++, TONES.length - 1);
+  const entries: Entry[] = usable.map((e, i) => {
     const showMark = lastOrg[e.track] !== e.org.company;
     lastOrg[e.track] = e.org.company;
-    return { ...e, tone, showMark };
+    const lines = e.role.highlights?.length ?? 0;
+    const room = Math.max(e.to - e.from, 1) * NARROW_SCALE_PX;
+    return {
+      ...e,
+      tone: e.role.tone ?? DEFAULT_TONES[i % DEFAULT_TONES.length],
+      showMark,
+      resultsFit: lines > 0 && room >= BLOCK_CHROME_PX + lines * RESULT_LINE_PX,
+    };
   });
 
   const top = Math.max(...entries.map((e) => e.to));
@@ -227,14 +265,30 @@ export default function ExperienceChart({
     work: entries.some((e) => e.track === "work" && e.org.logo),
     education: entries.some((e) => e.track === "education" && e.org.logo),
   };
+  // Whatever did not fit inside a block, in the order the chart draws it.
   const withResults = entries.filter(
-    (e) => e.track === "work" && e.role.highlights?.length,
+    (e) => e.role.highlights?.length && !e.resultsFit,
   );
 
   return (
     // exp-timeline carries the rule that strips list markers inside
     // .article-content, which the results list below still needs.
     <div className="exp-timeline exp-chart my-10">
+      {/* Which side is which, said once at the top. Without it the reader has
+          to infer the split from the content, and the two education blocks
+          happen to sit where a reader scanning down the right would meet them
+          last. */}
+      {hasEducation && (
+        <div className="exp-chart__legend mb-3 hidden md:flex">
+          <span className="flex-1 text-[0.75rem] font-medium uppercase leading-4 tracking-[0.06em] text-md-on-surface-variant">
+            Work
+          </span>
+          <span className="flex-1 text-right text-[0.75rem] font-medium uppercase leading-4 tracking-[0.06em] text-md-on-surface-variant">
+            Education
+          </span>
+        </div>
+      )}
+
       <div
         className={`exp-chart__plot relative ${
           hasEducation ? "" : "exp-chart__plot--single"
@@ -282,27 +336,10 @@ export default function ExperienceChart({
               <h3 className="text-[0.9375rem] font-medium leading-6 text-md-on-surface">
                 {e.role.title}
               </h3>
-              <ul className="mt-2 flex flex-col gap-2">
-                {(e.role.highlights ?? []).map((h) => (
-                  <li
-                    key={h.text}
-                    className="relative ml-0 pl-4 text-[0.875rem] leading-6 text-md-on-surface-variant before:absolute before:left-0 before:top-[0.6875rem] before:h-[3px] before:w-[3px] before:rounded-full before:bg-md-outline"
-                  >
-                    {h.text}
-                    {h.proof && (
-                      <>
-                        {" "}
-                        <Link
-                          href={`/work/${h.proof.slug}`}
-                          className="whitespace-nowrap font-medium text-primary underline decoration-1 underline-offset-2"
-                        >
-                          {h.proof.label}
-                        </Link>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-0.5 mb-2 text-[0.8125rem] leading-5 text-md-on-surface-variant">
+                {e.org.company}
+              </p>
+              <Results role={e.role} muted={false} />
             </div>
           ))}
         </div>

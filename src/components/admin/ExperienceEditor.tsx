@@ -5,6 +5,7 @@ import type {
   ExperienceCompany,
   ExperienceHighlight,
   ExperienceRole,
+  ExperienceTone,
 } from "@/db/schema";
 import { Link2, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -30,6 +31,24 @@ import { useEffect, useRef, useState } from "react";
  * nothing to scan down. Controls belong in one cluster at the end of the row;
  * content belongs on the margin.
  */
+
+// The tones a block can take, keyed to the classes in globals.css. The swatch
+// shows the same hue the chart will draw, so the choice is made by looking at
+// it rather than by reading a word.
+const TONES: [ExperienceTone | undefined, string, string][] = [
+  [
+    undefined,
+    "Auto",
+    "linear-gradient(135deg,hsl(221 78% 80%),hsl(348 78% 80%))",
+  ],
+  ["blue", "Blue", "hsl(221 78% 80%)"],
+  ["violet", "Violet", "hsl(268 78% 80%)"],
+  ["teal", "Teal", "hsl(186 78% 78%)"],
+  ["green", "Green", "hsl(148 78% 78%)"],
+  ["amber", "Amber", "hsl(36 78% 76%)"],
+  ["rose", "Rose", "hsl(348 78% 80%)"],
+  ["neutral", "Neutral", "hsl(220 9% 78%)"],
+];
 
 const KINDS = [
   ["work", "Work"],
@@ -396,6 +415,34 @@ export default function ExperienceEditor({
                     placeholder="2026-08 or blank = Present"
                     className="md-field-dense w-full font-mono"
                   />
+                </div>
+
+                {/* Block colour on the About chart. Auto means the chart
+                    picks from its default cycle, which is what an untouched
+                    row gets. */}
+                <div className="mb-2 flex items-center gap-1.5">
+                  <span className="mr-1 text-[0.75rem] text-md-on-surface-variant">
+                    Colour
+                  </span>
+                  {TONES.map(([tone, label, swatch]) => {
+                    const on = role.tone === tone;
+                    return (
+                      <button
+                        key={label}
+                        type="button"
+                        onClick={() => setRole(ci, ri, { tone })}
+                        aria-pressed={on}
+                        title={label}
+                        aria-label={`Colour: ${label}`}
+                        className={`h-5 w-5 rounded-full border transition-[box-shadow,border-color] ${
+                          on
+                            ? "border-md-on-surface ring-2 ring-md-on-surface/25"
+                            : "border-md-outline-variant hover:border-md-outline"
+                        }`}
+                        style={{ background: swatch }}
+                      />
+                    );
+                  })}
                 </div>
 
                 <GrowTextarea

@@ -1107,6 +1107,74 @@ html {
   margin-bottom: 0;
 }
 
+/* Chart block tones.
+
+   One hue per block, and everything else derives: fill, seam, ink, quiet ink
+   and bullet. Two rules rather than fourteen, and a tone cannot be half
+   defined in one theme and whole in the other.
+
+   Lightness does the contrast work and hue only tints, which is what keeps
+   every tone legible without a per-colour exception: the fill stays near the
+   top of the range and the ink near the bottom, so the pair clears WCAG AA
+   whatever hue is dropped in. Saturation is a second variable only so the
+   neutral tone can flatten to grey without needing its own rules. */
+.exp-chart__block {
+  --chart-sat: 78%;
+  background: hsl(var(--chart-hue) var(--chart-sat) 93%);
+  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.6) 85%);
+  --chart-ink: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.9) 22%);
+  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 30%);
+  --chart-bullet: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 58%);
+}
+.dark .exp-chart__block {
+  background: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.45) 21%);
+  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 31%);
+  --chart-ink: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.9) 91%);
+  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 78%);
+  --chart-bullet: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 62%);
+}
+
+.exp-tone--blue {
+  --chart-hue: 221;
+}
+.exp-tone--violet {
+  --chart-hue: 268;
+}
+.exp-tone--teal {
+  --chart-hue: 186;
+}
+.exp-tone--green {
+  --chart-hue: 148;
+}
+.exp-tone--amber {
+  --chart-hue: 36;
+}
+.exp-tone--rose {
+  --chart-hue: 348;
+}
+.exp-tone--neutral {
+  --chart-hue: 220;
+  --chart-sat: 9%;
+}
+
+/* A block lifts a little under the pointer. The chart is a page of large
+   flat rectangles; without this nothing answers when you move across it. */
+.exp-chart__block {
+  transition:
+    box-shadow var(--md-sys-motion-duration-short4)
+      var(--md-sys-motion-easing-standard),
+    transform var(--md-sys-motion-duration-short4)
+      var(--md-sys-motion-easing-standard);
+}
+.exp-chart__block:hover {
+  box-shadow: var(--md-sys-elevation-2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .exp-chart__block {
+    transition: none;
+  }
+}
+
 /* A chart block carries its own ink.
 
    `.article-content h3` / `p` / `li` / `a` are all 0,1,1 and a Tailwind colour
