@@ -172,10 +172,10 @@ function CompanyBlock({
               <span className="tabular-nums">{period}</span>
               <span className="mx-1.5 opacity-60">·</span>
               <span className="tabular-nums">{length}</span>
-              {/* Not in the hero. "Internship" after a title that already
-                  reads "Operation Intern" is the same fact twice, and it
-                  was the field that made one row longer than the next.
-                  Title and dates are what the column is for. */}
+              {/* Not in the hero. The employment type mostly repeats what
+                  the title already says, and it was the field that made one
+                  row longer than the next. Title and dates are what the
+                  column is for. */}
               {!compact && role.type && (
                 <>
                   <span className="mx-1.5 opacity-60">·</span>
