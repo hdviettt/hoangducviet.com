@@ -1,4 +1,6 @@
+import ExperienceChart from "@/components/about/ExperienceChart";
 import type { ExperienceCompany } from "@/db/schema";
+import { fmtDuration, fmtMonth, monthsInclusive } from "@/lib/experience-time";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,53 +29,6 @@ import Link from "next/link";
  *   demonstrates it. A line that says the platform runs twenty solutions is an
  *   assertion; the same line pointing at the platform is evidence.
  */
-
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-function ym(s: string): { y: number; m: number } {
-  const [y, m] = s.split("-").map(Number);
-  return { y, m };
-}
-
-function fmtMonth(s: string): string {
-  const { y, m } = ym(s);
-  return `${MONTHS[m - 1]} ${y}`;
-}
-
-// Inclusive month count, which is how LinkedIn tallies tenure: both endpoint
-// months count, so Aug to Aug is 13 months and not 12. Matching that matters
-// only because a reader who has both open should not find two numbers.
-function monthsInclusive(
-  start: string,
-  end: string | undefined,
-  now: Date,
-): number {
-  const s = ym(start);
-  const e = end ? ym(end) : { y: now.getFullYear(), m: now.getMonth() + 1 };
-  return (e.y - s.y) * 12 + (e.m - s.m) + 1;
-}
-
-function fmtDuration(months: number): string {
-  const y = Math.floor(months / 12);
-  const m = months % 12;
-  const parts: string[] = [];
-  if (y) parts.push(`${y} yr${y > 1 ? "s" : ""}`);
-  if (m) parts.push(`${m} mo${m > 1 ? "s" : ""}`);
-  return parts.join(" ") || "1 mo";
-}
 
 /**
  * One company: the logo and name, then its roles.
@@ -308,6 +263,12 @@ export default function Experience({
   // An empty timeline draws nothing rather than an empty frame. The widget can
   // be in the body before the data is filled in.
   if (!companies.length) return null;
+
+  // The full view is a chart now: a year axis with a block per role, sized by
+  // the time it took. Only the homepage column stays a list, because at 310px
+  // wide and beside a bio there is no room for an axis, and the question there
+  // is "where has he been" rather than "for how long".
+  if (!compact) return <ExperienceChart companies={companies} />;
   // One clock for the whole render, so two durations on the same page cannot
   // disagree because the month turned over between them.
   const now = new Date();

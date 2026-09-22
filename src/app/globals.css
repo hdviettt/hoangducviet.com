@@ -1107,6 +1107,69 @@ html {
   margin-bottom: 0;
 }
 
+/* A chart block carries its own ink.
+
+   `.article-content h3` / `p` / `li` / `a` are all 0,1,1 and a Tailwind colour
+   class is 0,1,0, so every colour the block set was being overridden by the
+   article's body colour. Measured, the top block's title and its meta line
+   came out 3/255 apart: no hierarchy at all, and the link took the site blue
+   on a primary-container fill, which is the same hue two lightness steps away.
+
+   These are 0,2,2 and read the colour off a custom property the block sets
+   per tone, so the tone is chosen in one place and the cascade follows. */
+.article-content .exp-chart article,
+.article-content .exp-chart article h3,
+.article-content .exp-chart article p,
+.article-content .exp-chart article li,
+.article-content .exp-chart article a {
+  color: var(--chart-ink);
+}
+.article-content .exp-chart article .chart-muted,
+.article-content .exp-chart article .chart-muted a {
+  color: var(--chart-ink-muted);
+}
+/* A block sets its own rhythm.
+
+   `.article-content h3` / `p` / `li` carry the article's prose margins, and at
+   0,1,1 they beat any Tailwind spacing class. Measured, that put 123px into a
+   block header holding 44px of text, and since the chart's scale is set by
+   whichever block is tightest, the leak was inflating every block on the page
+   and forcing the months-to-pixels ratio up with it.
+
+   `:where()` adds no specificity, so this lands at 0,2,1: enough to win, and
+   the block does its own spacing with flex gaps, which nothing can override. */
+.article-content .exp-chart article :where(h3, p, ul, ol, li) {
+  margin: 0;
+}
+.article-content .exp-chart article li::before {
+  background: var(--chart-bullet);
+}
+.article-content .exp-chart article a:hover {
+  text-decoration: underline;
+}
+
+/* The chart is wider than the prose it sits in.
+
+   620px is a reading measure, and a measure is for lines you read left to
+   right. This is scanned, and at 620px the result text was setting the block
+   heights instead of the tenure -- a 5-month role rendered 273px against a
+   15-month role's 513px, a ratio of 1.9 where the truth is 3.0, so the one
+   thing the chart exists to show was the thing it got wrong. Wider lines wrap
+   less, the text fits inside the tenure, and the blocks go back to being
+   drawn to time.
+
+   Same left edge as the prose; it grows to the right, bounded by the row it
+   sits in so it can never push past the page. */
+@media (min-width: 1024px) {
+  .article-content .exp-chart {
+    width: min(
+      52rem,
+      calc(var(--shell-max) * 1.158),
+      calc(100vw - 4rem)
+    );
+  }
+}
+
 .article-content a {
   color: var(--article-link);
   text-decoration: none;
