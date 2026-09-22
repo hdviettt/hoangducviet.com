@@ -27,23 +27,35 @@ export default function TechStack() {
       <h2 className="mb-4 text-[0.9375rem] font-semibold tracking-[-0.005em] text-md-on-surface-variant">
         What I build with
       </h2>
-      {/* The groups flow as one block rather than sitting in a grid of
-          label-and-row pairs.
+      {/* Label above its marks, four groups to a row.
 
-          The grid gave each group a row of its own, so seven groups cost
-          four rows at 1188px and the section ran to 305px. It also left the
-          rows badly short of their columns: each held about 250px of marks in
-          a 439px cell. Inline, a label and its marks are one unit that wraps
-          where it runs out of room, which packs the same 31 marks into two
-          lines.
+          Two earlier shapes were wrong in opposite directions. A grid of
+          label-beside-row pairs aligned well but gave every group a row of
+          its own: seven groups cost four rows and 305px, with each row
+          holding about 250px of marks in a 439px cell. Flowing them inline
+          fixed the height and broke the alignment -- measured, the labels
+          landed on six different left edges, two of them 14px apart, which
+          is the exact failure the site grid exists to prevent.
 
-          The marks stay at 36px. They carry monogram labels -- SQL, UMAP, Hd
-          -- set at 0.29 of the disc, so 28px would put those at 8px. The
-          height had to come out of the layout, not out of the type. */}
-      <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
+          Stacking the label puts the widest group, six marks at 251px, in a
+          273px column, so four columns fit at 1188 and seven groups take two
+          rows. Four clean edges instead of six scattered ones, and the
+          labels line up down the page as well as across it.
+
+          The marks stay at 36px. Six of them are monograms set at 0.29 of
+          the disc, so 28px would put those at 8px, and sub-10px type is
+          already on the list of things wrong here. */}
+      <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2 sm:gap-y-6 lg:grid-cols-4">
         {TECH_STACK.map((g) => (
-          <div key={g.group} className="flex items-center gap-2.5">
-            <span className="whitespace-nowrap text-[0.8125rem] font-medium text-md-on-surface-variant">
+          // Beside its marks in one column, above them in several. Stacking
+          // buys alignment only when there are columns to align, and on a
+          // phone there is one: the label would cost a line per group and
+          // take the block from 396px to 649.
+          <div
+            key={g.group}
+            className="flex items-center gap-2.5 sm:flex-col sm:items-start sm:gap-2"
+          >
+            <span className="whitespace-nowrap text-[0.75rem] font-medium uppercase leading-4 tracking-[0.06em] text-md-on-surface-variant">
               {g.group}
             </span>
             <LogoRow items={g.items} fixed />
