@@ -1148,6 +1148,65 @@ html {
   text-decoration: underline;
 }
 
+/* Two tracks around one axis: work on the left, school on the right.
+
+   The axis is centred only when there is something on both sides. With work
+   alone the right half would be empty, so the rule moves to the left edge and
+   the single track takes the width -- same component, no second layout to
+   keep in step.
+
+   Below md both tracks share the left rail, because two 45% columns at phone
+   width are two columns of about 150px, and a job title does not fit in
+   one. */
+.exp-chart__plot {
+  --exp-scale: 1.75rem;
+  height: calc(var(--exp-months) * var(--exp-scale));
+}
+.exp-chart__year {
+  top: calc(var(--exp-top) * var(--exp-scale));
+}
+.exp-chart__item {
+  top: calc(var(--exp-top) * var(--exp-scale));
+  height: calc(var(--exp-span) * var(--exp-scale));
+}
+/* 1024 is where the chart gets the wider measure, so a block goes from about
+   300px across to 376 and its title stops wrapping. That is what lets a month
+   be worth less height here than it is on a phone. */
+@media (min-width: 1024px) {
+  .exp-chart__plot {
+    --exp-scale: 1.25rem;
+  }
+}
+
+.exp-chart__axis {
+  left: 1.25rem;
+}
+.exp-chart__year {
+  left: 1.25rem;
+  transform: translate(-50%, -50%);
+}
+.exp-chart__item {
+  left: 3rem;
+  right: 0;
+}
+
+@media (min-width: 768px) {
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__axis,
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__year {
+    left: 50%;
+  }
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__item--work {
+    left: 0;
+    right: auto;
+    width: calc(50% - 2.5rem);
+  }
+  .exp-chart__plot:not(.exp-chart__plot--single) .exp-chart__item--education {
+    left: auto;
+    right: 0;
+    width: calc(50% - 2.5rem);
+  }
+}
+
 /* The chart is wider than the prose it sits in.
 
    620px is a reading measure, and a measure is for lines you read left to

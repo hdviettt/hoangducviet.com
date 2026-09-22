@@ -11,50 +11,41 @@ import Image from "next/image";
 import Link from "next/link";
 
 /**
- * The career as a chart: a year axis, and a block per role whose height is the
- * time it took.
+ * The career and the education on one year axis: work down the left, school
+ * down the right, every block as tall as the span it covers.
  *
- * The list version answers "what did he do". This answers "for how long, and
- * when", which is the question a list is bad at -- three roles set as three
- * equal rows say nothing about one lasting sixteen months and another six.
+ * Two tracks means the blocks are placed, not stacked -- a degree and a job
+ * run at the same time, and a flow layout cannot put two things at the same
+ * y. So each block is positioned from its own dates against a shared ruler,
+ * which is also what makes the two sides comparable at a glance.
  *
- * Honesty rules, because a chart that lies is worse than a list:
+ * The consequence, and the reason the blocks are terse: a placed block cannot
+ * push the next one down, so anything that does not fit would overlap. Every
+ * block therefore carries only what fits in the shortest span on the chart --
+ * a title, the organisation, and the dates. The result lines live under the
+ * chart instead, where they can be as long as they need to be.
  *
- *   A block is at least its tenure tall. It is allowed to be taller when its
- *   own text does not fit, and when that happens the year labels inside it
- *   stretch with it, because they are positioned as a percentage of the
- *   segment rather than in pixels. So the axis is piecewise linear: exact
- *   within every segment, and compressed only where text forced a segment
- *   open. It is never wrong about which side of a year a role falls on.
- *
- *   Gaps between roles are drawn at the same scale as the roles. A year out
- *   is a year of empty axis, not a missing row.
+ * Heights and positions both come from the same month arithmetic, so a block
+ * that looks twice as tall as another covers twice the time.
  */
 
-// 3rem a month, and the number is measured, not picked.
+// The months-to-pixels scale lives in the stylesheet, as --exp-scale, because
+// it has to change with the width and breakpoints belong in CSS. This file
+// emits unitless month counts and lets the stylesheet multiply.
 //
-// The scale has to clear the densest block, because a block that cannot fit
-// its own text sets its own height and stops being drawn to time. Measured at
-// this width, the tightest is the 5-month role carrying two result lines: its
-// natural content is 219px, so a month has to be worth at least 46px.
+// The floor is the shortest span on the chart, because a block that cannot
+// fit its own text would be clipped by its neighbour. The shortest here is a
+// 5-month role. Wide, that block is 376px across, its title sits on one line,
+// and 92px is enough: 1.25rem a month clears it. Narrow, the same title wraps
+// to two lines and wants about 104px, so the scale steps up to 1.75rem below
+// 1024px, which is also where the block stops getting the wider measure.
 //
-// The walk to get here is worth recording, because most of it was chasing a
-// bug rather than tuning a number. 1.625rem gave a 15-month role and a
-// 5-month one a height ratio of 1.9 where the truth is 3.0; 2.5rem got 2.36;
-// 3.5rem cleared it until the end date was pinned to the bottom edge; 4rem
-// cleared that. Then the real cause turned up: the article's prose margins
-// were leaking into the blocks and putting 123px into a header holding 44px
-// of text. With that fixed the same content fits in 3rem, and the section is
-// 1200px instead of 1673.
-//
-// The cost that remains is real: the scale is set by the densest block and
-// paid by the longest, so a 15-month role is three times the height of a
-// 5-month one whether or not it has three times as much to say. Pulling the
-// result lines out of the blocks is the one lever that changes that.
-const REM_PER_MONTH = 3;
+// The ceiling is the page. The axis runs Sep 2020 to Jun 2027 once education
+// is on it -- 81 months, against the 25 that work alone spanned -- so every
+// extra pixel a month costs 81 of them. That is why the blocks lost their
+// result lines when school arrived: at the 3rem a month this chart used when
+// it held work only, it would now be 3,900px tall.
 
-// Newest first, so the tone steps down as the roles get older. Past the end of
-// the ramp everything sits on the quietest step.
 const TONES = [
   {
     block: "bg-md-primary-container border-transparent",
@@ -82,29 +73,106 @@ const TONES = [
   },
 ];
 
+type Track = "work" | "education";
+
 type Entry = {
   role: ExperienceRole;
-  company: ExperienceCompany;
+  org: ExperienceCompany;
+  track: Track;
   from: number;
   to: number;
+  tone: number;
+  showMark: boolean;
 };
 
-type Segment =
-  | ({ kind: "role"; tone: number } & Entry)
-  | { kind: "gap"; from: number; to: number };
-
-function Logo({ company }: { company: ExperienceCompany }) {
-  if (!company.logo) return null;
+function Mark({ org }: { org: ExperienceCompany }) {
+  if (!org.logo) return null;
   return (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-md-outline-variant bg-md-surface">
+    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-md-outline-variant bg-md-surface">
       <Image
-        src={company.logo}
+        src={org.logo}
         alt=""
-        width={36}
-        height={36}
-        className="h-5 w-5 object-contain"
+        width={28}
+        height={28}
+        className="h-4 w-4 object-contain"
       />
     </span>
+  );
+}
+
+function Block({
+  entry,
+  now,
+  showSlot,
+}: {
+  entry: Entry;
+  now: Date;
+  showSlot: boolean;
+}) {
+  const { role, org, tone, showMark } = entry;
+  const t = TONES[tone];
+  const period = `${fmtMonth(role.start)} - ${
+    role.end ? fmtMonth(role.end) : "Present"
+  }`;
+  const length = fmtDuration(monthsInclusive(role.start, role.end, now));
+
+  return (
+    // The mark sits outside the text column rather than inside the first row
+    // of it, so the title, the note and the dates share one left edge. When
+    // the mark was in the header row, the title was indented past it and the
+    // two lines below it were not: three lines, two edges, in a block 376px
+    // wide.
+    <article
+      className={`flex h-full gap-2 overflow-hidden rounded-xl border p-3 ${t.block}`}
+      style={
+        {
+          "--chart-ink": t.ink,
+          "--chart-ink-muted": t.muted,
+          "--chart-bullet": t.bullet,
+        } as React.CSSProperties
+      }
+    >
+      {/* Reserved only when something in this track has a mark, so a track of
+          schools with no logos is not indented past an empty square. Within a
+          track that does have one, the slot is held for the rows that repeat
+          an organisation. */}
+      {showSlot && (
+        <div className="h-7 w-7 shrink-0">{showMark && <Mark org={org} />}</div>
+      )}
+
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex min-w-0 flex-col">
+          <h3 className="text-[0.9375rem] font-medium leading-5">
+            {role.title}
+          </h3>
+          <p className="chart-muted text-[0.8125rem] leading-4">
+            <a
+              href={org.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="no-underline hover:underline"
+            >
+              {org.company}
+            </a>
+          </p>
+        </div>
+
+        {role.note && (
+          <p className="chart-muted text-[0.75rem] leading-4">{role.note}</p>
+        )}
+
+        {/* The span sits on the bottom edge. A block drawn to time is mostly
+            empty when a long span has little to say about itself, and an
+            open-bottomed void reads as something missing; closed by its own
+            end date, the same space reads as the duration it is. */}
+        <div className="flex-1" />
+        <p className="chart-muted text-[0.75rem] leading-4 tabular-nums">
+          {period}
+          <span className="mx-1 opacity-60">&middot;</span>
+          {length}
+        </p>
+      </div>
+    </article>
   );
 }
 
@@ -118,14 +186,12 @@ export default function ExperienceChart({
   const now = new Date();
   const today = nowIndex(now);
 
-  // Every role across every company on one axis. The data nests roles under a
-  // company, but time does not: two companies are still one career, and the
-  // chart has to put them on the same ruler.
-  const entries: Entry[] = companies
-    .flatMap((company) =>
-      company.roles.map((role) => ({
+  const usable = companies
+    .flatMap((org) =>
+      org.roles.map((role) => ({
         role,
-        company,
+        org,
+        track: (org.kind === "education" ? "education" : "work") as Track,
         from: monthIndex(role.start),
         to: role.end ? monthIndex(role.end) : today,
       })),
@@ -133,217 +199,114 @@ export default function ExperienceChart({
     .filter((e) => Number.isFinite(e.from) && Number.isFinite(e.to))
     .sort((a, b) => b.to - a.to || b.from - a.from);
 
-  if (!entries.length) return null;
+  if (!usable.length) return null;
 
-  // Roles, newest at the top, with any time between them drawn to scale.
-  const segments: Segment[] = [];
-  entries.forEach((entry, i) => {
-    segments.push({
-      kind: "role",
-      tone: Math.min(i, TONES.length - 1),
-      ...entry,
-    });
-    const next = entries[i + 1];
-    if (next && entry.from > next.to) {
-      segments.push({ kind: "gap", from: next.to, to: entry.from });
-    }
+  // Tone by recency within each track, so the newest job and the newest
+  // qualification are each the strongest thing on their own side.
+  const rank: Record<Track, number> = { work: 0, education: 0 };
+  const lastOrg: Record<Track, string | null> = { work: null, education: null };
+  const entries: Entry[] = usable.map((e) => {
+    const tone = Math.min(rank[e.track]++, TONES.length - 1);
+    const showMark = lastOrg[e.track] !== e.org.company;
+    lastOrg[e.track] = e.org.company;
+    return { ...e, tone, showMark };
   });
 
-  // The company mark belongs to the company, not to each of its roles: three
-  // roles at one employer drew the same logo three times.
-  const firstOfCompany = new Set<string>();
-  let seen: string | null = null;
-  for (const e of entries) {
-    if (e.company.company !== seen) {
-      firstOfCompany.add(e.role.title);
-      seen = e.company.company;
-    }
+  const top = Math.max(...entries.map((e) => e.to));
+  const bottom = Math.min(...entries.map((e) => e.from));
+  const span = Math.max(top - bottom, 1);
+  const offset = (idx: number) => top - idx;
+
+  const years: number[] = [];
+  for (let y = Math.ceil(bottom / 12); januaryIndex(y) <= top; y++) {
+    if (januaryIndex(y) > bottom) years.push(y);
   }
+
+  const hasEducation = entries.some((e) => e.track === "education");
+  const trackHasMark: Record<Track, boolean> = {
+    work: entries.some((e) => e.track === "work" && e.org.logo),
+    education: entries.some((e) => e.track === "education" && e.org.logo),
+  };
+  const withResults = entries.filter(
+    (e) => e.track === "work" && e.role.highlights?.length,
+  );
 
   return (
     // exp-timeline carries the rule that strips list markers inside
-    // .article-content, which this still needs for the result lists.
+    // .article-content, which the results list below still needs.
     <div className="exp-timeline exp-chart my-10">
-      {/* The newest edge of the axis, named. Without it the first year label
-          can be most of a page down, and the top of the chart reads as
-          undated. */}
-      <div className="mb-2 flex gap-4">
-        <span className="w-14 shrink-0 text-right text-[0.75rem] font-medium leading-4 tabular-nums text-md-on-surface">
-          {entries[0].role.end ? fmtMonth(entries[0].role.end) : "Present"}
-        </span>
-        <span className="w-px shrink-0 bg-md-outline-variant" />
-      </div>
-
-      {segments.map((seg) => {
-        const months = Math.max(seg.to - seg.from, 1);
-        // Every January the axis crosses inside this segment. Positioned as a
-        // percentage so the label stays on its date even if text has made the
-        // segment taller than its tenure.
-        const years: { year: number; pct: number }[] = [];
-        for (let y = Math.ceil(seg.from / 12); januaryIndex(y) <= seg.to; y++) {
-          const at = januaryIndex(y);
-          if (at <= seg.from || at > seg.to) continue;
-          years.push({ year: y, pct: ((seg.to - at) / months) * 100 });
-        }
-
-        const key =
-          seg.kind === "role"
-            ? `role-${seg.company.company}-${seg.role.title}`
-            : `gap-${seg.from}-${seg.to}`;
-
-        return (
-          <div
-            key={key}
-            className="flex gap-4"
-            style={{ minHeight: `${months * REM_PER_MONTH}rem` }}
+      <div
+        className={`exp-chart__plot relative ${
+          hasEducation ? "" : "exp-chart__plot--single"
+        }`}
+        style={{ "--exp-months": span } as React.CSSProperties}
+      >
+        <div className="exp-chart__axis absolute top-0 bottom-0 w-px bg-md-outline-variant" />
+        {years.map((y) => (
+          <span
+            key={y}
+            className="exp-chart__year absolute -translate-y-1/2 rounded-full bg-md-surface px-1.5 text-[0.75rem] leading-4 tabular-nums text-md-on-surface-variant"
+            style={
+              { "--exp-top": offset(januaryIndex(y)) } as React.CSSProperties
+            }
           >
-            {/* Year rail */}
-            <div className="relative w-14 shrink-0">
-              {years.map(({ year, pct }) => (
-                <span
-                  key={year}
-                  className="absolute right-0 -translate-y-1/2 text-[0.75rem] leading-4 tabular-nums text-md-on-surface-variant"
-                  style={{ top: `${pct}%` }}
-                >
-                  {year}
-                </span>
-              ))}
-            </div>
+            {y}
+          </span>
+        ))}
 
-            {/* The axis itself, one segment at a time. The pieces butt
-                together, so it draws as a single rule. */}
-            <div className="relative w-px shrink-0 bg-md-outline-variant">
-              {years.map(({ year, pct }) => (
-                <span
-                  key={year}
-                  aria-hidden="true"
-                  className="absolute left-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-md-outline"
-                  style={{ top: `${pct}%` }}
-                />
-              ))}
-            </div>
-
-            <div className="flex min-w-0 flex-1 flex-col pb-3">
-              {seg.kind === "role" && (
-                <Block
-                  seg={seg}
-                  now={now}
-                  showLogo={firstOfCompany.has(seg.role.title)}
-                />
-              )}
+        {entries.map((e) => (
+          <div
+            key={`${e.track}-${e.org.company}-${e.role.title}`}
+            className={`exp-chart__item exp-chart__item--${e.track} absolute`}
+            style={
+              {
+                "--exp-top": offset(e.to),
+                "--exp-span": Math.max(e.to - e.from, 1),
+              } as React.CSSProperties
+            }
+          >
+            <div className="h-full pb-2">
+              <Block entry={e} now={now} showSlot={trackHasMark[e.track]} />
             </div>
           </div>
-        );
-      })}
-
-      {/* The oldest edge, so the axis is closed at both ends. */}
-      <div className="flex gap-4">
-        <span className="w-14 shrink-0 text-right text-[0.75rem] font-medium leading-4 tabular-nums text-md-on-surface">
-          {fmtMonth(entries[entries.length - 1].role.start)}
-        </span>
-        <span className="w-px shrink-0" />
+        ))}
       </div>
 
-      {/* What the chart is measured in, said once. A reader should not have
-          to infer that height means time. */}
-      <p className="mt-4 ml-[4.5rem] text-[0.75rem] leading-4 text-md-on-surface-variant">
-        Each block is as tall as the time it took.
-      </p>
-    </div>
-  );
-}
-
-function Block({
-  seg,
-  now,
-  showLogo,
-}: {
-  seg: { kind: "role"; tone: number } & Entry;
-  now: Date;
-  showLogo: boolean;
-}) {
-  const { role, company, tone } = seg;
-  const t = TONES[tone];
-  const period = `${fmtMonth(role.start)} - ${
-    role.end ? fmtMonth(role.end) : "Present"
-  }`;
-  const length = fmtDuration(monthsInclusive(role.start, role.end, now));
-
-  return (
-    <article
-      className={`flex flex-1 flex-col gap-3 rounded-xl border p-4 ${t.block}`}
-      style={
-        {
-          "--chart-ink": t.ink,
-          "--chart-ink-muted": t.muted,
-          "--chart-bullet": t.bullet,
-        } as React.CSSProperties
-      }
-    >
-      <div className="flex items-start gap-3">
-        {/* The slot is held even when the mark is not drawn, so the titles of
-            a run of roles at one company keep a single left edge. */}
-        <div className="h-9 w-9 shrink-0">
-          {showLogo && <Logo company={company} />}
-        </div>
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <h3 className="text-[1.0625rem] font-medium leading-6">
-            {role.title}
-          </h3>
-          <p className="chart-muted text-[0.8125rem] leading-5">
-            <a
-              href={company.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium no-underline hover:underline"
-            >
-              {company.company}
-            </a>
-          </p>
-        </div>
-      </div>
-
-      {role.note && (
-        <p className="chart-muted text-[0.875rem] leading-6">{role.note}</p>
-      )}
-
-      {/* The span sits on the block's bottom edge rather than under the
-          title. A block drawn to time is mostly empty when a long role has
-          little to say about itself, and an open-bottomed void reads as
-          something missing; closed by its own end date, the same space reads
-          as the duration it is. */}
-      {role.highlights && role.highlights.length > 0 && (
-        <ul className="flex flex-col gap-2">
-          {role.highlights.map((h) => (
-            <li
-              key={h.text}
-              className="chart-muted relative ml-0 pl-4 text-[0.875rem] leading-6 before:absolute before:left-0 before:top-[0.6875rem] before:h-[3px] before:w-[3px] before:rounded-full"
-            >
-              {h.text}
-              {h.proof && (
-                <>
-                  {" "}
-                  <Link
-                    href={`/work/${h.proof.slug}`}
-                    className="whitespace-nowrap font-medium underline decoration-1 underline-offset-2"
+      {/* The chart says when and for how long; this says what came of it. It
+          sits outside the plot because a placed block cannot grow and these
+          lines need to. */}
+      {withResults.length > 0 && (
+        <div className="mt-10 flex flex-col gap-6">
+          {withResults.map((e) => (
+            <div key={`${e.org.company}-${e.role.title}`}>
+              <h3 className="text-[0.9375rem] font-medium leading-6 text-md-on-surface">
+                {e.role.title}
+              </h3>
+              <ul className="mt-2 flex flex-col gap-2">
+                {(e.role.highlights ?? []).map((h) => (
+                  <li
+                    key={h.text}
+                    className="relative ml-0 pl-4 text-[0.875rem] leading-6 text-md-on-surface-variant before:absolute before:left-0 before:top-[0.6875rem] before:h-[3px] before:w-[3px] before:rounded-full before:bg-md-outline"
                   >
-                    {h.proof.label}
-                  </Link>
-                </>
-              )}
-            </li>
+                    {h.text}
+                    {h.proof && (
+                      <>
+                        {" "}
+                        <Link
+                          href={`/work/${h.proof.slug}`}
+                          className="whitespace-nowrap font-medium text-primary underline decoration-1 underline-offset-2"
+                        >
+                          {h.proof.label}
+                        </Link>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
-
-      {/* A spacer rather than mt-auto: the margin reset above clears auto
-          margins too, and the pin has to survive it. */}
-      <div className="flex-1" />
-      <p className="chart-muted text-[0.8125rem] leading-5 tabular-nums">
-        {period}
-        <span className="mx-1.5 opacity-60">·</span>
-        {length}
-      </p>
-    </article>
+    </div>
   );
 }

@@ -31,6 +31,11 @@ import { useEffect, useRef, useState } from "react";
  * content belongs on the margin.
  */
 
+const KINDS = [
+  ["work", "Work"],
+  ["education", "School"],
+] as const;
+
 const btn =
   "shrink-0 h-8 w-8 inline-flex items-center justify-center rounded-lg text-md-on-surface-variant hover:bg-md-on-surface/[0.08] hover:text-md-on-surface disabled:opacity-25 disabled:hover:bg-transparent";
 const delBtn =
@@ -266,9 +271,36 @@ export default function ExperienceEditor({
             <input
               value={company.company}
               onChange={(e) => setCompany(ci, { company: e.target.value })}
-              placeholder="Company"
+              placeholder="Company or school"
               className="md-field-dense min-w-0 flex-1 font-medium"
             />
+            {/* Which track this row lands on in the About chart. Work is the
+                default and is stored as nothing, so every row written before
+                the field existed keeps its meaning. */}
+            <div className="flex shrink-0 rounded-lg border border-md-outline-variant p-0.5">
+              {KINDS.map(([kind, label]) => {
+                const on = (company.kind ?? "work") === kind;
+                return (
+                  <button
+                    key={kind}
+                    type="button"
+                    onClick={() =>
+                      setCompany(ci, {
+                        kind: kind === "work" ? undefined : kind,
+                      })
+                    }
+                    aria-pressed={on}
+                    className={`h-7 rounded-md px-2 text-[0.75rem] transition-colors ${
+                      on
+                        ? "bg-md-on-surface/[0.10] text-md-on-surface"
+                        : "text-md-on-surface-variant hover:text-md-on-surface"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
             <RowControls
               label="company"
               first={ci === 0}
@@ -284,7 +316,7 @@ export default function ExperienceEditor({
               onChange={(e) =>
                 setCompany(ci, { url: e.target.value || undefined })
               }
-              placeholder="https://company.com"
+              placeholder="https://organisation.com"
               className="md-field-dense w-full"
             />
             <input
@@ -299,7 +331,7 @@ export default function ExperienceEditor({
 
           <div className="mb-4">
             <MediaPicker
-              label="Company logo"
+              label="Logo"
               value={company.logo ?? ""}
               onChange={(v) => setCompany(ci, { logo: v || undefined })}
             />
@@ -318,7 +350,7 @@ export default function ExperienceEditor({
                   <input
                     value={role.title}
                     onChange={(e) => setRole(ci, ri, { title: e.target.value })}
-                    placeholder="Job title"
+                    placeholder="Job title or degree"
                     className="md-field-dense min-w-0 flex-1 font-medium"
                   />
                   <RowControls

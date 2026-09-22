@@ -269,6 +269,12 @@ export default function Experience({
   // wide and beside a bio there is no room for an axis, and the question there
   // is "where has he been" rather than "for how long".
   if (!compact) return <ExperienceChart companies={companies} />;
+
+  // Work only in the column beside the bio. The chart shows school because it
+  // has an axis to hang it on and a second track to put it in; a 310px list
+  // has neither, and three degrees would push the work off the block.
+  const jobs = companies.filter((c) => c.kind !== "education");
+  if (!jobs.length) return null;
   // One clock for the whole render, so two durations on the same page cannot
   // disagree because the month turned over between them.
   const now = new Date();
@@ -279,7 +285,7 @@ export default function Experience({
     // the bottom stacked with the button's own to leave a 64px hole — four
     // times the gap between roles.
     <div className={`exp-timeline space-y-12 ${compact ? "" : "my-10"}`}>
-      {companies.map((company) => (
+      {jobs.map((company) => (
         <CompanyBlock
           key={company.company}
           company={company}

@@ -63,6 +63,17 @@ export interface ExperienceRole {
 
 export interface ExperienceCompany {
   company: string;
+  /**
+   * Which track this belongs to on the About chart: work on the left,
+   * education on the right. Absent means work, so every row written before
+   * this existed keeps its meaning.
+   *
+   * Education reuses the same shape rather than getting a column of its own.
+   * A school is an organisation, a degree is a thing you held there for a
+   * span of months, and the column is jsonb -- so this is a field, not a
+   * migration.
+   */
+  kind?: "work" | "education";
   url?: string;
   logo?: string;
   location?: string;
