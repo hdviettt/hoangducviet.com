@@ -8,7 +8,6 @@ import {
   fmtMonth,
   januaryIndex,
   monthIndex,
-  monthsInclusive,
   nowIndex,
 } from "@/lib/experience-time";
 import Image from "next/image";
@@ -63,11 +62,14 @@ const DEFAULT_TONES: ExperienceTone[] = [
   "rose",
 ];
 
-// What a block needs before it can carry its result lines inside itself.
-// A placed block cannot grow, so anything that does not fit is clipped -- the
-// lines go under the chart instead. Both numbers are the narrow case: the
+// What a card needs before it can carry its result lines inside itself.
+//
+// The card is content-sized now, so the constraint is no longer its own span
+// but the drop to the next card on the same side: a card that grows past that
+// would sit on top of its neighbour. Both numbers are the narrow case -- the
 // header, note and dates at about 100px, and a result line allowed to wrap to
-// two at 56. Deliberately pessimistic, because being wrong here loses text.
+// two at 56. Deliberately pessimistic, because being wrong here puts one card
+// through another.
 const BLOCK_CHROME_PX = 100;
 const RESULT_LINE_PX = 56;
 const NARROW_SCALE_PX = 20;
@@ -149,10 +151,18 @@ function Block({
   showSlot: boolean;
 }) {
   const { role, org, tone, showMark, resultsFit } = entry;
+  // A span that ends in the future is a plan, not a fact. The degree read
+  // "Sep 2023 - Jun 2027 . 3 yrs 10 mos" in September 2026, counting ten
+  // months that have not happened. The range still shows what is planned,
+  // marked as such; the duration counts only up to today.
+  const today = nowIndex(now);
+  const endIdx = role.end ? monthIndex(role.end) : today;
+  const planned = endIdx > today;
   const period = `${fmtMonth(role.start)} - ${
     role.end ? fmtMonth(role.end) : "Present"
-  }`;
-  const length = fmtDuration(monthsInclusive(role.start, role.end, now));
+  }${planned ? " (expected)" : ""}`;
+  const elapsed = Math.min(endIdx, today) - monthIndex(role.start) + 1;
+  const length = fmtDuration(Math.max(elapsed, 1));
 
   return (
     // The mark sits outside the text column rather than inside the first row
@@ -160,54 +170,62 @@ function Block({
     // the mark was in the header row, the title was indented past it and the
     // two lines below it were not: three lines, two edges, in a block 376px
     // wide.
-    <article
-      className={`exp-chart__block exp-tone--${tone} flex h-full gap-2 overflow-hidden rounded-xl border p-3`}
-    >
-      {/* Reserved only when something in this track has a mark, so a track of
-          schools with no logos is not indented past an empty square. Within a
-          track that does have one, the slot is held for the rows that repeat
-          an organisation. */}
-      {showSlot && (
-        <div className="h-7 w-7 shrink-0">{showMark && <Mark org={org} />}</div>
-      )}
-
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div className="flex min-w-0 flex-col">
-          <h3 className="text-[0.9375rem] font-medium leading-5">
-            {role.title}
-          </h3>
-          <p className="chart-muted text-[0.8125rem] leading-4">
-            <a
-              href={org.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="no-underline hover:underline"
-            >
-              {org.company}
-            </a>
-          </p>
-        </div>
-
-        {role.note && (
-          <p className="chart-muted text-[0.75rem] leading-4">{role.note}</p>
+    // The bar is what is drawn to time; the card is drawn to its content.
+    //
+    // They used to be the same element, which meant a 45-month degree was a
+    // 1,400px rectangle holding three lines of text, with its end date most
+    // of a screen below its title. Splitting them keeps the measurement
+    // exact -- the bar still spans precisely its months -- and lets the card
+    // be the size of what it says.
+    <>
+      <span className={`exp-chart__bar exp-tone--${tone}`} aria-hidden="true" />
+      <article
+        className={`exp-chart__card exp-tone--${tone} flex gap-2 rounded-xl border p-3`}
+      >
+        {/* Reserved only when something in this track has a mark, so a track
+            of schools with no logos is not indented past an empty square.
+            Within a track that does have one, the slot is held for the rows
+            that repeat an organisation. */}
+        {showSlot && (
+          <div className="h-7 w-7 shrink-0">
+            {showMark && <Mark org={org} />}
+          </div>
         )}
 
-        {/* Only when the span is long enough to hold them without clipping.
-            The rest of the time they are under the chart. */}
-        {resultsFit && <Results role={role} muted />}
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col">
+            <h3 className="text-[0.9375rem] font-medium leading-5">
+              {role.title}
+            </h3>
+            <p className="chart-muted text-[0.8125rem] leading-4">
+              <a
+                href={org.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="no-underline hover:underline"
+              >
+                {org.company}
+              </a>
+            </p>
+          </div>
 
-        {/* The span sits on the bottom edge. A block drawn to time is mostly
-            empty when a long span has little to say about itself, and an
-            open-bottomed void reads as something missing; closed by its own
-            end date, the same space reads as the duration it is. */}
-        <div className="flex-1" />
-        <p className="chart-muted text-[0.75rem] leading-4 tabular-nums">
-          {period}
-          <span className="mx-1 opacity-60">&middot;</span>
-          {length}
-        </p>
-      </div>
-    </article>
+          {role.note && (
+            <p className="chart-muted text-[0.75rem] leading-4">{role.note}</p>
+          )}
+
+          {/* Only when the next card in this track is far enough below that
+              these lines cannot reach it. The rest of the time they are
+              under the chart. */}
+          {resultsFit && <Results role={role} muted />}
+
+          <p className="chart-muted text-[0.75rem] leading-4 tabular-nums">
+            {period}
+            <span className="mx-1 opacity-60">&middot;</span>
+            {length}
+          </p>
+        </div>
+      </article>
+    </>
   );
 }
 
@@ -241,7 +259,13 @@ export default function ExperienceChart({
     const showMark = lastOrg[e.track] !== e.org.company;
     lastOrg[e.track] = e.org.company;
     const lines = e.role.highlights?.length ?? 0;
-    const room = Math.max(e.to - e.from, 1) * NARROW_SCALE_PX;
+    // Cards are anchored to the top of their span, so the room a card has is
+    // the drop to the next card on its own side. The last on a side has the
+    // rest of the chart.
+    const next = usable.slice(i + 1).find((o) => o.track === e.track);
+    const room = next
+      ? (e.to - next.to) * NARROW_SCALE_PX
+      : Number.POSITIVE_INFINITY;
     return {
       ...e,
       tone: e.role.tone ?? DEFAULT_TONES[i % DEFAULT_TONES.length],
@@ -319,9 +343,7 @@ export default function ExperienceChart({
               } as React.CSSProperties
             }
           >
-            <div className="h-full pb-2">
-              <Block entry={e} now={now} showSlot={trackHasMark[e.track]} />
-            </div>
+            <Block entry={e} now={now} showSlot={trackHasMark[e.track]} />
           </div>
         ))}
       </div>

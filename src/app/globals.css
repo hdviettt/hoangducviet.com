@@ -1107,31 +1107,38 @@ html {
   margin-bottom: 0;
 }
 
-/* Chart block tones.
+/* Chart tones: a bar drawn to time, and a card drawn to its content.
 
-   One hue per block, and everything else derives: fill, seam, ink, quiet ink
-   and bullet. Two rules rather than fourteen, and a tone cannot be half
-   defined in one theme and whole in the other.
+   The bar carries the colour. The card only takes a wash of the same hue,
+   because the card is text and the bar is the measurement -- when the card
+   was the saturated thing, a 45-month degree became 1,400px of flat lilac
+   holding three lines, and five of those made the page read as a toy.
 
-   Lightness does the contrast work and hue only tints, which is what keeps
-   every tone legible without a per-colour exception: the fill stays near the
-   top of the range and the ink near the bottom, so the pair clears WCAG AA
-   whatever hue is dropped in. Saturation is a second variable only so the
-   neutral tone can flatten to grey without needing its own rules. */
-.exp-chart__block {
-  --chart-sat: 78%;
-  background: hsl(var(--chart-hue) var(--chart-sat) 93%);
-  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.6) 85%);
+   One hue per entry and everything derives from it, in two rules, one per
+   theme. Lightness does the contrast work and hue only tints, which is what
+   keeps every tone legible without a per-colour exception. Saturation is a
+   second variable only so the neutral tone can flatten to grey. */
+.exp-chart__card {
+  --chart-sat: 70%;
+  background: hsl(var(--chart-hue) var(--chart-sat) 97.5%);
+  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 88%);
   --chart-ink: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.9) 22%);
-  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 30%);
+  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 32%);
   --chart-bullet: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.5) 58%);
 }
-.dark .exp-chart__block {
-  background: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.45) 21%);
-  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 31%);
-  --chart-ink: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.9) 91%);
-  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 78%);
-  --chart-bullet: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 62%);
+.exp-chart__bar {
+  --chart-sat: 70%;
+  background: hsl(var(--chart-hue) var(--chart-sat) 62%);
+}
+.dark .exp-chart__card {
+  background: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.3) 14%);
+  border-color: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.3) 26%);
+  --chart-ink: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.8) 90%);
+  --chart-ink-muted: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.35) 76%);
+  --chart-bullet: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.4) 60%);
+}
+.dark .exp-chart__bar {
+  background: hsl(var(--chart-hue) calc(var(--chart-sat) * 0.7) 46%);
 }
 
 .exp-tone--blue {
@@ -1157,20 +1164,51 @@ html {
   --chart-sat: 9%;
 }
 
-/* A block lifts a little under the pointer. The chart is a page of large
-   flat rectangles; without this nothing answers when you move across it. */
-.exp-chart__block {
-  transition:
-    box-shadow var(--md-sys-motion-duration-short4)
-      var(--md-sys-motion-easing-standard),
-    transform var(--md-sys-motion-duration-short4)
-      var(--md-sys-motion-easing-standard);
+/* The bar spans its entry exactly; the card hangs off the top of it.
+   The bar sits against the axis on both sides, so the two tracks read as
+   one ruler rather than as two lists that happen to be near each other. */
+.exp-chart__bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.375rem;
+  border-radius: 999px;
 }
-.exp-chart__block:hover {
+.exp-chart__card {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 1.5rem;
+}
+.exp-chart__bar {
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .exp-chart__plot:not(.exp-chart__plot--single)
+    .exp-chart__item--work
+    .exp-chart__bar {
+    left: auto;
+    right: 0;
+  }
+  .exp-chart__plot:not(.exp-chart__plot--single)
+    .exp-chart__item--work
+    .exp-chart__card {
+    left: 0;
+    right: 1.5rem;
+  }
+}
+
+/* A card lifts a little under the pointer. */
+.exp-chart__card {
+  transition: box-shadow var(--md-sys-motion-duration-short4)
+    var(--md-sys-motion-easing-standard);
+}
+.exp-chart__card:hover {
   box-shadow: var(--md-sys-elevation-2);
 }
 @media (prefers-reduced-motion: reduce) {
-  .exp-chart__block {
+  .exp-chart__card {
     transition: none;
   }
 }
@@ -1206,7 +1244,7 @@ html {
 
    `:where()` adds no specificity, so this lands at 0,2,1: enough to win, and
    the block does its own spacing with flex gaps, which nothing can override. */
-.article-content .exp-chart article :where(h3, p, ul, ol, li) {
+.article-content .exp-chart__card :where(h3, p, ul, ol, li) {
   margin: 0;
 }
 .article-content .exp-chart article li::before {
